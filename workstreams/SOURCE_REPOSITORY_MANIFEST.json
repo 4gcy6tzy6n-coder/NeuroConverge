@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-10-01",
+  "project": "NeuroConverge",
+  "freeze_state": "UNRESOLVED",
+  "sources": [
+    {
+      "name": "NeuroMotif",
+      "role": "structure_to_dynamics",
+      "remote": "https://github.com/4gcy6tzy6n-coder/NeuroMotif.git",
+      "public_ref": "refs/heads/main",
+      "public_commit": "1adc07ffc735cf458116ca36c9f4875708034d4a",
+      "local_candidate_worktree": "/Users/yyl/Desktop/workshop/NeuroMotif-publish",
+      "local_candidate_commit": "1adc07ffc735cf458116ca36c9f4875708034d4a",
+      "local_candidate_dirty_paths_at_audit": 0,
+      "scope_warning": "This published subset does not contain all local manuscript, source-of-record and audit artifacts. Confirm paper-critical source scope before calling this frozen."
+    },
+    {
+      "name": "NeuroMech",
+      "role": "biological_computation_to_artificial_transfer",
+      "remote": "https://github.com/4gcy6tzy6n-coder/NeuroMech.git",
+      "public_refs_observed": [
+        {
+          "ref": "refs/heads/experiment-publication",
+          "commit": "3e5c458f15b2cad7aa6c5703b1827763e84343bb"
+        }
+      ],
+      "local_main_commit": "555c064f4ff3153c871808c3f191b9934a18eaf5",
+      "local_main_dirty_paths_at_audit": 387,
+      "local_publication_worktree": "/private/tmp/neuromech-m5-xor-v2-publish",
+      "local_publication_commit": "3e5c458f15b2cad7aa6c5703b1827763e84343bb",
+      "local_publication_dirty_paths_at_audit": 2,
+      "scope_warning": "The publication draft's study selection/status predates the local mainline Route D synthesis. These revisions are not interchangeable; claim and artifact selection must be reconciled against the chosen frozen snapshot."
+    }
+  ],
+  "requested_neuroconverge_remote": {
+    "url": "https://github.com/4gcy6tzy6n-coder/NeuroConverge.git",
+    "heads_observed": [],
+    "interpretation": "No advertised heads were returned by git ls-remote. This does not distinguish an empty repository from visibility or access limitations."
+  }
+}
