@@ -6,6 +6,8 @@ Working paper title: **From connectome structure to artificial computation: boun
 
 NeuroConverge is a publication-level synthesis of two source projects. NeuroMotif contributes bounded structure-to-dynamics evidence; NeuroMech contributes source-grounded mechanism and artificial-transfer studies. The purpose is to test what the combined record supports, while keeping distinct studies and their evidence classes separate. This repository does not merge source Git histories or replace either source of record.
 
+For a concise map of the full project and its two workstreams, see [PROJECT_UNDERSTANDING.md](PROJECT_UNDERSTANDING.md).
+
 ## Central question
 
 When does biologically grounded neural computation survive translation into a useful artificial inductive bias?
