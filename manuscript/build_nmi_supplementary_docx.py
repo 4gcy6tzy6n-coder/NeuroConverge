@@ -4,6 +4,8 @@ import re
 from docx import Document
 from docx.enum.section import WD_ORIENT, WD_SECTION
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -83,6 +85,19 @@ def set_table_borders(table):
     tbl_pr.append(borders)
 
 
+def repeat_table_header(row):
+    tr_pr = row._tr.get_or_add_trPr()
+    tbl_header = OxmlElement("w:tblHeader")
+    tbl_header.set(qn("w:val"), "true")
+    tr_pr.append(tbl_header)
+
+
+def prevent_row_split(row):
+    tr_pr = row._tr.get_or_add_trPr()
+    cant_split = OxmlElement("w:cantSplit")
+    tr_pr.append(cant_split)
+
+
 def table_rows(lines):
     rows = []
     for line in lines:
@@ -131,6 +146,7 @@ set_run(footer.add_run("Internal candidate"), size=8, color=(90, 90, 90))
 lines = SOURCE.read_text(encoding="utf-8").splitlines()
 i = 0
 seen_title = False
+landscape_active = False
 while i < len(lines):
     stripped = lines[i].strip()
     if not stripped:
@@ -144,26 +160,42 @@ while i < len(lines):
         rows = table_rows(group)
         if not rows:
             continue
-        wide = doc.add_section(WD_SECTION.NEW_PAGE)
-        wide.orientation = WD_ORIENT.LANDSCAPE
-        wide.page_width = Inches(11.69)
-        wide.page_height = Inches(8.27)
-        wide.top_margin = Inches(0.58)
-        wide.bottom_margin = Inches(0.58)
-        wide.left_margin = Inches(0.62)
-        wide.right_margin = Inches(0.62)
-        wide.header.is_linked_to_previous = True
-        wide.footer.is_linked_to_previous = True
+        table_title = None
+        if len(rows[0]) == 5 and doc.paragraphs and doc.paragraphs[-1].text.startswith("Supplementary Table S7"):
+            table_title = doc.paragraphs[-1].text
+            paragraph = doc.paragraphs[-1]._element
+            paragraph.getparent().remove(paragraph)
+        if not landscape_active:
+            wide = doc.add_section(WD_SECTION.NEW_PAGE)
+            wide.orientation = WD_ORIENT.LANDSCAPE
+            wide.page_width = Inches(11.69)
+            wide.page_height = Inches(8.27)
+            wide.top_margin = Inches(0.58)
+            wide.bottom_margin = Inches(0.58)
+            wide.left_margin = Inches(0.62)
+            wide.right_margin = Inches(0.62)
+            wide.header.is_linked_to_previous = True
+            wide.footer.is_linked_to_previous = True
+            landscape_active = True
+        if table_title:
+            title_paragraph = doc.add_paragraph(style="Heading 1")
+            title_paragraph.paragraph_format.keep_with_next = True
+            title_paragraph.paragraph_format.space_after = Pt(8)
+            title_paragraph.add_run(table_title)
         table = doc.add_table(rows=len(rows), cols=len(rows[0]))
         table.autofit = False
-        if len(rows[0]) == 5:
+        if len(rows[0]) == 4:
+            widths = [1.15, 0.6, 2.05, 5.35]
+        elif len(rows[0]) == 5:
             widths = [1.47, 1.18, 1.8, 1.72, 4.23]
         elif len(rows[0]) == 7:
             widths = [1.35, 1.8, 1.05, 1.7, 0.95, 1.9, 1.65]
         else:
             raise ValueError(f"Unsupported supplementary table with {len(rows[0])} columns")
         set_table_borders(table)
+        repeat_table_header(table.rows[0])
         for ri, row in enumerate(rows):
+            prevent_row_split(table.rows[ri])
             for ci, value in enumerate(row):
                 cell = table.cell(ri, ci)
                 cell.width = Inches(widths[ci])
@@ -183,17 +215,21 @@ while i < len(lines):
                     for run in p.runs:
                         run.font.color.rgb = RGBColor(255, 255, 255)
                         run.bold = True
-        # Return to portrait after the wide comparison table.
-        portrait = doc.add_section(WD_SECTION.NEW_PAGE)
-        portrait.orientation = WD_ORIENT.PORTRAIT
-        portrait.page_width = Inches(8.27)
-        portrait.page_height = Inches(11.69)
-        portrait.top_margin = Inches(0.7)
-        portrait.bottom_margin = Inches(0.7)
-        portrait.left_margin = Inches(0.78)
-        portrait.right_margin = Inches(0.78)
-        portrait.header.is_linked_to_previous = True
-        portrait.footer.is_linked_to_previous = True
+        next_content = next((line.strip() for line in lines[i:] if line.strip()), "")
+        next_is_table = next_content.startswith("## Supplementary Table S7")
+        if not next_is_table:
+            # Return to portrait only when the following source content is prose or a result section.
+            portrait = doc.add_section(WD_SECTION.NEW_PAGE)
+            portrait.orientation = WD_ORIENT.PORTRAIT
+            portrait.page_width = Inches(8.27)
+            portrait.page_height = Inches(11.69)
+            portrait.top_margin = Inches(0.7)
+            portrait.bottom_margin = Inches(0.7)
+            portrait.left_margin = Inches(0.78)
+            portrait.right_margin = Inches(0.78)
+            portrait.header.is_linked_to_previous = True
+            portrait.footer.is_linked_to_previous = True
+            landscape_active = False
         continue
     if stripped.startswith("# "):
         heading = stripped[2:]
