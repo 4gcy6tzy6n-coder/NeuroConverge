@@ -1,0 +1,507 @@
+{
+  "study_id": "DMP_FAST_SLOW_CORRESPONDENCE_2X2_V1",
+  "status": "VERIFIED",
+  "project_level_status": "POST_RESULT_EXTENSION; NOT_PROJECT_PREREGISTRATION",
+  "n_units_per_family": 30,
+  "families": [
+    "DELAYED_ASSOCIATION",
+    "STATE_ESTIMATION",
+    "CONTEXTUAL_DECISION"
+  ],
+  "primary_by_family": [
+    {
+      "family": "DELAYED_ASSOCIATION",
+      "interaction": {
+        "mean": -0.0021158854166666665,
+        "ci95": [
+          -0.00615234375,
+          0.001726074218749929
+        ],
+        "n_independent_units": 30
+      },
+      "aligned_advantage": {
+        "mean": 0.0020833333333333333,
+        "ci95": [
+          -0.0034505208333333332,
+          0.008138020833333334
+        ],
+        "n_independent_units": 30
+      },
+      "p_raw": 0.3237735245295094,
+      "task_gate_improvement_null_minus_gru": {
+        "mean": 6.510416666666667e-05,
+        "ci95": [
+          0.0,
+          0.0001953125
+        ],
+        "n_independent_units": 30
+      },
+      "task_gate_p_raw": 1.0,
+      "advantage_slope_per_log2_n": {
+        "mean": 0.0009195963541666663,
+        "ci95": [
+          -0.00046386718749999954,
+          0.00244140625
+        ],
+        "n_independent_units": 30
+      },
+      "ood_loss_change": {
+        "DMP_FAST_SLOW|ALIGNED": {
+          "mean": 0.0014322916666666666,
+          "ci95": [
+            -0.008658854166666667,
+            0.010807291666666666
+          ],
+          "n_independent_units": 30
+        },
+        "DMP_FAST_SLOW|BROKEN": {
+          "mean": 0.0035481770833333333,
+          "ci95": [
+            -0.005859375,
+            0.01240234375
+          ],
+          "n_independent_units": 30
+        },
+        "SHORT_STATE_CONTROL|ALIGNED": {
+          "mean": 0.0026041666666666665,
+          "ci95": [
+            -0.007291666666666667,
+            0.0126953125
+          ],
+          "n_independent_units": 30
+        },
+        "SHORT_STATE_CONTROL|BROKEN": {
+          "mean": 0.0026041666666666665,
+          "ci95": [
+            -0.007356770833333333,
+            0.012631835937499858
+          ],
+          "n_independent_units": 30
+        },
+        "GENERIC_GRU|ALIGNED": {
+          "mean": 0.004134114583333333,
+          "ci95": [
+            -0.0059244791666666664,
+            0.014127604166666667
+          ],
+          "n_independent_units": 30
+        },
+        "GENERIC_GRU|BROKEN": {
+          "mean": 0.004134114583333333,
+          "ci95": [
+            -0.0056640625,
+            0.014127604166666667
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "advantage_by_n": {
+        "128": {
+          "mean": -0.0015950520833333333,
+          "ci95": [
+            -0.005208333333333333,
+            0.00107421875
+          ],
+          "n_independent_units": 30
+        },
+        "512": {
+          "mean": -0.003125,
+          "ci95": [
+            -0.00830078125,
+            0.0013346354166666667
+          ],
+          "n_independent_units": 30
+        },
+        "2048": {
+          "mean": 0.0020833333333333333,
+          "ci95": [
+            -0.003483072916666667,
+            0.008268229166666667
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "p_holm": 0.6475470490590188,
+      "task_gate_p_holm": 1.0,
+      "task_gate": "FAIL",
+      "mechanism_specificity_gate": "NOT_MET",
+      "advantage_slope_p_raw": 0.24241515169696606,
+      "advantage_slope_p_holm": 0.24241515169696606,
+      "sample_efficiency_gate": "NOT_MET"
+    },
+    {
+      "family": "STATE_ESTIMATION",
+      "interaction": {
+        "mean": -0.0021770935505628585,
+        "ci95": [
+          -0.0038346235298862058,
+          -0.000539846119160461
+        ],
+        "n_independent_units": 30
+      },
+      "aligned_advantage": {
+        "mean": -0.0024302313725153607,
+        "ci95": [
+          -0.0036310666054487225,
+          -0.0012274866861601678
+        ],
+        "n_independent_units": 30
+      },
+      "p_raw": 0.016859662806743864,
+      "task_gate_improvement_null_minus_gru": {
+        "mean": 0.9231096834565202,
+        "ci95": [
+          0.9036356318695471,
+          0.941805293757158
+        ],
+        "n_independent_units": 30
+      },
+      "task_gate_p_raw": 1.999960000799984e-05,
+      "advantage_slope_per_log2_n": {
+        "mean": 0.001175245828926564,
+        "ci95": [
+          -0.0001814769464544943,
+          0.002459975361513591
+        ],
+        "n_independent_units": 30
+      },
+      "ood_loss_change": {
+        "DMP_FAST_SLOW|ALIGNED": {
+          "mean": 0.0009620341161886851,
+          "ci95": [
+            -0.0018666377943009139,
+            0.003754890440031886
+          ],
+          "n_independent_units": 30
+        },
+        "DMP_FAST_SLOW|BROKEN": {
+          "mean": -0.00024558864533901214,
+          "ci95": [
+            -0.0036771401514609655,
+            0.003206597963968912
+          ],
+          "n_independent_units": 30
+        },
+        "SHORT_STATE_CONTROL|ALIGNED": {
+          "mean": 0.0015067985902229946,
+          "ci95": [
+            -0.0016492331555734078,
+            0.004718274731809891
+          ],
+          "n_independent_units": 30
+        },
+        "SHORT_STATE_CONTROL|BROKEN": {
+          "mean": 0.0005567371845245361,
+          "ci95": [
+            -0.0028585737788428866,
+            0.00399782893558343
+          ],
+          "n_independent_units": 30
+        },
+        "GENERIC_GRU|ALIGNED": {
+          "mean": -0.0017142971977591515,
+          "ci95": [
+            -0.00424692329019308,
+            0.0007386452487359435
+          ],
+          "n_independent_units": 30
+        },
+        "GENERIC_GRU|BROKEN": {
+          "mean": -0.0011938789238532385,
+          "ci95": [
+            -0.004496379969641567,
+            0.0020720125983158724
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "advantage_by_n": {
+        "128": {
+          "mean": -0.007131214688221614,
+          "ci95": [
+            -0.011826265311489503,
+            -0.002354155083497367
+          ],
+          "n_independent_units": 30
+        },
+        "512": {
+          "mean": -0.00013263399402300516,
+          "ci95": [
+            -0.0021053097831706205,
+            0.001767378337681292
+          ],
+          "n_independent_units": 30
+        },
+        "2048": {
+          "mean": -0.0024302313725153607,
+          "ci95": [
+            -0.0036075996172924836,
+            -0.0012199959748735061
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "p_holm": 0.05057898842023159,
+      "task_gate_p_holm": 5.9998800023999525e-05,
+      "task_gate": "PASS",
+      "mechanism_specificity_gate": "NOT_MET",
+      "advantage_slope_p_raw": 0.09813803723925521,
+      "advantage_slope_p_holm": 0.19627607447851042,
+      "sample_efficiency_gate": "NOT_MET"
+    },
+    {
+      "family": "CONTEXTUAL_DECISION",
+      "interaction": {
+        "mean": 0.0010091145833333334,
+        "ci95": [
+          -0.00537109375,
+          0.007779947916666667
+        ],
+        "n_independent_units": 30
+      },
+      "aligned_advantage": {
+        "mean": 0.0015625,
+        "ci95": [
+          -0.005729166666666666,
+          0.009309895833333333
+        ],
+        "n_independent_units": 30
+      },
+      "p_raw": 0.7792444151116977,
+      "task_gate_improvement_null_minus_gru": {
+        "mean": 0.25166015625,
+        "ci95": [
+          0.24332682291666666,
+          0.26044921875
+        ],
+        "n_independent_units": 30
+      },
+      "task_gate_p_raw": 1.999960000799984e-05,
+      "advantage_slope_per_log2_n": {
+        "mean": -0.017700195312499997,
+        "ci95": [
+          -0.0228759765625,
+          -0.012743937174479183
+        ],
+        "n_independent_units": 30
+      },
+      "ood_loss_change": {
+        "DMP_FAST_SLOW|ALIGNED": {
+          "mean": 0.22096354166666668,
+          "ci95": [
+            0.20152913411458334,
+            0.23841145833333333
+          ],
+          "n_independent_units": 30
+        },
+        "DMP_FAST_SLOW|BROKEN": {
+          "mean": 0.2107421875,
+          "ci95": [
+            0.19007161458333333,
+            0.23004557291666666
+          ],
+          "n_independent_units": 30
+        },
+        "SHORT_STATE_CONTROL|ALIGNED": {
+          "mean": 0.15305989583333332,
+          "ci95": [
+            0.12994791666666666,
+            0.17620442708333334
+          ],
+          "n_independent_units": 30
+        },
+        "SHORT_STATE_CONTROL|BROKEN": {
+          "mean": 0.16149088541666667,
+          "ci95": [
+            0.13740234375,
+            0.18492838541666667
+          ],
+          "n_independent_units": 30
+        },
+        "GENERIC_GRU|ALIGNED": {
+          "mean": -0.0025390625,
+          "ci95": [
+            -0.01455078125,
+            0.009440104166666666
+          ],
+          "n_independent_units": 30
+        },
+        "GENERIC_GRU|BROKEN": {
+          "mean": -0.003352864583333333,
+          "ci95": [
+            -0.01500732421875,
+            0.008365885416666666
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "advantage_by_n": {
+        "128": {
+          "mean": 0.07236328125,
+          "ci95": [
+            0.05035807291666667,
+            0.09557291666666666
+          ],
+          "n_independent_units": 30
+        },
+        "512": {
+          "mean": 0.03505859375,
+          "ci95": [
+            0.013346354166666666,
+            0.05953776041666667
+          ],
+          "n_independent_units": 30
+        },
+        "2048": {
+          "mean": 0.0015625,
+          "ci95": [
+            -0.005632324218749999,
+            0.009407552083333333
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "p_holm": 0.7792444151116977,
+      "task_gate_p_holm": 5.9998800023999525e-05,
+      "task_gate": "PASS",
+      "mechanism_specificity_gate": "NOT_MET",
+      "advantage_slope_p_raw": 1.999960000799984e-05,
+      "advantage_slope_p_holm": 5.9998800023999525e-05,
+      "sample_efficiency_gate": "PASS"
+    }
+  ],
+  "data_scaling_by_family": [
+    {
+      "family": "DELAYED_ASSOCIATION",
+      "advantage_by_n": {
+        "128": {
+          "mean": -0.0015950520833333333,
+          "ci95": [
+            -0.005208333333333333,
+            0.00107421875
+          ],
+          "n_independent_units": 30
+        },
+        "512": {
+          "mean": -0.003125,
+          "ci95": [
+            -0.00830078125,
+            0.0013346354166666667
+          ],
+          "n_independent_units": 30
+        },
+        "2048": {
+          "mean": 0.0020833333333333333,
+          "ci95": [
+            -0.003483072916666667,
+            0.008268229166666667
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "advantage_slope_per_log2_n": {
+        "mean": 0.0009195963541666663,
+        "ci95": [
+          -0.00046386718749999954,
+          0.00244140625
+        ],
+        "n_independent_units": 30
+      },
+      "slope_p_raw": 0.24241515169696606,
+      "slope_p_holm": 0.24241515169696606,
+      "sample_efficiency_gate": "NOT_MET"
+    },
+    {
+      "family": "STATE_ESTIMATION",
+      "advantage_by_n": {
+        "128": {
+          "mean": -0.007131214688221614,
+          "ci95": [
+            -0.011826265311489503,
+            -0.002354155083497367
+          ],
+          "n_independent_units": 30
+        },
+        "512": {
+          "mean": -0.00013263399402300516,
+          "ci95": [
+            -0.0021053097831706205,
+            0.001767378337681292
+          ],
+          "n_independent_units": 30
+        },
+        "2048": {
+          "mean": -0.0024302313725153607,
+          "ci95": [
+            -0.0036075996172924836,
+            -0.0012199959748735061
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "advantage_slope_per_log2_n": {
+        "mean": 0.001175245828926564,
+        "ci95": [
+          -0.0001814769464544943,
+          0.002459975361513591
+        ],
+        "n_independent_units": 30
+      },
+      "slope_p_raw": 0.09813803723925521,
+      "slope_p_holm": 0.19627607447851042,
+      "sample_efficiency_gate": "NOT_MET"
+    },
+    {
+      "family": "CONTEXTUAL_DECISION",
+      "advantage_by_n": {
+        "128": {
+          "mean": 0.07236328125,
+          "ci95": [
+            0.05035807291666667,
+            0.09557291666666666
+          ],
+          "n_independent_units": 30
+        },
+        "512": {
+          "mean": 0.03505859375,
+          "ci95": [
+            0.013346354166666666,
+            0.05953776041666667
+          ],
+          "n_independent_units": 30
+        },
+        "2048": {
+          "mean": 0.0015625,
+          "ci95": [
+            -0.005632324218749999,
+            0.009407552083333333
+          ],
+          "n_independent_units": 30
+        }
+      },
+      "advantage_slope_per_log2_n": {
+        "mean": -0.017700195312499997,
+        "ci95": [
+          -0.0228759765625,
+          -0.012743937174479183
+        ],
+        "n_independent_units": 30
+      },
+      "slope_p_raw": 1.999960000799984e-05,
+      "slope_p_holm": 5.9998800023999525e-05,
+      "sample_efficiency_gate": "PASS"
+    }
+  ],
+  "cross_task_mechanism_specificity_gate": "NOT_MET",
+  "trial_loss_arrays_recalculated": 7020,
+  "unit_metric_rows": 7020,
+  "independent_verification": {
+    "file_hashes": "PASS",
+    "trial_loss_recalculation": "PASS",
+    "correspondence_marginals_and_derangements": "PASS",
+    "parameter_counts": "PASS",
+    "unit_and_cell_completeness": "PASS",
+    "family_specific_inference": "PASS"
+  },
+  "interpretation_ceiling": "Synthetic fast\u2013slow dynamics \u00d7 correspondence results only; no biological validation, universal transfer law, hardware claim, or NMI readiness follows."
+}

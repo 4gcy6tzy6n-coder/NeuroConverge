@@ -1,0 +1,9 @@
+{
+  "complete": true,
+  "task_instances": 30,
+  "per_image_rows": 230400,
+  "per_image_sha256": "5fad061d1780bbc51a011c144423ee32a267d84f20a2088aa9e4a05da09cdec7",
+  "runner_sha256": "530914b02269dfef1e2f74d680b9ed0064776f34daa0e1f763ebc53859090b23",
+  "protocol_sha256": "b4cf70b9e06b40d06ebae3b59a0bd5ab3e7a1b59938f7e827def5a363bba99d7",
+  "freeze_sha256": "56af7787bf0999f112bc5dee61769945d75d7f22250d75babfb3e8968fc59705"
+}

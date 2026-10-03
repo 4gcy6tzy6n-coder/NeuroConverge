@@ -1,0 +1,4 @@
+contrast,mean_mse_difference,ci_low,ci_high,paired_seed_blocks,positive_favors
+Action-only − state | hidden,-0.06809435853665491,-0.14107730049863676,-0.0035410228489582245,32,second named arm (lower MSE)
+Event-revealed − state,0.0019920746844945825,-0.0896781483796076,0.0816521438755444,32,second named arm (lower MSE)
+Action-only − state | no reversal,-0.041910616130735434,-0.10135457183696417,0.021931971878029772,32,second named arm (lower MSE)

@@ -1,0 +1,5 @@
+stage,elements,interpretation
+Source evidence,"Anatomy, activity, perturbation, behaviour",Evidence types do not uniquely specify an artificial implementation
+Computation,Source-supported operation,Requires computational interpretation
+Translation,"Signal, representation, objective, learning rule",Implementation choices must be stated and tested
+AI utility,Task performance under comparator controls,Utility is task- and comparator-dependent

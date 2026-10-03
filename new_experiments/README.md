@@ -1,8 +1,10 @@
-# NeuroConverge prospective validation V1
+# NeuroConverge synthetic validation studies
 
 **Authorization:** user selected “按方案推进并运行 M2/M5 实验” on 1 October 2026.
 
-This package holds two distinct synthetic validation modules. Each module must have a frozen protocol, source/code hashes, paired-seed outputs, and independent arithmetic/integrity verification. The modules do not share an outcome or estimand. No combined effect, p-value, or pooled accuracy is defined.
+The user later explicitly authorized a separate DMP fast–slow × correspondence experiment. That module is a post-result extension and is documented independently; its protocol, code and verifier were frozen before its own outcome run. A later held-out synthetic V1 PC→SST figure/ground package was also run prospectively after its own protocol freeze; its scope and post-run sign-direction amendment are recorded separately.
+
+This package holds distinct synthetic validation modules. Each module has its own frozen protocol, source/code hashes, seed-level outputs, and independent arithmetic/integrity verification. The modules do not share an outcome or estimand. No combined effect, p-value, or pooled accuracy is defined.
 
 ## Module status
 
@@ -10,6 +12,8 @@ This package holds two distinct synthetic validation modules. Each module must h
 |---|---|---|---|
 | M2 realized state vs action belief | Does an explicit execution-state observation improve a particular synthetic controller over action-conditioned inference under hidden reversals? | Two full canonical runs and both verifiers completed; deterministic scientific outputs match after declared timing exclusions. | Synthetic actuator-observability only. It is not the premotor RIM→AIY signal and cannot establish biological transfer or general AI benefit. |
 | M5 correspondence-preserved timing | Does preserving trial-specific temporal information change the utility of a source-inspired local learning rule relative to broken correspondence and generic/reference controls? | Frozen run complete; task-viability gate and independent verifier passed. Post-run comparator-matching caveat is recorded in its amendment. | Synthetic algorithmic evidence only. It cannot establish measured cerebellar synaptic dynamics or biological-to-AI transfer. |
+| DMP fast–slow × correspondence | Does a fixed fast–slow state pathway benefit specifically from correct context correspondence across delayed association, state estimation and contextual decision? | 30 task instances per family; 7,020 metrics and per-trial loss vectors; pre-run freeze and independent verification passed. No family met the positive mechanism-specificity gate. Contextual-decision sample-efficiency gate passed, but its full-data advantage and primary interaction were not detected. | Synthetic, post-result project extension inspired by already published fast–slow dual-memory work. It does not validate cortical biology, general transfer, or novelty of fast–slow memory. |
+| Prospective V1 PC→SST figure–ground V1 | Does feature-matched inhibitory pooling improve synthetic figure/ground segmentation specifically under aligned feature routing? | One complete run with 30 task instances, three nested sample sizes, IID and skewed-background tests; 230,400 per-image AP records; integrity verifier passed. Specificity gate failed. The AP interaction was positive under a broken-minus-aligned contrast, opposite to the contract narrative; selective/aligned pooling underperformed the global-pool control. | New source-informed synthetic mechanism/task package selected after earlier project results; the visual domain overlaps prior synthetic-visual work. Not a biological replication, project-level preregistration, or broad transfer validation. A post-run amendment records the contrast-sign wording error and comparator limits. |
 
 ## Shared reporting rules
 
@@ -17,7 +21,7 @@ This package holds two distinct synthetic validation modules. Each module must h
 - Keep every prescribed seed and arm in the record. Do not tune or rerun selectively after results.
 - A task-viability failure makes downstream transfer contrasts inconclusive under that protocol.
 - Report positive, negative, invalid and inconclusive outcomes using the frozen decision rules.
-- Both V1 modules are complete and verified. The prospective experimental program is now closed; follow-up variants require a separate explicit scope decision.
+- The four modules documented here are complete and verified. The DMP and prospective V1 packages were selected after earlier project outcomes and must not be described as project-level preregistration. The prospective V1 protocol has a sign-direction wording error; preserve the original contract and report the observed two-sided effect in the opposite direction, as documented in its post-run amendment. No additional variant is authorized by these results.
 
 ## Verified results
 
@@ -25,4 +29,8 @@ This package holds two distinct synthetic validation modules. Each module must h
 
 M5 result: CF-timed local `nMAE_BROKEN − nMAE_ALIGNED = 0.116588` (95% seed-bootstrap CI `[0.115072, 0.118065]`, 30/30 seeds positive). The task gate passed. The same-feature generic ridge comparator showed a larger correspondence effect (`0.202390`), and the higher-memory exact replay reference was `0.189552`; the RBF comparison is not a strict parameter match (see M5 `POSTRUN_INTERPRETATION_AMENDMENT_01.md`). Thus this establishes a bounded synthetic correspondence effect for that local rule, not a biological-provenance advantage.
 
-Each module folder contains its contract, runner/verifier, source manifest, complete seed-level output, summary, and execution record.
+DMP V1 result: no task family met the positive mechanism-specificity criterion. Delayed association failed its viability gate; state-estimation interaction was negative (−0.00218, adjusted P = 0.05058) and aligned DMP loss exceeded the short-state control; contextual-decision interaction was near zero (+0.00101, adjusted P = 0.77924). The predeclared sample-efficiency gate passed only for contextual decision: advantage was positive at N=128 and N=512, not detected at N=2,048, with a negative slope (adjusted P = 0.000060). The same model's aligned longer-delay loss increased by 0.22096 (95% CI `[0.20153, 0.23841]`) in that family. These results do not establish fast–slow mechanism specificity or general transfer.
+
+Prospective V1 result: the synthetic task was viable (generic-context AP minus the 9/121 prevalence null = +0.37219, 95% CI `[0.36046, 0.38379]`). At N=512 IID, the frozen interaction was +0.01603 AP (95% CI `[0.00815, 0.02357]`, two-sided sign-flip P = 0.00060); because the formula is broken minus aligned and AP is higher-is-better, this is opposite to the protocol narrative's alignment-benefit prediction. Selective/aligned AP was 0.42202 versus 0.44409 for the global-pool control; their difference was −0.02208 (95% CI `[−0.02737, −0.01664]`). Thus the positive mechanism-specificity gate failed. The OOD interaction had the same direction (+0.01692, 95% CI `[0.00553, 0.02913]`), while sample-size slope evidence was inconclusive. The protocol sign error, visual-domain overlap, and limited generic comparator are recorded in `PROSPECTIVE_V1/POSTRUN_INTERPRETATION_AMENDMENT.md`.
+
+Each module folder contains its contract, runner/verifier, complete seed-level output, summary, and execution record. `PROSPECTIVE_V1/` retains the per-image AP records, seed-level means, pre-run freeze, verifier output and post-run interpretation amendment.

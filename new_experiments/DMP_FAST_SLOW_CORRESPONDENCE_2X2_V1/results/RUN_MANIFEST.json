@@ -1,0 +1,20 @@
+{
+  "study_id": "DMP_FAST_SLOW_CORRESPONDENCE_2X2_V1",
+  "status": "RUN_COMPLETE_UNVERIFIED",
+  "runtime_seconds": 1053.9753911495209,
+  "python": "3.9.6 (default, Jan  9 2026, 11:03:41) \n[Clang 17.0.0 (clang-1700.6.4.2)]",
+  "platform": "macOS-26.2-arm64-arm-64bit",
+  "numpy": "2.0.2",
+  "torch": "2.8.0",
+  "deterministic_algorithms": true,
+  "torch_threads": 1,
+  "units_per_family": 30,
+  "rows": 7020,
+  "trial_loss_arrays": 7020,
+  "contract_sha256": "e3ebe5039b2f684e4c1a519a9cc741660db42af4773b7ff4f3c47af105b511cc",
+  "runner_sha256": "4d4a9af0c66b3e928e20c8809d54ef2a1a562c22de812c08bce778900ff2aa85",
+  "metrics_sha256": "5c380d26f46f2e31485a74722dd46cfd3ee6335fade9078ba0015a77809ac22e",
+  "task_instance_manifest_sha256": "34c78cf50f81ad52fd81df42661d908f4bc68cfc6fecea698ddc8429bd1975cf",
+  "trial_losses_sha256": "5f065840f4e1db1c4ce71cea7cb0ff6cc6da628c6934205496eec959cf2d5e80",
+  "trial_loss_index_sha256": "a1d05f6ec4d0a7dbc183114fa5d4f593b57ef62b443952b4e861d4dcd62c9530"
+}

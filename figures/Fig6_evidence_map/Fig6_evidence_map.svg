@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="518.4pt" height="367.2pt" viewBox="0 0 518.4 367.2" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-03T22:17:47.593402</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 367.2 
+L 518.4 367.2 
+L 518.4 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 15.31872 98.086464 
+L 503.08128 98.086464 
+L 503.08128 70.384896 
+L 15.31872 70.384896 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #f4f7f8"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 15.31872 131.868864 
+L 503.08128 131.868864 
+L 503.08128 104.167296 
+L 15.31872 104.167296 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 15.31872 165.651264 
+L 503.08128 165.651264 
+L 503.08128 137.949696 
+L 15.31872 137.949696 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #f4f7f8"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 15.31872 199.433664 
+L 503.08128 199.433664 
+L 503.08128 171.732096 
+L 15.31872 171.732096 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 15.31872 233.216064 
+L 503.08128 233.216064 
+L 503.08128 205.514496 
+L 15.31872 205.514496 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #f4f7f8"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 15.31872 266.998464 
+L 503.08128 266.998464 
+L 503.08128 239.296896 
+L 15.31872 239.296896 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 15.31872 300.780864 
+L 503.08128 300.780864 
+L 503.08128 273.079296 
+L 15.31872 273.079296 
+z
+" clip-path="url(#pdcd39b8322)" style="fill: #f4f7f8"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #2864a5" x="20.3472" y="57.646234" transform="rotate(-0 20.3472 57.646234)">Evidence question</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #2864a5" x="183.7728" y="57.646234" transform="rotate(-0 183.7728 57.646234)">Record-level status</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 8.2px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #2864a5" x="379.88352" y="57.64239" transform="rotate(-0 379.88352 57.64239)">Inference ceiling</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 82.468645)">Connectome structure → task</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 89.621934)">computation</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 78.881692)">M0 bounded (round linkage pending);</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 86.14091)">Fish1.5 association unsupported; null</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 93.2942)">indeterminate</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 82.470285)">Frozen assay / one</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 89.705606)">specimen</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 116.169014)">Biological computation in</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 123.404334)">source system</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 116.169014)">Published worm evidence; project</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 123.404334)">reanalysis schema-blocked</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 116.251045)">Published cell-class</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 123.404334)">scope</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 149.943375)">Execution feedback →</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 157.194773)">artificial utility</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 149.953765)">M2: realized-state input worse than</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 157.205164)">action-only; GRU/PF lower MSE</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #202a33" x="379.88352" y="153.613917" transform="rotate(-0 379.88352 153.613917)">One synthetic plant</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 183.725775)">Temporal correspondence →</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 190.977173)">artificial utility</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 183.727415)">M5: local-rule effect; generic ridge</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 191.060845)">and replay effects larger</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 183.778657)">One synthetic</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 191.013978)">generator</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 217.557229)">Fast–slow dynamics ×</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 224.79255)">correspondence</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 217.55887)">DMP: no family passed specificity;</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 224.79419)">contextual small-data signal only</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 217.508175)">Three synthetic</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 224.841604)">families; post-result</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 251.380645)">Feature-matched inhibition</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(20.3472 258.533934)">× correspondence</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 251.35002)">V1: interaction opposite prediction;</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 258.503309)">aligned selective pool worse</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 251.343457)">One synthetic visual</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 258.578778)">task; sign error</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #202a33" x="20.3472" y="288.739689" transform="rotate(-0 20.3472 288.739689)">General transfer law</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 285.164685)">Not established by portfolios or V1</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(183.7728 292.400006)">test</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 281.504369)">Retrospective</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 288.657658)">synthesis + one</text>
+    <text style="font-size: 7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(379.88352 295.892978)">synthetic test</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 700; font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #b64c4c" transform="translate(20.3472 328.965619)">Endpoints and units differ; no cross-task effect is calculated. V1 was selected after earlier results, overlaps the prior visual domain,</text>
+    <text style="font-weight: 700; font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #b64c4c" transform="translate(20.3472 336.247781)">and its frozen AP contrast had a sign-direction wording error. This evidence map is retrospective, not a validated causal hierarchy.</text>
+   </g>
+  </g>
+  <g id="text_26">
+   <text style="font-weight: 700; font-size: 11px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="15.552" y="17.053594" transform="rotate(-0 15.552 17.053594)">Evidence map: what is supported, blocked or unresolved</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pdcd39b8322">
+   <rect x="7.776" y="18.36" width="502.848" height="337.824"/>
+  </clipPath>
+ </defs>
+</svg>

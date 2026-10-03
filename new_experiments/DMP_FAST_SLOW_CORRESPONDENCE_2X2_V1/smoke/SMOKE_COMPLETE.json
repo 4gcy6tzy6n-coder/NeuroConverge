@@ -1,0 +1,11 @@
+{
+  "family": "DELAYED_ASSOCIATION",
+  "shape_checks": "PASS",
+  "finite_output": "PASS",
+  "derangement_and_marginal": "PASS",
+  "parameter_count": "PASS",
+  "dmp_trainable_parameters": 1385,
+  "gru_trainable_parameters": 1372,
+  "outcomes_summarized": false,
+  "task_mapping_entries": 4
+}

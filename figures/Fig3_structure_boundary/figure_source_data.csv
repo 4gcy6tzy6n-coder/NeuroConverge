@@ -1,0 +1,4 @@
+record,estimate,ci_low,ci_high,permutation_p,unit_or_status,source
+Fish1.5 E1 recurrence-persistence,-0.10961965128026348,-0.29322829156871244,0.13382410486399873,0.8337166283371663,one specimen; 82 neurons,evidence/FISH15_PRIMARY_RESULT.json
+Fish1.5 frozen topology null defined,139,,,,graphs,evidence/FISH15_PRIMARY_RESULT.json
+Fish1.5 frozen topology null undefined,861,,,,graphs,evidence/FISH15_PRIMARY_RESULT.json

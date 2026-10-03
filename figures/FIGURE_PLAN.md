@@ -1,13 +1,14 @@
-# Five-figure plan
+# Six-figure plan
 
-The figures are source-linked internal-review exports. Each has a generation script, CSV source-data table, vector PDF/SVG, PNG review copy, alignment audit, and SHA-256 manifest entry. Rights and final source-revision audits remain open; these exports are not submission-ready.
+Figures are source-linked internal-review exports. Each includes a vector PDF/SVG, 300-dpi PNG, underlying CSV source data, alignment audit and SHA-256 manifest entry. The files have been visually inspected after export. Source ownership, reuse rights, final revision freeze and venue readiness remain open.
 
 | Figure | Purpose | Evidence shown | Guardrail |
 |---|---|---|---|
-| 1. Evidence map | Separate biological structure, source-supported computation, information correspondence and artificial utility across both portfolios. | Retrospective synthesis; two project lanes. | Dotted separators indicate separate tests, not a causal sequence or validated hierarchy. |
-| 2. Structure boundary | Show Fish1.5 association and invalid topology-null count, with M0 comparator definition. | One specimen, 82 neurons; 139/1,000 null correlations defined and 861 undefined; M0 bounded assay conclusion. | No universal structure claim or animal-population inference. |
-| 3. Motor feedback | Pair the M2 causal workflow with primary and diagnostic AcRKN contrasts. | Exact preceding executed-displacement sign versus action-only input; 32 paired seed blocks across three conditions. | Synthetic actuator observability only; signal is not the worm premotor signal; outcome-informed, not biological validation. |
-| 4. Temporal correspondence | Show M5 correspondence effects and absolute aligned/broken errors across local and generic controls. | 30 paired task seeds; CF-inspired local rule, no-trace/time-shuffle controls, same-feature ridge and full-input replay. | Ridge is feature-matched only; objectives/capacity differ; offline full-trial features; no biological LTD claim. |
-| 5. Evidence boundaries | Summarize what each evidence stream supports and its inference ceiling. | Claim-level statuses across source records and V1 tests. | No pooled effects, validated hierarchy or general transfer law. |
+| 1. Motivation | Explain why biological provenance leaves implementation decisions open. | Source evidence, computation, translation choices and task utility. | Conceptual framing only; no causal claim or empirical result. |
+| 2. Evidence framework | Organize the NeuroMotif and NeuroMech portfolios around four distinct evidence questions. | Retrospective project coverage across structure, computation, correspondence and utility. | Proposed map; not a validated hierarchy or causal chain. |
+| 3. Structure boundary | Show the source-linked Fish1.5 association and frozen-null result. | One specimen, 82 neurons; 139/1,000 null correlations defined; 861 undefined. | No animal-population claim; M0 remains a text/SI result because canonical round-level data are not in the integration snapshot. |
+| 4. Motor feedback | Pair M2 controller inputs/actuation loop with primary and diagnostic contrasts. | Exact executed-displacement sign versus action-only input; 32 paired seed blocks. | Synthetic post-actuator observation; not the worm premotor signal or biological transfer validation. |
+| 5. Temporal correspondence | Show the M5 synthetic pipeline, manipulation and outcomes. | 40-bin input, 16 full-trial RBF features, local update, aligned/broken regimes, local and generic results. | Offline features, outcome-informed test, unmatched objectives/capacity; no biological LTD validation. |
+| 6. Evidence boundaries | Summarize record status and inference ceilings. | Heterogeneous source records and separate M2/M5 units and endpoints. | No pooled effect, validated transfer law or claim of absence. |
 
-All figure means, intervals and labels are recoverable from the accompanying source data. Panel layout was rendered and visually inspected after export; the audit manifest records hashes and panel alignment checks.
+Figure means, intervals, labels and algorithm definitions are recoverable from accompanying source-data files. Figure count is six, the NMI display-item ceiling. Layout and alignment checks do not establish scientific novelty, reuse rights or submission readiness.

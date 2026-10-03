@@ -1,0 +1,36 @@
+{
+  "study_id": "DMP_FAST_SLOW_CORRESPONDENCE_2X2_V1",
+  "freeze_status": "FROZEN_BEFORE_CONFIRMATORY_OUTCOME_RUN",
+  "frozen_at_local": "2026-10-03T19:47:00.561901+08:00",
+  "contract_sha256": "e3ebe5039b2f684e4c1a519a9cc741660db42af4773b7ff4f3c47af105b511cc",
+  "runner_sha256": "4d4a9af0c66b3e928e20c8809d54ef2a1a562c22de812c08bce778900ff2aa85",
+  "verifier_sha256": "229a35f982f5081f88acf15a5f03b277f7db2b588d028113efaa2c5cb448dc86",
+  "runtime": {
+    "python": "3.9.6 (default, Jan  9 2026, 11:03:41) \n[Clang 17.0.0 (clang-1700.6.4.2)]",
+    "numpy": "2.0.2",
+    "torch": "2.8.0",
+    "platform": "macOS-26.2-arm64-arm-64bit",
+    "torch_threads": 1,
+    "deterministic_algorithms": true
+  },
+  "n_units_per_family": 30,
+  "families": [
+    "DELAYED_ASSOCIATION",
+    "STATE_ESTIMATION",
+    "CONTEXTUAL_DECISION"
+  ],
+  "scales": [
+    128,
+    512,
+    2048
+  ],
+  "n_test_each_split": 512,
+  "n_initializations": 2,
+  "epochs": 10,
+  "batch_size": 64,
+  "learning_rate": 0.003,
+  "random_seed_derivation": "SHA256(contract_sha256 | family | unit | role), first 64 bits modulo 2^31-1",
+  "inference_unit": "synthetic task-instance seed; trial and model initialization nested",
+  "confirmatory_output_path": "results/ (must be empty)",
+  "outcome_access_before_freeze": "no confirmatory outcomes generated or summarized"
+}

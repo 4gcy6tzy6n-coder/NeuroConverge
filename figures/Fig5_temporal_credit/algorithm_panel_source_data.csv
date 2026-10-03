@@ -1,0 +1,7 @@
+stage,definition
+Input,40-bin noisy temporal pulse and interval target
+Representation,16 Gaussian RBF features computed from the complete trial array
+Update,"One-pass eligibility-gated softmax update; artificial, not biological LTD"
+Aligned regime,Each input remains paired with its generating target
+Broken regime,Targets independently permuted within training and test splits
+Endpoint,Held-out normalized mean absolute error

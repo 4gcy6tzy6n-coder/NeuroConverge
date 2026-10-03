@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "metrics_sha256": "5c380d26f46f2e31485a74722dd46cfd3ee6335fade9078ba0015a77809ac22e",
+  "trial_losses_sha256": "5f065840f4e1db1c4ce71cea7cb0ff6cc6da628c6934205496eec959cf2d5e80",
+  "summary_sha256": "8be7907953aa24aef08e46522d4930c8cc641d01d90cf28e75ab7e4cf0258a1c",
+  "verifier_sha256": "229a35f982f5081f88acf15a5f03b277f7db2b588d028113efaa2c5cb448dc86",
+  "freeze_sha256": "68a3f493e41efee2bf1a52ad6294d1384807b357dab12fe666b0b3a1227e57ec"
+}

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="518.4pt" height="248.4pt" viewBox="0 0 518.4 248.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-03T22:17:46.800604</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 248.4 
+L 518.4 248.4 
+L 518.4 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 27.387072 127.001952 
+L 126.448128 127.001952 
+Q 134.493696 127.001952 134.493696 123.266016 
+L 134.493696 59.755104 
+Q 134.493696 56.019168 126.448128 56.019168 
+L 27.387072 56.019168 
+Q 19.341504 56.019168 19.341504 59.755104 
+L 19.341504 123.266016 
+Q 19.341504 127.001952 27.387072 127.001952 
+z
+" clip-path="url(#p06271bb962)" style="fill: #f2f5f7; stroke: #2864a5; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 153.099072 127.001952 
+L 252.160128 127.001952 
+Q 260.205696 127.001952 260.205696 123.266016 
+L 260.205696 59.755104 
+Q 260.205696 56.019168 252.160128 56.019168 
+L 153.099072 56.019168 
+Q 145.053504 56.019168 145.053504 59.755104 
+L 145.053504 123.266016 
+Q 145.053504 127.001952 153.099072 127.001952 
+z
+" clip-path="url(#p06271bb962)" style="fill: #f2f5f7; stroke: #138a8a; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 278.811072 127.001952 
+L 377.872128 127.001952 
+Q 385.917696 127.001952 385.917696 123.266016 
+L 385.917696 59.755104 
+Q 385.917696 56.019168 377.872128 56.019168 
+L 278.811072 56.019168 
+Q 270.765504 56.019168 270.765504 59.755104 
+L 270.765504 123.266016 
+Q 270.765504 127.001952 278.811072 127.001952 
+z
+" clip-path="url(#p06271bb962)" style="fill: #f2f5f7; stroke: #d47a18; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 404.523072 127.001952 
+L 491.012928 127.001952 
+Q 499.058496 127.001952 499.058496 123.266016 
+L 499.058496 59.755104 
+Q 499.058496 56.019168 491.012928 56.019168 
+L 404.523072 56.019168 
+Q 396.477504 56.019168 396.477504 59.755104 
+L 396.477504 123.266016 
+Q 396.477504 127.001952 404.523072 127.001952 
+z
+" clip-path="url(#p06271bb962)" style="fill: #f2f5f7; stroke: #b64c4c; stroke-width: 1.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #202a33" x="22.86144" y="25.023324" transform="rotate(-0 22.86144 25.023324)">Biological evidence leaves key implementation choices open</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #2864a5" x="76.9176" y="81.857666" transform="rotate(-0 76.9176 81.857666)">SOURCE EVIDENCE</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(48.905327 102.264858)">Anatomy · activity</text>
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(39.228248 110.111744)">perturbation · behaviour</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #138a8a" x="202.6296" y="81.857666" transform="rotate(-0 202.6296 81.857666)">COMPUTATION</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(173.428631 102.252377)">Which operation is</text>
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(163.556858 110.124225)">supported in the source?</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #d47a18" x="328.3416" y="81.857666" transform="rotate(-0 328.3416 81.857666)">TRANSLATION</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(292.625827 102.266522)">Signal · representation</text>
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(291.641256 110.113408)">objective · learning rule</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #b64c4c" x="447.768" y="81.857666" transform="rotate(-0 447.768 81.857666)">AI UTILITY</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(419.155 102.306459)">Benefit under task</text>
+    <text style="font-size: 7.1px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(409.49068 110.070143)">and comparator controls</text>
+   </g>
+   <g id="patch_6">
+    <path d="M 130.458144 91.51056 
+Q 138.514055 91.51056 145.451932 91.51056 
+" style="fill: none; stroke: #68737d; stroke-linecap: round"/>
+    <path d="M 142.251932 89.91056 
+L 145.451932 91.51056 
+L 142.251932 93.11056 
+" style="fill: none; stroke: #68737d; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 256.170144 91.51056 
+Q 264.226055 91.51056 271.163932 91.51056 
+" style="fill: none; stroke: #68737d; stroke-linecap: round"/>
+    <path d="M 267.963932 89.91056 
+L 271.163932 91.51056 
+L 267.963932 93.11056 
+" style="fill: none; stroke: #68737d; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 381.882144 91.51056 
+Q 389.938055 91.51056 396.875932 91.51056 
+" style="fill: none; stroke: #68737d; stroke-linecap: round"/>
+    <path d="M 393.675932 89.91056 
+L 396.875932 91.51056 
+L 393.675932 93.11056 
+" style="fill: none; stroke: #68737d; stroke-linecap: round"/>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #2864a5" x="259.2" y="156.62823" transform="rotate(-0 259.2 156.62823)">Each transition needs its own evidence and comparator</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(149.356875 182.351648)">A biological label alone does not fix the model input, objective,</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #202a33" transform="translate(147.80125 191.606272)">training procedure or the alternative that defines an advantage.</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #68737d" x="259.2" y="224.02782" transform="rotate(-0 259.2 224.02782)">Motivating distinction; not a causal model or a result established by these portfolios.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p06271bb962">
+   <rect x="7.776" y="7.452" width="502.848" height="233.496"/>
+  </clipPath>
+ </defs>
+</svg>
