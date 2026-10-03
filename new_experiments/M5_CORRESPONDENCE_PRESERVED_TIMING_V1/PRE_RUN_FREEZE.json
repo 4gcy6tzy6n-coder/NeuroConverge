@@ -1,0 +1,15 @@
+{
+  "status": "FROZEN_BEFORE_FIRST_OUTCOME_RUN",
+  "frozen_at_utc": "2026-10-01T13:36:28Z",
+  "repository_head_at_freeze": "b55871dec1207b2c9e8b63270ebcc7871f0feaca",
+  "classification": "synthetic post-hoc project extension; prospective contract frozen before first outcome run",
+  "frozen_files_sha256": {
+    "CONTRACT.md": "1434055cc21047edfd8185d50e6dc207c640ddb46aa3cf7b1293a8353c0e7658",
+    "run_experiment.py": "f7b66e0248cf255efbe4df9dcaaf0cb467f12ffb94af67fb5a79aad34933fbe3"
+  },
+  "environment_at_freeze": {
+    "python": "3.9.6",
+    "numpy": "2.0.2"
+  },
+  "run_policy": "one full run only; no tuning, rescue, arm replacement, seed removal, or protocol amendment after outcome inspection"
+}

@@ -1,0 +1,611 @@
+{
+  "schema_version": 2,
+  "audit_date": "2026-10-01",
+  "project": "NeuroConverge",
+  "scope_freeze": "AUTHOR_DIRECTED: no additional experiments by default; specifically authorized M2 and M5 V1 synthetic validation modules on 2026-10-01 are now complete.",
+  "artifact_freeze": "INCOMPLETE: paper-critical NeuroMech evidence includes local working-tree additions/modifications; this manifest hashes cited files without changing source histories.",
+  "portfolio_matrix": {
+    "source_path_in_neuromech_worktree": "summery/PROJECT_OWNER_EVIDENCE_MATRIX_REFRESH_02/PROJECT_EVIDENCE_CLASSIFICATION_MATRIX_V3.csv",
+    "sha256": "edb3b546d64e8658e9b07d0e23f336d9da151508c6d600025ddeb646d3daad4b",
+    "row_count": 39,
+    "snapshot_commit": "555c064f4ff3153c871808c3f191b9934a18eaf5",
+    "git_state": "?? summery/PROJECT_OWNER_EVIDENCE_MATRIX_REFRESH_02/PROJECT_EVIDENCE_CLASSIFICATION_MATRIX_V3.csv"
+  },
+  "sources": [
+    {
+      "name": "NeuroMotif",
+      "role": "Structure / Connectome Route",
+      "remote": "https://github.com/4gcy6tzy6n-coder/NeuroMotif.git",
+      "public_ref": "refs/heads/main",
+      "public_commit": "1adc07ffc735cf458116ca36c9f4875708034d4a",
+      "worktree_state": "clean at audit",
+      "scope_note": "Public main includes the M12 record and Fish1.5 package; M0 full report / parts of the source chain are local to the NeuroMech workspace."
+    },
+    {
+      "name": "NeuroMech-public-publication",
+      "role": "Mechanism / Transfer Route; selected audited result packages",
+      "remote": "https://github.com/4gcy6tzy6n-coder/NeuroMech.git",
+      "public_ref": "refs/heads/experiment-publication",
+      "public_commit": "3e5c458f15b2cad7aa6c5703b1827763e84343bb",
+      "worktree_state": "2 local changed/untracked paths at audit",
+      "scope_note": "Public route contains the independently checked M2 placement and selected M5 source/transfer packages; it does not include the full local M0-M12 evidence inventory."
+    },
+    {
+      "name": "NeuroMech-local-route-D",
+      "role": "Full retrospective portfolio and source-to-claim audit",
+      "remote": "https://github.com/4gcy6tzy6n-coder/NeuroMech.git",
+      "base_commit": "555c064f4ff3153c871808c3f191b9934a18eaf5",
+      "dirty_or_untracked_paths_at_audit": 387,
+      "paper_critical_snapshot_overlay_files": [
+        {
+          "path_in_source_worktree": "PHASE1_FALSIFICATION_REPORT.md",
+          "sha256": "84fda6bd0ab19f733e3be20581fed105d21405cca33fe7b29ac8a463e20dc3eb",
+          "bytes": 22890,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "RR18/README.md",
+          "sha256": "8bc948465543aa2f860d4fca8717f39c39512100dcf6bad339f3fffb9fd5ac7e",
+          "bytes": 2275,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "RR18_AGENTS.md",
+          "sha256": "f4948bd71b0648f687fe3809607edc57acf2ee5fc8334f76e8457cd2c9f12b0c",
+          "bytes": 28695,
+          "git_state": "M RR18_AGENTS.md",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/DROSOPHILA_COUNTEREVIDENCE_NATURAL_SCENE_V1/summary.json",
+          "sha256": "421c8ff6a9163028715a7e16756f33e861f2d4dcd081620933d9a3626d02919e",
+          "bytes": 9214,
+          "git_state": "?? data/results/DROSOPHILA_COUNTEREVIDENCE_NATURAL_SCENE_V1/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/DROSOPHILA_COUNTEREVIDENCE_ROBUSTNESS_V1/summary.json",
+          "sha256": "62406ebaaed08246ce2ef0fa674b461ca585104d1789c7d6388c2e804ceb4655",
+          "bytes": 10667,
+          "git_state": "?? data/results/DROSOPHILA_COUNTEREVIDENCE_ROBUSTNESS_V1/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/FISH15_POSTRESULT_RECURRENCE_NULL_V1/CONDITIONED_NULL_SUMMARY.json",
+          "sha256": "534be24b24c9a5b0b2a14e7bbe3ba405c8c2fd9c4a6c2e06aa5de6cf157fa04c",
+          "bytes": 1201,
+          "git_state": "?? data/results/FISH15_POSTRESULT_RECURRENCE_NULL_V1/CONDITIONED_NULL_SUMMARY.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/FISH15_POSTRESULT_RECURRENCE_NULL_V1/RESULTS.md",
+          "sha256": "71f92369c5dd57f0e7c64c7ae71158b3131c597ec681ff097065933721f37e88",
+          "bytes": 3374,
+          "git_state": "?? data/results/FISH15_POSTRESULT_RECURRENCE_NULL_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M11_CEREBELLAR_ELIGIBILITY_LATENT_STATE_V1/M11_POSTRUN_VERIFICATION.json",
+          "sha256": "5c926e4f068df2096111336bc215d3deda65f26d0b49c01ae427fc8868587d3e",
+          "bytes": 2493,
+          "git_state": "?? data/results/M11_CEREBELLAR_ELIGIBILITY_LATENT_STATE_V1/M11_POSTRUN_VERIFICATION.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M11_CEREBELLAR_ELIGIBILITY_LATENT_STATE_V1/M11_RESULT.json",
+          "sha256": "293da05d2edfc22b0cbcb8fa628a514ea066d5ba0c51c7b0b08fce1eb302af2a",
+          "bytes": 5750,
+          "git_state": "?? data/results/M11_CEREBELLAR_ELIGIBILITY_LATENT_STATE_V1/M11_RESULT.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_CLOSED_LOOP_ACTIVE_SENSING_V1/summary.json",
+          "sha256": "238a860006f221204aa004e3b05f27a1d164f30de125503b8767a8540cbdfcf7",
+          "bytes": 8476,
+          "git_state": "?? data/results/M2_CLOSED_LOOP_ACTIVE_SENSING_V1/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_CROSS_TASK_STATE_FEEDBACK_V1/summary.json",
+          "sha256": "977585ed6946b9a7f5246dc5bec9afa6d02cf732c74eb4b9af3318620ddac38d",
+          "bytes": 4950,
+          "git_state": "?? data/results/M2_CROSS_TASK_STATE_FEEDBACK_V1/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_FEEDBACK_SITE_SPECIFICITY_V3/summary.json",
+          "sha256": "595bcd0db99812e140d6bf69d1cf51a9cfe489e597478c9f1fc517c09c242ba0",
+          "bytes": 7558,
+          "git_state": "?? data/results/M2_FEEDBACK_SITE_SPECIFICITY_V3/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_FEEDBACK_SITE_SPECIFICITY_V4/summary.json",
+          "sha256": "ca2bba7e6ce66b32de39f413a2569bde34cdb63717d26290ffa9c8c8f5cde11c",
+          "bytes": 12150,
+          "git_state": "?? data/results/M2_FEEDBACK_SITE_SPECIFICITY_V4/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_FORWARD_STATE_DECISION_TRANSFER_V1/summary.json",
+          "sha256": "e25d538428ef2a28098faff9f4615a772b5fd33665d24b79ab1eae9bfd5f12ad",
+          "bytes": 12604,
+          "git_state": "?? data/results/M2_FORWARD_STATE_DECISION_TRANSFER_V1/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_FORWARD_STATE_SENSORY_GATE_V2/summary.json",
+          "sha256": "b91d70e6e9df763f0151552ee2472634f672ed94a2bb69c4915f71d9930f7de0",
+          "bytes": 3516,
+          "git_state": "?? data/results/M2_FORWARD_STATE_SENSORY_GATE_V2/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_FORWARD_STATE_SENSORY_GATE_V3/summary.json",
+          "sha256": "c046babc8ee87c8e077c7c2b014a5a78083990993baff4590b08436a5b422482",
+          "bytes": 20236,
+          "git_state": "?? data/results/M2_FORWARD_STATE_SENSORY_GATE_V3/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_JI2021_FEEDBACK_DYNAMICS/summary.json",
+          "sha256": "5770a1c33e46073980d3882d55b025b90c4354820326ba383f2cc672cefd252a",
+          "bytes": 5757,
+          "git_state": "?? data/results/M2_JI2021_FEEDBACK_DYNAMICS/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_JI2021_FEEDBACK_SITE_CONTROL_V1/summary.json",
+          "sha256": "f034bab8e9b3971565946b16cc4414dd107b0b4fd34384d3ec629bafe33f4557",
+          "bytes": 1973,
+          "git_state": "?? data/results/M2_JI2021_FEEDBACK_SITE_CONTROL_V1/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_JI2021_FEEDBACK_SITE_CONTROL_V2/summary.json",
+          "sha256": "4999cba0e21ebe7ea3c3d51ac1eee021c0dbe278013ad6a40bf65673063fb3ab",
+          "bytes": 5054,
+          "git_state": "?? data/results/M2_JI2021_FEEDBACK_SITE_CONTROL_V2/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_RIM_ABLATION_SOURCE_REANALYSIS/summary.json",
+          "sha256": "8f99dbed882bfd9114675e0f68fd2806b374757b79bf82d027887b0b3de086c5",
+          "bytes": 4206,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/M2_TARGETED_GAIN_OPTIMIZATION/primary_result.json",
+          "sha256": "6e3f3e0e138e96f58888e14ac1bb70f880f1f1952af6dfd465138214a0323082",
+          "bytes": 1028,
+          "git_state": "?? data/results/M2_TARGETED_GAIN_OPTIMIZATION/primary_result.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M4_CA3/results_v2_unclamped_method_correction/summary.json",
+          "sha256": "aadd610252c0fbc01a2d997d0fd3418f112743589b800177a4151097587081a5",
+          "bytes": 35041,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/M5_CEREBELLAR/results_v3_local_norm_correction/summary.json",
+          "sha256": "461dfd792eb07106f326511afc8a4683a8dac0650e165d78f899f7ee9eef9dca",
+          "bytes": 3573,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/M5_DELAYED_REWARD_BANDIT/primary_result.json",
+          "sha256": "7fef25b3bf38143a3dbb1b7c01eecab7d0cb5e06a7e57f643a3e508dcd6ce646",
+          "bytes": 2101,
+          "git_state": "?? data/results/M5_DELAYED_REWARD_BANDIT/primary_result.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M5_ELIGIBILITY_TEMPORAL_XOR_V2/summary.json",
+          "sha256": "8dd3a45f7a21378b766d3045607050fa9263d30adf6f6f0a5bd644916d8c1d48",
+          "bytes": 971,
+          "git_state": "?? data/results/M5_ELIGIBILITY_TEMPORAL_XOR_V2/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M5_RECURRENT_RESERVOIR_BANDIT/primary_result.json",
+          "sha256": "c520d22b6a943c33a5c0ff4477c40e142f43dc9b92cbc623cf45e8814b83131f",
+          "bytes": 2168,
+          "git_state": "?? data/results/M5_RECURRENT_RESERVOIR_BANDIT/primary_result.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M5_TASK_GENERATOR_GENERALIZATION/primary_result.json",
+          "sha256": "37826d7076d454eae959f7eec9d0a92db5ae803ef1f3251c0259f3a5852cb94c",
+          "bytes": 2994,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/M6_STATE_GATED_INFERENCE/summary.json",
+          "sha256": "d73097ac72f1afe29c4b44c83a621d1023e065dd85279331e8e91eecdf4ce1d2",
+          "bytes": 8741,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/M7_TEMPORAL_CORRELATION_BOUNDARY/analysis_v1_objective_stratified.json",
+          "sha256": "7f588c8264b0dc565759b925f54ca2c904137097858e79081aa11f31169c8e22",
+          "bytes": 17231,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "data/results/M8_MEMORY_MATCHED_REPLAY_ANALYSIS/summary.json",
+          "sha256": "20f18dc8b88d8139d5ea2154b8c532cb873bace1084cc3a77aaaa57a208d9db5",
+          "bytes": 3170,
+          "git_state": "?? data/results/M8_MEMORY_MATCHED_REPLAY_ANALYSIS/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "data/results/M8_TRACE_HORIZON_FRONTIER/summary.json",
+          "sha256": "073808a997a70dec9665a7c0aa3ece53da5794b9a7de96ad720c9d6c120d0ca4",
+          "bytes": 11445,
+          "git_state": "?? data/results/M8_TRACE_HORIZON_FRONTIER/summary.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/biological_validation/O3_ROUTE2_REPORT_CLAIM_VERIFICATION_01.md",
+          "sha256": "824eea1cb3e26f5a35e3ae7554db412eb3f3f704222b774b418f0cc477053b91",
+          "bytes": 4548,
+          "git_state": "?? experiments/biological_validation/O3_ROUTE2_REPORT_CLAIM_VERIFICATION_01.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m10_m5_eprop_temporal_xor/results/M10_FINAL_STATUS.json",
+          "sha256": "fa15aa00f978c4e09a086054564991bbeac621f791afaed79f8e8acf764b03ba",
+          "bytes": 1032,
+          "git_state": "?? experiments/m10_m5_eprop_temporal_xor/results/M10_FINAL_STATUS.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m11_cerebellar_eligibility_latent_state/M11_CONTRACT.md",
+          "sha256": "cccc3b17f1655adf0093a5810d5b7153b0d7572739b4d58d99c0ba727e64c0b2",
+          "bytes": 6821,
+          "git_state": "?? experiments/m11_cerebellar_eligibility_latent_state/M11_CONTRACT.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m11_cerebellar_eligibility_latent_state/M11_PRE_RUN_CLARIFICATION_01.md",
+          "sha256": "3f7b5c699904ffc6c5e2dad168ba0378c2084e7d45a55c3ca7f35ca3b7fff3ad",
+          "bytes": 4799,
+          "git_state": "?? experiments/m11_cerebellar_eligibility_latent_state/M11_PRE_RUN_CLARIFICATION_01.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m1_higher_order/RR19_H4_EXTERNAL_POSTRESULT_INTERPRETATION.md",
+          "sha256": "da97b500cb71738d7c2e3deada9c6dcec63c0639eeb0fd32b4fa143afb0ecc86",
+          "bytes": 1336,
+          "git_state": "?? experiments/m1_higher_order/RR19_H4_EXTERNAL_POSTRESULT_INTERPRETATION.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m1_higher_order/RR19_H4_EXTERNAL_POSTRESULT_RESULTS.json",
+          "sha256": "dd43c4d1175282141320e2ed6f7f8922685f232116812cd8dd3a4eb9ec182bad",
+          "bytes": 1418,
+          "git_state": "?? experiments/m1_higher_order/RR19_H4_EXTERNAL_POSTRESULT_RESULTS.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m1_higher_order/RR19_H4_EXTERNAL_POSTRESULT_RESULTS.md",
+          "sha256": "46c47d279db6771c58ec13bb10dea4e31e2249ec1f7b623afd5289600f794db3",
+          "bytes": 1661,
+          "git_state": "?? experiments/m1_higher_order/RR19_H4_EXTERNAL_POSTRESULT_RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m1_higher_order/RR19_H4_EXTERNAL_SCHEMA_AUDIT.md",
+          "sha256": "18fa6d74b45ec877d3a91f9eab2c0a7769369b4d2f195ac2d9aaa1e30a061c69",
+          "bytes": 1896,
+          "git_state": "?? experiments/m1_higher_order/RR19_H4_EXTERNAL_SCHEMA_AUDIT.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m1_higher_order/RR19_STEP4_PARTIAL_RESULTS.md",
+          "sha256": "194ba73b523a44af1920835ab0379c4eac889ed9ef012e590e30841ae78d9946",
+          "bytes": 4872,
+          "git_state": "?? experiments/m1_higher_order/RR19_STEP4_PARTIAL_RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m4_ca3_partial_cue/RESULTS.md",
+          "sha256": "6c48af099c04b6ec545c635e83129949efea605aa1e9844b2eecae24689f618a",
+          "bytes": 4743,
+          "git_state": "?? experiments/m4_ca3_partial_cue/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m5_cerebellar_eligibility/RESULTS.md",
+          "sha256": "d9800e07676758364cca1f10c6e0b4dc26d849d32c24f42901351f1c749822d6",
+          "bytes": 4073,
+          "git_state": "?? experiments/m5_cerebellar_eligibility/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m9_m5_eprop_recurrent_association_v2/M9V2_CONTRACT.md",
+          "sha256": "d89c102a8d329a6cd2092432c24436e0d7ab7bed4bca7287060ea94b44034763",
+          "bytes": 2293,
+          "git_state": "?? experiments/m9_m5_eprop_recurrent_association_v2/M9V2_CONTRACT.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m9_m5_eprop_recurrent_association_v2/results/M9V2_PRIMARY_RESULT.json",
+          "sha256": "d312085e6258ee2569035b09ea30995b45d0171750c7f63682badc0b2aaa6bd7",
+          "bytes": 2916,
+          "git_state": "?? experiments/m9_m5_eprop_recurrent_association_v2/results/M9V2_PRIMARY_RESULT.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "experiments/m9_m5_eprop_recurrent_association_v2/results/M9V2_RESULTS.md",
+          "sha256": "b8d2393f155fd6ffe1f18dce111de50551ca7714cd333c105f4b57bef2073a99",
+          "bytes": 1166,
+          "git_state": "?? experiments/m9_m5_eprop_recurrent_association_v2/results/M9V2_RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/GATE_VERDICTS.md",
+          "sha256": "d1c736da9912096c9ebddaaf2f25e7d4588c5ccf6ca6961fb8a249031ce0601c",
+          "bytes": 871,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "results/candidate_screen/CE_AFD_AIY_RIM_E4_SCHEMA_CLOSURE_REPORT.md",
+          "sha256": "010082d1f6c155491ad7b33857ab731b9cd193fa14f9e482fe472e0b42b816f1",
+          "bytes": 4867,
+          "git_state": "?? results/candidate_screen/CE_AFD_AIY_RIM_E4_SCHEMA_CLOSURE_REPORT.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/candidate_screen/R20_01_R22_FINAL_ACQUISITION_DISPOSITION.md",
+          "sha256": "276cd4aca23f9e4816a4078b00441e2d68031b92ea65142e443389388451a6ba",
+          "bytes": 4535,
+          "git_state": "?? results/candidate_screen/R20_01_R22_FINAL_ACQUISITION_DISPOSITION.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/experiment1/FISH15_FIGURE_PANEL_C_SOURCE.csv",
+          "sha256": "df3ff67789c04d4eb5ff843b6ad08525040d64d54440924d1c6b58d40e9df6d0",
+          "bytes": 387,
+          "git_state": "?? results/experiment1/FISH15_FIGURE_PANEL_C_SOURCE.csv",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/experiment1/FISH15_FIGURE_ROBUSTNESS_LEGEND.md",
+          "sha256": "704880db3b633e7e254a3d24773001d796c231a56ec4c62d46a20bc036dd6e0b",
+          "bytes": 729,
+          "git_state": "?? results/experiment1/FISH15_FIGURE_ROBUSTNESS_LEGEND.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/experiment1/FISH15_PRIMARY_RESULT.json",
+          "sha256": "c99569555ff2ef17844d7002914df5e29cbb3727169bb0caa04ee4a71bc09171",
+          "bytes": 1165,
+          "git_state": "?? results/experiment1/FISH15_PRIMARY_RESULT.json",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/experiment1/FISH15_ROBUSTNESS_RESULTS.csv",
+          "sha256": "df3ff67789c04d4eb5ff843b6ad08525040d64d54440924d1c6b58d40e9df6d0",
+          "bytes": 387,
+          "git_state": "?? results/experiment1/FISH15_ROBUSTNESS_RESULTS.csv",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/experiment1/FISH15_SECONDARY_ASSOCIATIONS_CORRECTED.csv",
+          "sha256": "2cd960b5922bd143e52e3eff0e95d4a23822308a2d26d8062c90f53fe3e53f0a",
+          "bytes": 520,
+          "git_state": "?? results/experiment1/FISH15_SECONDARY_ASSOCIATIONS_CORRECTED.csv",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "results/experiment1/FISH15_SECONDARY_ASSOCIATIONS_CORRECTION.md",
+          "sha256": "2d1d76db722ee3e3d27bc2db02dffb5d23ac7ad9dfe5e44794ef6f9c70a7f0ee",
+          "bytes": 2561,
+          "git_state": "?? results/experiment1/FISH15_SECONDARY_ASSOCIATIONS_CORRECTION.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/DROSOPHILA_COUNTEREVIDENCE_NATURAL_SCENE_V1/RESULTS.md",
+          "sha256": "72b2c29da17ecec2250cf35b9486da2784a1ded73984923e24fa77c6b5677fc0",
+          "bytes": 4606,
+          "git_state": "?? summery/DROSOPHILA_COUNTEREVIDENCE_NATURAL_SCENE_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/DROSOPHILA_COUNTEREVIDENCE_ROBUSTNESS_V1/DROSOPHILA_COUNTEREVIDENCE_ROBUSTNESS_V1_RESULTS.md",
+          "sha256": "8596f74beba222e338496af22a81744f4b29b667b9c2f5f42b194228f456972a",
+          "bytes": 3011,
+          "git_state": "?? summery/DROSOPHILA_COUNTEREVIDENCE_ROBUSTNESS_V1/DROSOPHILA_COUNTEREVIDENCE_ROBUSTNESS_V1_RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/FISH15_E1_TASK_COMPLIANCE_AUDIT_01/README.md",
+          "sha256": "8045a1285d3f9166aee2293ba3725d2bd840b87b2db62528e67cec2f88651a2f",
+          "bytes": 7436,
+          "git_state": "?? summery/FISH15_E1_TASK_COMPLIANCE_AUDIT_01/README.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M11_CEREBELLAR_ELIGIBILITY_LATENT_STATE_V1/RESULTS.md",
+          "sha256": "f155e75175879e6ea3d28705dd97935b310138d9aa26be3b6812c8bc74131206",
+          "bytes": 3544,
+          "git_state": "?? summery/M11_CEREBELLAR_ELIGIBILITY_LATENT_STATE_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_CLOSED_LOOP_ACTIVE_SENSING_V1/RESULTS.md",
+          "sha256": "a66cac75b713341e063603c243f21f17986697d5cc4a2ad88b3904459409245b",
+          "bytes": 2876,
+          "git_state": "?? summery/M2_CLOSED_LOOP_ACTIVE_SENSING_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_CROSS_TASK_STATE_FEEDBACK_V1/RESULTS.md",
+          "sha256": "e750120bced1cfac5adcf3eb720a2d331f5c6568c650663d74118750be71b98a",
+          "bytes": 2555,
+          "git_state": "?? summery/M2_CROSS_TASK_STATE_FEEDBACK_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FEEDBACK_SITE_SPECIFICITY_V3/RESULTS.md",
+          "sha256": "15908e58191ad770e7e32be7b43d55c290b3b57ed8924a8c004f277279ba32db",
+          "bytes": 4487,
+          "git_state": "?? summery/M2_FEEDBACK_SITE_SPECIFICITY_V3/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FEEDBACK_SITE_SPECIFICITY_V4/RESULTS.md",
+          "sha256": "0fa2937796dece1ffd32852b0a48b27dc1d0a659574295a57511a9e99964641b",
+          "bytes": 4052,
+          "git_state": "?? summery/M2_FEEDBACK_SITE_SPECIFICITY_V4/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FORWARD_STATE_DECISION_TRANSFER_V1/RESULTS.md",
+          "sha256": "e86ad1d5c0752debbcb2c0411c117acc9cefe2ee2be50a33c38ee439baedc86b",
+          "bytes": 2485,
+          "git_state": "?? summery/M2_FORWARD_STATE_DECISION_TRANSFER_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FORWARD_STATE_SENSORY_GATE_V1/IMPLEMENTATION_INCIDENT.md",
+          "sha256": "71da083b0867faf007e61bdb3eab195dc36fb48e6461cd6269d8fbd96803af7a",
+          "bytes": 1248,
+          "git_state": "?? summery/M2_FORWARD_STATE_SENSORY_GATE_V1/IMPLEMENTATION_INCIDENT.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FORWARD_STATE_SENSORY_GATE_V1/RESULTS.md",
+          "sha256": "4318e62ca8cba3b3163a8737af1dfc1c5d8e80d3f7939e7d57c8478fd64a414a",
+          "bytes": 586,
+          "git_state": "?? summery/M2_FORWARD_STATE_SENSORY_GATE_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FORWARD_STATE_SENSORY_GATE_V2/RESULTS.md",
+          "sha256": "95a4f7d51823de9b5dfd2ebbc19b7c2ee7355eaff15a7a9e9c6532ed5e73d82b",
+          "bytes": 3095,
+          "git_state": "?? summery/M2_FORWARD_STATE_SENSORY_GATE_V2/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_FORWARD_STATE_SENSORY_GATE_V3/RESULTS.md",
+          "sha256": "8d6c477356eed1493c1cb29c0f472a5058bbf3eb4c060461d62832565ce2d9f2",
+          "bytes": 3617,
+          "git_state": "?? summery/M2_FORWARD_STATE_SENSORY_GATE_V3/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_JI2021_FEEDBACK_DYNAMICS/RESULTS.md",
+          "sha256": "80d35303352afdab9a57adc7be59d15a5ce708a1ac2c3fb97d2c37c4d6eeb7a7",
+          "bytes": 4082,
+          "git_state": "?? summery/M2_JI2021_FEEDBACK_DYNAMICS/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_JI2021_FEEDBACK_SITE_CONTROL_V1/RESULTS.md",
+          "sha256": "c53dfe0beff1a9a0a08cdea7a584fc33a33c3cab0a9cacfbf06e584e374acf83",
+          "bytes": 3236,
+          "git_state": "?? summery/M2_JI2021_FEEDBACK_SITE_CONTROL_V1/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_JI2021_FEEDBACK_SITE_CONTROL_V2/M2_JI2021_FEEDBACK_SITE_CONTROL_V2_RESULTS.md",
+          "sha256": "a3edfcb53a22e3256b80fbced62759699c0848968e84807dca18ac18660f2e01",
+          "bytes": 2790,
+          "git_state": "?? summery/M2_JI2021_FEEDBACK_SITE_CONTROL_V2/M2_JI2021_FEEDBACK_SITE_CONTROL_V2_RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M2_RIM_ABLATION_SOURCE_REANALYSIS/RESULTS.md",
+          "sha256": "cb6f1f413a4bda787aacc89758e80cd3183db3987055fb596792993775ff9142",
+          "bytes": 2779,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "summery/M2_TARGETED_GAIN_OPTIMIZATION/RESULTS.md",
+          "sha256": "e0a66f053624c6a4ddc0f7ccfef9dc410c8f48ea1dc0e883500ac24e73576d8e",
+          "bytes": 3705,
+          "git_state": "?? summery/M2_TARGETED_GAIN_OPTIMIZATION/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M5_DELAYED_REWARD_BANDIT/RESULTS.md",
+          "sha256": "0bf833aa403e70ad39685bcf26675997b95d47871cf0ea6cbb885ff63827ef16",
+          "bytes": 3472,
+          "git_state": "?? summery/M5_DELAYED_REWARD_BANDIT/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M5_RECURRENT_RESERVOIR_BANDIT/RESULTS.md",
+          "sha256": "550d47b5057ff1a5b04e34a91deb5f126cbe669c693fff1f2995dbeef1b8c251",
+          "bytes": 2799,
+          "git_state": "?? summery/M5_RECURRENT_RESERVOIR_BANDIT/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M5_TASK_GENERATOR_GENERALIZATION/README.md",
+          "sha256": "36311637c475c991dd09856f175da65eccc53b9662a26d77375c73f74704f1dc",
+          "bytes": 658,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "summery/M6_STATE_GATED_INFERENCE/RESULTS.md",
+          "sha256": "80f75cf4bcef02c739a59aba4caef1906d7443e1b2c9e53cdc4d9a34946dfa2a",
+          "bytes": 3963,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "summery/M7_TEMPORAL_CORRELATION_BOUNDARY/RESULTS.md",
+          "sha256": "c872f9f4421315f079217a12da1fbce95467f00e75e817194560eeabb7af2500",
+          "bytes": 3688,
+          "git_state": "clean",
+          "tracked": true
+        },
+        {
+          "path_in_source_worktree": "summery/M8_MEMORY_MATCHED_REPLAY_ANALYSIS/RESULTS.md",
+          "sha256": "1920222e9f57aeecfb2bce373973860d60a784431c140635f88608b8d7b668ea",
+          "bytes": 1887,
+          "git_state": "?? summery/M8_MEMORY_MATCHED_REPLAY_ANALYSIS/RESULTS.md",
+          "tracked": false
+        },
+        {
+          "path_in_source_worktree": "summery/M8_TRACE_HORIZON_FRONTIER/RESULTS.md",
+          "sha256": "88ff6bd3c6734c1283fc24edae64a3834afd1caf7ff5c84189946608bf61826c",
+          "bytes": 2735,
+          "git_state": "?? summery/M8_TRACE_HORIZON_FRONTIER/RESULTS.md",
+          "tracked": false
+        }
+      ],
+      "scope_note": "Local evidence ledger and Route-D records are a later, unpushed working-tree snapshot. Individual cited files are hashed above; there is no single public commit representing this snapshot."
+    }
+  ],
+  "neuroconverge_remote": {
+    "url": "https://github.com/4gcy6tzy6n-coder/NeuroConverge",
+    "ref": "refs/heads/main",
+    "commit": "b55871dec1207b2c9e8b63270ebcc7871f0feaca",
+    "tree": "ab23be556af6016552ba8b6fa9ed8c38f59616cc"
+  },
+  "prospective_validation": {
+    "status": "M2_M5_V1_COMPLETE_EXPERIMENT_PROGRAM_CLOSED",
+    "m2_source_provenance": "new_experiments/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/SOURCE_PROVENANCE.json",
+    "m2_reproducibility": "new_experiments/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/runs/reproducibility_comparison.json",
+    "m5_run_manifest": "new_experiments/M5_CORRESPONDENCE_PRESERVED_TIMING_V1/results/run_manifest.json",
+    "m5_postrun_method_audit": "new_experiments/M5_CORRESPONDENCE_PRESERVED_TIMING_V1/POSTRUN_METHOD_AUDIT.md",
+    "interpretation_note": "Synthetic-only distinct estimands; no biological validation, no pooled effect; future variants require separate authorization."
+  }
+}

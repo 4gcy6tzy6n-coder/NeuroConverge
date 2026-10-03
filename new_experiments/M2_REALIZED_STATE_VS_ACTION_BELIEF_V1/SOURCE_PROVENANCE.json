@@ -1,0 +1,40 @@
+{
+  "experiment": "M2_REALIZED_STATE_VS_ACTION_BELIEF_V1",
+  "source_checkout": "/private/tmp/neuromech-m5-xor-v2-publish",
+  "source_repository": "https://github.com/4gcy6tzy6n-coder/NeuroMech.git",
+  "source_head": "3e5c458f15b2cad7aa6c5703b1827763e84343bb",
+  "source_state_warning": "The experiment contract was modified and the runner/verifier directory was untracked at capture time. HEAD identifies the base checkout only; exact content identity is given by SHA-256 below.",
+  "source_checkout_modified_by_this_run": false,
+  "captured_files": [
+    {
+      "path": "summery/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/CONTRACT.md",
+      "source_git_state": "modified",
+      "sha256": "489ed473bbeb895ccb99ad8b661dbbdeacee0f2a19fc6615e1a4dfa8fd6736f0"
+    },
+    {
+      "path": "model/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/run_experiment.py",
+      "source_git_state": "untracked",
+      "sha256": "984ef632108a0aa3256a19009747194818db1296ed0531fe1b294703cf27c8d6"
+    },
+    {
+      "path": "model/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/verify_results.py",
+      "source_git_state": "untracked",
+      "sha256": "f6d48727f4ece27f385d56baf1221ac12e09b0cb36ef6e52e6e47d867e7c7055"
+    },
+    {
+      "path": "model/M2_ACTION_CONDITIONED_RKN_2D_PURSUIT_V1/vendor/acrkn_cell.py",
+      "source_git_state": "tracked",
+      "sha256": "ef2983547c0ccd1390c078a778a4d436e02039bdf358d248b3138ab4da7f0310"
+    },
+    {
+      "path": "model/M2_ACTION_CONDITIONED_RKN_2D_PURSUIT_V1/vendor/ATTRIBUTION.md",
+      "source_git_state": "tracked",
+      "sha256": "d14e03a32cd558b9f24a821d3e245d15e13e1da89fe03dabbb0b34d53fbf96c3"
+    },
+    {
+      "path": "model/M2_ACTION_CONDITIONED_RKN_2D_PURSUIT_V1/vendor/LICENSE-MIT.txt",
+      "source_git_state": "tracked",
+      "sha256": "50d220bf56d8acca548ec516ffa6dbf849feaa7be3cae3ff4e936c653c99329d"
+    }
+  ]
+}

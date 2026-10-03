@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_date": "2026-10-01",
   "project": "NeuroConverge",
-  "freeze_state": "UNRESOLVED",
+  "freeze_state": "SOURCE_ARTIFACT_FREEZE_UNRESOLVED",
   "sources": [
     {
       "name": "NeuroMotif",
@@ -30,12 +30,14 @@
       "local_publication_worktree": "/private/tmp/neuromech-m5-xor-v2-publish",
       "local_publication_commit": "3e5c458f15b2cad7aa6c5703b1827763e84343bb",
       "local_publication_dirty_paths_at_audit": 2,
-      "scope_warning": "The publication draft's study selection/status predates the local mainline Route D synthesis. These revisions are not interchangeable; claim and artifact selection must be reconciled against the chosen frozen snapshot."
+      "scope_warning": "The publication draft's study selection/status predates the local mainline Route D synthesis. These revisions are not interchangeable; claim and artifact selection must be reconciled against the chosen frozen snapshot. The user-directed scope is no new experiments by default; this is not an artifact freeze."
     }
   ],
-  "requested_neuroconverge_remote": {
+  "neuroconverge_publication_repository": {
     "url": "https://github.com/4gcy6tzy6n-coder/NeuroConverge.git",
-    "heads_observed": [],
-    "interpretation": "No advertised heads were returned by git ls-remote. This does not distinguish an empty repository from visibility or access limitations."
+    "ref": "refs/heads/main",
+    "commit": "b55871dec1207b2c9e8b63270ebcc7871f0feaca",
+    "tree": "ab23be556af6016552ba8b6fa9ed8c38f59616cc",
+    "interpretation": "Repository is populated. This commit is an initial integration checkpoint, not a completed manuscript package."
   }
 }

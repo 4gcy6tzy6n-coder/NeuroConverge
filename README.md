@@ -19,17 +19,18 @@ The current evidence does not establish that connectome structure is universally
 - **NeuroMotif — structure and dynamics:** [source manifest](workstreams/neuromotif_manifest/README.md)
 - **NeuroMech — biological computation and artificial transfer:** [source manifest](workstreams/neuromech_manifest/README.md)
 
-The source projects are not yet both frozen to an unambiguous clean, published commit. The observed commit and dirty-worktree state are recorded in [PROJECT_FREEZE.md](PROJECT_FREEZE.md). No project will be called frozen until that discrepancy is resolved and the paper-critical artifacts are pinned.
+The user-authorized prospective V1 tests are complete and the experiment program is closed. The source artifacts are still not frozen. NeuroMech has two divergent evidence views: public `experiment-publication` and the broader local Route-D portfolio. See [PROJECT_FREEZE.md](PROJECT_FREEZE.md) and [the publication-branch crosswalk](evidence/PUBLICATION_BRANCH_CROSSWALK.csv); rows without exact Route-D matches remain candidates, not adjudicated manuscript evidence.
 
 ## Package map
 
 - `manuscript/` — integrated article draft, references and supplementary manuscript source.
-- `figures/` — five planned main figures, each with a storyboard and source-data checklist.
+- `figures/` — five generated main figures with CSV source data, vector/review exports, geometry audits and SHA-256 manifest.
 - `evidence/` — claim–evidence matrix, experiment selection and claim ceiling.
 - `workstreams/` — source repository identity, commit and canonical artifact links.
 - `supplementary/` — selected extended results, negative results, robustness and provenance.
+- `new_experiments/` — frozen M2/M5 prospective synthetic V1 protocols, results, source hashes and verification records.
 - `reproducibility/` — code/data manifests, environment notes and audit status.
 
 ## Current status
 
-This is the initial integration workspace, not an internal-review-ready submission package. The source commits need a final freeze decision; figures are storyboards until source data are independently reconciled; citation metadata, manuscript claims, rights/licensing, author metadata and reproducibility remain under review. No new experiments are authorized by this package; resolve evidentiary gaps by narrowing or removing claims unless a claim-critical gap cannot otherwise be addressed.
+The complete internal manuscript draft now includes the abstract, Introduction, four Results, Discussion, detailed study-level Methods, figure legends and draft availability/declaration statements. Five source-linked figures have been generated and visually inspected. The V1 synthetic experiments are complete and the experimental scope is closed. This is not a submission-ready package: source artifact freeze, exact historical inclusion crosswalk, redistribution rights, author-supplied information, final attribution and NMI contribution/novelty assessment remain open. The current venue audit does not admit the project as NMI-ready; further writing should not be presented as resolving that scientific/editorial gap.

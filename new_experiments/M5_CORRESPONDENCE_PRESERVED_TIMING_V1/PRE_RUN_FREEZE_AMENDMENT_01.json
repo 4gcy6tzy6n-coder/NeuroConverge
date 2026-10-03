@@ -1,0 +1,19 @@
+{
+  "status": "REFROZEN_AFTER_PRE_OUTCOME_RUNTIME_COMPATIBILITY_FAILURE",
+  "frozen_at_utc": "2026-10-01T13:37:22Z",
+  "supersedes_for_execution": "PRE_RUN_FREEZE.json",
+  "original_contract_unchanged": true,
+  "outcomes_observed_before_amendment": false,
+  "incident_record": "EXECUTION_INCIDENT_01.md",
+  "allowed_code_change": "removed Python-3.10-only strict=True from two zip calls; runner now reads this amendment",
+  "frozen_files_sha256": {
+    "CONTRACT.md": "1434055cc21047edfd8185d50e6dc207c640ddb46aa3cf7b1293a8353c0e7658",
+    "run_experiment.py": "9f9f4d810f473573fc86f8a8bb2ad454a4d099009004429618d7b766f3bbad80",
+    "EXECUTION_INCIDENT_01.md": "dfd6e929aa5af8095e418ef8eea215d9cb7a0844dadf2763c37d1195b1b0e47c"
+  },
+  "environment_at_freeze": {
+    "python": "3.9.6",
+    "numpy": "2.0.2"
+  },
+  "run_policy": "one successful full run only; no tuning, rescue, arm replacement, seed removal, or protocol amendment after outcome inspection"
+}

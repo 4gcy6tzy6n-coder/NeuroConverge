@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "mode": "FULL_CANONICAL",
+  "training_seed_blocks": 32,
+  "fit_rows": 160,
+  "episode_rows": 73728,
+  "seed_summary_rows": 576,
+  "acrkn_parameter_count": 320,
+  "gru_parameter_count": 323,
+  "checks": [
+    "row completeness and unique episode keys",
+    "paired hidden/revealed stream identifiers",
+    "parameter/update/token accounting",
+    "seed-summary and all frozen contrast recomputation",
+    "particle gain/ESS/convergence diagnostics",
+    "positive AcRKN covariance diagnostics",
+    "source and output hashes"
+  ]
+}

@@ -1,0 +1,8 @@
+element,label,evidence_note
+question,Biological structure,M0 bounded assay; Fish1.5 single specimen
+question,Source-supported computation,Published worm finding; modeled source data
+question,Information correspondence,Separate outcome-informed synthetic M2 and M5 tests
+question,Artificial utility,Task-specific results versus generic/reference controls
+separator,Separate test,Ordering organizes evidence questions; it is not causal inference
+portfolio,NeuroMotif,Structure/dynamics line
+portfolio,NeuroMech,Mechanism/transfer line

@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "checks": [
+    "contract and run code match pre-run frozen SHA-256 values",
+    "all 30 seeds x 2 regimes x 5 arms are present exactly once",
+    "all recorded performance values are finite and within the normalized 0-1 range",
+    "ALIGNED and BROKEN input hashes match within every seed",
+    "all 150 paired seed-arm correspondence effects recompute exactly",
+    "reported arm means and positive-seed counts recompute exactly",
+    "result files match the run-manifest SHA-256 values"
+  ]
+}

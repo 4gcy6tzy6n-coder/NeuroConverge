@@ -1,0 +1,174 @@
+{
+  "generator": "make_main_figures.py",
+  "generator_sha256": "4fb8131d64c13f20661e49921ecf43c365f7c4ee5cad5cb74674fae1c81e7ca5",
+  "source_inputs": {
+    "new_experiments/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/runs/canonical_1/summary.json": "e9678eb7a2e640a4bf3315ff335cc1134e7018d9ba014352ae9997b6772bd5e5",
+    "new_experiments/M5_CORRESPONDENCE_PRESERVED_TIMING_V1/results/primary_result.json": "323dca1bdd36aaf07a20016368f8d50159d2b6a7bd012c5b8155a8d58a89e0ad",
+    "new_experiments/M5_CORRESPONDENCE_PRESERVED_TIMING_V1/results/per_seed_metrics.csv": "b93cd350daf9aed238fb373cb78ee2782523d809421bcb60e4259075fa747f4d",
+    "new_experiments/M5_CORRESPONDENCE_PRESERVED_TIMING_V1/results/per_seed_correspondence_effects.csv": "7a6929f7d34044f57b3853576a4114aa0c683e904e1a6fdfab755325c2eb9737"
+  },
+  "matplotlib": "3.9.4",
+  "figures": [
+    {
+      "figure": 1,
+      "directory": "figures/Fig1_framework",
+      "pdf": "Fig1_framework.pdf",
+      "svg": "Fig1_framework.svg",
+      "png": "Fig1_framework.png",
+      "source_data": "figure_source_data.csv",
+      "alignment": "Fig1_framework.alignment.json",
+      "files": {
+        "Fig1_framework.pdf": {
+          "sha256": "cff3db0b240be54b2150121c251dca5a40a2fa07a64e17364af7ccca91409016",
+          "bytes": 41553
+        },
+        "Fig1_framework.svg": {
+          "sha256": "a81cff28e61e7070513fde357eddc08f7cbcbe07c74e01d8bcaaf8b732f5d22c",
+          "bytes": 8729
+        },
+        "Fig1_framework.png": {
+          "sha256": "d82b7f4710dce5e47f74881928ace46e5fd08ae95565f4419a3f9d122d1ca54f",
+          "bytes": 132380
+        },
+        "figure_source_data.csv": {
+          "sha256": "ccd25d1a63f3557b57d542990d8c85ecea98715208f9d88ce909ba587b9524b3",
+          "bytes": 541
+        },
+        "Fig1_framework.alignment.json": {
+          "sha256": "89937f04ac9325b9de86e18afd9b0a86540a64e77aef1f467cd56540e81297f0",
+          "bytes": 898
+        }
+      }
+    },
+    {
+      "figure": 2,
+      "directory": "figures/Fig2_structure_boundary",
+      "pdf": "Fig2_structure_boundary.pdf",
+      "svg": "Fig2_structure_boundary.svg",
+      "png": "Fig2_structure_boundary.png",
+      "source_data": "figure_source_data.csv",
+      "alignment": "Fig2_structure_boundary.alignment.json",
+      "files": {
+        "Fig2_structure_boundary.pdf": {
+          "sha256": "3de8e15c244377c50daef58e0630d5c013f1a0c858d5661b084510ae367e67e4",
+          "bytes": 44263
+        },
+        "Fig2_structure_boundary.svg": {
+          "sha256": "2063a294d922be0bea3f6a61c0c5f7926d410fbd275e085777ce531f9012f275",
+          "bytes": 12911
+        },
+        "Fig2_structure_boundary.png": {
+          "sha256": "18f0949ca1fc50e7b12c74fc63c0e8aea2e8c1690e62b6ad717a30b52b511e6b",
+          "bytes": 133936
+        },
+        "figure_source_data.csv": {
+          "sha256": "05b826910c5e2698e149018bf8737ebeeb68bc2cd051f4962b9a82cfb24a0c5e",
+          "bytes": 547
+        },
+        "Fig2_structure_boundary.alignment.json": {
+          "sha256": "bc004f87367eba17c43157f7d7d81eb98e6ccf9efa30f6192ac0fb1be8b5d406",
+          "bytes": 1564
+        }
+      }
+    },
+    {
+      "figure": 3,
+      "directory": "figures/Fig3_motor_feedback",
+      "pdf": "Fig3_motor_feedback.pdf",
+      "svg": "Fig3_motor_feedback.svg",
+      "png": "Fig3_motor_feedback.png",
+      "source_data": "figure_source_data.csv",
+      "alignment": "Fig3_motor_feedback.alignment.json",
+      "files": {
+        "Fig3_motor_feedback.pdf": {
+          "sha256": "8bb48da960d60bd65daa81b826da820975afa4d8ea89b647196c4f7594ef01d4",
+          "bytes": 45727
+        },
+        "Fig3_motor_feedback.svg": {
+          "sha256": "73f00895b4d858bba5d06d91fd612bd56b18a94dcb5f5692065b28ced1cbef1e",
+          "bytes": 16212
+        },
+        "Fig3_motor_feedback.png": {
+          "sha256": "e2bb8b762c7954b9f5f86fbb339dbd7be05e870306f4feeed40a57710b4b9fbe",
+          "bytes": 166408
+        },
+        "figure_source_data.csv": {
+          "sha256": "9a56a58b403d40548bb20ca75120f955d055ef7d62a7e842ec21d6fd684f9686",
+          "bytes": 378
+        },
+        "Fig3_motor_feedback.alignment.json": {
+          "sha256": "380690f0c51c4780677dc6efff80150af92f5fd5cf1849cc13694c8a73cb9017",
+          "bytes": 1521
+        }
+      }
+    },
+    {
+      "figure": 4,
+      "directory": "figures/Fig4_temporal_credit",
+      "pdf": "Fig4_temporal_credit.pdf",
+      "svg": "Fig4_temporal_credit.svg",
+      "png": "Fig4_temporal_credit.png",
+      "source_data": "figure_source_data.csv",
+      "alignment": "Fig4_temporal_credit.alignment.json",
+      "files": {
+        "Fig4_temporal_credit.pdf": {
+          "sha256": "8af5e0b6fba6b42c4a7405c6fbf875307e1fda326f3ba4a4b02fded5d1bbaa43",
+          "bytes": 45620
+        },
+        "Fig4_temporal_credit.svg": {
+          "sha256": "b186d0dddb9ed230c6e479d1fc0c6bed1466131bacafb7f4acfd5aea11b35327",
+          "bytes": 23822
+        },
+        "Fig4_temporal_credit.png": {
+          "sha256": "f8a8bd326972940de81d1246716cdeb57af49c48aac49a7f276d2d938f3fbfa8",
+          "bytes": 134343
+        },
+        "figure_source_data.csv": {
+          "sha256": "b75456baef366bd02fbd7409a7deca78ce9a2066cb2ef587730aef4e2492946f",
+          "bytes": 1190
+        },
+        "Fig4_temporal_credit.alignment.json": {
+          "sha256": "d5221752eb9fbf1c5aa361bdbaf50ac389ebadef4f4c512ccad4ced53702d63d",
+          "bytes": 1513
+        }
+      }
+    },
+    {
+      "figure": 5,
+      "directory": "figures/Fig5_evidence_map",
+      "pdf": "Fig5_evidence_map.pdf",
+      "svg": "Fig5_evidence_map.svg",
+      "png": "Fig5_evidence_map.png",
+      "source_data": "figure_source_data.csv",
+      "alignment": "Fig5_evidence_map.alignment.json",
+      "files": {
+        "Fig5_evidence_map.pdf": {
+          "sha256": "70047667a0487636abd735b04e15c76538722e5499e10c1487aca81a88083018",
+          "bytes": 44054
+        },
+        "Fig5_evidence_map.svg": {
+          "sha256": "777404b9b24b5e5aeb693a5c11019bfe7c97d51e769d18ea166a338c30f6a7c0",
+          "bytes": 9710
+        },
+        "Fig5_evidence_map.png": {
+          "sha256": "46197b4e2fee5be3cf3064940e0d1ada19b420d3ad049a8e4c858f6c9ca992b3",
+          "bytes": 267062
+        },
+        "figure_source_data.csv": {
+          "sha256": "07fe58e2e4e214894860d07a39f4a4a7b5d1c252b65beeedcb83557945ca9c2b",
+          "bytes": 874
+        },
+        "Fig5_evidence_map.alignment.json": {
+          "sha256": "14ce50756cb6d7b53264b3e16b233e0369db2e4c49d664e7bc02be926404951c",
+          "bytes": 895
+        }
+      }
+    }
+  ],
+  "status": "PROVISIONAL_LAYOUT_ASSESSED",
+  "limitations": [
+    "Source ownership and reuse rights remain pending.",
+    "Final source-revision audit remains pending.",
+    "Layout assessment does not establish submission readiness."
+  ]
+}

@@ -1,7 +1,7 @@
-# Figure 3 storyboard — Motor-state feedback and synthetic transfer
+# Figure 3 — M2 causal workflow and controller contrasts
 
-**Status:** concept only; selected M2 round has not been frozen for this manuscript.
+**Current export:** `Fig3_motor_feedback.pdf` and `.png`; effect estimates in `figure_source_data.csv`.
 
-Panel A: published worm circuit/source evidence and the measured construct (premotor motor-state representation). Panel B: source-to-model signal mapping. Panel C: one selected synthetic task's primary contrast and strong references, with uncertainty unit and secondary trade-off shown separately.
+Panel A shows the current inputs, AcRKN update/policy, stochastic actuator and feedback of the preceding executed-displacement sign. Panel B plots three paired contrasts: hidden reversals, revealed reversals and no reversals. Positive values favor the first-named arm; only the primary hidden-reversal interval excludes zero, in the direction favoring action-only.
 
-**Required review:** do not conflate action, premotor command/state and realized body motion. The NeuroMech publication draft cites figures/rounds that may not match the current mainline evidence portfolio; reconcile before selecting a canonical result.
+**Inference limit:** one outcome-informed synthetic actuator-observability task; exact post-actuator sign is distinct from the biological worm premotor signal.

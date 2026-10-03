@@ -1,0 +1,110 @@
+{
+  "experiment": "M2_REALIZED_STATE_VS_ACTION_BELIEF_V1",
+  "classification": "generic synthetic actuator-observability benchmark; not biological transfer",
+  "mode": "FULL_CANONICAL",
+  "contract_sha256": "489ed473bbeb895ccb99ad8b661dbbdeacee0f2a19fc6615e1a4dfa8fd6736f0",
+  "runner_sha256": "984ef632108a0aa3256a19009747194818db1296ed0531fe1b294703cf27c8d6",
+  "verifier_sha256": "f6d48727f4ece27f385d56baf1221ac12e09b0cb36ef6e52e6e47d867e7c7055",
+  "vendored_acrkn_sha256": "ef2983547c0ccd1390c078a778a4d436e02039bdf358d248b3138ab4da7f0310",
+  "python": "3.9.6",
+  "numpy": "2.0.2",
+  "torch": "2.8.0",
+  "device": "CPU",
+  "threads": 1,
+  "training_seeds": [
+    950000,
+    950001,
+    950002,
+    950003,
+    950004,
+    950005,
+    950006,
+    950007,
+    950008,
+    950009,
+    950010,
+    950011,
+    950012,
+    950013,
+    950014,
+    950015,
+    950016,
+    950017,
+    950018,
+    950019,
+    950020,
+    950021,
+    950022,
+    950023,
+    950024,
+    950025,
+    950026,
+    950027,
+    950028,
+    950029,
+    950030,
+    950031
+  ],
+  "updates": 160,
+  "batch_size": 32,
+  "sequence_length": 64,
+  "test_episodes_per_block_arm_condition": 128,
+  "conditions": [
+    "NO_REVERSAL",
+    "HIDDEN_REVERSAL",
+    "REVEALED_REVERSAL"
+  ],
+  "arms": [
+    "ACRKN_ACTION_ONLY",
+    "ACRKN_REALIZED_STATE",
+    "ACRKN_REVERSAL_REVEALED",
+    "GRU_ACTION_ONLY",
+    "GRU_REALIZED_STATE",
+    "TASK_AWARE_PARTICLE_FILTER"
+  ],
+  "duration_seconds": 741.5449461936951,
+  "nondeterministic_fields": [
+    "manifest.duration_seconds",
+    "fit_manifest.training_seconds",
+    "inference_timing.inference_seconds",
+    "particle_diagnostics.inference_seconds"
+  ],
+  "outputs": {
+    "fit_manifest.csv": {
+      "bytes": 1061948,
+      "sha256": "596f660b3f88528517a0b6c9fa98c0ab1cffba54e3871c3657b15b5d01fb99d1"
+    },
+    "episode_metrics.csv": {
+      "bytes": 7717461,
+      "sha256": "f0f3115488239d9076a07b2ecc5a603d833792a680400d1f6e83ef80dffc18a0"
+    },
+    "seed_summary.csv": {
+      "bytes": 55386,
+      "sha256": "2a508bcc50dabd03163b0b69212d537cfffc211db2e1d0b9257f7623e1bc5eff"
+    },
+    "stream_registry.csv": {
+      "bytes": 5449,
+      "sha256": "c0f86534879e3b6bfe17a6471d7492cfb651139ca847b69e1d758f4b39b18ef0"
+    },
+    "particle_gain_validation.csv": {
+      "bytes": 556,
+      "sha256": "c8cff95ca8202019c6b28c00d615dc2dcb585069885b371e2cc67f5363113041"
+    },
+    "particle_diagnostics.csv": {
+      "bytes": 37799,
+      "sha256": "22f0622ad4921658f2460ff0eb1f01d9b965eb109b6f6fa03d0aea6648268dc4"
+    },
+    "inference_timing.csv": {
+      "bytes": 36668,
+      "sha256": "668eacc6686543628ba73be8efcc385fcef5dea3ee933b276b275a8a3fc0a3cd"
+    },
+    "model_diagnostics.csv": {
+      "bytes": 22251,
+      "sha256": "0157faa2c98f40bc8fe5fecb687e9740c0fa65d78634777200ccc4ce7ce5c7f0"
+    },
+    "summary.json": {
+      "bytes": 5859,
+      "sha256": "e9678eb7a2e640a4bf3315ff335cc1134e7018d9ba014352ae9997b6772bd5e5"
+    }
+  }
+}

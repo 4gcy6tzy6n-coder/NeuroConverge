@@ -1,0 +1,87 @@
+{
+  "experiment": "M2_REALIZED_STATE_VS_ACTION_BELIEF_V1",
+  "classification": "generic synthetic actuator-observability benchmark; not biological transfer",
+  "mode": "QUICK_IMPLEMENTATION_CHECK",
+  "training_seed_blocks": 2,
+  "primary_estimand": "ACRKN_ACTION_ONLY MSE - ACRKN_REALIZED_STATE MSE in HIDDEN_REVERSAL",
+  "primary_seed_block_values": [
+    0.6716852337121964,
+    -0.14995599165558815
+  ],
+  "primary_summary": {
+    "mean": 0.2608646210283041,
+    "ci95_low": -0.14995599165558815,
+    "ci95_high": 0.6716852337121964,
+    "n_seed_blocks": 2
+  },
+  "revealed_gap_seed_block_values": [
+    0.0,
+    0.06373313441872597
+  ],
+  "revealed_gap_summary": {
+    "mean": 0.031866567209362984,
+    "ci95_low": 0.0,
+    "ci95_high": 0.06373313441872597,
+    "n_seed_blocks": 2
+  },
+  "information_recovery_seed_block_values": [
+    0.6716852337121964,
+    -0.21368912607431412
+  ],
+  "information_recovery_summary": {
+    "mean": 0.22899805381894112,
+    "ci95_low": -0.21368912607431412,
+    "ci95_high": 0.6716852337121964,
+    "n_seed_blocks": 2
+  },
+  "no_reversal_gap_seed_block_values": [
+    1.5859724283218384,
+    -0.332755908370018
+  ],
+  "no_reversal_gap_summary": {
+    "mean": 0.6266082599759102,
+    "ci95_low": -0.332755908370018,
+    "ci95_high": 1.5859724283218384,
+    "n_seed_blocks": 2
+  },
+  "mean_mse_by_condition_arm": {
+    "NO_REVERSAL": {
+      "ACRKN_ACTION_ONLY": 14.322902359068394,
+      "ACRKN_REALIZED_STATE": 13.696294099092484,
+      "ACRKN_REVERSAL_REVEALED": 13.312200017273426,
+      "GRU_ACTION_ONLY": 33.477077569812536,
+      "GRU_REALIZED_STATE": 43.731094509363174,
+      "TASK_AWARE_PARTICLE_FILTER": 0.8156317449703988
+    },
+    "HIDDEN_REVERSAL": {
+      "ACRKN_ACTION_ONLY": 9.106546018272638,
+      "ACRKN_REALIZED_STATE": 8.845681397244334,
+      "ACRKN_REVERSAL_REVEALED": 9.022221460938454,
+      "GRU_ACTION_ONLY": 12.412337586283684,
+      "GRU_REALIZED_STATE": 12.7771612778306,
+      "TASK_AWARE_PARTICLE_FILTER": 2.5871235141542748
+    },
+    "REVEALED_REVERSAL": {
+      "ACRKN_ACTION_ONLY": 9.106546018272638,
+      "ACRKN_REALIZED_STATE": 8.845681397244334,
+      "ACRKN_REVERSAL_REVEALED": 8.877547964453697,
+      "GRU_ACTION_ONLY": 12.412337586283684,
+      "GRU_REALIZED_STATE": 12.7771612778306,
+      "TASK_AWARE_PARTICLE_FILTER": 2.6101235060289083
+    }
+  },
+  "acrkn_parameter_count": 320,
+  "gru_parameter_count": 323,
+  "particle_filter": {
+    "selected_kp": 1.2,
+    "selected_kd": 0.15,
+    "main_particle_count": 256,
+    "convergence_particle_counts": [
+      64,
+      128,
+      256
+    ],
+    "validation_streams_disjoint": true
+  },
+  "claim_boundary": "post-actuator observability in one synthetic plant; no biological or general-AI claim"
+}

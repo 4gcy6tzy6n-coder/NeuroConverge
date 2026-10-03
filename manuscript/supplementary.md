@@ -1,22 +1,63 @@
-# Supplementary Information (outline)
+# Supplementary Information (integration draft)
 
-## Supplementary Table 1 — Included and excluded evidence records
+**Status:** portfolio-level disposition is imported from NeuroMech Route-D evidence matrix V3 (39 records). This supplement includes the complete 39-row portfolio disposition and V1 run records, but it is not yet a fully adjudicated source-to-claim supplement: records imported from the divergent `experiment-publication` branch are listed separately in `../evidence/PUBLICATION_BRANCH_CROSSWALK.csv` and remain candidates until exact IDs, contracts, result files and hashes are reconciled.
 
-For every study: source project, experiment ID, source path, contract, canonical result, unit, evidence class, prospective/outcome-informed status, correction history, inclusion decision and claim ceiling. Import source matrices only after exact row-level reconciliation.
+## Supplementary Table S1 — Full Route-D portfolio disposition
 
-## Supplementary Table 2 — Source and artifact provenance
+`../supplementary/TABLE_S1_PORTFOLIO_DISPOSITION.csv` contains all 39 rows from `PROJECT_EVIDENCE_CLASSIFICATION_MATRIX_V3.csv`, with an added proposed NeuroConverge disposition. It preserves the original labels, portfolio scope, units, source pointers and interpretation limits. The imported source matrix hash and source worktree state are recorded in `../workstreams/PAPER_CRITICAL_SOURCE_SNAPSHOT.json`.
 
-Paper-critical file paths, repository and commit, SHA-256 digest, license/redistribution status and whether raw inputs, derived data, runner and environment are available.
+The portfolio includes the bounded M0 assay; Fish1.5 primary, invalid-null, robustness and post-result records; published worm evidence and schema-limited analyses; M2 synthetic rounds and historical failure; M4–M11 algorithmic studies; M12 task-viability failure; Drosophila-inspired synthetic tests; and separately governed RR18/RR19 records. Different studies are not replications and are not pooled. RR18/RR19 remain separate workstreams.
 
-## Supplementary Methods
+## Supplementary Table S2 — Publication-branch crosswalk
 
-1. NeuroMotif structure/dynamics assay and Fish1.5 analysis, including single-specimen unit and invalid null inference.
-2. Published worm evidence and limits of public source tables.
-3. M2 synthetic switching task, all controller arms, seed-level uncertainty and false-switch trade-off.
-4. Cerebellar source-data analysis, session-level split and modeled weight construction.
-5. Synthetic interval task and post-run input-information audit.
-6. Retrospective selection, claim coding, corrections and limitations.
+`../evidence/PUBLICATION_BRANCH_CROSSWALK.csv` maps the nine claims from the initial NeuroConverge draft to exact or unresolved Route-D matches. C04–C06 and C08 lack exact V3 records; C09 maps to a supplementary-only record. Their use in the earlier draft does not itself establish inclusion in the final evidence portfolio. All are candidates pending source identity, contract/result linkage, outcome status and hash reconciliation.
 
-## Supplementary Results
+## Supplementary Methods S1 — Retrospective portfolio selection
 
-Retain all selected negative results, invalid or blocked analyses, stronger comparator outcomes, robustness checks, and post-result diagnostics. Clearly label results outside the four main-text narratives; do not suppress them or combine their estimands.
+This integration is a retrospective, source-linked synthesis, not a systematic review or prospectively unified experiment. Scope is frozen against launching new experiments by default. Each record retains its original evidence class, unit, task, comparator, status (including invalid, blocked, or outcome-informed), and correction history. A record's presence in the portfolio matrix does not imply that it supports the central claim. The current main-text selection follows the four questions stated in the article, subject to the unresolved exact source-to-claim mappings below; supplementary-only results remain visible to reduce selective reporting. RR18/RR19 are separately governed and excluded. No common effect or meta-analysis is calculated because the tasks, outcomes, units and sampling structures are not exchangeable.
+
+## Supplementary Methods S2 — Source provenance and reproducibility boundary
+
+The NeuroMotif public `main` candidate is `1adc07ffc735cf458116ca36c9f4875708034d4a`. The NeuroMech public `experiment-publication` candidate is `3e5c458f15b2cad7aa6c5703b1827763e84343bb`; its local worktree had two changed/untracked paths at audit. The broader local Route-D view is based on `555c064f4ff3153c871808c3f191b9934a18eaf5` plus 387 changed/untracked paths. These states are not interchangeable and none is an owner-approved immutable full freeze. Paper-critical file hashes are in `../workstreams/PAPER_CRITICAL_SOURCE_SNAPSHOT.json`; this proves file identity at audit time, not that a result was independently rerun or redistributable.
+
+Source files and historical environments remain heterogeneous. Exact runners, dependency locks, licenses and redistribution rights must be evaluated per selected record. The integration repository is not a replacement for either source repository and does not claim full independent reproducibility.
+
+## Supplementary Results S1 — Full portfolio interpretation
+
+Consult Table S1 for the complete row-level status and ceilings. In brief, the route contains positive, negative, invalid, inconclusive, schema-blocked and supplementary-only records. M2 comprises multiple synthetic/controller rounds and cannot be summarized by the single favorable sensory-site versus output-persistence contrast alone. M5 and related eligibility studies are heterogeneous; V3 classifies the M5 line as supplementary-only, while some selected `experiment-publication` packages have no exact V3 row. M11 and M12 must be retained in the full portfolio account, as must the Drosophila synthetic counterevidence and robustness records. These records constrain project-level selection but do not become evidence for a biological mechanism merely by being included.
+
+## Supplementary Table S3 — Outcome-informed synthetic V1 tests
+
+`../new_experiments/` contains the frozen M2 and M5 contracts, runners, complete seed-level outputs, source/code provenance, verification records and interpretation limits. M2 compares action-conditioned inference and realized-state channels in a synthetic tracking task; two complete runs reproduced scientifically exactly after declared timing exclusions. M5 compares aligned and broken input-target correspondence in a separate synthetic interval task; the task gate passed, and the result is limited by a post-run correction that the generic ridge arm was feature matched but not strictly parameter matched. These records do not validate either motivating biological mechanism, and the two outcomes are not pooled.
+
+## Supplementary Results S2 — Historical artificial tests and source-readout record
+
+The following numerical account was moved from the earlier main Results. These historical studies retain their original identities and ceilings; they are not replications of the completed V1 tests. Exact Route-D record linkage remains unresolved for some publication-branch packages (Supplementary Table S2). The source-readout endpoint was held-out trial squared Pearson correlation with time progress, a direction-insensitive association rather than calibrated time prediction. Of 80 planned splits, 78 were usable; two retained the status `NO_TRAINING_CF_CANDIDATES`. Source weights were modeled and sessions were not established as independent animals.
+
+In one synthetic switching task, sensory-site motor feedback reached 88.94% accuracy versus 82.14% for an equal-parameter output-persistence control, but did not exceed no-feedback (89.05%), a two-unit generic recurrent model (90.21%), or a task-aware Bayes filter (90.30%). The local contrast therefore identifies a placement-dependent trade-off against one comparator, not an overall accuracy advantage.
+
+In the cerebellar source analysis, model-derived weights exceeded uniform weights in 15/16 source sessions and CF-time-shuffled weights in 16/16; a fixed ridge readout exceeded the source-derived projection in 14/16. This supports within-session predictive temporal structure under the modeled analysis. In the separate synthetic interval task, CF-timed LTD did not meet its frozen transfer criterion: mean held-out absolute error was 0.1252 s versus 0.1097 s for no-trace, 0.1252 s for CF-time-shuffled teaching, 0.1030 s for a generic radial-basis representation, and 0.0753 s for the training-label empirical timer. A design audit found that trial-specific timing jitter was independently sampled and not present in the inputs. The outcome bounds this implementation/task pair; it does not test whether the biological rule could use a suitable trial-specific signal.
+
+Two additional M5 eligibility-trace studies use different synthetic objectives and must not be combined with the source-defined CF-LTD interval experiment. In a delayed-XOR classification task (32 seeds), eligibility traces reached 0.6974 accuracy versus 0.5562 for no-trace and one-step truncated backpropagation through time (TBPTT-1), but trailed TBPTT-4 (0.9633) and full backpropagation (0.9996). In a separate fixed-generator classification suite, trace eligibility exceeded no-trace by 0.2284 (95% interval [0.2213, 0.2357]); exact replay nevertheless outperformed eligibility in all 12 generator-by-delay cells (overall means 0.7609 versus 0.5590). These are post-result synthetic demonstrations that eligibility can help against a weak memory control under some task conditions; the stronger replay and gradient-based controls set a lower ceiling on claims. Neither result validates a cerebellar mechanism or establishes general transfer.
+
+The M2, M5 source-readout, source-defined transfer, delayed-XOR and task-generator records are pinned to the NeuroMech `experiment-publication` commit `3e5c458f15b2cad7aa6c5703b1827763e84343bb`. Existing stored-output verifiers passed for M2 and the two source-defined CF-LTD packages; stored verification records are available for the delayed-XOR and generator studies, and selected artifact hashes are recorded in [`SELECTED_ARTIFACTS.csv`](../reproducibility/SELECTED_ARTIFACTS.csv). These packages are post-result exploratory at the project level, and the source-readout summaries are descriptive. This pins the cited study records; it does not resolve the broader NeuroMech mainline/worktree freeze or which additional studies belong in the integrated paper.
+
+## Supplementary Results S3 — Fish1.5 inference and M0 source boundary
+
+Fish1.5 retained 10,000 valid positive-association permutation draws and 9,844 valid neuron-bootstrap draws out of 10,000 requested draws. The reported bootstrap interval summarizes the valid draws. The frozen topology null preserved binary in/out degrees and the global weight multiset, but not each node's weighted strength. With 861 undefined correlations, its P value remains unestimable. Post-result conditional null analyses do not repair the original frozen inference and retain their separate labels in Table S1. The M0 report documents a crossover only after both retention curves approached noise. Its comparator retained diagonal self-persistence. The complete M0 report is local to the NeuroMech source workspace, and canonical round-artifact linkage is still incomplete; assignment to the structural workstream does not make the full package part of the NeuroMotif public snapshot.
+
+## Supplementary Results S4 — M2 V1 diagnostics and reproducibility
+
+The full arm-by-condition means, primary and diagnostic intervals, parameter counts and repeated-run comparison are retained in `../new_experiments/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/RUN_REPORT.md` and `runs/canonical_1/summary.json`. All 32 seed blocks are included. Both full runs passed the independent verifier and agree scientifically after only declared timing fields are excluded. The revealed-event control had no frozen equivalence margin; its zero-crossing interval cannot establish equivalent performance. The benchmark received an exact execution-sign measurement, with no tested corruption or delay condition.
+
+The M2 base HEAD `3e5c458f15b2cad7aa6c5703b1827763e84343bb` did not define the executed version: the captured contract was modified and the runner/verifier were untracked. `SOURCE_PROVENANCE.json` identifies the exact contract SHA-256 `489ed473bbeb895ccb99ad8b661dbbdeacee0f2a19fc6615e1a4dfa8fd6736f0`, runner `984ef632108a0aa3256a19009747194818db1296ed0531fe1b294703cf27c8d6`, and verifier `f6d48727f4ece27f385d56baf1221ac12e09b0cb36ef6e52e6e47d867e7c7055`.
+
+## Supplementary Results S5 — M5 V1 controls and comparator correction
+
+Full means and effect intervals are retained in `../new_experiments/M5_CORRESPONDENCE_PRESERVED_TIMING_V1/RESULTS.md` and `results/primary_result.json`. The no-trace broken-minus-aligned nMAE effect was −0.000069515 (95% interval [−0.000411054, +0.000219329]); the teaching-time shuffle effect was −0.001199416 ([−0.002510140, +0.000071742]). Zero-crossing intervals do not establish equivalence or zero information. The same-feature ridge arm has a scalar 17-parameter head, whereas the local rule has a 476-parameter, 28-class softmax head; objectives and fitting procedures differ. The preserved frozen contract and post-run audit record the correction from parameter matched to feature matched. Teaching-time shuffling is a training intervention; the aligned/broken regime independently changes input-target pairing in both train and test splits, so the primary effect does not separate training and evaluation contributions.
+
+The M5 contract SHA-256 is `1434055cc21047edfd8185d50e6dc207c640ddb46aa3cf7b1293a8353c0e7658`, and the successful runner SHA-256 is `9f9f4d810f473573fc86f8a8bb2ad454a4d099009004429618d7b766f3bbad80`. The first launch failed before producing outcomes because Python 3.9 did not support `zip(strict=True)`; a syntax-only amendment was frozen before the successful run. The original freeze, amendment, execution incident and successful run manifest remain intact.
+
+## Remaining assembly work
+
+Study-level procedures for the selected M0, Fish1.5, source-readout, M2 V1 and M5 V1 analyses are now in the main Methods, and all five main figures have source-data tables and export hashes. Remaining gaps are the exact source-to-claim crosswalk for some historical branch records, final citation/attribution review, reuse-rights audit and author-supplied end matter. The manuscript remains an internal draft and is not NMI-ready.

@@ -1,0 +1,16 @@
+{
+  "before": {
+    "1. The tested structure-to-dynamics assays did not establish a general advantage": 121,
+    "2. Source-supported computation is distinct from graph structure": 118,
+    "3. Artificial effects were bounded by task, information and comparator": 413,
+    "4. The combined record motivates a transfer-evidence hierarchy": 65,
+    "5. Prospective synthetic tests separate information access from biological specificity": 259
+  },
+  "after": {
+    "1. The tested connectome descriptions did not establish the proposed computational advantage": 241,
+    "2. Source evidence constrained the computation without selecting a unique artificial implementation": 356,
+    "3. Direct execution-state information did not improve the tested action-conditioned controller": 426,
+    "4. Preserved temporal correspondence supported prediction without establishing mechanism specificity": 442
+  },
+  "results_total_after_including_preface": 1588
+}

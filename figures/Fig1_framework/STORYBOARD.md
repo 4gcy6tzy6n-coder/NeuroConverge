@@ -1,7 +1,7 @@
-# Figure 1 storyboard — Evidence levels and workstream convergence
+# Figure 1 — Evidence questions and project coverage
 
-**Status:** concept only; no source data.
+**Current export:** `Fig1_framework.pdf` and `.png`; source rows in `figure_source_data.csv`.
 
-Left-to-right layers: biological structure → source-supported computation → information correspondence → computational sufficiency → mechanism specificity → artificial utility. Place NeuroMotif primarily at structure/dynamics boundaries and NeuroMech across source computation and artificial tests. Use solid marks only for observed/reproduced evidence, dashed arrows for hypotheses, and explicit `blocked`, `invalid`, `inconclusive`, and `task-bounded` labels.
+Four adjacent panels separate biological structure, source-supported computation, information correspondence and artificial utility. NeuroMotif and NeuroMech are shown as differently scoped evidence portfolios. Dotted separators mark transitions requiring separate tests.
 
-**Required review:** no arrow should imply automatic causation or validation; avoid suggesting the two projects share one estimand.
+**Inference limit:** retrospective organizing proposal only; no automatic causal sequence, shared estimand or validated transfer hierarchy.

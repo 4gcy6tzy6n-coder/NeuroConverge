@@ -1,7 +1,7 @@
-# Figure 4 storyboard — Cerebellar temporal credit
+# Figure 4 — M5 temporal correspondence task
 
-**Status:** concept revised after reviewing five distinct M5 records; source selection, hashes and licensing still require final review.
+**Current export:** `Fig4_temporal_credit.pdf` and `.png`; seed-level source table in `figure_source_data.csv`.
 
-Four panels must remain visually distinct: (A) source-data, within-session predictive readout from modeled CF-LTD weights; (B) source-defined CF-LTD on the synthetic interval task, where the frozen transfer criterion failed and independently sampled timing jitter was absent from the inputs; (C) synthetic delayed-XOR eligibility versus no-trace, TBPTT-1, TBPTT-4 and full BPTT; (D) synthetic fixed-generator classification, comparing eligibility with no-trace and exact replay across three generators and four delays. Name session/task-seed units and mark post-result exploratory status on each relevant panel.
+Panel A reports paired broken-minus-aligned nMAE effects. Panel B shows the corresponding mean nMAE in each regime for the CF-inspired local rule, no-trace and time-shuffle controls, same-feature generic ridge and exact full-input replay.
 
-**Required review:** Do not transfer a number from an older publication draft to a different M5 round, pool results across tasks, or treat source-derived model weights as directly measured synapses. Show the weaker and stronger controls: trace may beat no-trace in some synthetic tasks but does not beat exact replay or longer/full BPTT here. Retain M5 delayed-teaching v3 in the selection/exclusion audit.
+**Inference limit:** local-rule correspondence benefit in one synthetic generator; ridge is feature-matched but differs in head size, objective and fitting, while replay receives the full trial. Historical M5 experiments remain in Supplementary Results S2.

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="518.4pt" height="226.8pt" viewBox="0 0 518.4 226.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-03T17:55:17.203461</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 226.8 
+L 518.4 226.8 
+L 518.4 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 41.472 161.028 
+L 252.793457 161.028 
+L 252.793457 49.896 
+L 41.472 49.896 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m13949a2a6d" d="M 0 0 
+L 0 3.5 
+" style="stroke: #000000; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m13949a2a6d" x="47.509756" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="47.509756" y="173.038469" transform="rotate(-0 47.509756 173.038469)">−0.4</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="77.698536" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="77.698536" y="173.038469" transform="rotate(-0 77.698536 173.038469)">−0.3</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="107.887315" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="107.887315" y="173.038469" transform="rotate(-0 107.887315 173.038469)">−0.2</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="138.076095" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="138.076095" y="173.038469" transform="rotate(-0 138.076095 173.038469)">−0.1</text>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="168.264874" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="168.264874" y="173.038469" transform="rotate(-0 168.264874 173.038469)">0.0</text>
+     </g>
+    </g>
+    <g id="xtick_6">
+     <g id="line2d_6">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="198.453654" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="198.453654" y="173.038469" transform="rotate(-0 198.453654 173.038469)">0.1</text>
+     </g>
+    </g>
+    <g id="xtick_7">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="228.642434" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="228.642434" y="173.038469" transform="rotate(-0 228.642434 173.038469)">0.2</text>
+     </g>
+    </g>
+    <g id="text_8">
+     <text style="font: 8px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="147.132729" y="184.253469" transform="rotate(-0 147.132729 184.253469)">Spearman correlation (95% neuron-bootstrap CI)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2"/>
+   <g id="line2d_8">
+    <path d="M 168.264874 161.028 
+L 168.264874 49.896 
+" clip-path="url(#p66a621581b)" style="fill: none; stroke-dasharray: 3.7,1.6; stroke-dashoffset: 0; stroke: #68737d"/>
+   </g>
+   <g id="LineCollection_1">
+    <path d="M 79.742829 105.462 
+L 208.664737 105.462 
+" clip-path="url(#p66a621581b)" style="fill: none; stroke: #2864a5; stroke-width: 2"/>
+   </g>
+   <g id="line2d_9">
+    <defs>
+     <path id="m0c1d9b84cb" d="M 0 4 
+L 0 -4 
+" style="stroke: #2864a5"/>
+    </defs>
+    <g clip-path="url(#p66a621581b)">
+     <use xlink:href="#m0c1d9b84cb" x="79.742829" y="105.462" style="fill: #2864a5; stroke: #2864a5"/>
+    </g>
+   </g>
+   <g id="line2d_10">
+    <g clip-path="url(#p66a621581b)">
+     <use xlink:href="#m0c1d9b84cb" x="208.664737" y="105.462" style="fill: #2864a5; stroke: #2864a5"/>
+    </g>
+   </g>
+   <g id="line2d_11">
+    <defs>
+     <path id="m6fba559e8e" d="M 0 3 
+C 0.795609 3 1.55874 2.683901 2.12132 2.12132 
+C 2.683901 1.55874 3 0.795609 3 0 
+C 3 -0.795609 2.683901 -1.55874 2.12132 -2.12132 
+C 1.55874 -2.683901 0.795609 -3 0 -3 
+C -0.795609 -3 -1.55874 -2.683901 -2.12132 -2.12132 
+C -2.683901 -1.55874 -3 -0.795609 -3 0 
+C -3 0.795609 -2.683901 1.55874 -2.12132 2.12132 
+C -1.55874 2.683901 -0.795609 3 0 3 
+z
+" style="stroke: #2864a5"/>
+    </defs>
+    <g clip-path="url(#p66a621581b)">
+     <use xlink:href="#m6fba559e8e" x="135.17204" y="105.462" style="fill: #2864a5; stroke: #2864a5"/>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 41.472 161.028 
+L 41.472 49.896 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 41.472 161.028 
+L 252.793457 161.028 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_9">
+    <text style="fill: #202a33; font: 7.5px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(45.698429 141.57612)">ρ = −0.110</text>
+    <text style="fill: #202a33; font: 7.5px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(45.698429 149.535495)">positive-direction permutation p = 0.834</text>
+   </g>
+   <g id="text_10">
+    <text style="font: 700 8px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="16.113425" y="39.42669" transform="rotate(-0 16.113425 39.42669)">a</text>
+   </g>
+   <g id="text_11">
+    <text style="font: 700 9px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="41.472" y="43.896" transform="rotate(-0 41.472 43.896)">Fish1.5 E1: one specimen, 82 neurons</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_5">
+    <path d="M 309.771984 161.028 
+L 505.44 161.028 
+L 505.44 49.896 
+L 309.771984 49.896 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 309.771984 126.678109 
+L 336.969838 126.678109 
+L 336.969838 84.245891 
+L 309.771984 84.245891 
+z
+" clip-path="url(#pe065a9fe5c)" style="fill: #138a8a"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 336.969838 126.678109 
+L 505.44 126.678109 
+L 505.44 84.245891 
+L 336.969838 84.245891 
+z
+" clip-path="url(#pe065a9fe5c)" style="fill: #d7dee3"/>
+   </g>
+   <g id="matplotlib.axis_3">
+    <g id="xtick_8">
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="309.771984" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_12">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="309.771984" y="173.038469" transform="rotate(-0 309.771984 173.038469)">0</text>
+     </g>
+    </g>
+    <g id="xtick_9">
+     <g id="line2d_13">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="348.905587" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_13">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="348.905587" y="173.038469" transform="rotate(-0 348.905587 173.038469)">200</text>
+     </g>
+    </g>
+    <g id="xtick_10">
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="388.03919" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_14">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="388.03919" y="173.038469" transform="rotate(-0 388.03919 173.038469)">400</text>
+     </g>
+    </g>
+    <g id="xtick_11">
+     <g id="line2d_15">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="427.172794" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_15">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="427.172794" y="173.038469" transform="rotate(-0 427.172794 173.038469)">600</text>
+     </g>
+    </g>
+    <g id="xtick_12">
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="466.306397" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_16">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="466.306397" y="173.038469" transform="rotate(-0 466.306397 173.038469)">800</text>
+     </g>
+    </g>
+    <g id="xtick_13">
+     <g id="line2d_17">
+      <g>
+       <use xlink:href="#m13949a2a6d" x="505.44" y="161.028" style="stroke: #000000; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_17">
+      <text style="font: 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="505.44" y="173.038469" transform="rotate(-0 505.44 173.038469)">1000</text>
+     </g>
+    </g>
+    <g id="text_18">
+     <text style="font: 8px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="407.605992" y="184.253469" transform="rotate(-0 407.605992 184.253469)">Frozen topology-null graphs (n = 1,000)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_4"/>
+   <g id="patch_8">
+    <path d="M 309.771984 161.028 
+L 309.771984 49.896 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 309.771984 161.028 
+L 505.44 161.028 
+" style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_19">
+    <text style="fill: #138a8a; font: 700 7px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="337.556842" y="76.967804" transform="rotate(-0 337.556842 76.967804)">139 defined</text>
+   </g>
+   <g id="text_20">
+    <text style="fill: #202a33; font: 700 7.3px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle" x="421.204919" y="107.354297" transform="rotate(-0 421.204919 107.354297)">861 undefined</text>
+   </g>
+   <g id="text_21">
+    <text style="font: 700 8px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="286.291822" y="39.42669" transform="rotate(-0 286.291822 39.42669)">b</text>
+   </g>
+   <g id="text_22">
+    <text style="font: 700 9px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="309.771984" y="43.896" transform="rotate(-0 309.771984 43.896)">Frozen null was not estimable</text>
+   </g>
+  </g>
+  <g id="text_23">
+   <text style="font: 700 11px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="15.552" y="14.811656" transform="rotate(-0 15.552 14.811656)">Structure-to-dynamics evidence is bounded to the tested records</text>
+  </g>
+  <g id="text_24">
+   <text style="fill: #68737d; font: 6.8px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(15.552 205.5234)">M0 tested whole-connectome off-diagonal recurrence against passive identity-like persistence, which retains diagonal state memory.</text>
+   <text style="fill: #68737d; font: 6.8px 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif" transform="translate(15.552 212.894812)">The result bounds that frozen assay; the single-specimen topology null is indeterminate because 861/1,000 graphs were undefined.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p66a621581b">
+   <rect x="41.472" y="49.896" width="211.321457" height="111.132"/>
+  </clipPath>
+  <clipPath id="pe065a9fe5c">
+   <rect x="309.771984" y="49.896" width="195.668016" height="111.132"/>
+  </clipPath>
+ </defs>
+</svg>

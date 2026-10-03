@@ -1,0 +1,7 @@
+seed_block,training_seed,condition,evaluation_seed,paired_stream_group,reversal_probability,episodes
+0,1960000,NO_REVERSAL,31000000,block-0-p0,0.0,8
+0,1960000,HIDDEN_REVERSAL,31001000,block-0-p025,0.25,8
+0,1960000,REVEALED_REVERSAL,31001000,block-0-p025,0.25,8
+1,1960001,NO_REVERSAL,31010000,block-1-p0,0.0,8
+1,1960001,HIDDEN_REVERSAL,31011000,block-1-p025,0.25,8
+1,1960001,REVEALED_REVERSAL,31011000,block-1-p025,0.25,8

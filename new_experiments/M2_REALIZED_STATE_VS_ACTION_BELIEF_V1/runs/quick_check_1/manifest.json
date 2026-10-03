@@ -1,0 +1,80 @@
+{
+  "experiment": "M2_REALIZED_STATE_VS_ACTION_BELIEF_V1",
+  "classification": "generic synthetic actuator-observability benchmark; not biological transfer",
+  "mode": "QUICK_IMPLEMENTATION_CHECK",
+  "contract_sha256": "489ed473bbeb895ccb99ad8b661dbbdeacee0f2a19fc6615e1a4dfa8fd6736f0",
+  "runner_sha256": "984ef632108a0aa3256a19009747194818db1296ed0531fe1b294703cf27c8d6",
+  "verifier_sha256": "f6d48727f4ece27f385d56baf1221ac12e09b0cb36ef6e52e6e47d867e7c7055",
+  "vendored_acrkn_sha256": "ef2983547c0ccd1390c078a778a4d436e02039bdf358d248b3138ab4da7f0310",
+  "python": "3.9.6",
+  "numpy": "2.0.2",
+  "torch": "2.8.0",
+  "device": "CPU",
+  "threads": 1,
+  "training_seeds": [
+    1960000,
+    1960001
+  ],
+  "updates": 3,
+  "batch_size": 4,
+  "sequence_length": 64,
+  "test_episodes_per_block_arm_condition": 8,
+  "conditions": [
+    "NO_REVERSAL",
+    "HIDDEN_REVERSAL",
+    "REVEALED_REVERSAL"
+  ],
+  "arms": [
+    "ACRKN_ACTION_ONLY",
+    "ACRKN_REALIZED_STATE",
+    "ACRKN_REVERSAL_REVEALED",
+    "GRU_ACTION_ONLY",
+    "GRU_REALIZED_STATE",
+    "TASK_AWARE_PARTICLE_FILTER"
+  ],
+  "duration_seconds": 1.5816707611083984,
+  "nondeterministic_fields": [
+    "manifest.duration_seconds",
+    "fit_manifest.training_seconds",
+    "inference_timing.inference_seconds",
+    "particle_diagnostics.inference_seconds"
+  ],
+  "outputs": {
+    "fit_manifest.csv": {
+      "bytes": 66707,
+      "sha256": "72736079c06303516a94f3dc4e84a18603c3f056b49481eda3745d4b05300304"
+    },
+    "episode_metrics.csv": {
+      "bytes": 30061,
+      "sha256": "262206b06ba20d991aa442ddeb2c1fbc24db8f61dd0dafb1d42706ea9ed5d29e"
+    },
+    "seed_summary.csv": {
+      "bytes": 3343,
+      "sha256": "508238a41636b063b45397ee1aebe98aa2ca1d17462c387b5a0b0378828ad1cd"
+    },
+    "stream_registry.csv": {
+      "bytes": 421,
+      "sha256": "fbb7d3c439b80f0a7903566f96e6b429c34862becb57b8925463b361d0381567"
+    },
+    "particle_gain_validation.csv": {
+      "bytes": 556,
+      "sha256": "c8cff95ca8202019c6b28c00d615dc2dcb585069885b371e2cc67f5363113041"
+    },
+    "particle_diagnostics.csv": {
+      "bytes": 2423,
+      "sha256": "d913a88c272332d5200dd32aa565d73ec1e1cb863ad19469c86e42e7f03a7bf2"
+    },
+    "inference_timing.csv": {
+      "bytes": 2259,
+      "sha256": "caf119a980249a6bb9225480c621616d254e79ee7322faeae2f2e069a0a2fc3c"
+    },
+    "model_diagnostics.csv": {
+      "bytes": 1455,
+      "sha256": "2437c2ebc386212426536d12571e678307c3a7a756b1fa6eb31167fbe4ae9ed9"
+    },
+    "summary.json": {
+      "bytes": 2730,
+      "sha256": "5001f199a8c96ebd1bf3386018bbbfd9660d25c48de55ea779a9f3ffe0c2183d"
+    }
+  }
+}

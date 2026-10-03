@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "comparison": "SCIENTIFIC_OUTPUTS_EXACT_AFTER_DECLARED_TIMING_EXCLUSIONS",
+  "run_a": "/Users/yyl/Desktop/workshop/NMI/NeuroConverge/new_experiments/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/runs/canonical_1",
+  "run_b": "/Users/yyl/Desktop/workshop/NMI/NeuroConverge/new_experiments/M2_REALIZED_STATE_VS_ACTION_BELIEF_V1/runs/canonical_2",
+  "declared_nondeterministic_fields": [
+    "manifest.duration_seconds",
+    "fit_manifest.training_seconds",
+    "inference_timing.inference_seconds",
+    "particle_diagnostics.inference_seconds"
+  ],
+  "deterministic_files": {
+    "summary.json": {
+      "bytes": 5859,
+      "sha256": "e9678eb7a2e640a4bf3315ff335cc1134e7018d9ba014352ae9997b6772bd5e5"
+    },
+    "episode_metrics.csv": {
+      "bytes": 7717461,
+      "sha256": "f0f3115488239d9076a07b2ecc5a603d833792a680400d1f6e83ef80dffc18a0"
+    },
+    "seed_summary.csv": {
+      "bytes": 55386,
+      "sha256": "2a508bcc50dabd03163b0b69212d537cfffc211db2e1d0b9257f7623e1bc5eff"
+    },
+    "stream_registry.csv": {
+      "bytes": 5449,
+      "sha256": "c0f86534879e3b6bfe17a6471d7492cfb651139ca847b69e1d758f4b39b18ef0"
+    },
+    "particle_gain_validation.csv": {
+      "bytes": 556,
+      "sha256": "c8cff95ca8202019c6b28c00d615dc2dcb585069885b371e2cc67f5363113041"
+    },
+    "model_diagnostics.csv": {
+      "bytes": 22251,
+      "sha256": "0157faa2c98f40bc8fe5fecb687e9740c0fa65d78634777200ccc4ce7ce5c7f0"
+    }
+  },
+  "normalized_timing_files": {
+    "fit_manifest.csv": {
+      "excluded_column": "training_seconds",
+      "rows": 160,
+      "normalized_sha256": "082874221bd707d5a1a44b2e4486bb0381f7a7552dd332b201f16b1591636c64"
+    },
+    "inference_timing.csv": {
+      "excluded_column": "inference_seconds",
+      "rows": 576,
+      "normalized_sha256": "c7a23cf3a44941666a34f7d4d37a92bae5cc4d291e253e185c8b7dc2311ecd40"
+    },
+    "particle_diagnostics.csv": {
+      "excluded_column": "inference_seconds",
+      "rows": 288,
+      "normalized_sha256": "2a09aecaebec082e4f2af877b5ab580d6f3671ff14d3269c1ee75b0805a66b3c"
+    }
+  },
+  "normalized_manifest_sha256": "e2da69dd80c0d1846432537b09dceae709fe3e75f9de006f07a76cd493bb9ecc"
+}

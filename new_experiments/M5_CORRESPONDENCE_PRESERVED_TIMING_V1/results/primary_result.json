@@ -1,0 +1,64 @@
+{
+  "status": "FROZEN_RUN_COMPLETE",
+  "classification": "synthetic post-hoc project extension; prospective contract frozen before first outcome run",
+  "outcome": "normalized mean absolute error (lower is better)",
+  "primary_estimand": "paired task-seed mean nMAE(BROKEN) - nMAE(ALIGNED) for CF_TIMED_LOCAL",
+  "task_viability": {
+    "passed": true,
+    "aligned_exact_replay_relative_improvement_vs_constant": 0.7234832914986088,
+    "required_relative_improvement": 0.25,
+    "exact_replay_effect_ci_lower_must_exceed_zero": [
+      0.18691166251563845,
+      0.19222912842704612
+    ]
+  },
+  "effects": {
+    "CF_TIMED_LOCAL": {
+      "mean_broken_minus_aligned_nmae": 0.1165879792815532,
+      "bootstrap_95_ci": [
+        0.11507242996983326,
+        0.1180650509688199
+      ],
+      "positive_seed_count": 30,
+      "n_seeds": 30
+    },
+    "NO_TRACE": {
+      "mean_broken_minus_aligned_nmae": -6.951517278943146e-05,
+      "bootstrap_95_ci": [
+        -0.00041105424312460796,
+        0.0002193294687905655
+      ],
+      "positive_seed_count": 19,
+      "n_seeds": 30
+    },
+    "CF_TIME_SHUFFLE": {
+      "mean_broken_minus_aligned_nmae": -0.0011994164246242416,
+      "bootstrap_95_ci": [
+        -0.00251013966036043,
+        7.174218871852676e-05
+      ],
+      "positive_seed_count": 11,
+      "n_seeds": 30
+    },
+    "GENERIC_MATCHED_RBF": {
+      "mean_broken_minus_aligned_nmae": 0.20238961959454782,
+      "bootstrap_95_ci": [
+        0.20012262409122308,
+        0.20467523619136582
+      ],
+      "positive_seed_count": 30,
+      "n_seeds": 30
+    },
+    "EXACT_REPLAY_REFERENCE": {
+      "mean_broken_minus_aligned_nmae": 0.18955165719284228,
+      "bootstrap_95_ci": [
+        0.18691166251563845,
+        0.19222912842704612
+      ],
+      "positive_seed_count": 30,
+      "n_seeds": 30
+    }
+  },
+  "decision": "CF_CORRESPONDENCE_EFFECT_SUPPORTED",
+  "interpretation_ceiling": "synthetic fixed-task artificial result only; no biological validation or general AI claim"
+}
