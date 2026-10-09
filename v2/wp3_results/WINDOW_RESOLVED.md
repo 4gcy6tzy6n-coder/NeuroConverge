@@ -1,3 +1,12 @@
+> **STATUS: THE `d` VALUES HERE ARE z-SCORES, NOT EFFECT SIZES (round 28 census).** The source JSON stores
+> `diff / SE`, whose name in the file is `d`. A z-score quoted as an effect size overstates the effect by
+> `sqrt(n)`, which here is hundreds. **The largest genuine effect size anywhere in this corpus is 0.7690, so
+> any `d` of 2 or more is a z-score.** **See
+> [`CENSUS_d_z_versus_d_effect.md`](CENSUS_d_z_versus_d_effect.md).** The numbers stand as statistics; the
+> label does not. The text is left unaltered.
+
+---
+
 # The window question is answered: 500 ms stimulus, 4 s criterion, and why longer windows inflate
 
 **Status: the window dependence of round 2 is EXPLAINED, and the correct window is determined from the

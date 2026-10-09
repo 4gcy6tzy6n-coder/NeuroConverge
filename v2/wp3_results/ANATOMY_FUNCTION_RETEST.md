@@ -1,3 +1,12 @@
+> **STATUS: THE `d` VALUES HERE ARE z-SCORES, NOT EFFECT SIZES (round 28 census).** The source JSON stores
+> `diff / SE`, whose name in the file is `d`. A z-score quoted as an effect size overstates the effect by
+> `sqrt(n)`, which here is hundreds. **The largest genuine effect size anywhere in this corpus is 0.7690, so
+> any `d` of 2 or more is a z-score.** **See
+> [`CENSUS_d_z_versus_d_effect.md`](CENSUS_d_z_versus_d_effect.md).** The numbers stand as statistics; the
+> label does not. The text is left unaltered.
+
+---
+
 # Anatomy-versus-function re-test, and the three confounds that limit it
 
 **Status: RESULT OBTAINED, CONFOUNDED, NOT YET INTERPRETABLE AS A CORRECTION.** This document records

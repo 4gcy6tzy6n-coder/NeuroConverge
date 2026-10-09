@@ -44,6 +44,7 @@ document remains findable by the claim it made.**
 | `FIGURE_SPECIFICATIONS.md` and `FIGURE_SOURCE_DATA.json` | figure-ready data with hashes | how a manuscript would be assembled |
 | `CONSOLIDATED_POSITION.md` | the line's position as of its date | **read with the four supersessions in mind** |
 | `../wp1_data/PATH_LAYOUT.md` | the four input paths the scripts expect, their provenance, integrity and licences | **read before attempting to re-run anything**; 27 of 29 scripts read from `/tmp/` |
+| `CENSUS_d_z_versus_d_effect.md` | **seventy-six fields across five files store a z-score in a field named `d`**; the four live claims draw on files storing genuine Cohen's `d` | **a `d` of 2 or more in this corpus is a z-score, not an effect size** |
 | `NOTATION_two_effect_sizes.md` | two quantities share the symbol `d` | **read before quoting any effect size**: `d_A` is `mean(diff)/SD(diff)` across animals, `d_B` is the mean of per-animal standardised effects |
 
 ## 4. The invalid runs, retained on purpose
@@ -75,7 +76,9 @@ least once, and three were withdrawn or narrowed outright.**
    data records a hash for each.
 4. **Treat everything a superseded document says about interpretation as dated**, and its measurements as
    still standing.
-4a. **Before quoting an effect size, check which `d` it is.** `NOTATION_two_effect_sizes.md` defines the two;
+4a. **Before quoting an effect size, check which `d` it is, and apply the arithmetic check: the largest
+   genuine effect size in this corpus is 0.7690, so any `d` of 2 or more is a z-score rather than an effect
+   size.** `CENSUS_d_z_versus_d_effect.md` and `NOTATION_two_effect_sizes.md` define the four meanings. `NOTATION_two_effect_sizes.md` defines the two;
    a value above about 0.4 in this corpus is the across-animal ratio and a value near 0.10 is usually the
    per-animal mean.
 5. **`v2/tools/check_artifacts.py` will verify any requirement you state against the corpus**, and its README
