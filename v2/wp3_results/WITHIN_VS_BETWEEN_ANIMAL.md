@@ -122,3 +122,12 @@ this one, with the ICC value printed so that it cannot be reused without the rea
   marker).
 * Read-out and inclusion conventions as in `SOURCE_RULE_RESULT.md`.
 * **No model was fitted. The association is observational and cross-individual; no causal claim is made.**
+---
+
+> **INTERPRETATION RETRACTED, appended 2026-10-09.** The reading in this document -- that the animals
+> differ rather than the measurements being noisy -- is **withdrawn**. A three-level decomposition
+> separating a homogeneous animal offset, a pair-specific animal deviation and within-cell measurement
+> error gives **5.5 % pair-specific animal deviation against 37.5 % measurement error**, so the low
+> cross-animal agreement is better explained by unreliable pair means than by heterogeneous biology. See
+> [`CORRECTION_heterogeneity_is_noise.md`](CORRECTION_heterogeneity_is_noise.md), which takes precedence.
+> **The measurements in this document are unaffected; the interpretation is.** The text is left unaltered.
