@@ -61,13 +61,13 @@ code at `github.com/dwitvliet/NemaNode`). Read from the source page, not from a 
 * **Direction is stated:** chemical = **directed**; gap junction = **undirected**.
 * **Edge type and stability class are stated:** stable / developmentally dynamic (added) /
   develop mentally dynamic (pruned) / variable / post-embryonic / not classified.
-* **⚠️ The source page says the gap-junction annotation "is by no means exhaustive, and should not be
+* **WARNING: The source page says the gap-junction annotation "is by no means exhaustive, and should not be
   treated as such."** Gap junctions must therefore be carried as an explicitly incomplete edge class,
   or excluded, and either choice must be frozen before outcomes.
-* **⚠️ Licence: `UNKNOWN`.** The page states none. This must be resolved before any redistribution.
+* **WARNING: Licence: `UNKNOWN`.** The page states none. This must be resolved before any redistribution.
   Compare with the functional side, which is `CC-BY-4.0`.
 
-## 3. ⚠️ The decisive blocker: the trace ↔ cell mapping is not in the downloadable artifacts
+## 3. WARNING: The decisive blocker: the trace ↔ cell mapping is not in the downloadable artifacts
 
 **This is the finding that decides WP1.**
 
