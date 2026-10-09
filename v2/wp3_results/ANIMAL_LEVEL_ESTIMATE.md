@@ -124,7 +124,7 @@ used, but it is not the explanation for anything.**
 
 ## 7. Provenance
 
-* Script `anatomy/08_animal_level.py`; outputs `anatomy/RESULT_animal_level.json` and
+* Script `anatomy/09_animal_level.py`; outputs `anatomy/RESULT_animal_level.json` and
   `anatomy/RESULT_baseline_conventions.json`.
 * Anatomical and functional inputs and their checksums: `CONFOUND_TESTS.md` section 7.
 * Source `shift_vol` and baseline convention: `pumpprobe/Fconn.py:170, 256` with

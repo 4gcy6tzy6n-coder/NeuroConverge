@@ -112,7 +112,7 @@ established that the pass rate was plausible rather than zero.
 
 ## 7. Provenance
 
-* Scripts `anatomy/11_source_rule.py` and the fast harness `anatomy/11a_source_rule_harness.py`;
+* Scripts `anatomy/11b_source_rule.py` and the fast harness `anatomy/11a_source_rule_harness.py`;
   output `anatomy/RESULT_source_rule.json`.
 * Source rule lines: `pumpprobe/Fconn.py:141, 170, 261, 277-282, 313-319, 348-392, 430-467`;
   `pumpprobe/Funatlas.py:2214, 2426`.

@@ -43,6 +43,7 @@ document remains findable by the claim it made.**
 | `METHODS_LEVEL_SURVEY.md` | four full texts, 376,157 chars, none reporting it | confirms the placement |
 | `FIGURE_SPECIFICATIONS.md` and `FIGURE_SOURCE_DATA.json` | figure-ready data with hashes | how a manuscript would be assembled |
 | `CONSOLIDATED_POSITION.md` | the line's position as of its date | **read with the four supersessions in mind** |
+| `../wp1_data/PATH_LAYOUT.md` | the four input paths the scripts expect, their provenance, integrity and licences | **read before attempting to re-run anything**; 27 of 29 scripts read from `/tmp/` |
 | `NOTATION_two_effect_sizes.md` | two quantities share the symbol `d` | **read before quoting any effect size**: `d_A` is `mean(diff)/SD(diff)` across animals, `d_B` is the mean of per-animal standardised effects |
 
 ## 4. The invalid runs, retained on purpose

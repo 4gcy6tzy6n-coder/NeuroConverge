@@ -127,7 +127,7 @@ this one, with the ICC value printed so that it cannot be reused without the rea
 
 ## 6. Provenance
 
-* Scripts `anatomy/13_measurement_structure.py` (within versus between split-half, sound) and
+* Scripts `anatomy/13_within_vs_between_splithalf.py` (within versus between split-half, sound) and
   `anatomy/13a_icc_INVALID_zero_inflation.py` (the buggy variance decomposition, retained with an INVALID
   marker).
 * Read-out and inclusion conventions as in `SOURCE_RULE_RESULT.md`.

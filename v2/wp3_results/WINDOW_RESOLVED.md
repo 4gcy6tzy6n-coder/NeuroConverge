@@ -123,7 +123,7 @@ of that matrix do not inherit them.**
 
 * Source protocol and inclusion criterion: `randi.xml`, Europe PMC full text of PMC10632145, quoted
   verbatim above.
-* Time course and common-mode scripts: `anatomy/04_timecourse.py`, `anatomy/05_common_mode.py`.
+* Time course and common-mode scripts: `anatomy/04_timecourse.py`, `anatomy/06_common_mode.py`.
 * Inter-stimulus intervals: measured from all 113 `{i}_stim_volume_i.txt`.
 * **No model was fitted. No biological claim beyond the measured contrasts is made.**
 ---
