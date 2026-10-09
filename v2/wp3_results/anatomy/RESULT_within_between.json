@@ -1,0 +1,12 @@
+{
+  "n_animals": 112,
+  "n_events": 3333,
+  "n_pairs": 29395,
+  "within_animal_units": 33578,
+  "within_animal_rfull": 0.5223178668939336,
+  "between_animal_pairs": 15189,
+  "between_animal_rfull": 0.040451905832119675,
+  "ICC": 0.9310616969524114,
+  "within_var": 73216.12786410289,
+  "between_var": 988836.8184284861
+}
