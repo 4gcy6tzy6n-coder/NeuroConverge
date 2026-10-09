@@ -1,3 +1,13 @@
+> **STATUS: THE PAIR-LEVEL VALUE IS A z-SCORE, NOT AN EFFECT SIZE (round 27).** The pair-level figures in
+> this document come from `diff / SE`, while the animal-level figures come from `diff / SD`. **Their ratio is
+> `sqrt(n)`, a definitional identity, and the pair-level effect size expressed as a Cohen's `d` is SMALLER
+> than the animal-level one, not larger.** The pseudo-replication point stands and the metric describing it
+> does not. **Superseded by
+> [`CORRECTION_unit_inflation_is_significance.md`](CORRECTION_unit_inflation_is_significance.md).**
+> The text is left unaltered.
+
+---
+
 # Notation: two effect sizes share the symbol `d` in this corpus and are not the same quantity
 
 **Status: a notation defect found by a cross-script consistency audit, and its fix. No measurement changed;
@@ -81,7 +91,8 @@ Quantity B and are unaffected. Only the comparison against the Quantity-A values
 
 | notation | meaning | where used |
 | --- | --- | --- |
-| **`d_A`** | **between-animal paired Cohen's `d`**, `mean(diff)/SD(diff)` | the specification sensitivity table, V2-C1, V2-C4 |
+| **`d_z`** | **z-score**, `diff/SE` | the pair-unit rows in the specification table, and `RESULT_baseline_conventions.json` and `RESULT_corrected.json` |
+| **`d_A`** | **between-animal paired Cohen's `d`**, `mean(diff)/SD(diff)` | the specification sensitivity table, V2-C4 |
 | **`d_B`** | **mean of per-animal standardised effects** | the heterogeneity and random-effects analysis, V2-C3's per-animal distribution |
 
 **And the numbers, so a reader can tell which they are looking at without opening a script:**
@@ -89,11 +100,10 @@ Quantity B and are unaffected. Only the comparison against the Quantity-A values
 ```
 d_A  values in this corpus:  0.7289 (animal level), 0.4495 (source rule), 0.4145 (chemical), 0.7690 (gap),
                              0.1580 (source read-out, unweighted), 0.0852 (inverse-variance weighted),
-                             11.048 (pair unit)
 d_B  values in this corpus:  0.1165 (mean), 0.1052 (median), 0.1019 (random-effects), 0.0825 (fixed-effect)
 ```
 
-**A value above about 0.4 in this corpus is certainly `d_A`; a value near 0.10 is usually `d_B`. That is a
+**A value above about 0.4 in this corpus is certainly `d_A`; a value near 0.10 is usually `d_B`. That is a **`11.048` is `d_z`, not `d_A`, and is removed from that list by round 27's correction.**
 heuristic for reading, not a definition, and the documents are the authority.**
 
 ## 6. What this changes

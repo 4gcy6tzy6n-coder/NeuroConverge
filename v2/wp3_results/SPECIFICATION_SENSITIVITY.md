@@ -1,3 +1,13 @@
+> **STATUS: THE PAIR-LEVEL VALUE IS A z-SCORE, NOT AN EFFECT SIZE (round 27).** The pair-level figures in
+> this document come from `diff / SE`, while the animal-level figures come from `diff / SD`. **Their ratio is
+> `sqrt(n)`, a definitional identity, and the pair-level effect size expressed as a Cohen's `d` is SMALLER
+> than the animal-level one, not larger.** The pseudo-replication point stands and the metric describing it
+> does not. **Superseded by
+> [`CORRECTION_unit_inflation_is_significance.md`](CORRECTION_unit_inflation_is_significance.md).**
+> The text is left unaltered.
+
+---
+
 # The estimate is specification-dependent across a defensible range, and one weighting test failed
 
 **Status: the central methodological finding of this line, stated with the range rather than a point, plus
