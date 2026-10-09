@@ -102,3 +102,12 @@ not previously have.**
 * Script `anatomy/17_effect_reliability.py`; output `anatomy/RESULT_effect_reliability.json`.
 * Read-out, pre-window and analysis-window conventions as in `SOURCE_RULE_RESULT.md`.
 * **No model was fitted. No causal claim is made.**
+---
+
+> **WITHDRAWN IN PART, appended 2026-10-09.** This document states that *"what is reproducible within an
+> animal is WHICH PAIRS IT HAPPENED TO HAVE MEASURED, not a biological property of the animal's circuit"*.
+> **The measurement in [`PAIR_COMPOSITION_TEST.md`](PAIR_COMPOSITION_TEST.md) shows pair composition
+> accounts for only 17.7 % of the between-animal variance**, with 42.2 % measurement noise and about 40 %
+> unexplained. The composition account is therefore **directionally right and quantitatively overstated**.
+> **The reliability measurement here (`r_full = 0.5266`, signal share 0.578) is unaffected; only the
+> interpretation of where that signal comes from is.** The text is left unaltered.
