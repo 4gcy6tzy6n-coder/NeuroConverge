@@ -1,3 +1,13 @@
+> **STATUS: ONE COMPONENT NARROWED (round 26).** This document's correction stands and its four numbers
+> reproduce exactly at their own specification. **What is narrowed is the pair-specific animal share: it is
+> 5.5 % only at the unrestricted specification and rises to 46.0 % as pairs measured in fewer animals are
+> excluded, going NEGATIVE in the mutant arm -- an impossible value for a variance share.** The measurement-
+> error share of 37.5 % is robust at 37-39 % across the whole range. **Superseded in part by
+> [`CORRECTION_variance_decomposition_specification.md`](CORRECTION_variance_decomposition_specification.md).**
+> The text is left unaltered.
+
+---
+
 # CORRECTION: the heterogeneity is mostly measurement noise, not animal-specific biology
 
 **Status: this retracts the interpretation given in rounds 9 and 10, on the strength of a decomposition that
