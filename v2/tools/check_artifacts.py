@@ -22,7 +22,9 @@ Usage:
     # Prefix the label with '!' to require ABSENCE instead of presence.
     # A needle written  re:<pattern>  is treated as a regular expression (multiline).
     # A needle written  num:<value>   matches a number with 5e-4 relative tolerance, so a rounded
-    #                                 figure quoted in prose matches its full-precision JSON value.
+    #                                 figure quoted in prose matches its full-precision JSON value,
+    #                                 and a percentage also matches its fraction form.
+    # Literal text is matched case-insensitively.
     ALL :: the animal is the unit :: Unit: the animal | the unit is the animal
     wp3_results/X.md :: some number :: 0.7289
     SPEC
@@ -103,19 +105,28 @@ def main() -> int:
             if n.startswith("num:"):
                 # numeric match with tolerance: a rounded value in a document and the full-precision
                 # value in a JSON are the SAME fact, and a substring test cannot see that.
+                # A percentage needle also matches its fraction form, because "57.3 %" in prose and
+                # "0.5729" in a JSON are the same fact too.
                 try:
                     want = float(n[4:])
                 except ValueError:
                     return False
-                tol = max(5e-4, abs(want) * 5e-4)
+                cands = [want]
+                if abs(want) > 1.5:            # looks like a percentage
+                    cands.append(want / 100.0)
+                elif 0 < abs(want) <= 1.0:     # looks like a fraction
+                    cands.append(want * 100.0)
                 for m in re.finditer(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?", hay):
                     try:
-                        if abs(float(m.group(0)) - want) <= tol:
-                            return True
+                        got = float(m.group(0))
                     except ValueError:
-                        pass
+                        continue
+                    for c in cands:
+                        if abs(got - c) <= max(5e-4, abs(c) * 5e-4):
+                            return True
                 return False
-            return norm(n) in hay
+            # literal substrings are matched case-insensitively: "Nine" and "nine" are the same claim
+            return norm(n).lower() in hay.lower()
         hits = [n for n in needles if matches(n)]
         if absent:
             ok = not hits
