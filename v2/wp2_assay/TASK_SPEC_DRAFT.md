@@ -99,6 +99,25 @@ same seeds**.
 | **N2 — class-block-preserving rewire** | degrees **and** the number of edges between neuron classes | tests whether the effect is explained by **cell-class composition** rather than by within-class structure. This is the strictest control and the one most likely to kill a naive H1. |
 | **N3 — weight-shuffled** | topology fixed, `syn` weights permuted across edges | tests whether the effect is carried by the **synapse-count weighting** rather than the topology |
 
+**NEW, joint-lead requirement 2026-10-09: the two edge classes must NOT be given equal evidentiary
+weight, and this is now a design constraint rather than a caveat.** Witvliet et al. state that the
+reconstruction of **electrical (gap-junction) connectivity is less complete than that of chemical
+synapses**. Consequences that bind the null construction:
+
+1. **The chemical layer is the primary analysis.** The gap-junction layer enters as a **secondary,
+   explicitly lower-confidence** analysis, not merged into one adjacency.
+2. **Asymmetric rewiring is therefore required, not optional.** N1 must preserve degree **within each
+   layer separately**, and must **not** swap a chemical edge for a gap-junction edge; a null that
+   treats the two as interchangeable edges of one graph assumes precisely the equal completeness the
+   source denies.
+3. **Missingness in the gap-junction layer is expected and must be propagated, not ignored.** Because
+   the electrical reconstruction is known-incomplete, an absence of a gap junction is **weaker
+   evidence of absence** than an absence of a chemical synapse. Any conclusion that rests on
+   gap-junction sparsity must carry this asymmetry.
+4. **The 2026 Scientific Reports locomotion result is consistent with this caution**: anatomical
+   weights used directly did not produce the behaviour, and weights had to be optimised away from
+   anatomy.
+
 **Direction handling is explicit and must not be fudged.** Chemical synapses are **directed**; gap
 junctions are **undirected**. The graph is therefore not a single matrix. Any rewire must state which
 layer it operates on, and N1's degree sequence must be preserved **per layer**; collapsing the two
@@ -200,7 +219,45 @@ claim of *adequate power* needs the larger value.
 **This is a weak design and must be declared as such.** No amount of frame count changes it. If the
 effect of interest is smaller than the 80 % value, the honest outcome is `INCONCLUSIVE`, not `FAIL`.
 
+**CRITICAL AMENDMENT, joint-lead correction 2026-10-09: 21 is the DATASET total, not necessarily the
+confirmatory sample size.** The table above assumes all 21 animals enter the paired evaluation. If any
+animals are consumed by training, development or model selection, **the confirmatory `n` is smaller and
+the table does not apply.** An earlier draft used `n = 21` without stating this assumption; the
+assumption is the correction.
+
+**WP2 must therefore report three distinct counts and the hierarchy between them:**
+
+| quantity | meaning | status |
+| --- | --- | --- |
+| **total animals** | 21, the dataset total | known |
+| **training / development animals** | consumed by fitting and model selection | **to be fixed in C4** |
+| **effective paired confirmatory animals `n_eff`** | animals entering the paired test | **to be fixed in C4; the power table above must be recomputed for it** |
+| **training seeds per animal** | repeated initialisations, **nested within animal, not independent** | to be fixed in C4 |
+
+**The nesting must be explicit:** seeds are nested within animals, animals are nested within the
+dataset. **A seed-level standard error computed across seeds on one animal is not an animal-level
+standard error**, and reporting it as one would inflate `n` — the exact error the plan forbids when it
+says sample size must not be manufactured from frame or neuron counts. **A seed is the same kind of
+non-replicate as a frame.**
+
 ---
+
+## 3.6 Source licensing: use rights and redistribution rights are separate
+
+**Joint-lead correction 2026-10-09, adopted.** The NemaNode **repository declares GPL-3.0**, but that
+is a **software** licence over the code. **It does not transfer to the anatomical matrices the code
+loads**, which are third-party reconstructions (White 1986 compilations and Witvliet et al.) and whose
+redistribution terms are **`UNKNOWN`**.
+
+| asset | use as analysis input | redistribution |
+| --- | --- | --- |
+| DANDI `000541` NWB | permitted, `spdx:CC-BY-4.0`, `dandi:OpenAccess` | permitted with attribution |
+| NemaNode code | permitted, GPL-3.0 | code licence, not a data licence |
+| **the anatomical matrices loaded by that code** | **permitted for analysis** | **`UNKNOWN` -- NOT permitted until resolved** |
+
+**R1 therefore stays OPEN and is not closed by the GPL-3.0 finding.** No copy of an anatomical matrix
+may be redistributed, and no derived graph package may be published, until each source's terms are
+established. This does not block analysis.
 
 ## 4. What this document does NOT do
 

@@ -11,7 +11,94 @@ recorded as verified unless its DOI resolved to a record this session.
 
 ---
 
-## 1. The nearest neighbour, and why it is the one that matters
+## 0. PRIMARY NEAREST NEIGHBOUR — this displaces everything below it
+
+**Creamer MS, Leifer AM, Pillow JW. _Bridging the gap between the connectome and whole-brain activity
+in C. elegans._ bioRxiv `10.1101/2024.09.22.614271`, v1 2024-09-23 through **v4 2026-05-18**. Code:
+`github.com/Nondairy-Creamer/Creamer_LDS_2026`.**
+
+**Read this session:** all four version records from the bioRxiv API, the v4 abstract verbatim, and the
+repository README. This is the *same work* that the joint lead initially listed as two separate
+nearest neighbours ("Bridging the gap..." and "Creamer, Leifer & Pillow 2026 preprint revision"); the
+2026 item is **v4 of this preprint**, not a second paper.
+
+> "Here, we address this problem using a **connectome-constrained dynamical model of the brain, which
+> we fit to whole-brain recordings of neural activity during optogenetic perturbation of single
+> neurons**. This dynamical model, **which contains non-zero weights only between anatomically connected
+> neurons**, captured causal interactions between all pairs of neurons 82% as well as the
+> reproducibility of the perturbation data themselves. ... **Strikingly, alternative models fit using a
+> shuffled connectome achieved much lower performance.** Finally, we found that **adding connections
+> beyond those in the connectome did not improve** the models ability to capture causal interactions."
+
+**From the repository README:**
+
+* `dynamics_weights`: "W", weight between every neuron in the brain;
+* **`mask`: "binary mask which determines which values to learn. this is how we specify the connectome
+  constraint"** -- the connectome constraint is a mask over a full weight matrix;
+* `dynamics_input_weights`: "H", the effect of optogenetic stimulation on the targeted neuron;
+* `quick_start_examples/` demonstrates loading the paper's models and predicting **STAMs, correlations,
+  and reconstructing missing neurons**.
+
+### What is therefore ALREADY PUBLISHED and cannot be v2's novelty
+
+| candidate contribution | status | basis |
+| --- | --- | --- |
+| a connectome-constrained model fit to real whole-brain recordings | **DONE** | v4 abstract |
+| **real connectome beating a shuffled connectome** | **DONE** | v4 abstract, "much lower performance" |
+| predicting **held-out / missing neurons** from a subset | **DONE** | repository README, `reconstruct missing neurons` |
+| adding non-connectome edges does not help | **DONE** | v4 abstract |
+| the masked-weight implementation of a connectome constraint | **DONE** | README, `mask` |
+
+$$
+\boxed{\text{H1's basic experiment -- real graph versus shuffled graph -- is NOT available as v2's novelty core}}
+$$
+
+### What remains, and it must be framed as an ORTHOGONAL axis, not as a better version
+
+The joint lead's acceptance question for the next round is the right one:
+
+> *after fixing the model, the input information and the topology statistics, does a correct
+> cross-individual neuron identity correspondence still provide an increment that existing
+> connectome-constrained prediction work has not explained?*
+
+**The defensible distinction is that the two designs manipulate different variables.**
+
+| | Creamer et al. | v2 (proposed) |
+| --- | --- | --- |
+| treatment | the **graph**: real connectome versus shuffled connectome | the **mapping**: correct cross-individual identity versus a lawful mismatch |
+| held fixed | the neuron identity assignment, which is **assumed** | **the topology**, which is held fixed by construction (M1/M2 leave the adjacency matrix unchanged) |
+| what the design can detect | whether the graph's topology carries information | whether **the correspondence between the graph's nodes and the recorded cells** carries information |
+| the interaction | not reported | **structure x mapping**: does the graph's value depend on the mapping being right? |
+
+**Why the manipulation is meaningful only at fixed real topology, which v2 already specifies.** If the
+graph is shuffled, a "correct" node-to-cell identity no longer refers to anything real: shuffling the
+graph destroys the correspondence the mapping is about. **So the mapping factor is orthogonal to the
+shuffled-graph factor by necessity, not by preference.** M1 (class-preserving permutation) and M2
+(cross-animal rotation) both leave the adjacency matrix unchanged, which is exactly what makes them a
+mapping manipulation rather than a second graph manipulation.
+
+**What this is NOT.** It is not a claim that Creamer's result is wrong, incomplete, or superseded. It
+is not a claim that a cross-individual test would be more informative than a within-animal one -- v2's
+design is **weaker** on that axis, because the graph and the recording come from different animals. It
+is not a claim that the identity question is unexplored in principle; Creamer's mask construction
+**has** an identity assumption, and v2's contribution is to make that assumption a **tested factor**
+rather than an unexamined premise.
+
+### The risk, stated at full strength
+
+If the mapping manipulation, at fixed topology and fixed capacity, produces no increment distinguishable
+from its own null, then **v2 has no NMI-level contribution here** and the sprint verdict becomes PIVOT
+or STOP. The joint lead's own formulation is adopted verbatim: *if such a comparison cannot be
+constructed, then however well the real graph predicts, the project must reassess whether it has
+sufficient independent scientific contribution.*
+
+**Citation status: all four version records read, v4 abstract read verbatim, repository README read.
+Full text NOT read; the data split, the identity handling and the shuffled-graph construction were
+NOT inspected and remain owed.**
+
+---
+
+## 1. The second-nearest neighbour, and why it still matters
 
 **Beiran M, Litwin-Kumar A (2025). _Prediction of neural activity in connectome-constrained recurrent
 networks._ Nature Neuroscience 28(12):2561-2574. doi `10.1038/s41593-025-02080-4`.** Abstract read
@@ -25,7 +112,7 @@ verbatim from Europe PMC (MED 41145885, PMC12648571).
 > alone. However, recordings from a small subset of neurons can remove this degeneracy** ... It can
 > also prioritize which neurons to record to most effectively inform such predictions."
 
-**This is close enough that the burden is on v2 to be specific.** It already states the direction v2
+**With Creamer et al. now primary (section 0), this is the second-nearest neighbour.** It already states the direction v2
 might otherwise claim as new: that connectivity alone often does not constrain dynamics, and that a
 subset of recordings resolves the degeneracy.
 
@@ -100,7 +187,41 @@ PIVOT or STOP, not GO.**
 finalised.** Under the project's own rule, a claim that cannot be verified is recorded as not
 verified and not cited as support.
 
-## 5. A cross-reference that must be closed before this matrix is final
+## 5. The v1 cross-reference, now READ and closed
+
+**Status: CLOSED 2026-10-09.** `evidence/NEAREST_NEIGHBOUR_COMPARISON.md` (4,872 B, dated 2026-10-04)
+has now been read. Its rows and their bearing on NCV2-RQ:
+
+| v1 row | primary source | bears on NCV2-RQ? |
+| --- | --- | --- |
+| Connectome-based computation | Suárez et al. 2024; **Beiran & Litwin-Kumar 2025** | **YES, partially** -- the same Beiran citation this matrix treats in section 1. No conflict; the v1 row states that structure-constrained models "already exist", which is consistent and is now superseded by section 0 (Creamer) |
+| Biological concept transfer | Hofmann et al. 2025 | no -- about concept-transfer interventions in artificial models |
+| Brain-model alignment | Muzellec & Kar 2026 | no -- about prediction direction and alignment claims |
+| Mechanism-specific model contrast | Sun et al. 2026 | no -- fast-slow pathways, DMP |
+| Operational evaluation taxonomy | Hupkes et al. 2023 | no -- the v1 evidence-decomposition taxonomy |
+| Baseline fairness and reporting | McGreivy & Hakim 2024 | **indirectly** -- motivates the comparator-fairness checklist in TASK_SPEC_DRAFT section 2.4 |
+| Negative transfer | Wang et al. CVPR 2019 | no -- source/target training transfer |
+
+**Conclusion: no row of the v1 comparison covers NCV2-RQ's specific design** (cross-individual
+structure-to-function with a fixed-topology identity-mismatch factor). The v1 document bounds the
+**v1 manuscript's** claim about evidence decomposition; it does not bound, and does not anticipate,
+the v2 estimand. **The one shared citation is Beiran & Litwin-Kumar 2025, and this matrix already
+treats it more strictly than the v1 row does.**
+
+**What the v1 document explicitly disclaims, and v2 inherits:** it states it is "not an exhaustive
+novelty review", that "priority and sufficient NMI importance remain unestablished", and that "a
+stronger claim of superior audit decisions, predictive transfer conditions or general mechanism
+advantage would require its own independent evaluation". **NCV2-002 is that independent evaluation for
+the v2 question, and it reaches a harsher conclusion than the v1 document does.**
+
+---
+
+## 6. Historical note: the cross-reference as it stood before being closed
+
+**Status when section 0 was written: OPEN.** The v1 workstream's working tree contains an untracked
+`evidence/NEAREST_NEIGHBOUR_COMPARISON.md`. **Action recorded, not taken:** before this matrix is
+treated as final, read it and either absorb its rows or state explicitly why they do not bear on
+NCV2-RQ.
 
 At the time of writing, the **v1 workstream's working tree** contains an untracked file
 `evidence/NEAREST_NEIGHBOUR_COMPARISON.md`, together with `evidence/M0_PROVENANCE_AUDIT.md` and

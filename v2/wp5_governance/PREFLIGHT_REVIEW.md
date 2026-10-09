@@ -138,3 +138,131 @@ and its rows absorbed or dismissed.**
 **Review limitation, repeated because it matters:** this is a **separate self-review and not an
 independent one**. The plan requires an independent scientific review before results are treated as
 claims; that review has not happened.
+
+---
+
+# ADDENDUM — after the joint lead's review of 2026-10-09
+
+**The joint lead maintained `GO_CONDITIONAL`, approved WP2 protocol design and control construction,
+and continued to block WP3.** This addendum records what changed in response, and one finding that
+**worsens** the novelty position.
+
+## A1. The novelty position is now worse, not better
+
+**`Creamer MS, Leifer AM, Pillow JW`, bioRxiv `10.1101/2024.09.22.614271`, v4 2026-05-18, code at
+`github.com/Nondairy-Creamer/Creamer_LDS_2026`, is now the PRIMARY nearest neighbour** and displaces
+Beiran & Litwin-Kumar 2025 into second place. All four version records, the v4 abstract verbatim and
+the repository README were read this session.
+
+**What it already publishes**, from the abstract and README: a connectome-constrained dynamical model
+fit to real whole-brain recordings; **"alternative models fit using a shuffled connectome achieved
+much lower performance"**; that adding non-connectome edges did not improve causal capture; and a
+`quick_start_examples/` that reconstructs missing neurons.
+
+**Consequence, stated plainly: H1's basic experiment -- real graph versus shuffled graph -- is
+unavailable as v2's novelty core.** The joint lead's own conclusion is adopted.
+
+**What remains is one axis, and it is narrow.** Creamer varies the **graph** while the identity
+assignment is an unexamined premise; v2 holds **topology fixed** and varies the **mapping**. These are
+orthogonal by necessity, because shuffling a graph destroys the correspondence a "correct identity"
+would refer to. The load-bearing claim is therefore the **structure x mapping interaction**, and the
+joint lead's acceptance question is adopted as the sprint's governing question.
+
+**If that comparison cannot be built lawfully at fixed topology and fixed capacity, v2 has no
+NMI-level contribution here.** That is stated at full strength in
+`NOVELTY_NEAREST_NEIGHBOURS.md` section 0.
+
+## A2. The v1 cross-reference is closed
+
+`evidence/NEAREST_NEIGHBOUR_COMPARISON.md` was read. **No row of it covers NCV2-RQ's design.** Its one
+shared citation is Beiran & Litwin-Kumar 2025, which this matrix treats more strictly. The v1 document
+explicitly disclaims being an exhaustive novelty review and leaves priority unestablished.
+**Recorded in `NOVELTY_NEAREST_NEIGHBOURS.md` section 5.** The joint lead's precondition for signing a
+novelty conclusion is therefore met on the reading, **though the conclusion itself is now
+`NOVELTY_PROVISIONAL -- CLAIM DIFFERENTIATION REQUIRED`**, the lead's own phrasing, and is not a
+signature.
+
+## A3. v1 freeze: the check is now content-level, not history-level
+
+**The joint lead's correction is accepted: "the last commit touching a path is not ours" is limited
+Git history evidence and cannot exclude uncommitted working-tree edits, indirectly regenerated files,
+or branch-sync changes.** A content-level proof was built this session and is stored as
+`v2/wp0_freeze/V1_FREEZE_HASH_PROOF.json`, comparing SHA-256 content at three points for all 15 frozen
+files:
+
+| level | claim | result |
+| --- | --- | --- |
+| A | content at the freeze commit equals the recorded hash | **PASS 15/15** |
+| B | content at HEAD equals content at the freeze commit | **PASS 15/15** |
+| C | working-tree content equals HEAD content (i.e. no uncommitted edit) | **PASS 15/15** |
+| D | working-tree content equals the recorded hash | **PASS 15/15** |
+
+**The proof's own limitation is recorded inside the artifact:** it proves the **content of the 15
+declared files** is byte-identical. **It does not prove no other v1 file was touched**, because the
+manifest freezes a declared set, not the tree. The two claims the lead asked to be separated are now
+separated: *"v2 did not modify the frozen evidence"* is proven at content level; *"v2 touched no v1
+file at all"* rests on the git-history statement alone and is stated as such.
+
+## A4. Two corrections adopted, two WP2 rulings recorded
+
+**Correction 1, sample size.** 21 is the **dataset** total, **not** the confirmatory `n`. The power
+table assumed all 21 enter the paired evaluation; if any animals are consumed by training,
+development or model selection the table does not apply. **WP2 must now report total animals,
+training/development animals, effective paired confirmatory `n_eff`, and the nesting of seeds within
+animals within the dataset.** `TASK_SPEC_DRAFT.md` section 3.5 carries this amendment, including the
+statement that **a seed is the same kind of non-replicate as a frame** and that a seed-level standard
+error is not an animal-level one.
+
+**Correction 2, the freeze check.** Done, see A3.
+
+**Ruling 1, chemical versus gap junction.** Adopted as a **design constraint, not a caveat**: the
+chemical layer is the primary analysis; the gap-junction layer is secondary and explicitly
+lower-confidence; N1 must preserve degree **per layer separately** and must **not** swap a chemical
+edge for a gap-junction edge; and an absent gap junction is **weaker evidence of absence** than an
+absent chemical synapse, because the source states the electrical reconstruction is less complete.
+`TASK_SPEC_DRAFT.md` section 2.2 carries this.
+
+**Ruling 2, source licensing.** Adopted. **NemaNode's GPL-3.0 is a software licence and does not
+transfer to the anatomical matrices it loads**, whose redistribution terms remain `UNKNOWN`.
+**R1 stays OPEN.** Use as analysis input is permitted; **redistribution is not, until resolved.**
+`TASK_SPEC_DRAFT.md` section 3.6 carries the use-versus-redistribution table.
+
+## A5. Two `NOT VERIFIED` entries remain `NOT VERIFIED`
+
+**Fagerholm & Brazdil 2026** -- the lead found a *different* 2026 Physical Review E paper by the same
+authors on human ultrafast oscillations (`10.1103/jjzp-h5qf`). **It does not match the entry** (which
+is a Zenodo record, `10.5281/zenodo.22395352`, titled "Structure-Dynamics Interdependence: An
+Information-Theoretic Framework for Neural State Prediction", whose metadata was retrieved but whose
+PDF was blocked by HTTP 403). **A same-author paper is not a substitute. Maintained `NOT VERIFIED`.**
+
+**Linderman et al. 2026** -- not uniquely locatable from author and year alone. **Maintained
+`NOT VERIFIED`; requires an exact title, DOI or preprint number.**
+
+## A6. Repository visibility: the commits are local only
+
+**The joint lead reports that the connected NeuroConverge GitHub view does not show `01879e3`,
+`c358940`, `f6d3650` or `d86c978`, nor the v2 files. That is explained and confirmed:** the branch was
+**12 commits ahead of `origin/main` (remote at `9aba389`) and had not been pushed.** The lead's
+inability to verify was therefore correct at the time of writing, and **"all seven items complete" was
+this lane's report, not an independently verified fact.** Pushing is a publication action and was not
+taken unilaterally.
+
+## A7. WP2 rulings accepted as the next round's scope
+
+| item | ruling | next-round obligation |
+| --- | --- | --- |
+| C1 sampling interval | prioritised | recover from the acquisition series or the source paper; **if only frame indices are recoverable, restrict to discrete-step prediction and do not claim second-scale dynamics** |
+| C2 `f_target` | fix inside development data, then freeze | target-neuron selection, missingness handling, identity-match consistency |
+| C3 primary threshold | **must freeze** | primary loss, minimum meaningful difference, animal-level interval, power assumptions |
+| C4 seed registry | **must freeze** | animal split, model init, random graphs, identity permutation, training config, RNG sources |
+| R1 licensing | stays open | use versus redistribution audited separately |
+| independent review | outstanding | an outside person reviews the frozen contract, the comparators and the statistical unit |
+
+**Governing question for the next acceptance, adopted verbatim from the joint lead:** after fixing the
+model, the input information and the topology statistics, **does a correct cross-individual neuron
+identity correspondence still provide an increment that existing connectome-constrained prediction
+research has not explained?**
+
+**This addendum does not change the verdict. It remains `GO_CONDITIONAL`:** WP2 design and control
+construction approved; WP3 confirmatory work, confirmatory unblinding, post-hoc threshold changes and
+formal manuscript writing all remain **not approved**.
