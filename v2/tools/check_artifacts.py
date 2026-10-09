@@ -37,9 +37,32 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 TEXT_SUFFIXES = (".md", ".json", ".csv", ".py", ".yaml", ".yml", ".txt")
 
 
+def strip_md(s: str) -> str:
+    """Remove Markdown emphasis markers so a bolded word still matches its plain spelling.
+
+    Without this, a requirement for the phrase "not a systematic sample" fails against the document
+    text "**not** a systematic sample" -- the markers sit inside the phrase.  This bit twice before
+    being fixed, in a repository whose documents use bold heavily.
+    """
+    s = re.sub(r"\*\*(.+?)\*\*", r"\1", s, flags=re.S)   # **bold**
+    s = re.sub(r"(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)", r"\1", s, flags=re.S)  # *italic*
+    s = re.sub(r"__(.+?)__", r"\1", s, flags=re.S)           # __bold__
+    s = re.sub(r"`([^`]+)`", r"\1", s)                       # `code`
+    # Blockquote continuation markers sit INSIDE a sentence that spans lines, so "which it\n> cannot"
+    # becomes "which it > cannot" and a requirement for "which it cannot" fails.  This repository's
+    # documents quote sources heavily, so it bit immediately.
+    s = re.sub(r"(?m)^[ \t]*>[ \t]?", " ", s)               # leading '>' of a blockquote line
+    s = re.sub(r"\n[ \t]*>[ \t]?", " ", s)                  # a '>' that survives mid-text
+    return s
+
+
 def norm(s: str) -> str:
-    """Collapse all whitespace, so a phrase broken across lines still matches."""
-    return re.sub(r"\s+", " ", s)
+    """Strip Markdown emphasis, then collapse all whitespace.
+
+    Both steps are needed: a phrase broken across lines, and a phrase with a bolded word inside it,
+    each failed to match before.
+    """
+    return re.sub(r"\s+", " ", strip_md(s))
 
 
 def collect(which: str) -> tuple[str, str]:

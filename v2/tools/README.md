@@ -113,3 +113,42 @@ Alternatives are separated by `;;`, because `|` is needed inside regexes.
 * **Its diagnostic output turned a mystery into a two-second diagnosis twice in one round** -- once when
   a path was written `v2/tools/...` inside the `v2/` root, and once when a rounded number was searched
   for in a full-precision JSON.
+
+## Two more masking characters, both found the moment a document quoted sources heavily
+
+**Round 18's survey quotes verbatim, and two Markdown constructs sit *inside* the quoted sentences.**
+
+**1. Emphasis markers.** A requirement for the phrase `not a systematic sample` failed against
+`**not** a systematic sample`. **`strip_md` now removes `**bold**`, `*italic*`, `__bold__` and `` `code` ``
+before matching.**
+
+**2. Blockquote continuation markers.** A sentence spanning two quoted lines is
+
+```
+> ... and which it
+> cannot, is unknown.
+```
+
+which normalises to `... and which it > cannot, is unknown.`, so a requirement for `which it cannot` fails.
+**Leading `>` markers of blockquote lines are now stripped too.**
+
+**Both were latent from the first version and neither had been triggered**, because earlier documents
+bolded at the edges of sentences rather than inside a searched phrase, and quoted at most one line at a
+time. **A checker is only as good as the documents it has been pointed at.**
+
+### The requirement forms, complete
+
+| form | meaning |
+| --- | --- |
+| `text` | literal substring, case-insensitive, whitespace-normalised, Markdown-stripped |
+| `re:<pattern>` | multiline regular expression, for context-aware requirements |
+| `num:<value>` | numeric match with relative tolerance, percentage and fraction interchangeable |
+| `!`-prefixed label | the requirement is **absence**, not presence |
+| `;;` | separates alternatives, because `|` is needed inside regexes |
+
+### The tally
+
+**Thirteen self-inflicted check failures across rounds 2 to 18, every one the check's and not an artifact's
+-- with one exception, round 14, where the checker caught a genuine document-versus-JSON contradiction
+that its author had introduced.** Each of the thirteen narrowed the checker; the one real catch is why it
+is worth the trouble.
