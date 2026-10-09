@@ -132,3 +132,11 @@ established, and C1-C3 are each sufficient to produce the observed pattern artef
   discarded `RESULT_invalid_idorder.json`.
 * **No model was fitted. No biological claim is made. No licence permitting redistribution of the
   derived data was found, so nothing is redistributed.**
+---
+
+> **RETRACTION NOTICE, appended 2026-10-09.** The effect sizes in section 2 of this document are
+> **window-dependent** and its headline claim is retracted by
+> [`RETRACTION_window_dependence.md`](RETRACTION_window_dependence.md). Changing only the post-stimulus
+> window moves the chemical association from `d = 1.154` at 1 s to `d = 3.118` at 16 s. **The text above
+> is left unaltered so the error remains auditable; read it together with the retraction, which takes
+> precedence.**

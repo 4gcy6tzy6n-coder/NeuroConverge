@@ -140,3 +140,11 @@ consistent with the weak chemical association measured here.**
   `d6e7b3d93175b40b7ae17bde2182835e9c2144388142c522ee9be3832f6ce836`, per
   `../../wp1_data/WIRESHIFT_STAGE2_WT_AUDIT.md`.
 * **No redistribution of the derived data.** No licence permitting it was found.
+---
+
+> **RETRACTION NOTICE, appended 2026-10-09.** The effect sizes in section 5 of this document are
+> **window-dependent** and its headline claim is retracted by
+> [`RETRACTION_window_dependence.md`](RETRACTION_window_dependence.md). Changing only the post-stimulus
+> window moves the chemical association from `d = 1.154` at 1 s to `d = 3.118` at 16 s. **The text above
+> is left unaltered so the error remains auditable; read it together with the retraction, which takes
+> precedence.**
