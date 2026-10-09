@@ -1,0 +1,77 @@
+{
+  "artifact": "SOURCE_FREEZE_MANIFEST.json",
+  "created_utc": "2026-10-09T12:12:17+00:00",
+  "purpose": "NCV2-001: freeze the NeuroConverge v1 source of record so that v2 work never retroactively edits a v1 gate, report or scientific conclusion. v1 is READ-ONLY from this point; new work lives under NeuroConverge/v2/ and is labelled prospective.",
+  "v1_source_of_record": {
+    "repo": "https://github.com/4gcy6tzy6n-coder/NeuroConverge.git",
+    "branch": "main",
+    "commit": "5d38a5f1ee8e46ee79a7c6e3ab1e158a0c82aa8d"
+  },
+  "files": {
+    "manuscript/ARTICLE_DRAFT.md": {
+      "sha256": "d5742a6ef916acbadb3badac98c85732afb20158e515bff00e8d81e27227ebd4",
+      "bytes": 68120
+    },
+    "manuscript/supplementary.md": {
+      "sha256": "7ed373233428a40a43eba2b15c8cba5fe56948554486985a59acdd68db99f34b",
+      "bytes": 63584
+    },
+    "manuscript/NMI_MANUSCRIPT_CANDIDATE.docx": {
+      "sha256": "238e8ed29117749791e26caba7e0951c75241783997edddbd62a15be7446506d",
+      "bytes": 1090362
+    },
+    "manuscript/NMI_MANUSCRIPT_CANDIDATE.pdf": {
+      "sha256": "bca060381c8a0554e02d0f138b5fd7a6b1e275b4a30f76967752530f352165cc",
+      "bytes": 875778
+    },
+    "manuscript/NMI_SUPPLEMENTARY_INFORMATION.docx": {
+      "sha256": "76ad8477fd24f997fc181489db9c29151f47b8394339cc2458f07eb35c24fdc0",
+      "bytes": 68917
+    },
+    "manuscript/NMI_SUPPLEMENTARY_INFORMATION.pdf": {
+      "sha256": "45566810b1c72355fb8abe3d1a6807b6ad91c43a164e279edcea5521854bd3ed",
+      "bytes": 381582
+    },
+    "evidence/CLAIM_EVIDENCE_MATRIX.csv": {
+      "sha256": "7b9ba812d32f3f93f146afaa7151d6475f2a24b2bdc0ae7a861dc4b7061ba86a",
+      "bytes": 10815
+    },
+    "evidence/CLAIM_CEILING.md": {
+      "sha256": "1076e9a909f3d94810031cd853bdfb4dd7551c84d9733a24ddba06a1b6d577ca",
+      "bytes": 3054
+    },
+    "evidence/IRCN_EVIDENCE_DISPOSITION.json": {
+      "sha256": "889136b9cc90f05e8f0374bc3f0bdaa4b740434408f3ea1ba76d38b04d719c1d",
+      "bytes": 10065
+    },
+    "workstreams/SOURCE_REPOSITORY_MANIFEST.json": {
+      "sha256": "5d83b8946710851e3f298ec7d763c2a4099069b89b1e456b6525bfb83f6879d5",
+      "bytes": 2219
+    },
+    "workstreams/PAPER_CRITICAL_SOURCE_SNAPSHOT.json": {
+      "sha256": "94f1afe5d5117425f64485470d3ba10b4b8fffa745cce0681a06d110436898c7",
+      "bytes": 30355
+    },
+    "PROJECT_FREEZE.md": {
+      "sha256": "b04c27d68e3524d8849e77def1c64ad808a195834aae6d4fbdc7179c3286731d",
+      "bytes": 5264
+    },
+    "PROJECT_UNDERSTANDING.md": {
+      "sha256": "0ffc7bfe22d67358138bda439df8ff87b6a039468696d4c13238a4ddd16702eb",
+      "bytes": 12325
+    },
+    "SUBMISSION_CLOSURE.md": {
+      "sha256": "9785dce4f6306051c6dccbb74e7583c945b0f64308b4ca3c783752c900315612",
+      "bytes": 9377
+    },
+    "README.md": {
+      "sha256": "2574fbc367de61146a0714400b5b378ad2cef6c5b3e79c35f725b07ed3762279",
+      "bytes": 6345
+    }
+  },
+  "not_frozen_here": {
+    "figures/": "carries 42+ uncommitted changes from another workstream at freeze time; not hashed here so that this manifest does not freeze a moving target. Re-freeze after that work lands.",
+    "IRCN_artifacts": "IRCN is a separate repository and a separate project group; its revision read for the v1 integration is recorded in evidence/IRCN_EVIDENCE_DISPOSITION.json, not re-frozen here."
+  },
+  "label_rule": "v1 records stay retrospective / outcome-informed. Every v2 artifact must be marked prospective and must not be described as a completed v2 experiment."
+}
