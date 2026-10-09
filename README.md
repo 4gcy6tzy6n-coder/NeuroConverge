@@ -23,8 +23,9 @@ The user-authorized prospective V1 tests are complete and the experiment program
 
 ## Package map
 
-- `manuscript/` — integrated manuscript candidate (Markdown and Word), references and supplementary manuscript source.
-- `figures/` — six generated main figures with CSV source data, vector/review exports, geometry audits and SHA-256 manifest.
+- `manuscript/` — integrated manuscript candidate (Markdown and Word), references and supplementary manuscript source. Contains seven Results sections; the seventh is the third programme's infeasible-comparison case.
+- `evidence/IRCN_EVIDENCE_DISPOSITION.json` — the third programme's evidence disposition: recomputed pilot quantities checked against its frozen record, with per-artifact SHA-256.
+- `figures/` — six generated main figures with CSV source data, vector/review exports, geometry audits and SHA-256 manifest. **Figure 2's source data carries two portfolio bars and its embedded title names two portfolios; the third programme is therefore not depicted there and its coverage is given in Supplementary Table S11. The figure was deliberately not regenerated while `figures/` carries unrelated in-flight changes to the generator and its outputs.**
 - `evidence/` — claim–evidence matrix, experiment selection and claim ceiling.
 - `workstreams/` — source repository identity, commit and canonical artifact links.
 - `supplementary/` — selected extended results, negative results, robustness and provenance.

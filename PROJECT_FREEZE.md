@@ -14,6 +14,7 @@ The publication repository is new and must not absorb either source repository's
 |---|---|---|---|---|
 | NeuroMotif | `https://github.com/4gcy6tzy6n-coder/NeuroMotif.git` | public `main`: `1adc07ffc735cf458116ca36c9f4875708034d4a` | local publication worktree at this commit was clean when inspected | Candidate snapshot; not an owner-approved freeze |
 | NeuroMech | `https://github.com/4gcy6tzy6n-coder/NeuroMech.git` | public `experiment-publication`: `3e5c458f15b2cad7aa6c5703b1827763e84343bb`; local `main`: `555c064f4ff3153c871808c3f191b9934a18eaf5` | local `main` worktree had 387 changed/untracked paths; publication branch worktree had 2 uncommitted paths | Unfrozen; canonical paper/evidence snapshot unresolved. The Route-D V3 portfolio matrix does not contain several selected `3e5c458` M2/M5 experiment IDs. |
+| **IRCN** | `https://github.com/4gcy6tzy6n-coder/IRCN.git` | branch `v0.7.0-runtime-icef-bridge`, HEAD `8eac42d`; the `v0.8.0/cbcc` pilot directory is present in that working tree and is **not committed at that head** | 48 changed/untracked paths when inspected | **Candidate snapshot; not frozen.** IRCN's own `data_provenance.md` classifies NeuroConverge and NeuroMech as read-only adjacent workspaces, and its v0.7.0 development contract excludes NeuroConverge modification and NMI manuscript edits. Its inclusion in this manuscript is an owner-authorized scope amendment of 9 October 2026, recorded and not hidden |
 
 NeuroConverge is a separate publication repository. Its `main` was pushed and verified at `b55871dec1207b2c9e8b63270ebcc7871f0feaca` (tree `ab23be556af6016552ba8b6fa9ed8c38f59616cc`). This records the initial integration checkpoint; it does not certify the upstream source portfolios as frozen.
 
@@ -23,8 +24,10 @@ NeuroConverge is a separate publication repository. Its `main` was pushed and ve
 2. Preserve the original unit, task, comparator, preregistration status, corrections and evidence class for every result.
 3. Do not pool unlike endpoints into a project-level effect.
 4. A public-data or schema block is a boundary, not a biological negative.
-5. RR18 and RR19 are separately governed workstreams and are excluded from this manuscript scope unless an explicit evidence audit establishes otherwise.
+5. RR18 and RR19 are separately governed workstreams and are excluded from this manuscript scope unless an explicit evidence audit establishes otherwise. **The 9 October 2026 amendment admits IRCN only; it does not admit RR18 or RR19, and no RR18/RR19 result appears in this manuscript.**
 6. No new experiment by default. Lower or remove a claim when existing evidence is insufficient.
+7. **The IRCN inclusion crosses a boundary that line declared for itself.** Record it as an owner-authorized amendment with its date; do not rewrite `IRCN/data_provenance.md` or the v0.7.0 development contract to imply the boundary never existed, and do not use IRCN's earlier conclusions as evidence inside IRCN.
+8. **A comparison that could not be instantiated is not a negative mechanism result, and a scope freeze is not an artifact freeze.** Keep those apart in every sentence that mentions the third programme.
 
 ## Freeze completion checklist
 
@@ -33,5 +36,7 @@ NeuroConverge is a separate publication repository. Its `main` was pushed and ve
 - [ ] Confirm NeuroMotif commit and identify which source artifacts, beyond its currently published model/result subset, belong in the paper.
 - [ ] Record paper-critical source paths and SHA-256 hashes in the manifests.
 - [ ] Run source-to-claim, numerical and rights/licence audits on the selected files; obtain an owner-approved immutable artifact snapshot.
+- [ ] Decide whether Figure 2 gains a third portfolio bar or whether the third programme stays in Supplementary Table S11 only; the figure's source data currently carries two bars and `figures/` has unrelated in-flight changes, so it was deliberately not regenerated.
+- [ ] Record the IRCN source revision actually read for the manuscript once `v0.8.0/cbcc` is committed, since the reviewed tree is not the committed head.
 
 Until these conditions pass, manifests must identify a candidate snapshot rather than state “frozen.”
