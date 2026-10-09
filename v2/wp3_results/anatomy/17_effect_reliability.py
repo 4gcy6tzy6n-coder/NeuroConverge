@@ -106,6 +106,9 @@ print(f"    分半效应差(m1-m2)的 SD         {(m1-m2).std(ddof=1):.4f}")
 print(f"    ==> 若分半差与跨动物 SD 同量级，则跨动物离散主要是估计噪声")
 print(f"    比率 SD(m1-m2)/SD(full) = {(m1-m2).std(ddof=1)/full.std(ddof=1):.4f}")
 # variance attributable to noise: var(m1-m2)/2 estimates the noise variance of the effect
+# divisor is 4, not 2:  var(m1-m2) = var(m1)+var(m2) = 2*var(half) = 4*var(full),
+# because a half has half the data and therefore twice the variance.  The /2 version understated
+# the signal by a factor of two and was caught by inconsistency with split_half_r_full.
 noise_var=(m1-m2).var(ddof=1)/4.0; total_var=full.var(ddof=1)
 print(f"\n    效应估计的噪声方差 var(m1-m2)/4 = {noise_var:.6f}")
 print(f"    全数据效应的方差               = {total_var:.6f}")
