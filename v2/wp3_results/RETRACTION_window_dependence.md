@@ -1,3 +1,13 @@
+> **STATUS: INTERPRETATION SUPERSEDED (its own date).** This document is retained unaltered as the
+> record of a reading that was later withdrawn or narrowed: **the original window-dependence reading**. The measurements in it stand;
+> the interpretation does not. **Superseded by [`WINDOW_RESOLVED.md`](WINDOW_RESOLVED.md)**, which takes precedence and records
+> that this document is itself the retraction of an earlier reading and is retained as the record of it.
+>
+> **The title above still states the superseded reading, deliberately, so the document remains findable
+> by the claim it made.** Read the body as a dated record and the linked document as current.
+
+---
+
 # CORRECTION AND RETRACTION: the effect size is a function of the post-stimulus window
 
 **Status: this document retracts a headline claim made in two earlier documents of this project, and

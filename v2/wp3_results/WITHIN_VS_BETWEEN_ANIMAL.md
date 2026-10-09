@@ -1,3 +1,13 @@
+> **STATUS: INTERPRETATION SUPERSEDED (round 12).** This document is retained unaltered as the
+> record of a reading that was later withdrawn or narrowed: **the animals differ rather than the measurements being noisy**. The measurements in it stand;
+> the interpretation does not. **Superseded by [`CORRECTION_heterogeneity_is_noise.md`](CORRECTION_heterogeneity_is_noise.md)**, which takes precedence and records
+> that see the appended notice; the measurements stand and the interpretation is withdrawn.
+>
+> **The title above still states the superseded reading, deliberately, so the document remains findable
+> by the claim it made.** Read the body as a dated record and the linked document as current.
+
+---
+
 # Within-animal reproducibility versus cross-animal agreement, and a bug that invalidates the ICC
 
 **Status: one finding is sound and important; one computation is buggy and its result is withdrawn before

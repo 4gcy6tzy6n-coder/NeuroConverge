@@ -1,3 +1,13 @@
+> **STATUS: INTERPRETATION SUPERSEDED (round 15).** This document is retained unaltered as the
+> record of a reading that was later withdrawn or narrowed: **what is reproducible is which pairs were measured**. The measurements in it stand;
+> the interpretation does not. **Superseded by [`PAIR_COMPOSITION_TEST.md`](PAIR_COMPOSITION_TEST.md)**, which takes precedence and records
+> that pair composition accounts for only 17.7 % of the between-animal variance, with 42.2 % measurement noise and about 40 % unexplained, so the composition account is directionally right and quantitatively overstated.
+>
+> **The title above still states the superseded reading, deliberately, so the document remains findable
+> by the claim it made.** Read the body as a dated record and the linked document as current.
+
+---
+
 # The effect is about 55 % reproducible within an animal, and that reproducibility is pair composition
 
 **Status: one measurement, one self-caught factor-of-two error, and a synthesis that reconciles round 12's

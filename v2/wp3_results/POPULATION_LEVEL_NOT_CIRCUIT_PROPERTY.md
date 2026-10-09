@@ -1,3 +1,13 @@
+> **STATUS: INTERPRETATION SUPERSEDED (round 12).** This document is retained unaltered as the
+> record of a reading that was later withdrawn or narrowed: **the population-level-not-circuit-property framing**. The measurements in it stand;
+> the interpretation does not. **Superseded by [`CORRECTION_heterogeneity_is_noise.md`](CORRECTION_heterogeneity_is_noise.md)**, which takes precedence and records
+> that only 5.5 % of the variance in a pair's response is pair-specific animal deviation against 37.5 % within-cell measurement error, so the between-animal spread is better explained by measurement error and by which pairs each animal sampled than by animal-specific circuit biology.
+>
+> **The title above still states the superseded reading, deliberately, so the document remains findable
+> by the claim it made.** Read the body as a dated record and the linked document as current.
+
+---
+
 # The association is a population-level regularity, not a property of the circuit
 
 **Status: the line's culminating result, with the claim it supports and the claims it does not.** No model
