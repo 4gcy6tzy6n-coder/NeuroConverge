@@ -1,6 +1,6 @@
 # Project understanding: NeuroConverge and its two workstreams
 
-**Audit snapshot:** 3 October 2026. This is a project map, not an owner-approved source freeze.
+**Audit snapshot:** 3 October 2026. This is a project map, not an owner-approved source freeze. **Superseded in scope on 9 October 2026:** the manuscript now also includes a third, separately governed programme (IRCN budget-matched scheduling), added under an owner-authorized scope amendment and described in the manuscript's Results section 7, Methods, Supplementary Methods S6, Table S11 and Results S8, and recorded in `evidence/IRCN_EVIDENCE_DISPOSITION.json`. This document continues to describe the two original portfolios and has not been rewritten to include the third.
 
 ## The integrated question
 

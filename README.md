@@ -6,7 +6,7 @@ Working paper title: **Evidence boundaries in transferring biological computatio
 
 NeuroConverge is a publication-level synthesis of two source projects, extended on 9 October 2026 to include a third, separately governed engineering programme. NeuroMotif contributes bounded structure-to-dynamics evidence; NeuroMech contributes source-grounded mechanism and artificial-transfer studies. The purpose is to test what the combined record supports, while keeping distinct studies and their evidence classes separate. This repository does not merge source Git histories or replace either source of record.
 
-For a concise map of the full project and its two workstreams, see [PROJECT_UNDERSTANDING.md](PROJECT_UNDERSTANDING.md).
+For a concise map of the two source workstreams, see [PROJECT_UNDERSTANDING.md](PROJECT_UNDERSTANDING.md); it predates the 9 October 2026 addition of the third programme and describes only the two original portfolios.
 
 ## Central question
 
