@@ -99,3 +99,25 @@ PIVOT or STOP, not GO.**
 **Two entries are marked `NOT VERIFIED` and must be closed before any claim about novelty is
 finalised.** Under the project's own rule, a claim that cannot be verified is recorded as not
 verified and not cited as support.
+
+## 5. A cross-reference that must be closed before this matrix is final
+
+At the time of writing, the **v1 workstream's working tree** contains an untracked file
+`evidence/NEAREST_NEIGHBOUR_COMPARISON.md`, together with `evidence/M0_PROVENANCE_AUDIT.md` and
+`manuscript/TECHNICAL_CLOSURE_PLAN.md`. These are another lane's in-flight artifacts and were
+**deliberately not read, not modified and not committed here**.
+
+**Why it matters for NCV2-002.** A nearest-neighbour comparison already exists in the v1 tree. It
+covers a different question -- the v1 manuscript's positioning against connectome-based computation,
+biological concept transfer, brain-model alignment and negative transfer -- but the overlap is
+non-empty, and **v2 must not present as new anything that comparison already establishes.**
+
+**Action recorded, not taken:** before this matrix is treated as final, read
+`evidence/NEAREST_NEIGHBOUR_COMPARISON.md` and either absorb its rows or state explicitly why they do
+not bear on NCV2-RQ. Until then, section 3's permitted novelty statement is **provisional**.
+
+**Note on the defect check.** The pre-commit check for "v1 untouched" initially failed. It was wrong:
+it tested whether any path under `manuscript/`, `evidence/`, `workstreams/` or `PROJECT_FREEZE.md` was
+dirty, which flags the other lane's in-flight edits. The correct test is whether the **last commit
+touching that path** is one of this lane's, and by that test every dirty v1 path belongs to another
+workstream. The check was corrected rather than the finding suppressed.
