@@ -140,3 +140,11 @@ established, and C1-C3 are each sufficient to produce the observed pattern artef
 > window moves the chemical association from `d = 1.154` at 1 s to `d = 3.118` at 16 s. **The text above
 > is left unaltered so the error remains auditable; read it together with the retraction, which takes
 > precedence.**
+---
+
+> **SPECIFICATION MISMATCH NOTICE, appended 2026-10-09.** Every `d` value in this document was computed
+> under a specification that differs from the source's in at least five respects -- window, amplitude
+> reference, contiguous-run requirement, derivative criterion and tail handling. The source's actual rule
+> is recovered in [`SOURCE_RULE_RECOVERED.md`](SOURCE_RULE_RECOVERED.md). **These numbers are therefore not
+> estimates of the paper's quantity and must not be read as such.** The text is left unaltered so the
+> mismatch remains auditable.

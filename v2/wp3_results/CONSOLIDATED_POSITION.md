@@ -97,3 +97,11 @@ can support, and shows that the answer depends on choices the atlas does not rep
 (item 1)**, the class control is single-window, the reliability proxy is not exogenous, and nothing here
 has been through an independent review. **The previous round's verdict that the v1 case synthesis is not
 NMI-ready stands unchanged.**
+---
+
+> **SPECIFICATION MISMATCH NOTICE, appended 2026-10-09.** Every `d` value in this document was computed
+> under a specification that differs from the source's in at least five respects -- window, amplitude
+> reference, contiguous-run requirement, derivative criterion and tail handling. The source's actual rule
+> is recovered in [`SOURCE_RULE_RECOVERED.md`](SOURCE_RULE_RECOVERED.md). **These numbers are therefore not
+> estimates of the paper's quantity and must not be read as such.** The text is left unaltered so the
+> mismatch remains auditable.
