@@ -1,0 +1,226 @@
+{
+  "artifact": "FIGURE_SOURCE_DATA_v2",
+  "purpose": "Figure-ready source data for the four surviving claims of the v2 line, each with the specification that produced it. Every number is read from a committed result JSON; the JSONs' sha256 prefixes are recorded so a figure can be traced to its artifact.",
+  "source_hashes": {
+    "RESULT_final_estimate.json": "0beea3423fb23130",
+    "RESULT_common_mode.json": "2e1a0422c9a7f2ce",
+    "RESULT_timecourse.json": "563a91c96bcd7f11",
+    "RESULT_corrected.json": "9ae87ad003855635",
+    "RESULT_pair_composition.json": "3d75e9a4d5659f04",
+    "RESULT_effect_reliability.json": "d8b7b1abd94febd1",
+    "RESULT_three_level_variance.json": "64264cb99db039b9",
+    "RESULT_timescale_class.json": "d87fa1d679c3344a",
+    "RESULT_within_between.json": "9377136aec5e4dc5",
+    "RESULT_invalid_idorder.json": "51cb7a5c10a9b22f",
+    "RESULT_baseline_conventions.json": "fb27bcf794c48ede",
+    "RESULT_per_animal_heterogeneity.json": "b6423f4f98f20c98",
+    "RESULT_technical_covariates.json": "076ed8485f0dec4d",
+    "RESULT_iv_weighting_INVALID_weights.json": "a6b4baad7bd9e8f1",
+    "RESULT_confounds.json": "0722d40adb4917d7",
+    "RESULT_source_rule.json": "088443281cd051fb",
+    "RESULT_animal_level.json": "98d1e9581eef75f2",
+    "RESULT_fig6.json": "6cee9646ac192527",
+    "RESULT_robust_class.json": "367a7247de337f5a",
+    "RESULT_icc_INVALID.json": "f1849287b8799054",
+    "RESULT_zscored.json": "d3656ae40289a0de",
+    "RESULT_inclusion_filtered.json": "43a9ec69d5c77c8b"
+  },
+  "excluded": {
+    "anatomy/RESULT_icc_INVALID.json": "WITHdrawn: the within-animal variance was computed as var(vs) if len(vs)>1 else 0, and most (animal,pair) units hold one measurement, so the ICC of 0.93 is inflated by construction.",
+    "anatomy/RESULT_iv_weighting_INVALID_weights.json": "Withdrawn: the inverse-variance weights span thirty-one orders of magnitude, so the weighted mean is determined by a handful of near-zero-variance units."
+  },
+  "V2-C1_unit_inflation": {
+    "claim": "Treating neuron-pair measurements as independent replicates inflates the standardised connectivity-function effect by 11 to 18 times.",
+    "figure": "paired bar chart, one bar per unit, three contrast panels (chemical, gap, combined)",
+    "series": [
+      {
+        "contrast": "chemical, animal unit",
+        "d": 0.41447555086243504,
+        "t": 4.3073562755330155,
+        "n": 108
+      },
+      {
+        "contrast": "gap, animal unit",
+        "d": 0.7689525072067619,
+        "t": 8.028099866033843,
+        "n": 109
+      },
+      {
+        "contrast": "combined, animal unit",
+        "d": 0.7289018847857346,
+        "t": 7.609959092085672,
+        "n": 109
+      }
+    ],
+    "pair_unit_counterpart": {
+      "d_combined_pair_unit": 11.048,
+      "note": "from CONFOUND_TESTS round 5; the committed JSON for that run is RESULT_corrected.json"
+    },
+    "inflation_factors": {
+      "chemical": 11.2,
+      "gap": 17.9,
+      "combined": 15.2
+    },
+    "specification": {
+      "unit": "animal; pair-measurement as the contrast",
+      "readout": "connected mean minus unconnected mean, each animal standardised within itself",
+      "pre_window": "60 volumes (30 s), baseline from volumes 30-60",
+      "analysis_window": "per event, int((inter-stimulus interval - 5)/dt), capped at 60 volumes",
+      "scripts": [
+        "09_animal_level.py",
+        "10_robust_and_class.py"
+      ]
+    }
+  },
+  "V2-C2_fig6_reproduction": {
+    "claim": "The source's own anatomy-versus-spontaneous-activity comparison reproduces, and the quantity it predicts has cross-animal agreement of only r = 0.208 on the cells available.",
+    "figure": "two panels: the two animals' Fig-6 values; the cross-animal agreement of the target",
+    "series": {
+      "fig6_animal0": {
+        "label": "动物 0",
+        "n_pairs": 3540,
+        "r": 0.0367570770002564,
+        "r_log": 0.04595960919618188
+      },
+      "fig6_animal1": {
+        "label": "动物 1",
+        "n_pairs": 1560,
+        "r": -0.006367480940431335,
+        "r_log": 0.051261388983584795
+      },
+      "cross_animal_r_of_correlation_matrix": 0.20844762547501247
+    },
+    "n": {
+      "animals": 2,
+      "shared_cells": 23,
+      "cells_animal0": 61,
+      "cells_animal1": 41
+    },
+    "specification": {
+      "data": "OSF spont_data_fig6.zip, 2,402,185 B, two animals",
+      "target": "off-diagonal activity correlation matrix per animal",
+      "predictor": "synapse-count matrix built by name from both source tables, 346 names",
+      "scripts": [
+        "15_fig6_reproduction.py"
+      ]
+    }
+  },
+  "V2-C3_three_level_decomposition": {
+    "claim": "A pair's response decomposes into 55.1 % between-pair, 37.5 % within-cell measurement error, 5.5 % pair-specific animal deviation and 1.9 % homogeneous animal offset.",
+    "figure": "single stacked bar of the four variance shares",
+    "shares": {
+      "var_pair": 0.5512040356787827,
+      "var_eps": 0.375326503967489,
+      "var_beta": 0.054782333955990296,
+      "var_alpha": 0.018687126397737928
+    },
+    "raw_variances": {
+      "var_total": 16.429581752405962,
+      "var_pair": 9.056051766440653,
+      "var_eps": 6.166457480778582,
+      "var_beta": 0.9000508343175477,
+      "var_alpha": 0.3070216708691788
+    },
+    "n_units": 192303,
+    "specification": {
+      "model": "y = mu + alpha[animal] + beta[animal,pair] + eps",
+      "identification": "eps from the units with repeats; the rest by subtraction",
+      "space": "log, because the responses span -3.5e5 to 2.5e5",
+      "scripts": [
+        "16_three_level_variance.py"
+      ]
+    },
+    "shares_frac": {
+      "between_pair": 0.5512040356787827,
+      "measurement_error": 0.375326503967489,
+      "pair_specific_animal": 0.054782333955990296,
+      "animal_offset": 0.018687126397737928
+    }
+  },
+  "V2-C4_specification_sensitivity": {
+    "claim": "The published per-pair values come from analysis choices that live in the pipeline's code and not in its data file, and re-analysing the same records under defensible choices moves the animal-level estimate from d = 0.085 to 0.729.",
+    "figure": "one point per specification on a common axis, with the animal unit and the pair unit marked",
+    "series": [
+      {
+        "spec": "4 s window, common-mode removed, no inclusion rule",
+        "unit": "animal",
+        "d": 0.7289018847857346,
+        "source": "14_per_animal_heterogeneity.py"
+      },
+      {
+        "spec": "source rule, amplitude + derivative criteria",
+        "unit": "animal",
+        "d": 0.4494511406066225,
+        "source": "11b_source_rule.py",
+        "pass_frac": 0.669066906690669
+      },
+      {
+        "spec": "source rule, unweighted sum read-out",
+        "unit": "animal",
+        "d": 0.15798182543851905,
+        "source": "12_inverse_variance_weighting.py (the unweighted arm only; the weighted arm is INVALID)"
+      },
+      {
+        "spec": "source rule, inverse-variance weighted",
+        "unit": "animal",
+        "d": null,
+        "source": "EXCLUDED, weights pathological"
+      }
+    ],
+    "validation_of_the_range": "The range is an instance of a condition the field reports: a 2025 Nature Reviews Neuroscience review states it remains unclear whether structural connectivity constrains directed-connectivity models, and a 2025 Scientific Reports paper states no universally accepted method exists for inferring effective connectivity.",
+    "specification": {
+      "scripts": [
+        "09",
+        "10",
+        "11b",
+        "12",
+        "14"
+      ]
+    }
+  },
+  "supporting_reliability": {
+    "figure": "two panels: split-half reliability by stratum; the variance shares of the effect",
+    "pair_response": {
+      "within_animal_r_full": 0.5223178668939336,
+      "between_animal_r_full": 0.040451905832119675,
+      "units_within": 33578,
+      "pairs_between": 15189
+    },
+    "effect": {
+      "split_half_r_full": 0.5265926992262423,
+      "noise_frac": 0.42183632800903,
+      "signal_frac": 0.57816367199097,
+      "n_animals": 98
+    },
+    "cross_animal_reliability_by_strain": {
+      "NONE": 0.11957725931902259,
+      "A_abs2sd": 0.22634152879609412,
+      "B_topdecile": 0.3317660183771324
+    },
+    "specification": {
+      "scripts": [
+        "13_within_vs_between_splithalf.py",
+        "17_effect_reliability.py",
+        "02_reliability_inclusion_filtered.py"
+      ]
+    }
+  },
+  "withdrawn_or_narrowed": [
+    {
+      "was": "the animals differ rather than the measurements being noisy (round 9)",
+      "now": "narrowed in round 12: 5.5 % pair-specific animal against 37.5 % measurement error"
+    },
+    {
+      "was": "a population-level regularity rather than a circuit property (round 10)",
+      "now": "weakened in round 12; the between-animal spread is 42.2 % noise and 17.7 % pair composition"
+    },
+    {
+      "was": "what is reproducible is which pairs were measured (round 14)",
+      "now": "reduced in round 15 to exactly 17.7 %"
+    },
+    {
+      "was": "the ICC of 0.93",
+      "now": "withdrawn in round 9"
+    }
+  ]
+}
