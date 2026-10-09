@@ -44,6 +44,7 @@ document remains findable by the claim it made.**
 | `FIGURE_SPECIFICATIONS.md` and `FIGURE_SOURCE_DATA.json` | figure-ready data with hashes | how a manuscript would be assembled |
 | `CONSOLIDATED_POSITION.md` | the line's position as of its date | **read with the four supersessions in mind** |
 | `../wp1_data/PATH_LAYOUT.md` | the four input paths the scripts expect, their provenance, integrity and licences | **read before attempting to re-run anything**; 27 of 29 scripts read from `/tmp/` |
+| `ORDER_AXIS.md` | **the order of application as an explicit axis** | **the exact correctness check passes -- `w` at post 24 reproduces the code's 0.7289 and t=7.610 -- and the order is the largest dimension measured, 0.85 at post 24, with one order stable at 0.12 across windows and the other spanning 1.06 and crossing zero** |
 | `JOINT_GRID_VERIFIED_NONADDITIVE.md` | the corrected joint grid, from a step verified against the code first | **the two largest dimensions are strongly non-additive: isolated sum -0.008 but joint +0.571; and a declared grid spans -0.096 to +0.966, crossing zero** |
 | `RETRACTION_joint_grid_wrong_axis.md` | the joint grid over the two largest dimensions | **withdrawn: it divided by the wrong axis, so its weighting axis is not the code's and its additivity test is void; its per-cell-normalisation numbers stand** |
 | `V2C4_RANGE_MEASURED_IN_ONE_FRAMEWORK.md` | V2-C4's specifications measured in one framework | **within a weighting family they span 0.056 unweighted and 0.181 weighted, against a reported span of 0.644; the per-event weighting contributes 0.18 to 0.30 to each** |
@@ -93,6 +94,7 @@ least once, and three were withdrawn or narrowed outright.**
    a value above about 0.4 in this corpus is the across-animal ratio and a value near 0.10 is usually the
    per-animal mean.
 4c. **The pool over which a common mode or a normalisation is computed is itself a specification
+4d. **Check the ORDER in which a pipeline applies its normalisations, not only whether it applies them.** Two orderings of the same two normalisations differ by 0.85 at one window while agreeing to 0.02 at another. See `ORDER_AXIS.md`.
    dimension.** `CORRECTION_common_mode_cell_pool.md` measured it at 0.34 in `d_A`, larger than the whole
    range spanned by window, baseline and normalisation together.
 4b. **Before trusting a specification grid, check it for redundancy: if two levels of an axis give
