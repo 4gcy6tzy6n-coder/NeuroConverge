@@ -156,7 +156,7 @@ missing:
 | a task with a feasible baseline | **NOT YET ASSESSED** | NCV2-004 is not done; the behaviour traces are a candidate source |
 | lawful, recomputable data access | **PARTIAL** | JSON obtained under `CC-BY-4.0`; HDF5 and the restructure script blocked by a traffic limiter; the structural licence is `UNKNOWN` |
 
-> **Verdict: `WP1 = BLOCKED_PENDING_MAPPING_ACCESS`.** Not a pass, and deliberately not a fail. The plan
+> **Verdict as first recorded: `WP1 = BLOCKED_PENDING_MAPPING_ACCESS`.** Not a pass, and deliberately not a fail. The plan
 > distinguishes "we measured and it was not there" from "we could not measure"; this is the second.
 
 **What would unblock it, in order of preference:** (a) obtain `processed_h5.tar.bz2` or
@@ -169,3 +169,109 @@ blocked data and do not proceed to WP3.**
 
 **Nothing in this document is a NeuroConverge v2 result.** It is a feasibility audit, and its own
 deliverable is the statement of what is *not* yet known.
+
+---
+
+## 7. RESOLUTION (same session, later the same day): the mapping exists, in a better resource
+
+**The blocker in section 3 was an artifact of which resource was read first, not a property of the
+data.** The plan's own warning applied to me: *a failed lookup is not evidence of absence.*
+
+**WormID is a Wix site whose dataset page links out to eight DANDI Archive dandisets.** All eight are
+`spdx:CC-BY-4.0`, all use the **NWB** standard, and all are reachable through the DANDI REST API with
+**no token and no challenge page** -- unlike Dryad and, intermittently, Zenodo. DANDI serves presigned
+S3 URLs from `api.dandiarchive.org/api/assets/<uuid>/download/`.
+
+| dandiset | name | assets | smallest asset |
+| --- | --- | --- | --- |
+| 000472 | NeuroPAL volumetric images (Kato lab, UCSF) | 10 | 197,073,664 B |
+| 000541 | NeuroPAL Microfluidic Chip Images and GCaMP activity | 21 | **1,420,403,684 B** |
+| 000565 | C. elegans whole-brain neuroPAL and immobilized | 21 | 253,712,472 B |
+| 000692 | Whole-brain spontaneous GCaMP activity with NeuroPAL | 9 | 8,575,482,056 B |
+| 000714 | Segmented and labeled NeuroPAL structural images | 9 | 49,172,084 B |
+| 000715 | NeuroPAL: Atlas of C. elegans neuron locations | 10 | 67,636,308 B |
+| 000776 | Brain-wide representations of behaviour (Atanas et al. 2023) | 38 | 26,283,315,575 B |
+| 001623 | C. elegans whole-brain imaging datasets (Dunn et al. 2025, WormID) | 95 | 2,118,164,791 B |
+
+**Three NWB files were downloaded and opened with `h5py` (which is available; `pynwb` is not, and is
+not needed because NWB is HDF5):**
+
+| file | bytes | what it contains |
+| --- | --- | --- |
+| `000472` smallest | 197,073,664 | `PlaneSegmentation` with `ID_labels`(185) and `id`(170). **Structural only.** |
+| `000565` smallest | 253,712,472 | `PlaneSegmentation` with `ID_labels`(144) and `id`(116). **Structural only** -- this file is not in the subset that also carries calcium data. |
+| **`000541` smallest** | **1,420,403,684** | **identity AND function in one file. This is the resolution.** |
+
+### What the `000541` file actually contains
+
+```text
+processing/CalciumActivity/SignalRawFluor/SignalCalciumImResponseSeries   [RoiResponseSeries]
+        data            (936, 177)  float64      # 936 timepoints x 177 neurons
+        rois            (177,)      int64        # the same 177 segment ids
+        starting_time   scalar                    # attr: "Raw fluorescence activity for calcium imaging data"
+processing/CalciumActivity/SignalRawFluordNMF/dNMFCalciumImResponseSeries   # dNMF variant, same shape
+processing/CalciumActivity/NeuronIDs                     [SegmentationLabels]
+processing/CalciumActivity/CalciumSeriesSegmentationdNMF/...  [ImageSegmentation] 936 children
+processing/NeuroPAL/NeuroPALSegmentation/NeuroPALNeurons [PlaneSegmentation]
+        id               (177,)  int64    # 0..176, contiguous
+        ID_labels        (718,)  object   # flat CHARACTER array, not a label list
+        ID_labels_index  (177,)  uint16   # NWB ragged-string cumulative END offsets
+        voxel_mask       (177,)  [(x,y,z,weight)]
+acquisition/CalciumImageSeries        [MultiChannelVolumeSeries]
+general/subject                       [CElegansSubject]
+intervals/chemical_stimuli            [TimeIntervals]
+```
+
+**The identity mapping decodes to a clean one-to-one table.** `ID_labels` holds 718 single characters
+with only 31 distinct values because NWB stores variable-length strings as a flat character array plus
+cumulative end offsets; the first eight offsets are `[5, 8, 11, 14, 17, 19, 23, 27]` and the last is
+718. Decoding by offset yields **177 labels for 177 segments, all 177 distinct, one empty**:
+
+```text
+seg 0 -> IL2DR    seg 1 -> I2R     seg 2 -> I2L     seg 3 -> MCR
+seg 4 -> MCL      seg 5 -> MI      seg 6 -> NSMR    seg 7 -> NSML
+seg 8 -> I3       seg 9 -> IL2VR   seg 10 -> M3R    seg 11 -> IL2DL   ...
+```
+
+**The identity of a trace row is therefore `rois` -> `id` -> `ID_labels`, entirely inside one file.**
+This is exactly the correspondence the WormWideWeb JSON export does not expose.
+
+**Verified animal metadata** (`general/subject`): `subject_id = 20190929_07`,
+`description = "NeuroPAL worm in microfluidic chip"`, `strain = OH16230`, `growth_stage = YA`,
+`sex = O`, `cultivation_temp = 20.0`, `date_of_birth = 2019-09-27`.
+
+**Verified activity is real**: a 200-by-5 slice of `data` has min 0.0415, max 0.6525, mean 0.1131,
+std 0.1286, and is not all-zero.
+
+### Two honest limitations of this resource
+
+1. **Microfluidic chip means no free behaviour.** The `000541` files carry calcium activity and
+   chemical-stimulus intervals, but no behavioural time series was found. **The primary endpoint must
+   therefore be neural-activity prediction, not behaviour prediction.** The plan explicitly permits
+   this: it names *prediction error of unobserved neuron activity* as an acceptable primary endpoint.
+2. **One session per animal**, and the calcium trace is `starting_time = 0.0` with no `rate` attribute
+   in the response series, so the sampling interval must be recovered from the acquisition series or
+   the source paper before any temporal analysis. `UNKNOWN` as of this writing.
+
+### Why this stays inside the plan's rules
+
+It does not stitch structure to function across animals without marking it: the structure still comes
+from the Witvliet/NemaNode reconstructions of **different** animals, and the mapping class remains
+`CELL_CLASS_ALIGNED_ACROSS_SPECIMENS`, never same-animal causal evidence. It does not manufacture
+sample size from neurons or frames: the replicate unit is the animal, and `000541` supplies **21** of
+them. It does not treat a model-internal label as biological annotation: `ID_labels` comes from
+NeuroPAL transgenic labelling, not from connectivity. And it does not revive blocked data: the Dryad
+and WormWideWeb routes are simply no longer needed for the identity question.
+
+### Revised WP1 condition
+
+| requirement | was | now | basis |
+| --- | --- | --- | --- |
+| identifiable independent biological replicate unit | PASS | **PASS** | 21 animals in `000541`; `subject_id` verified |
+| interpretable structure-function cell-class alignment | BLOCKED | **PASS** | 177 named identities per file, 1:1 with trace rows, verified by decoding |
+| a task with a feasible baseline | not assessed | **not assessed** | NCV2-004 |
+| lawful, recomputable data access | PARTIAL | **PASS** | CC-BY-4.0, OpenAccess, no token, DANDI REST API, files actually downloaded |
+
+> **Revised verdict: `WP1 = OPEN_PENDING_TASK_AND_SPLIT`.** The mapping blocker is closed. The two
+> remaining items are NCV2-004 (a testable animal-level target) and NCV2-006 (frozen splits), neither of
+> which is a data-availability question. **WP3 still does not start until those are frozen.**
