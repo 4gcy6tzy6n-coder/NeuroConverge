@@ -103,7 +103,7 @@ d_A  values in this corpus:  0.7289 (animal level), 0.4495 (source rule), 0.4145
 d_B  values in this corpus:  0.1165 (mean), 0.1052 (median), 0.1019 (random-effects), 0.0825 (fixed-effect)
 ```
 
-**A value above about 0.4 in this corpus is certainly `d_A`; a value near 0.10 is usually `d_B`. That is a **`11.048` is `d_z`, not `d_A`, and is removed from that list by round 27's correction.**
+**A value above about 0.4 in this corpus is `d_A`; a value near 0.10 is usually `d_B`. That is a heuristic for reading, not a definition, and the documents are the authority.** **`11.048` is `d_z`, not `d_A`, and round 27's correction removes it from that list.**
 heuristic for reading, not a definition, and the documents are the authority.**
 
 ## 6. What this changes
