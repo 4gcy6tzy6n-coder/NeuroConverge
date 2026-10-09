@@ -1,3 +1,11 @@
+> **STATUS: THE 37 TO 39 PER CENT RANGE IS TOO NARROW (round 29).** This document's conclusion that the
+> measurement-error share is insensitive to the minimum-animals-per-pair restriction is CONFIRMED. **Its
+> quoted range is not: across eight specifications the share is 38.7 % to 57.1 %, and the read-out alone
+> moves it about thirteen points.** What survives is the sign structure, not any point value. **See
+> [`CORRECTION_eps_is_a_range.md`](CORRECTION_eps_is_a_range.md).** The text is left unaltered.
+
+---
+
 # CORRECTION: V2-C3's pair-specific component is specification-dependent; only the measurement-error share is robust
 
 **Status: this narrows V2-C3 materially. Its four published numbers reproduce exactly, and one of them turns
