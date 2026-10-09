@@ -1,0 +1,238 @@
+{
+  "workstream": "IRCN \u2014 irregular recurrent circuit network",
+  "repository": "https://github.com/4gcy6tzy6n-coder/IRCN.git",
+  "reviewed_tree": {
+    "branch": "v0.7.0-runtime-icef-bridge",
+    "head": "8eac42d",
+    "note": "v0.8.0/cbcc is present in the working tree and is not committed at this head"
+  },
+  "scope_note": "IRCN/data_provenance.md classifies NeuroConverge and nmi_feedback_routing as 'Existing adjacent workspaces | Read-only boundary; not used as IRCN inputs', and IRCN/model/v0.7.0/DEVELOPMENT_CONTRACT_v0.2.md excludes NeuroConverge modification and NMI manuscript edits. Their inclusion here is an owner-authorized scope amendment.",
+  "artifacts": {
+    "confirmatory_freeze": {
+      "path": "IRCN/result/v0.8.0/cbcc/results/pilot_20261009T092726.879189Z/confirmatory_freeze.json",
+      "sha256": "5fc07c59ff062bbf710b32a4476f5fa681a82965d9d66dff6903110f255beb08",
+      "bytes": 8092
+    },
+    "pilot_seed_metrics": {
+      "path": "IRCN/result/v0.8.0/cbcc/results/pilot_20261009T092726.879189Z/pilot_seed_metrics.csv",
+      "sha256": "7c9b690499a6f77082fba82a7483ace8510d0332c729f8c6577fc48048481e6f",
+      "bytes": 27671
+    },
+    "validation_gate_v2": {
+      "path": "IRCN/result/v0.8.0/cbcc/results/validation_v2_20261009T092706.571860Z/validation_gate.json",
+      "sha256": "f99f453673a9eb7cd76e9f73392089f7c407c4f79bfa51d027c9b8805812a48b",
+      "bytes": 276
+    },
+    "validation_gate_v1": {
+      "path": "IRCN/result/v0.8.0/cbcc/results/validation_gate_20261009T092156.827901Z/validation_gate.json",
+      "sha256": "3d6d95dfd68859b8c749c251c813f73a85e9da828474083e3fd1d43e9c0e93bc",
+      "bytes": 2458
+    },
+    "pilot_failures": {
+      "path": "IRCN/result/v0.8.0/cbcc/results/pilot_20261009T092726.879189Z/failures.jsonl",
+      "sha256": "1119b0af2b3b2b4296a4ef58359257f9a1c3920889054917b5def7e414980c74",
+      "bytes": 218
+    },
+    "experiment_report": {
+      "path": "IRCN/research/cbcc/cbcc_experiment_report.md",
+      "sha256": "ba70d7598033ec61f2fcfd1570c71a923a19238a2833efdfd1b6c05012275bcc",
+      "bytes": 7720
+    },
+    "preregistration_v2": {
+      "path": "IRCN/research/cbcc/pre_registration_v2.yaml",
+      "sha256": "abcc757a7a1ebd724675e2875299356886707fb94fd58846be6dcdc1d244fdb4",
+      "bytes": 6362
+    },
+    "v07_completion": {
+      "path": "IRCN/result/v0.7.0/COMPLETION_RECORD.md",
+      "sha256": "89c31f83ea1a28bdc663027c9005b9ba687e3929ce74ce098325b7a11119b968",
+      "bytes": 2656
+    },
+    "v07_decision": {
+      "path": "IRCN/result/v0.7.0/decision_v1.md",
+      "sha256": "8c0aad8243d20f5008fa00f41118c5c8966bc30147bd6eafb6e81968b494945f",
+      "bytes": 1753
+    },
+    "wp_status": {
+      "path": "IRCN/reports/WORK_PACKAGE_STATUS.md",
+      "sha256": "843782ed54710080128072d7a3e8ce2fa2ae68575013bbf42ad970cfd1bc1a5b",
+      "bytes": 1305
+    },
+    "decision_v1": {
+      "path": "IRCN/decision_v1.md",
+      "sha256": "008b105f820837b4381a1f04518e61d5cd1be16e0463386c19d80a2f6db61d83",
+      "bytes": 1653
+    },
+    "protocol_deviations": {
+      "path": "IRCN/protocol_deviations.md",
+      "sha256": "88b19f86cd91b964af84bebcfe325f3a959f79b4a4824b2051451c6bcb29e213",
+      "bytes": 1707
+    },
+    "e1_report": {
+      "path": "IRCN/E1_report.md",
+      "sha256": "15532b976b60cfc5c79a44b42f26f03bc44b465dfb6af20781632a645e084abf",
+      "bytes": 3379
+    },
+    "e1_results_csv": {
+      "path": "IRCN/E1_results.csv",
+      "sha256": "77000f77020270dc548855e885d720fd983dfedcbddc54862ce1f2d45bf3477b",
+      "bytes": 175
+    },
+    "v06_decision": {
+      "path": "IRCN/result/v0.6.0/decision_v1.md",
+      "sha256": "6c43905626dc6bca84a20b2cff317a3ada1d7bc8fda4bdbe4c6dbcf44d337152",
+      "bytes": 1467
+    },
+    "run_experiment.py": {
+      "path": "IRCN/research/cbcc/run_experiment.py",
+      "sha256": "183a55ea07bb18de7798f3d656b8f2d7caa70d89bcbf29e40731edf35d71e1cf",
+      "bytes": 25852
+    }
+  },
+  "pilot": {
+    "preregistration": "CBCC-confirmatory-v2",
+    "budget_mac_per_tick": 2756,
+    "n_per_seed": 8,
+    "pilot_seeds": [
+      1300,
+      1301,
+      1302,
+      1303,
+      1304,
+      1305,
+      1306,
+      1307
+    ],
+    "validation_seeds": [
+      1200,
+      1201,
+      1202,
+      1203,
+      1204,
+      1205,
+      1206,
+      1207
+    ],
+    "test_seed_start": 3000,
+    "multiplicity": "Holm correction across all four scheduler controls in both task families (8 tests)",
+    "eligibility_rule": "a control policy is eligible iff, for EVERY pilot seed, abs(MAC_control - MAC_cbcc)/max(MAC_cbcc,1) <= 0.01  -- i.e. the control must match the TREATMENT's own realized consumption",
+    "families": {
+      "sparse_key": {
+        "cbcc_mac_per_seed": {
+          "1300": 508160.0,
+          "1301": 500288.0,
+          "1302": 508160.0,
+          "1303": 500288.0,
+          "1304": 505536.0,
+          "1305": 505536.0,
+          "1306": 502912.0,
+          "1307": 505536.0
+        },
+        "baselines": {
+          "random": {
+            "min_relative_deviation": 0.037909319899244336,
+            "max_relative_deviation": 0.0542407573237815,
+            "eligible": false
+          },
+          "fixed_frequency": {
+            "min_relative_deviation": 0.037909319899244336,
+            "max_relative_deviation": 0.0542407573237815,
+            "eligible": false
+          },
+          "activity": {
+            "min_relative_deviation": 0.05411283100933862,
+            "max_relative_deviation": 0.15736169135333586,
+            "eligible": false
+          },
+          "no_influence": {
+            "min_relative_deviation": 0.04118387909319899,
+            "max_relative_deviation": 0.0575668414992964,
+            "eligible": false
+          }
+        },
+        "eligible": [],
+        "primary_baseline": null,
+        "n_confirmatory_seeds": 0,
+        "per_seed_budget_match_within_1pct": false,
+        "mean_loss_by_policy": {
+          "activity": 0.010533173932529241,
+          "cbcc": 0.010839731371238772,
+          "fixed_frequency": 0.010745757806986951,
+          "full_update": 0.00970779811420867,
+          "no_influence": 0.010366069134106343,
+          "random": 0.010718530979407405,
+          "zero_output": 0.010839016280101432
+        }
+      },
+      "feedback_switch": {
+        "cbcc_mac_per_seed": {
+          "1300": 25344.0,
+          "1301": 25344.0,
+          "1302": 25344.0,
+          "1303": 25344.0,
+          "1304": 25344.0,
+          "1305": 25344.0,
+          "1306": 25344.0,
+          "1307": 25344.0
+        },
+        "baselines": {
+          "random": {
+            "min_relative_deviation": 19.810606060606062,
+            "max_relative_deviation": 19.810606060606062,
+            "eligible": false
+          },
+          "fixed_frequency": {
+            "min_relative_deviation": 19.810606060606062,
+            "max_relative_deviation": 19.810606060606062,
+            "eligible": false
+          },
+          "activity": {
+            "min_relative_deviation": 14.669191919191919,
+            "max_relative_deviation": 17.671717171717173,
+            "eligible": false
+          },
+          "no_influence": {
+            "min_relative_deviation": 19.876262626262626,
+            "max_relative_deviation": 19.876262626262626,
+            "eligible": false
+          }
+        },
+        "eligible": [],
+        "primary_baseline": null,
+        "n_confirmatory_seeds": 0,
+        "per_seed_budget_match_within_1pct": false,
+        "mean_loss_by_policy": {
+          "activity": 0.02657162122813498,
+          "cbcc": 0.026122426727446264,
+          "fixed_frequency": 0.024915858342540034,
+          "full_update": 0.016903719998224844,
+          "no_influence": 0.0243265365719993,
+          "random": 0.025339338245437895,
+          "zero_output": 0.02601414053383824
+        }
+      }
+    },
+    "sample_size_feasible": false,
+    "test_seeds": {
+      "sparse_key": [],
+      "feedback_switch": []
+    },
+    "validation_gate_v2": {
+      "sparse_key": {
+        "full_update_mse": 0.010233773539118338,
+        "zero_output_mse": 0.011305724828475795,
+        "eligible": true
+      },
+      "feedback_switch": {
+        "full_update_mse": 0.019627089228933726,
+        "zero_output_mse": 0.026394435427582935,
+        "eligible": true
+      }
+    },
+    "validation_gate_v1_failed": {
+      "sparse_key": false,
+      "feedback_switch": false
+    },
+    "cross_check": "recomputed from pilot_seed_metrics.csv and matched to confirmatory_freeze.json to 1e-12"
+  }
+}
