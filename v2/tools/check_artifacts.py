@@ -21,6 +21,8 @@ Usage:
     # Alternatives are separated by ';;'  (NOT '|', which regex needles need).
     # Prefix the label with '!' to require ABSENCE instead of presence.
     # A needle written  re:<pattern>  is treated as a regular expression (multiline).
+    # A needle written  num:<value>   matches a number with 5e-4 relative tolerance, so a rounded
+    #                                 figure quoted in prose matches its full-precision JSON value.
     ALL :: the animal is the unit :: Unit: the animal | the unit is the animal
     wp3_results/X.md :: some number :: 0.7289
     SPEC
@@ -98,6 +100,21 @@ def main() -> int:
                     return re.search(n[3:], hay, re.M) is not None
                 except re.error:
                     return False
+            if n.startswith("num:"):
+                # numeric match with tolerance: a rounded value in a document and the full-precision
+                # value in a JSON are the SAME fact, and a substring test cannot see that.
+                try:
+                    want = float(n[4:])
+                except ValueError:
+                    return False
+                tol = max(5e-4, abs(want) * 5e-4)
+                for m in re.finditer(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?", hay):
+                    try:
+                        if abs(float(m.group(0)) - want) <= tol:
+                            return True
+                    except ValueError:
+                        pass
+                return False
             return norm(n) in hay
         hits = [n for n in needles if matches(n)]
         if absent:

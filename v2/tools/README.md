@@ -84,3 +84,32 @@ it fires on `# TODO: fix this later` and stays silent on the sentence above.
 alternatives on `|`, which every regex also uses, so a pattern containing `(#|//|--)` was shredded into
 three literal needles. **Fixed by moving the separator to `;;`.** A checker whose own input format cannot
 express the requirement is worse than no checker, because it reports a red result that means nothing.
+
+## A fourth requirement form: `num:`
+
+**Round 7 added `num:<value>` for numeric matching with 5e-4 relative tolerance.** The reason is a fresh
+instance of the same class: a check searched the JSON for `0.4495` and failed, because the JSON stores
+`0.4494511406066225` and a rounded figure is **not a substring** of its full-precision value. **The two
+represent the same fact**, so the check was wrong and the artifact was right -- the sixth self-inflicted
+check failure in this line, and the first one the checker's own diagnostic output made obvious in
+seconds rather than minutes.
+
+The four requirement forms now are:
+
+| form | meaning |
+| --- | --- |
+| `text` | literal substring, whitespace-normalised |
+| `re:<pattern>` | multiline regular expression, for context-aware requirements |
+| `num:<value>` | numeric match with tolerance, so a rounded quote matches its full-precision source |
+| `!`-prefixed label | the requirement is **absence**, not presence |
+
+Alternatives are separated by `;;`, because `|` is needed inside regexes.
+
+## What the tool has already earned
+
+* It fixed a defect class that recurred in **five consecutive rounds**.
+* Its **first full run** established a real fact: no `TODO`, `FIXME`, emoji or silent control characters
+  anywhere in the line's 51 text artifacts, across 337,955 characters.
+* **Its diagnostic output turned a mystery into a two-second diagnosis twice in one round** -- once when
+  a path was written `v2/tools/...` inside the `v2/` root, and once when a rounded number was searched
+  for in a full-precision JSON.
