@@ -84,13 +84,30 @@ is not a claim that the identity question is unexplored in principle; Creamer's 
 **has** an identity assumption, and v2's contribution is to make that assumption a **tested factor**
 rather than an unexamined premise.
 
-### The risk, stated at full strength
+### THE RISK MATERIALISED. Read the decision record.
 
-If the mapping manipulation, at fixed topology and fixed capacity, produces no increment distinguishable
-from its own null, then **v2 has no NMI-level contribution here** and the sprint verdict becomes PIVOT
-or STOP. The joint lead's own formulation is adopted verbatim: *if such a comparison cannot be
-constructed, then however well the real graph predicts, the project must reassess whether it has
-sufficient independent scientific contribution.*
+**Status as of 2026-10-09, after the joint lead supplied the full v4 PDF and it was read in full: the
+overlap is TOTAL, not partial.**
+
+Creamer et al. **already perform the identity permutation at fixed topology** -- their Methods state
+that the shuffled connectome is *"topologically identical to the original network; we have only permuted
+the identity of each node in the graph"* -- they **already use the same connectome files**
+(`witvliet_2020_7.csv`, `witvliet_2020_8.csv`, `white_1986_jsh.csv`, `white_1986_n2u.csv`, all from
+nemanode.org), and they **already work across 110 animals with 55/55 train-test splits**, reporting that
+the learned properties are *"conserved across animals"*.
+
+**Therefore v2's proposed novelty -- hold topology fixed and vary the mapping -- is already published,
+on the same inputs, with five times the animals.** The one residual (they do not cross graph-shuffle
+with identity-shuffle as a 2 x 2 design) is a methodological refinement, not a new scientific question.
+
+> **Verdict: `PIVOT_OR_STOP` on the H2-centred novelty claim.** Full analysis, quoted passages, the
+> coverage table and three lawful options are in
+> [`DECISION_RECORD_NOVELTY_REASSESSMENT.md`](DECISION_RECORD_NOVELTY_REASSESSMENT.md).
+
+**What this matrix does NOT retract:** the feasibility finding. An audited, reproducible route to
+identity-resolved functional data now exists, backed by files actually downloaded and read. **The
+question changed status from "unanswered" to "already answered elsewhere", and those are different
+findings.**
 
 **Citation status: all four version records read, v4 abstract read verbatim, repository README read.
 Full text NOT read; the data split, the identity handling and the shuffled-graph construction were

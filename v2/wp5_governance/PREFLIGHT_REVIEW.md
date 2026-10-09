@@ -266,3 +266,70 @@ research has not explained?**
 **This addendum does not change the verdict. It remains `GO_CONDITIONAL`:** WP2 design and control
 construction approved; WP3 confirmatory work, confirmatory unblinding, post-hoc threshold changes and
 formal manuscript writing all remain **not approved**.
+
+---
+
+# ADDENDUM 2 — the full v4 text was read, and the verdict changes
+
+**The joint lead supplied `2024.09.22.614271v4.full.pdf` and authorized the repository push, which was
+done (`9aba389..21905da`). The full text was read this session: 10 pages, 950 extracted lines, 67,724
+characters.**
+
+## B1. The verdict moves from `GO_CONDITIONAL` to `PIVOT_OR_STOP`
+
+**This supersedes the verdict in section 1 and in Addendum 1.** The reason is not a new doubt; it is
+evidence. Four passages decide it, all quoted verbatim with line locations in
+[`DECISION_RECORD_NOVELTY_REASSESSMENT.md`](../wp0_freeze/DECISION_RECORD_NOVELTY_REASSESSMENT.md):
+
+1. their shuffled connectome is *"topologically identical to the original network; we have only
+   permuted the identity of each node in the graph"* -- **this is v2's M1**;
+2. they name the manipulation *"shuffled the neural identities"*;
+3. the connectome is *"the sum of the matrix of synapse counts from three adult connectomes and one L4
+   connectome"* taken from nemanode.org, **specifically `witvliet_2020_7.csv` and
+   `witvliet_2020_8.csv`** -- **the files v2 downloaded**;
+4. *"The data set of **110 animals** was split into 5 different subsets of **55 animals in the train set
+   and 55 animals in the test set**"*, and the model learns *"functional properties of individual
+   neurons that are unique to each neuron and **conserved across animals**"*.
+
+**Consequence: v2's cross-individual identity-mismatch design is already published, at five times the
+animal count, on identical connectome inputs.** WP2's control-construction phase would be a
+reimplementation of a published control.
+
+## B2. What this does NOT invalidate
+
+**The sprint's stated deliverable is still met, and the feasibility work stands.** The sprint was asked
+to establish that an answerable scientific question exists with real biological data, valid controls and
+independent statistical units. **That was established by downloading and reading real files**, and it
+remains true. What has changed is that **the question, once shown answerable, turns out to have been
+answered by someone else.**
+
+**Also standing, and worth keeping:** the content-level v1 freeze proof (`V1_FREEZE_HASH_PROOF.json`,
+four levels, 15/15 each); the two `NOT VERIFIED` citations recorded rather than guessed; the documented
+exclusion of the 24 pharyngeal neurons; and the gap-junction and licensing rulings.
+
+## B3. Revised item status
+
+| item | was | now |
+| --- | --- | --- |
+| NCV2-001 isolated tree and freeze | DONE | **DONE**, now with a content-level proof |
+| NCV2-002 novelty matrix | DONE, provisional | **DONE, and it has done its job -- it found a total overlap** |
+| NCV2-003 feasibility from real files | DONE | **DONE, unaffected** |
+| NCV2-004 testable target and mismatches | DONE as draft | **DRAFT, and the mismatches are now known to be published controls** |
+| NCV2-005 matched-topology null | DONE as draft | **DRAFT, same reservation** |
+| NCV2-006 splits, estimator, leakage | DONE as draft | **DRAFT, same reservation** |
+| NCV2-007 pre-flight review | GO_CONDITIONAL | **PIVOT_OR_STOP** |
+
+## B4. Recommendation, and what needs the joint lead
+
+**Do not proceed to WP3 on the H2 basis.** Three lawful options are set out in section 5 of the decision
+record: PIVOT the data system (which requires its own feasibility pass, not a relabelling), NARROW with
+a reduced biological claim (honest, but unlikely to be NMI-level), or STOP and return the feasibility
+audit as a negative positioning result.
+
+**The joint lead's decision is required, because this is a scientific-scope decision and not a
+methodological one.** What this review can state is what the evidence supports: **the identity-mismatch
+design is already realised in the literature, on these exact connectomes, at 110 animals.**
+
+**Still outstanding, unchanged by this finding:** C1 (sampling interval `UNKNOWN`), C2-C4 (unfrozen
+parameters), R1 (NemaNode matrix redistribution terms `UNKNOWN`), and the **independent** review, which
+this document is not.
