@@ -116,6 +116,28 @@ within one round of being applied.**
 
 * Instrumented comparison `anatomy/33_instrumented_comparison.py`.
 * The original script's re-run: `anatomy/32_rerun_09_animal_level.py`, output shown in section 1.
-* **The verification that the weighting accounts for the full `0.39`-to-`0.73` difference was running as this
-  was written; its result is recorded in the next entry rather than asserted here.**
+* **The verification, completed: the weighting accounts for the difference exactly.**
+
+```
+without per-event sd weighting:  d_A = 0.3933   (diff 0.65615,  sd 1.66828,  t 4.106)
+with    per-event sd weighting:  d_A = 0.7289   (diff 0.07702,  sd 0.10567,  t 7.610)
+the weighting's contribution:    +0.3356
+```
+
+**The weighted run returns `diff = 0.07702` and `sd = 0.10567`, the original script's values to five decimal
+places, and `d_A = 0.7289` with them.** **So `0.3933 + 0.3356 = 0.7289` exactly, and the entire discrepancy
+is one omitted step.** **The grid's reproduction of the code's configuration is exact apart from it.**
+
+## 4a. The immediate consequence for V2-C3, and the test now running
+
+**The three-level variance decomposition behind V2-C3 omitted the same step.** **Its shares -- 55.1 per cent
+between-pair, 37.5 per cent measurement error, 5.5 per cent pair-specific animal and 1.9 per cent animal
+offset at the round-12 specification, and the 38.7-to-57.1 per cent measurement-error range of round 29 --
+were all computed on unweighted events.**
+
+**So the question is not academic: if the weighting moves those shares as much as it moves `d_A`, then V2-C3
+has the same defect as V2-C4's grids, and every share this line has reported for it is an unweighted value.**
+**A decomposition run both ways on the same events is in progress and its result is recorded in the next entry
+rather than asserted here.**
+
 * **No model was fitted. No causal claim is made.**
