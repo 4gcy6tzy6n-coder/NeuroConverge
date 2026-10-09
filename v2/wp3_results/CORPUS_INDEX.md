@@ -44,6 +44,7 @@ document remains findable by the claim it made.**
 | `FIGURE_SPECIFICATIONS.md` and `FIGURE_SOURCE_DATA.json` | figure-ready data with hashes | how a manuscript would be assembled |
 | `CONSOLIDATED_POSITION.md` | the line's position as of its date | **read with the four supersessions in mind** |
 | `../wp1_data/PATH_LAYOUT.md` | the four input paths the scripts expect, their provenance, integrity and licences | **read before attempting to re-run anything**; 27 of 29 scripts read from `/tmp/` |
+| `CORRECTION_per_event_weighting_omitted.md` | **the per-event `sd` division is a weighting five of this line's grids omitted**, worth about 0.34 in `d_A` | **the code weights each event by 1/its across-cell spread; the grids did not, so every 0.39-versus-0.73 comparison in rounds 26-33 was weighted against unweighted** |
 | `CORRECTION_cell_pool_refuted.md` | the cell pool varied directly: **it contributes 0.0038, not 0.3394** | **four candidate causes for the 0.729-versus-0.393 discrepancy eliminated; unresolved; the decisive test is re-running the original script** |
 | `CORRECTION_common_mode_cell_pool.md` | the common mode's cell pool, an undeclared specification dimension worth 0.34 in `d_A` | **the pool over which a common mode is computed is a specification; the corpus declares no such thing** |
 | `V2C4_RANGE_STRESS_TEST.md` | V2-C4's range across twelve common-mode-free specifications, and a redundant inclusion axis | **the range is real and its upper end is one unvaried step, common-mode removal** |
