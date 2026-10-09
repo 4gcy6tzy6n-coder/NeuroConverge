@@ -1,0 +1,110 @@
+[
+  {
+    "transform": "raw",
+    "method": "pearson",
+    "detrend": false,
+    "r_animal0": 0.03675707700025644,
+    "r_animal1": -0.00636748094043132,
+    "r_cross": 0.20844762547501236,
+    "n_shared": 23
+  },
+  {
+    "transform": "raw",
+    "method": "pearson",
+    "detrend": true,
+    "r_animal0": 0.03562672974052901,
+    "r_animal1": 0.0020728820809494406,
+    "r_cross": 0.2611662816254443,
+    "n_shared": 23
+  },
+  {
+    "transform": "raw",
+    "method": "spearman",
+    "detrend": false,
+    "r_animal0": 0.038134574053650894,
+    "r_animal1": 0.0027408981717073917,
+    "r_cross": 0.22527082911277385,
+    "n_shared": 23
+  },
+  {
+    "transform": "raw",
+    "method": "spearman",
+    "detrend": true,
+    "r_animal0": 0.03558895359704268,
+    "r_animal1": 0.011799826526407377,
+    "r_cross": 0.2703320324372282,
+    "n_shared": 23
+  },
+  {
+    "transform": "dff",
+    "method": "pearson",
+    "detrend": false,
+    "r_animal0": 0.03675707700025638,
+    "r_animal1": -0.00636748094043125,
+    "r_cross": 0.20844762547501247,
+    "n_shared": 23
+  },
+  {
+    "transform": "dff",
+    "method": "pearson",
+    "detrend": true,
+    "r_animal0": 0.03562672974052902,
+    "r_animal1": 0.0020728820809493855,
+    "r_cross": 0.26116628162544425,
+    "n_shared": 23
+  },
+  {
+    "transform": "dff",
+    "method": "spearman",
+    "detrend": false,
+    "r_animal0": 0.038134574053650894,
+    "r_animal1": 0.0027408981717073917,
+    "r_cross": 0.22527082911277385,
+    "n_shared": 23
+  },
+  {
+    "transform": "dff",
+    "method": "spearman",
+    "detrend": true,
+    "r_animal0": 0.03558895359704268,
+    "r_animal1": 0.011799826526407377,
+    "r_cross": 0.2703320324372282,
+    "n_shared": 23
+  },
+  {
+    "transform": "z",
+    "method": "pearson",
+    "detrend": false,
+    "r_animal0": 0.03675707700025633,
+    "r_animal1": -0.006367480940431326,
+    "r_cross": 0.20844762547501247,
+    "n_shared": 23
+  },
+  {
+    "transform": "z",
+    "method": "pearson",
+    "detrend": true,
+    "r_animal0": 0.03562672974052902,
+    "r_animal1": 0.0020728820809492554,
+    "r_cross": 0.2611662816254445,
+    "n_shared": 23
+  },
+  {
+    "transform": "z",
+    "method": "spearman",
+    "detrend": false,
+    "r_animal0": 0.038134574053650894,
+    "r_animal1": 0.0027408981717073917,
+    "r_cross": 0.22527082911277385,
+    "n_shared": 23
+  },
+  {
+    "transform": "z",
+    "method": "spearman",
+    "detrend": true,
+    "r_animal0": 0.03558895359704268,
+    "r_animal1": 0.011799826526407377,
+    "r_cross": 0.2703320324372282,
+    "n_shared": 23
+  }
+]

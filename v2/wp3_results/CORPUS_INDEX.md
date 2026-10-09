@@ -11,7 +11,7 @@ that searched every document for statements still asserting a withdrawn claim.**
 | claim | one-line statement | primary documents | status |
 | --- | --- | --- | --- |
 | **V2-C1** | treating pair measurements as replicates inflates the **SIGNIFICANCE** by about `sqrt(n)`, while the pair-level **effect size is smaller** than the animal-level one; the corpus's "11 to 18 times" divided a z-score by a Cohen's `d` | `ANATOMY_FUNCTION_RETEST.md`, `CONFOUND_TESTS.md`, `ANIMAL_LEVEL_ESTIMATE.md`, `ROBUSTNESS_AND_CLASS_AT_ANIMAL_LEVEL.md` | **arithmetic** |
-| **V2-C2** | the source's own Fig-6 comparison **reproduces** at `r = +0.0368` and `-0.0064`, and its target has cross-animal agreement of only **`r = 0.208`** on the cells available | `FIG6_LIKE_FOR_LIKE.md` | **reproduced, `n = 2` stated** |
+| **V2-C2** | the source's own Fig-6 comparison **reproduces** at `r = +0.0368` and `-0.0064`, and its target has cross-animal agreement of only **`r = 0.208`** to `0.270` on the cells available | `FIG6_LIKE_FOR_LIKE.md`, **`V2C2_STRESS_TEST.md`** | **reproduced and stress-tested across four specifications; `n = 2` stated** |
 | **V2-C3** | a pair's response has a **measurement-error share of 38.7 to 57.1 %** across eight specifications, always the largest or second-largest component; the **pair-specific animal share is negative when pairs measured in one animal are included and 21.6 to 35.5 % when excluded**; what is robust is the sign structure, not any share | `CORRECTION_heterogeneity_is_noise.md`, **`CORRECTION_variance_decomposition_specification.md`**, **`CORRECTION_eps_is_a_range.md`** | **measurement-error share solid; pair-specific share narrowed** |
 | **V2-C4** | the published values come from choices that live in the pipeline's code, and re-analysing moves the animal-level estimate across **`d` 0.085 to 0.729** | `SOURCE_RULE_RECOVERED.md`, `SPECIFICATION_COMPLETE.md`, `SPECIFICATION_SENSITIVITY.md`, `SPECIFICATION_IN_LITERATURE.md` | **sensitivity solid; sampled practice still owed** |
 
@@ -44,6 +44,7 @@ document remains findable by the claim it made.**
 | `FIGURE_SPECIFICATIONS.md` and `FIGURE_SOURCE_DATA.json` | figure-ready data with hashes | how a manuscript would be assembled |
 | `CONSOLIDATED_POSITION.md` | the line's position as of its date | **read with the four supersessions in mind** |
 | `../wp1_data/PATH_LAYOUT.md` | the four input paths the scripts expect, their provenance, integrity and licences | **read before attempting to re-run anything**; 27 of 29 scripts read from `/tmp/` |
+| `V2C2_STRESS_TEST.md` | V2-C2 across four effective specifications, and a redundant grid axis | **the reproduction is stable; the bound ranges 0.208 to 0.270, always far below 0.5; and a grid must be checked for redundancy before it is reported** |
 | `CORRECTION_eps_is_a_range.md` | the measurement-error share across eight specifications | **a share from a variance decomposition is a range over a declared specification set, not a point value** |
 | `CENSUS_d_z_versus_d_effect.md` | **seventy-six fields across five files store a z-score in a field named `d`**; the four live claims draw on files storing genuine Cohen's `d` | **a `d` of 2 or more in this corpus is a z-score, not an effect size** |
 | `NOTATION_two_effect_sizes.md` | two quantities share the symbol `d` | **read before quoting any effect size**: `d_A` is `mean(diff)/SD(diff)` across animals, `d_B` is the mean of per-animal standardised effects |
@@ -82,6 +83,9 @@ least once, and three were withdrawn or narrowed outright.**
    size.** `CENSUS_d_z_versus_d_effect.md` and `NOTATION_two_effect_sizes.md` define the four meanings. `NOTATION_two_effect_sizes.md` defines the two;
    a value above about 0.4 in this corpus is the across-animal ratio and a value near 0.10 is usually the
    per-animal mean.
+4b. **Before trusting a specification grid, check it for redundancy: if two levels of an axis give
+   bit-identical output, that axis is not a specification.** V2-C2's grid had three transforms that produced
+   one result, so twelve rows were four specifications.
 5. **`v2/tools/check_artifacts.py` will verify any requirement you state against the corpus**, and its README
    documents the thirteen ways it has been wrong.
 
