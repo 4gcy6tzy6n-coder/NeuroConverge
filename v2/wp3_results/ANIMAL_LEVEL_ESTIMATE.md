@@ -130,3 +130,13 @@ used, but it is not the explanation for anything.**
 * Source `shift_vol` and baseline convention: `pumpprobe/Fconn.py:170, 256` with
   `pumpprobe/Funatlas.py:2214`.
 * **No model was fitted. No biological claim beyond the measured association is made.**
+---
+
+> **CAVEAT CORRECTED, appended 2026-10-09.** Section 5 states that the reported `p` is "therefore
+> optimistic" because within-animal dependence is not modelled. **That caution is withdrawn by
+> [`ROBUSTNESS_AND_CLASS_AT_ANIMAL_LEVEL.md`](ROBUSTNESS_AND_CLASS_AT_ANIMAL_LEVEL.md) section 1:**
+> re-computed with each animal weighted by its pair counts, the weighted and unweighted `t` agree closely
+> and the weighting moves the gap-junction statistic further from the null, so **the animal-level paired
+> test does account for the dependence that matters.** The pairs are still not independent replicates --
+> the inflation factor of 11 to 18 times measured above is real -- but **that caution belongs to the wrong
+> unit, not to this one.** The text is left unaltered.
