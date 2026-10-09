@@ -152,3 +152,28 @@ time. **A checker is only as good as the documents it has been pointed at.**
 -- with one exception, round 14, where the checker caught a genuine document-versus-JSON contradiction
 that its author had introduced.** Each of the thirteen narrowed the checker; the one real catch is why it
 is worth the trouble.
+
+## A requirement form this corpus needs: the `d` in a result file is not always an effect size
+
+**Rounds 27 and 28 established that `d` in this corpus means four different things.** **The census in
+`../wp3_results/CENSUS_d_z_versus_d_effect.md` found seventy-six fields across five result files that store
+`diff / SE`, a z-score, under that name.** **A document quoting such a value as an effect size overstates the
+effect by `sqrt(n)`, which here is hundreds.**
+
+**So a requirement about an effect size must name the quantity, and there is an arithmetic check that a
+requirement can encode:**
+
+```
+wp3_results/SOME_DOC.md  :: effect size is not a z  :: ! re:num:([2-9]|[1-9][0-9])   <- not usable as written
+```
+
+**The usable form is a plain bound on the value, because the largest genuine effect size anywhere in this
+corpus is 0.7690:**
+
+```
+wp3_results/SOME_DOC.md  :: any d above 1.5 must be labelled a z-score :: z-score
+```
+
+**The heuristic, stated so it can be tested: a `d` of 2 or more in this corpus is a z-score.** **The tooling
+cannot enforce that by itself, because it does not know which quantity a number denotes; what it can do is
+require that the distinction be stated, which is what the requirement above does.**
