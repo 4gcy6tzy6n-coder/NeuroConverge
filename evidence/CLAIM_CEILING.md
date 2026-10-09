@@ -25,7 +25,7 @@ The two projects provide heterogeneous, bounded evidence that biological structu
 - That the proposed evidence hierarchy is a validated universal law or instrument.
 - That the third programme's scheduler is inefficacious, or that its mechanism failed. Its interaction was never tested; the comparison could not be instantiated.
 - That the third programme's descriptive pilot ordering licenses a compute or quality claim. No control was eligible, no primary baseline was selected, the confirmatory seed count is zero and no confirmatory evaluation ran.
-- That passing an accuracy gate (96/96 and 240/240, maximum NRMSE 4.2635e-9) or a software-semantics parity gate (42/42 attempts, maximum state difference 2.8311e-15) licenses an efficiency or efficacy claim. Both projects' own decision records decline those claims.
+- That passing an accuracy gate (96/96 calibration at maximum relative NRMSE 5.5743e-9, and 240/240 untouched-seed at maximum 4.2635e-9, limit 6.8376e-8) or a software-semantics parity gate (42/42 attempts, maximum state difference 2.8311e-15) licenses an efficiency or efficacy claim. Both projects' own decision records decline those claims.
 - That the three programmes identify one common algorithm, estimand or effect, or that any of them validates another.
 
 Each Results claim must be bounded by its actual source, independent unit, frozen criterion, task, comparator, outcome history and reproduceability evidence. “Completed project” is not synonymous with a positive or fully reproducible result.

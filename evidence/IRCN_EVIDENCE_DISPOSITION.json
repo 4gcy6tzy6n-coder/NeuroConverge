@@ -234,5 +234,29 @@
       "feedback_switch": false
     },
     "cross_check": "recomputed from pilot_seed_metrics.csv and matched to confirmatory_freeze.json to 1e-12"
+  },
+  "source_discrepancies": [
+    {
+      "where": "IRCN/reports/WORK_PACKAGE_STATUS.md, and the same file under result/v0.3.4i/ and result/v0.3.5/",
+      "claim": "v0.3.4i passed 96/96 calibration and 240/240 untouched-seed confirmation cases. Max NRMSE `4.2635e-9` against `6.8376e-8`",
+      "conflict": "IRCN/reports/FINAL_DECISION/FINAL_DECISION.md gives the two frozen contracts different maxima: 96/96 calibration cases at maximum NRMSE 5.5743e-9 against the frozen limit 6.8376e-8, and 240/240 untouched-seed cases at maximum NRMSE 4.2635e-9. The work-package status line quotes only the confirmatory maximum while naming both runs.",
+      "resolution_used_here": "The manuscript states both maxima separately and attributes each to its own frozen contract, sourced from FINAL_DECISION.md. IRCN's own records were NOT edited. The confirmatory maximum is the smaller and is the one its status table quotes.",
+      "not_a_scientific_change": "No run, threshold or verdict differs; only which of two maxima is attributed to which contract."
+    }
+  ],
+  "wp1_gates": {
+    "calibration": {
+      "cases": "96/96",
+      "max_relative_nrmse": 5.5743e-09,
+      "limit": 6.8376e-08,
+      "source": "IRCN/reports/FINAL_DECISION/FINAL_DECISION.md line 7"
+    },
+    "confirmatory": {
+      "cases": "240/240",
+      "max_relative_nrmse": 4.2635e-09,
+      "limit": 6.8376e-08,
+      "source": "IRCN/reports/FINAL_DECISION/FINAL_DECISION.md line 8"
+    },
+    "note": "the two are separate frozen contracts with separate contract SHA-256 prefixes 0587a37039ca and 98e734a02a02"
   }
 }
