@@ -1,0 +1,25 @@
+{
+  "aligned": false,
+  "align": {
+    "aconnectome_witvliet_2020_8.csv:chemical": {
+      "hit": 135,
+      "miss": 1756
+    },
+    "aconnectome_witvliet_2020_8.csv:electrical": {
+      "hit": 91,
+      "miss": 209
+    },
+    "aconnectome_white_1986_whole.csv:chemical": {
+      "hit": 157,
+      "miss": 2079
+    }
+  },
+  "n_animals": 112,
+  "n_pairs": 41106,
+  "conn_mean": 0.038217227415736334,
+  "unconn_mean": -0.024678871721664154,
+  "diff": 0.06289609913740049,
+  "cohens_d": 4.742869207654173,
+  "n_conn": 2695,
+  "n_unconn": 26584
+}
