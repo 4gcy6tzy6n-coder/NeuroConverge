@@ -1,0 +1,21 @@
+{
+  "n_animals_scanned": 113,
+  "n_animals_used": 112,
+  "n_pairs": 41106,
+  "n_meas": 242514,
+  "Z_split_r_min4": 0.06359062605024592,
+  "Z_split_rfull_min4": 0.11957725931902259,
+  "Z_n_min4": 18436,
+  "Z_split_r_min6": 0.10001790260161761,
+  "Z_split_rfull_min6": 0.18184777241364602,
+  "Z_n_min6": 13232,
+  "Z_split_r_min10": 0.17708667076657586,
+  "Z_split_rfull_min10": 0.30088977330997796,
+  "Z_n_min10": 7723,
+  "Z_split_r_min20": 0.3832226473593511,
+  "Z_split_rfull_min20": 0.5541011753833621,
+  "Z_n_min20": 2366,
+  "Z_within_var": 0.8317013326731713,
+  "Z_between_var": 0.19216552967805883,
+  "Z_between_frac": 0.18768605249784698
+}
