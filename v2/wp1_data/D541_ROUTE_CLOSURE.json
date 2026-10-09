@@ -1,0 +1,33 @@
+{
+  "route": "DANDI 000541 generalisation test",
+  "outcome": "CLOSED for this environment after three failures",
+  "failures": [
+    {
+      "n": 1,
+      "mode": "curl --max-time 3600, sequential loop",
+      "result": "5/5 truncated by mid-transfer disconnects; all unreadable by h5py"
+    },
+    {
+      "n": 2,
+      "mode": "curl -C - with retries in a loop",
+      "result": "stalled at 59/59/39/0.4/0 percent; zero complete files"
+    },
+    {
+      "n": 3,
+      "mode": "concurrent resume",
+      "result": "MY OWN BUG: a manual resume test ran while the loop's curl held its own offset, so the later write truncated the file from 433 MB back over 859 MB"
+    }
+  ],
+  "budget_used_gb": 2.541492652,
+  "budget_cap_gb": 10.0,
+  "usable_sessions": 1,
+  "structure_established": {
+    "sampling_s": 0.25,
+    "cells_per_session": 177,
+    "stimuli_per_session": 3,
+    "stimulus_window_s": 10.0,
+    "drift": "large monotonic drift, median 0.261 to 0.151 over the record"
+  },
+  "what_the_dataset_could_have_supported": "the cross-animal half of the reliability structure only; each session holds three stimuli, so no within-animal split-half is possible",
+  "verification_done": "the extraction was written and de-risked before the download completed: dt=0.25 confirmed by two independent checks, 177/177 cells produce non-zero responses, drift handled by per-stimulus baseline"
+}
