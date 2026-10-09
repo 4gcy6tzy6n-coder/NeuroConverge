@@ -44,6 +44,7 @@ document remains findable by the claim it made.**
 | `FIGURE_SPECIFICATIONS.md` and `FIGURE_SOURCE_DATA.json` | figure-ready data with hashes | how a manuscript would be assembled |
 | `CONSOLIDATED_POSITION.md` | the line's position as of its date | **read with the four supersessions in mind** |
 | `../wp1_data/PATH_LAYOUT.md` | the four input paths the scripts expect, their provenance, integrity and licences | **read before attempting to re-run anything**; 27 of 29 scripts read from `/tmp/` |
+| `CORRECTION_common_mode_cell_pool.md` | the common mode's cell pool, an undeclared specification dimension worth 0.34 in `d_A` | **the pool over which a common mode is computed is a specification; the corpus declares no such thing** |
 | `V2C4_RANGE_STRESS_TEST.md` | V2-C4's range across twelve common-mode-free specifications, and a redundant inclusion axis | **the range is real and its upper end is one unvaried step, common-mode removal** |
 | `V2C2_STRESS_TEST.md` | V2-C2 across four effective specifications, and a redundant grid axis | **the reproduction is stable; the bound ranges 0.208 to 0.270, always far below 0.5; and a grid must be checked for redundancy before it is reported** |
 | `CORRECTION_eps_is_a_range.md` | the measurement-error share across eight specifications | **a share from a variance decomposition is a range over a declared specification set, not a point value** |
@@ -84,6 +85,9 @@ least once, and three were withdrawn or narrowed outright.**
    size.** `CENSUS_d_z_versus_d_effect.md` and `NOTATION_two_effect_sizes.md` define the four meanings. `NOTATION_two_effect_sizes.md` defines the two;
    a value above about 0.4 in this corpus is the across-animal ratio and a value near 0.10 is usually the
    per-animal mean.
+4c. **The pool over which a common mode or a normalisation is computed is itself a specification
+   dimension.** `CORRECTION_common_mode_cell_pool.md` measured it at 0.34 in `d_A`, larger than the whole
+   range spanned by window, baseline and normalisation together.
 4b. **Before trusting a specification grid, check it for redundancy: if two levels of an axis give
    bit-identical output, that axis is not a specification.** V2-C2's grid had three transforms that produced
    one result, so twelve rows were four specifications.
