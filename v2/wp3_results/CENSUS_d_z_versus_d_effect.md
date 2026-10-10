@@ -1,6 +1,6 @@
 # Census: which `d` in this corpus is an effect size and which is a z-score
 
-**Status: round 27's owed item, completed. Seventy-six fields across four result files store a z-score in a
+**Status: round 27's owed item, completed. Seventy-six fields across five result files store a z-score in a
 field named `d`, with no corresponding effect size. The files that carry the line's four live claims store
 genuine Cohen's `d`.</** No model was fitted.
 
