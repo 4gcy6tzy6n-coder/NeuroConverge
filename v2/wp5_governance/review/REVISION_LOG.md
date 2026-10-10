@@ -10,3 +10,4 @@
 | round 74 | 43a2292ae751da832cfe42ff86ab1b4d6ac6e6703fb711947640bb30cf36a7ce | 623 lines | decomposition validated by simulation; base rate measured at 0.0 per cent (two coders, 97.7 per cent agreement) |
 | round 75 | 9627c79f960d4ffd5bd265665f4e209cc4f864fe74d2c2ff115276f29763f90a | 655 lines | the measured base rate and the decomposition simulation are written into the manuscript |
 | round 89 | ed5a2bad5a8469cc683083d3f71f3f7c341f9ca471f7fc263c3a53e4c9189819 | 712 lines | verification pass: defect ledger 17->19 in four places, Fig 6 now draws 19, jumbled limitations paragraph rewritten |
+| round 89b | 1136c757af914af99456618e2d73fd551230f0cafc675820b5619d656f95fa54 | 731 lines | the independent re-implementation result written into section 2.7 and the abstract; one doubled markup marker repaired |

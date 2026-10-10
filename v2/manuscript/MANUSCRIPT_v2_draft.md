@@ -50,13 +50,15 @@ the signed-sum read-out, where `beta` is -10.9, -8.1, -8.1 and -7.5 per cent acr
 and does NOT occur under the mean-over-the-window read-out, where the same restriction gives +1.9, +6.1,
 +6.1 and +6.7 per cent.** **So the unrestricted specification is ill posed under one of the two read-outs
 this line treats as defensible and well posed under the other, and any exclusion of it is partly a choice
-of read-out rather than a property of the data.**.**
+of read-out rather than a property of the data.**
 
 **Finally, a case study rather than a claim: we attempted to re-derive the artifact's own numbers and failed for
 six rounds because our re-implementations differed from the code in ways not visible on reading it.** **The
 artifact WAS recovered once we stopped reasoning and compared each re-implemented step against the original's
 own intermediate values, which is why this is reported as a case study and NOT as evidence that the
-specification cannot be recovered.** This line is NOT the pipeline's author and has no relationship to it
+specification cannot be recovered.** **And an INDEPENDENT re-implementer, given the public repository, the deposited data and the paper's own
+stated convention, made eight complete attempts and did NOT reproduce the target, naming the definition of the
+combined contrast among the things it could not resolve.** This line is NOT the pipeline's author and has no relationship to it
 beyond reading its published code and its deposited data; it is an independent group, which is the weaker
 and the true version of the claim.** **An earlier draft said "the published pipeline's own authors are its
 most informed possible re-implementers", which asserted an identity between this manuscript's authors and
@@ -393,6 +395,23 @@ does not pass, and `../wp3_results/JOINT_GRID_VERIFIED_NONADDITIVE.md` states bo
 differs by `0.0042`, which is a contradiction in that document and not a qualification of the result.**
 **We report the non-additivity as provisional on the strength of the ORDER grid, where the same pair of
 normalisations was measured with a check that passes, rather than on the joint grid whose check failed.**
+
+**AND AN INDEPENDENT RE-IMPLEMENTER, GIVEN THE PIPELINE'S PUBLIC REPOSITORY, THE DEPOSITED EXPORT AND THE
+PAPER'S OWN STATED CONVENTION, AND FORBIDDEN THIS LINE'S DERIVATIONS, MADE EIGHT COMPLETE ATTEMPTS AND DID NOT
+REPRODUCE THE TARGET.** **Its closest value on the explicitly combined contrast was `d = 0.7158` against the
+target's `0.7289`, and its scan over defensible variants put the estimate anywhere between 0.69 and 0.92.**
+**The protocol fixed what each outcome would mean before it was run: a first-attempt success would have obliged
+this paper to say that the six failures below are evidence about this line rather than about the task. That is
+not what happened, so the case study stands, and the count is reported alongside this line's six.**
+
+**AND IT NAMED WHAT IT COULD NOT RESOLVE, WHICH IS A LIMIT OF THIS PAPER'S LEDGER.** **The published convention
+fixes the window, the baseline and the normalisation, and leaves UNDETERMINED which anatomical source and
+threshold define "connected", whether the combined measure is the UNION of chemical and gap-junction pairs or
+their INTERSECTION, and how trials and pairs are pooled.** **Those are at least two dimensions section 2.1 does
+not enumerate, and the independent attempt found them because it had no code to read.**
+
+**AND IT CONFIRMED ONE THING EXACTLY FROM OUTSIDE: `t / d = sqrt(109)`, since `7.610 / 0.7289 = 10.4403`. That
+is an independent confirmation of section 2.5's structural claim.**
 
 **We also failed to explain the discrepancy four times before doing that, each time by proposing a cause and
 testing it, and each proposed cause was refuted.** **We report that sequence in the defect ledger, because
