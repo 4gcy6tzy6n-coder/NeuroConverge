@@ -301,6 +301,9 @@ deleted, under `v2/wp3_results/`.**
 
 ## 5. Figure legends
 
+**All six are rendered by `../figures/make_figures.py`, which reads each series from the committed
+result artifact named below and retypes nothing.**
+
 **Figure 1 — the specification ledger.** Seven dimensions, each with its isolated contribution, marked by
 whether the artifact declares it. Source: `SPECIFICATION_LEDGER.md`, `FIGURE_SOURCE_DATA.json`.
 
