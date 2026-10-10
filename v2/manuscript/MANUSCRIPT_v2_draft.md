@@ -63,7 +63,7 @@ most informed possible re-implementers", which asserted an identity between this
 the audited pipeline's, and no such identity holds.** **The demonstration is therefore that an INDEPENDENT
 group could not recover the specification from the artifact without reading the code line by line, which is
 what the record shows, rather than the stronger and unsupported claim it replaced.** We report the full defect
-ledger -- NINETEEN numbered self-found errors, from the fifth to the twenty-third, each named by the DOCUMENT that records it -- nine of them are correction documents, two are retractions, and eight are analysis documents in which a defect was found and recorded -- plus
+ledger -- NINETEEN numbered self-found errors, from the fifth to the twenty-third, each named by the DOCUMENT that records it -- ten of them are correction documents, two are retractions, and seven are analysis documents in which a defect was found and recorded -- plus
 earlier ones referenced in prose and not separately documented -- because it is the evidence for the claim
 rather than an appendix to it.**
 
