@@ -282,10 +282,21 @@ in both as the source reports.** **And we bound it: restricted to the 23 cell na
 activity-correlation matrices agree at only `r = +0.2084`.**
 
 **So the published comparison measures anatomy against a target whose own cross-animal reliability is about
-0.21.** **Under classical test theory the observed association is attenuated by roughly `sqrt(0.208) = 0.456`,
-implying a true association near 0.081 — still small, and the point is not the corrected magnitude but that the
-comparison, as published, measures anatomy against a quantity that differs between animals and is reported
-from two of them.**
+0.21.** **Under classical test theory the observed association is attenuated by `sqrt(r_reliability)`, and an earlier
+version of this sentence used that to imply a true association near 0.081.** **THAT POINT VALUE IS
+WITHDRAWN, because the reliability it depends on cannot carry one.** **The reliability is `r = +0.2084`
+estimated over the 23 cell names the two animals share, and a Fisher-z interval at that sample is
+`[-0.223, +0.572]`, WHICH CROSSES ZERO: the cross-animal agreement is not distinguishable from none at this
+sample.** **Because the correction divides by the square root of that estimate, the corrected value is
+unbounded as the estimate approaches zero, and across the interval it runs from about 0.049 to unbounded.**
+**The correction is therefore reported as ILLUSTRATIVE ONLY: it shows that the published comparison measures
+anatomy against a quantity whose own cross-animal agreement is poorly determined from two animals over 23
+cells, and it does NOT yield a corrected magnitude.** **An isolated reviewer raised exactly this, and the
+withdrawal is recorded rather than the number quietly dropped.**
+
+**The stability range quoted below carries the same restriction: +0.208 to +0.270 is a range across four
+specifications computed on the SAME two animals and the SAME 23 cells, so it is a range over estimators and
+not an interval for the quantity.**
 
 **Both quantities are stable across the distinct specifications we could vary (Pearson or Spearman
 correlation, with or without detrending): the reproduction stays between +0.036 and +0.038 in the first animal,
