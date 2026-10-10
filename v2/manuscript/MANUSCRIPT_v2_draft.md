@@ -63,7 +63,7 @@ most informed possible re-implementers", which asserted an identity between this
 the audited pipeline's, and no such identity holds.** **The demonstration is therefore that an INDEPENDENT
 group could not recover the specification from the artifact without reading the code line by line, which is
 what the record shows, rather than the stronger and unsupported claim it replaced.** We report the full defect
-ledger -- seventeen numbered self-found errors, each named by the correction document that records it, plus
+ledger -- NINETEEN numbered self-found errors, from the fifth to the twenty-third, each named by the DOCUMENT that records it -- nine of them are correction documents, two are retractions, and eight are analysis documents in which a defect was found and recorded -- plus
 earlier ones referenced in prose and not separately documented -- because it is the evidence for the claim
 rather than an appendix to it.**
 
@@ -483,10 +483,10 @@ reproduce a step without the authors' code, and they are enough to flip a pre-re
 **So the paper does NOT report that test's outcome.** **What it reports is the part both codings agree on:
 both matrices declare several of the dimensions this atlas leaves undeclared, the counts exceed the atlas's
 ONE, and the dimensions are therefore not universally undeclared, while no rate can be quoted from a sample
-of two.** **The second is the stronger case, because a
-reliability analysis of its own measurement is a stated aim rather than a by-product.** **So these dimensions are NOT
-universally undeclared, the counterexample sits in the same citing frame, and the paper's claims are about
-this atlas and about an observed rate rather than about necessity.** **The measurement-error share is a range
+of two.** **Both matrices are in the same citing frame as the audited atlas, so the
+counterexample is not drawn from a different literature, and the mouse matrix is the stronger instance of the two
+because a reliability analysis of its own measurement is a stated aim there rather than a by-product.** **The
+paper's claims are therefore about THIS atlas and about an observed rate, and not about necessity.** **The measurement-error share is a range
 over the specifications we varied and not a property of the preparation.** **The pair-specific component is
 ill posed at the unrestricted specification and we have not resolved the estimator.** **And we have had no
 independent review: the review recorded in `../wp5_governance/PREFLIGHT_REVIEW.md` is this line's own.**
@@ -547,7 +547,7 @@ and those twenty-seven now include every artifact the figure legends below name,
 not: six of the seven legend sources, including the order grid, the joint grid and the specification ledger,
 were outside the hash chain while the text claimed the chain covered the figures. The file does not carry its
 own hash, because writing the value changes the file.**
-**Seventeen numbered self-found defects and the invalid runs that produced some of them are retained rather
+**NINETEEN numbered self-found defects, from the fifth to the twenty-third, and the invalid runs that produced some of them are retained rather
 than deleted, under `v2/wp3_results/`.**
 
 ---

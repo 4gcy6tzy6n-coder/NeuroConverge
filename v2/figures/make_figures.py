@@ -167,7 +167,7 @@ fig.savefig(OUT/"Fig5_like_for_like.png"); plt.close(fig)
 # wrong, and the round a document MENTIONS is not reliably the round of discovery, so the round is not plotted.
 NUM = {"fifth":5,"sixth":6,"seventh":7,"eighth":8,"ninth":9,"tenth":10,"eleventh":11,"twelfth":12,
        "thirteenth":13,"fourteenth":14,"fifteenth":15,"sixteenth":16,"seventeenth":17,"eighteenth":18,
-       "nineteenth":19,"twentieth":20,"twenty-first":21}
+       "nineteenth":19,"twentieth":20,"twenty-first":21,"twenty-second":22,"twenty-third":23}
 _rows = {}
 # tools/ is meta-documentation: it DISCUSSES the defects rather than defining them, and would
 # otherwise be matched for whichever number its prose happens to mention.
@@ -187,7 +187,7 @@ ax.set_yticks(range(len(defects)))
 ax.set_yticklabels([d[0] for d in defects], fontsize=6.5)
 ax.set_xlabel("defect number as the document states it")
 ax.set_xlim(4, 22)
-ax.set_xticks([5, 10, 15, 20, 21])
+ax.set_xticks([5, 10, 15, 20])
 ax.set_title(f"{len(defects)} numbered defects, each from the document that states its number",
              fontsize=7.5, loc="left")
 fig.savefig(OUT/"Fig6_defect_ledger.png"); plt.close(fig)

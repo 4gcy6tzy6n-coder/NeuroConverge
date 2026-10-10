@@ -76,7 +76,10 @@ document remains findable by the claim it made.**
 
 ## 5. The defect ledger
 
-**Seventeen numbered self-found defects, from the fifth to the twenty-first, each named by its own
+**NINETEEN numbered self-found defects, from the fifth to the twenty-third, each named by its own
+**This count has now been stale twice, both times by exactly the entries added most recently:
+first at seventeen when the twenty-second was committed, and again here.** **The cause is the same each time,
+and it is worth naming: a defect is recorded by WRITING A NEW DOCUMENT, and nothing regenerates the ledger.**
 committed correction document; defects one to four are referenced in prose but have no document that names
 them. A further thirteen self-inflicted check failures are recorded in `../tools/README.md`.** **The count was
 previously stated as twenty-one, which came from a figure whose table was typed from memory; see
