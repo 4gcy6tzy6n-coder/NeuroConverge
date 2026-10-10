@@ -58,3 +58,38 @@ not evidentiary: it can find a defect, and it cannot certify the absence of one.
 * **Manuscript revision reviewed:** the draft at commit `cc99cad`.
 * **No finding from this review is a publication claim until it is acted on and, where it is a measurement,
   re-verified.**
+
+---
+
+## 6. Revision drift, recorded rather than smoothed
+
+**The three reviewers did not all read the same bytes, and the difference is measurable.**
+
+| reviewer | manuscript revision | size |
+| --- | --- | --- |
+| **R2** | `cc99cad` | **30,525 bytes** |
+| **R1 and R3, at launch** | `efa73dc`, whose manuscript is identical to `cc99cad` | **30,525 bytes** |
+| **R1 and R3, which read the file from disk after launch** | `77b50bb` | **31,301 bytes** |
+
+**The cause: this line continued working while the reviews were in flight.** **Round 59 found the quantity with
+two ranges by a consistency sweep and fixed it in `0adbb5b`. Round 60 tightened an over-broad literature claim
+in `77b50bb`.** **R1 and R3 therefore saw two changes that R2 did not, and R2 saw a revision in which both
+defects are present.**
+
+**What this does and does not invalidate.**
+
+* **The three-way comparison IS valid for agreement and disagreement**, because all three launched against the
+  same 30,525-byte manuscript and a difference in what they report cannot be caused by the later edits unless
+  one of them happens to mention them.
+* **R2-M5 is unaffected and remains the strongest evidence in this review.** **R2 raised the two-range conflict
+  against a revision in which it existed, and this line found the same conflict independently in the same round
+  by a different route.** **That convergence does not depend on which revision R1 or R3 read.**
+* **A concern that R2 raised against `cc99cad` may already be fixed at `77b50bb`.** **The synthesis must
+  therefore check every R2 concern against the CURRENT manuscript before reporting it as outstanding, and must
+  say which revision each finding applies to.**
+* **Nothing here licenses re-running R2 against the newer revision.** **A frozen report stays frozen; the
+  correction belongs in the synthesis and in the manuscript's own record.**
+
+**The operational lesson, recorded because it is the same class as everything else in this corpus: a report is
+bound to the bytes it was written against, and "the manuscript" is not a stable object while the line is still
+working on it.** **The setup file said the revision was `cc99cad`; the reviewers read the file, not the commit.**

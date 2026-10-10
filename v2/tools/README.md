@@ -236,3 +236,21 @@ own near-miss output showed the text was present.**
 **In every case the artifact was right and the CHECK was wrong, and in every case the near-miss diagnostic is
 what identified it.** **The transferable rule: when a text check fails, read its near-miss output before reading
 the artifact, because five times out of five the fault was in the pattern.**
+
+## A seventh instance, and the first in which the CHECK was right and the READING was wrong
+
+**Round 61 compared two manuscript revisions and printed, for each item, whether a string was present in the
+old revision and whether a DIFFERENT string was present in the new one.** **The output read `cc99cad: 含 ->
+HEAD: 含` for two items, and that was read as "the old text is still there".**
+
+**It was not.** **The script was testing whether the REPLACEMENT was present, and the replacement was present in
+both cases.** **The stale text was gone: `None of those fifteen reports` appeared once at `cc99cad` and zero
+times at HEAD, and `37 to 57 per cent` appeared twice and now appears once, in the sentence that quotes it in
+order to record it.**
+
+**So the family now has seven instances, and the seventh is inverted: the first six were checks that failed on
+correct input, and this one was a correct check that was misread.**
+
+**The rule this adds: when comparing two versions, assert on the OLD string's ABSENCE in the new version, not on
+the NEW string's presence.** **Testing for the replacement cannot detect a stale copy that was left behind
+somewhere else in the document, which is exactly the failure the comparison was written to catch.**
