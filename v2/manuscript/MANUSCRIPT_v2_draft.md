@@ -197,9 +197,28 @@ which matched neither grid; the correct figures are 38.7 and 17, and both are st
 checkable.** **Its value depends on the precision weighting (13.0 points), the read-out (about 13 points), the
 window and the normalisations.**
 
-**The pair-specific animal component is not robust in the same way: it ranges from 5.5 to 46.0 per cent
-depending on a minimum-measurements-per-pair restriction, and at the unrestricted specification it goes
-NEGATIVE under one of the two read-outs, which is impossible for a share of a common total.** **The four components are obtained by
+**The pair-specific animal component is not robust in the same way, AND ITS TWO ENDS COME FROM TWO DIFFERENT
+GRIDS.** **Its range of 5.5 to 46.0 per cent is the min-animals-per-pair SWEEP
+(`anatomy/RESULT_variance_decomposition_sweep.json`), which varies one axis only, the minimum number of
+ANIMALS a pair must be measured in, and whose value at its most permissive level is POSITIVE, +5.5 per cent
+at one animal per pair rising to +46.0 per cent at ten.** **The NEGATIVE values come from a different grid,
+`anatomy/RESULT_eps_specification_grid.json`, whose varied axis is the READ-OUT rather than the
+restriction: at one animal per pair it gives -10.9, -8.1, -8.1 and -7.5 per cent under the signed-sum
+read-out and +1.9, +6.1, +6.1 and +6.7 per cent under the mean-over-the-window read-out.** **So the two ends
+of the stated range and the sign claim cannot both come from one specification set, unlike the
+measurement-error range above, which is explicitly reported as the union of two grids.**
+
+**THE READ-OUT, DEFINED HERE BECAUSE THE MANUSCRIPT QUOTED ITS EFFECT WITHOUT SAYING WHAT IT IS.** **Each
+per-event quantity is combined over the post-stimulus window in one of two ways: the SIGNED SUM of its
+per-volume values, or the MEAN over the window.** **The two are not equivalent because the quantity is
+signed, so a mean divides by the window length while a sum does not, and the choice is itself an undeclared
+specification dimension worth about 13 points in the measurement-error share and the sign of the
+pair-specific component here.**
+
+**AND THE RESTRICTION IS NAMED AS THE ARTIFACT NAMES IT.** **Its key is `min_an`, and the figure's axis
+label is "minimum animals per pair".** **Earlier versions of this manuscript, this figure's legend and the
+Methods called it "min-animals-per-pair", which is a DIFFERENT quantity and is not what the grid
+varies; the name is corrected throughout.** **The four components are obtained by
 subtraction with no non-negativity constraint, so a negative term means the printed percentages are component
 contributions and not shares of one variance; at the sharpest specification the positive terms alone reach 111.0
 per cent.** **That negativity is informative rather than merely
@@ -420,7 +439,7 @@ a specification. Two such axes were found, and one of them had been added by the
 intermediate values for a single animal — `sd`, `dv`, `dvs`, `cm`, `dev` and the per-cell value — with
 agreement required at machine precision.
 
-**Variance decomposition, and what it can and cannot be read as.** `y = mu + alpha[animal] + beta[animal, pair] + eps`, in log space, with `eps` identified from the (animal, pair) cells holding two or more measurements and the remaining three components obtained BY SUBTRACTION with no non-negativity constraint, so `beta` can be negative. **This matters for how the output may be described.** **When every component is non-negative the four numbers are shares of a common total and sum to 100 per cent.** **When `beta` is negative they do NOT: the four values still add to about 100 per cent, but the positive components alone exceed 100, at one specification reaching 111.0 per cent because `beta` is -10.9 per cent.** **A negative component therefore means the four numbers are a component decomposition with a negative term, and NOT four shares of one variance.** **The decomposition is reported as a function of the minimum-measurements-per-pair restriction because at the unrestricted specification the subtracted component can be negative, and every percentage in this paper that comes from a row with a negative component is labelled as a component share rather than a variance share.**
+**Variance decomposition, and what it can and cannot be read as.** `y = mu + alpha[animal] + beta[animal, pair] + eps`, in log space, with `eps` identified from the (animal, pair) cells holding two or more measurements and the remaining three components obtained BY SUBTRACTION with no non-negativity constraint, so `beta` can be negative. **This matters for how the output may be described.** **When every component is non-negative the four numbers are shares of a common total and sum to 100 per cent.** **When `beta` is negative they do NOT: the four values still add to about 100 per cent, but the positive components alone exceed 100, at one specification reaching 111.0 per cent because `beta` is -10.9 per cent.** **A negative component therefore means the four numbers are a component decomposition with a negative term, and NOT four shares of one variance.** **The decomposition is reported as a function of the min-animals-per-pair restriction, WHICH IS A RESTRICTION ON ANIMALS AND NOT ON MEASUREMENTS because at the unrestricted specification the subtracted component can be negative, and every percentage in this paper that comes from a row with a negative component is labelled as a component share rather than a variance share.**
 
 **Software.** Python 3.12 with numpy and h5py. **All scripts, result JSONs and the figure source data are
 committed; `../wp3_results/FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-seven source artifacts,
@@ -495,7 +514,7 @@ at three windows. Source: `../wp3_results/anatomy/RESULT_joint_grid_verified.jso
 **Figure 3 — the order is the largest dimension.** The two sequences across three windows, with the stability
 of each marked. Source: `../wp3_results/anatomy/RESULT_order_axis.json`. Rendered file: `../figures/Fig3_order.png`.
 
-**Figure 4 — the decomposition.** Four components as a function of the minimum-measurements-per-pair
+**Figure 4 — the decomposition.** Four components as a function of the min-animals-per-pair
 restriction, with the negative region marked as ill posed. Source:
 `../wp3_results/anatomy/RESULT_variance_decomposition_sweep.json`, `../wp3_results/anatomy/RESULT_decomposition_weighted.json`. Rendered file: `../figures/Fig4_decomposition.png`.
 

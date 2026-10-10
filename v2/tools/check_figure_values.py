@@ -1,5 +1,9 @@
 """Every data literal in a figure script must appear in the artifact that is supposed to source it.
 
+Exit codes: 0 = every literal traced, N = N literals untraceable, 3 = SKIPPED because the corpus was not visible.
+The third status exists because an isolated reviewer found that returning 0 for the skip made it
+indistinguishable from a pass at the level a commit gate reads.
+
 Round 50 found Figure 6's table typed from memory: both the defect names and their round numbers were
 invented.  Round 53 scanned the remaining figure script and found Figure 1's thirteen data literals ARE all
 traceable, and one apparent stray (0.505) is the y-position of a text label rather than data.
@@ -53,7 +57,9 @@ def main():
         print(f"  SKIP: the artifact corpus under {root} is {len(hay)} chars, too small to verify against.",
               file=sys.stderr)
         print(f"  SKIP REASON: the check cannot see its input; this is NOT a pass.", file=sys.stderr)
-        return 0
+        # A DISTINCT exit status, because an isolated reviewer recorded that returning 0 made the skip
+        # indistinguishable from a pass at the level a commit gate reads.
+        return 3
     fails = 0
     for s in scripts:
         lits = data_literals(s)
