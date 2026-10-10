@@ -32,8 +32,9 @@ non-additive: two of them whose isolated contributions sum to `-0.008` combine t
 **The artifact reports no reliability for the quantity it publishes. Decomposing the per-animal records behind
 it, within-cell measurement error accounts for 17 to 57 per cent of the variance in a pair's response
 depending on the specification, and is never the smallest component, while the pair-specific animal component
-is negative at the unrestricted specification — an impossible value for a variance share, which bounds which
-specifications are well posed.**
+is negative at the unrestricted specification, which is impossible for a SHARE of a common total and is
+therefore a property of the estimator rather than of the animal: the four components are obtained by
+subtraction with no non-negativity constraint, so when one is negative the others are not shares of one variance.**
 
 **Finally, and as a demonstration rather than a claim: we attempted to re-derive the artifact's own numbers,
 and the attempt failed for six consecutive rounds because our re-implementations differed from the original
@@ -177,7 +178,10 @@ window and the normalisations.**
 
 **The pair-specific animal component is not robust in the same way: it ranges from 5.5 to 46.0 per cent
 depending on a minimum-measurements-per-pair restriction, and at the unrestricted specification it goes
-NEGATIVE — an impossible value for a variance share.** **That negativity is informative rather than merely
+NEGATIVE, which is impossible for a share of a common total.** **The four components are obtained by
+subtraction with no non-negativity constraint, so a negative term means the printed percentages are component
+contributions and not shares of one variance; at the sharpest specification the positive terms alone reach 111.0
+per cent.** **That negativity is informative rather than merely
 inconvenient: it marks the specification as ill posed, because a pair mean computed from a single animal
 inflates the between-pair term and drives the subtracted component below zero.**
 
@@ -365,13 +369,14 @@ a specification. Two such axes were found, and one of them had been added by the
 intermediate values for a single animal — `sd`, `dv`, `dvs`, `cm`, `dev` and the per-cell value — with
 agreement required at machine precision.
 
-**Variance decomposition.** `y = mu + alpha[animal] + beta[animal, pair] + eps`, in log space, with `eps`
-identified from the (animal, pair) cells holding two or more measurements and the remaining components
-obtained by subtraction. **The decomposition is reported as a function of the minimum-measurements-per-pair
-restriction, because at the unrestricted specification the subtracted component can be negative.**
+**Variance decomposition, and what it can and cannot be read as.** `y = mu + alpha[animal] + beta[animal, pair] + eps`, in log space, with `eps` identified from the (animal, pair) cells holding two or more measurements and the remaining three components obtained BY SUBTRACTION with no non-negativity constraint, so `beta` can be negative. **This matters for how the output may be described.** **When every component is non-negative the four numbers are shares of a common total and sum to 100 per cent.** **When `beta` is negative they do NOT: the four values still add to about 100 per cent, but the positive components alone exceed 100, at one specification reaching 111.0 per cent because `beta` is -10.9 per cent.** **A negative component therefore means the four numbers are a component decomposition with a negative term, and NOT four shares of one variance.** **The decomposition is reported as a function of the minimum-measurements-per-pair restriction because at the unrestricted specification the subtracted component can be negative, and every percentage in this paper that comes from a row with a negative component is labelled as a component share rather than a variance share.**
 
 **Software.** Python 3.12 with numpy and h5py. **All scripts, result JSONs and the figure source data are
-committed; `FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-two source artifacts.**
+committed; `FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-seven source artifacts,
+and those twenty-seven now include every artifact the figure legends below name, which an earlier version did
+not: six of the seven legend sources, including the order grid, the joint grid and the specification ledger,
+were outside the hash chain while the text claimed the chain covered the figures. The file does not carry its
+own hash, because writing the value changes the file.**
 **Seventeen numbered self-found defects and the invalid runs that produced some of them are retained rather
 than deleted, under `v2/wp3_results/`.**
 

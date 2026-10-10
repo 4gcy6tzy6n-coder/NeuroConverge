@@ -23,7 +23,12 @@
     "RESULT_robust_class.json": "367a7247de337f5a",
     "RESULT_icc_INVALID.json": "f1849287b8799054",
     "RESULT_zscored.json": "d3656ae40289a0de",
-    "RESULT_inclusion_filtered.json": "43a9ec69d5c77c8b"
+    "RESULT_inclusion_filtered.json": "43a9ec69d5c77c8b",
+    "CORPUS_INDEX.md": "05cb4287998612ea",
+    "RESULT_fig6_specification_grid.json": "bc2b43acc1369e0d",
+    "RESULT_joint_grid_verified.json": "df3c3d08cf9095ca",
+    "RESULT_order_axis.json": "6033d4f82a8f2c54",
+    "SPECIFICATION_LEDGER.md": "ce00f8fc9f62de24"
   },
   "excluded": {
     "anatomy/RESULT_icc_INVALID.json": "WITHdrawn: the within-animal variance was computed as var(vs) if len(vs)>1 else 0, and most (animal,pair) units hold one measurement, so the ICC of 0.93 is inflated by construction.",
@@ -222,5 +227,6 @@
       "was": "the ICC of 0.93",
       "now": "withdrawn in round 9"
     }
-  ]
+  ],
+  "source_hashes_note": "Hashes are of the artifacts listed. This file does not carry its own hash, because writing the value changes the file and the value would be stale on arrival."
 }
