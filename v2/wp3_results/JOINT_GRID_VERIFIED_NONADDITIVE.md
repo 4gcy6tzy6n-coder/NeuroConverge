@@ -1,3 +1,14 @@
+> **DATED BANNER, appended round 62.** **This document states in its summary that it is "the first grid in
+> seven rounds whose correctness check passes before its result is read", and its section 2 states that
+> the same check "returns `d_A = 0.7331` and `t = 7.654`, against `09_animal_level.py`'s 0.7289 and
+> 7.610 -- a difference of 0.0042".** **Both sentences are in the body below and they cannot both be
+> true.** **The check does not pass: it differs by `0.0042`, the explanation first offered for that
+> difference was refuted in round 42, and the difference was never identified.** **`ORDER_AXIS.md`
+> section 1 states this, and the exact-match verification this document is named after belongs to the
+> ORDER grid and not to this one.** **The non-additivity result below is therefore provisional, and the
+> title's word "VERIFIED" overstates what this grid establishes.** **The body is left intact because
+> this corpus does not rewrite superseded text.**
+
 # The two largest dimensions are strongly non-additive, and the verified grid spans a range that crosses zero
 
 **Status: the corrected joint grid, built from a step verified against the code first, reproduces the code's

@@ -115,7 +115,10 @@ normalisation contributes `-0.3462` and the precision weighting `+0.3378`, summi
 together they give `+0.5706`.** **The interaction, `+0.5789`, is larger than either isolated effect.**
 
 **The reason is that both are normalisations and each rescales the quantity the other operates on, which is
-why the ORDER is itself a dimension.**
+why the ORDER is itself a dimension.** **PROVENANCE CAVEAT: this joint grid's own correctness cell returns
+`d = 0.7331` against the code's `0.7289`, a difference of `0.0042` whose proposed explanation was refuted
+and which was never identified; the exact-match verification belongs to the ORDER grid. The non-additivity
+figure is therefore reported as provisional. See section 2.7.**
 
 ### 2.3 The largest dimension is the order
 
@@ -225,10 +228,21 @@ code:**
 | 39 | our weighting divided by an array reduced over volumes where the code reduces over cells | the contribution changed sign again |
 
 **The resolution, in round 40, was to stop hypothesising and instead verify each re-implemented step against
-the code's own intermediate values for a single animal.** **Every intermediate then matched bit for bit — `sd`
-exact, and `dv`, `dvs`, `cm` and `dev` with a maximum absolute difference of `0.000e+00` — and with the
-verified sequence the pipeline's own configuration reproduced at `d = 0.7289` and `t = 7.610` against the
-code's `0.7289` and `7.610`.**
+the code's own intermediate values for a single animal.** **For the order grid, every intermediate then matched
+bit for bit — `sd` exact, and `dv`, `dvs`, `cm` and `dev` with a maximum absolute difference of `0.000e+00` —
+and with that verified sequence the pipeline's own configuration reproduced at `d = 0.7289` and `t = 7.610`
+against the code's `0.7289` and `7.610`.**
+
+**That verification belongs to the ORDER grid and NOT to the joint grid that produces the non-additivity
+result in section 2.2, and the distinction must be stated because the two grids did not both pass.**
+**The joint grid's own correctness cell returns `d = 0.7331` and `t = 7.654` against the code's `0.7289`
+and `7.610`, a difference of `0.0042`, and the explanation first offered for it — a slightly different
+event set — was refuted: the exact match is available, and the `0.0042` is an implementation difference
+that was never identified.** **So the non-additivity result in section 2.2 rests on a grid whose own check
+does not pass, and `JOINT_GRID_VERIFIED_NONADDITIVE.md` states both that its check passes and that it
+differs by `0.0042`, which is a contradiction in that document and not a qualification of the result.**
+**We report the non-additivity as provisional on the strength of the ORDER grid, where the same pair of
+normalisations was measured with a check that passes, rather than on the joint grid whose check failed.**
 
 **We also failed to explain the discrepancy four times before doing that, each time by proposing a cause and
 testing it, and each proposed cause was refuted.** **We report that sequence in the defect ledger, because
