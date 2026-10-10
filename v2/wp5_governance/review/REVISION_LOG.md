@@ -5,3 +5,4 @@
 | round | sha256 | size | change |
 | --- | --- | --- | --- |
 | round 67 | f950e38b28fc4fbdf28bbd2f5ace37dc514316eb6df5d9f970bf2bcb70ffb66b | 578 lines | availability section added, citation claim scoped to 7/9, all paths made relative and verified, revision identifier introduced |
+| round 69 | d458077794042975c9efeebe47ff07a1afdd1493ce1c20680137062fde0410cf | 593 lines | Figure 1 now parses its declared source; zero typed data literals remain in the figure script |

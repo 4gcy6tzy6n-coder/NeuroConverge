@@ -17,13 +17,34 @@ plt.rcParams.update({"font.size": 8, "axes.spines.top": False, "axes.spines.righ
 GREY, ACC, WARN = "#4d4d4d", "#1f6fb4", "#b4431f"
 
 # ---- Figure 1: the specification ledger
-dims = [("order of application", (0.02, 0.85), False),
-        ("per-cell normalisation", (0.3395, 0.3395), False),
-        ("per-event precision weighting", (0.3356, 0.3356), False),
-        ("post-stimulus window", (0.2364, 0.2364), False),
-        ("baseline convention", (0.0295, 0.0496), True),
-        ("common-mode removal", (0.0103, 0.0285), False),
-        ("the common mode's cell pool", (0.0038, 0.0038), False)]
+# ---- Figure 1 data is PARSED from its declared source, not typed.
+# An isolated reviewer recorded that the script never opened SPECIFICATION_LEDGER.md, which the legend names,
+# and that the seven values were literals.  They are now read from the ledger's own section-3 table.
+LEDGER = D / "SPECIFICATION_LEDGER.md"
+def parse_ledger(path):
+    rows, in_tbl = [], False
+    for line in path.read_text().split("\n"):
+        if line.startswith("| dimension | levels | isolated size | declared? |"):
+            in_tbl = True; continue
+        if in_tbl:
+            if not line.startswith("|"):
+                if rows: break
+                continue
+            if set(line) <= set("|- "): continue
+            c = [x.strip().replace("**", "").strip("`") for x in line.strip("|").split("|")]
+            if len(c) < 4: continue
+            m = re.findall(r"\d+\.\d+", c[2])
+            if not m: continue
+            nums = [float(x) for x in m]
+            rows.append((c[0], (min(nums), max(nums)), c[3].lower().startswith("yes")))
+    return rows
+dims = parse_ledger(LEDGER)
+# the order row is not a level of a declared parameter; it comes from the ORDER table in ORDER_AXIS.md
+o = L(A / "RESULT_order_axis.json")
+_oA = [o[f"A|{w}"]["d_A"] for w in (12, 24, 48) if f"A|{w}" in o]
+_oB = [o[f"B|{w}"]["d_A"] for w in (12, 24, 48) if f"B|{w}" in o]
+if _oA and _oB:
+    dims.insert(0, ("order of application", (min(min(_oA), min(_oB)), max(max(_oA), max(_oB))), False))
 fig, ax = plt.subplots(figsize=(4.6, 2.6))
 y = np.arange(len(dims))[::-1]
 for i,(nm,(lo,hi),decl) in zip(y, dims):
@@ -37,7 +58,11 @@ ax.set_xlim(-0.02, 0.90)
 ax.plot([],[], lw=6, color=ACC, label="declared in the artifact")
 ax.plot([],[], lw=6, color=WARN, label="declared nowhere")
 ax.legend(frameon=False, fontsize=6.5, loc="lower right")
-ax.set_title("Seven undeclared-or-small dimensions", fontsize=8, loc="left")
+# the title is derived, not typed: the ledger lists eight dimensions and the manuscript reports seven plus a
+# redundant eighth, so the count in the title must follow the rows actually drawn
+_n = len(dims)
+_zero = [d for d in dims if d[1][1] == 0.0]
+ax.set_title(f"{_n - len(_zero)} specification dimensions, plus {len(_zero)} redundant" if _zero else f"{_n} specification dimensions", fontsize=8, loc="left")
 fig.savefig(OUT/"Fig1_specification_ledger.png"); plt.close(fig)
 
 # ---- Figure 2: non-additivity
@@ -160,10 +185,10 @@ for i, (lab, n) in enumerate(defects):
     ax.plot(n, i, "o", ms=5, color=ACC)
 ax.set_yticks(range(len(defects)))
 ax.set_yticklabels([d[0] for d in defects], fontsize=6.5)
-ax.set_xlabel("self-found defect number (the stated discovery order)")
+ax.set_xlabel("defect number as the document states it")
 ax.set_xlim(4, 22)
 ax.set_xticks([5, 10, 15, 20, 21])
-ax.set_title(f"{len(defects)} numbered self-found defects, each from its own correction document",
+ax.set_title(f"{len(defects)} numbered defects, each from the document that states its number",
              fontsize=7.5, loc="left")
 fig.savefig(OUT/"Fig6_defect_ledger.png"); plt.close(fig)
 print("  已渲染 6 幅图")

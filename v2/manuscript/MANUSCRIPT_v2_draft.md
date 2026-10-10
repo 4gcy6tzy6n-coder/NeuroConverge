@@ -482,7 +482,11 @@ the problem the paper describes is not one that a single group escapes by good i
 **All six are rendered by `../figures/make_figures.py`, which reads each series from the committed
 result artifact named below and retypes nothing.**
 
-**Figure 1 — the specification ledger.** Seven dimensions, each with its isolated contribution, marked by
+**Figure 1 — the specification ledger.** **Eight rows: the seven specification dimensions of section 2.1, each
+with its isolated contribution and marked by whether the artifact declares it, plus the inclusion rule of
+0.0000 whose redundancy the text reports.** **The figure's title is DERIVED from the ledger's own table rather
+than typed, so the count in it follows the rows drawn; an earlier version of the script hardcoded seven values
+and omitted the eighth row.** **Marked by
 whether the artifact declares it. Source: `../wp3_results/SPECIFICATION_LEDGER.md`, `../wp3_results/FIGURE_SOURCE_DATA.json`. Rendered file: `../figures/Fig1_specification_ledger.png`.
 
 **Figure 2 — non-additivity.** Isolated contributions against the joint effect for the two largest dimensions,
