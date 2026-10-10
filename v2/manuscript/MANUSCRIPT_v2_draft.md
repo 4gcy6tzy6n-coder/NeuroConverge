@@ -460,10 +460,15 @@ section 2.1 would fit in a table smaller than the provenance section of most dat
 laboratory with a different preparation, could not be run: the download failed three times, the third time
 because of a concurrency error of our own, costing 1.866 GB with no usable files.** **So every result here
 rests on one atlas.** **AND SAME-KIND COMPARISONS MAKE THAT CONCRETE: TWO whole-brain functional matrices, inspected by
-documentation alone, declare FOUR and SIX of the seven dimensions this atlas leaves undeclared, and both
-report reliability figures for their functional quantities.** **The second MEETS the pre-registered criterion
-for refuting any claim that these dimensions are generally undeclared, so the claim is refuted for one of the
-two and the paper's scope is this atlas and an observed rate rather than a necessity.** **The second is the stronger case, because a
+documentation alone, declare FIVE and FOUR of the seven dimensions this atlas leaves undeclared under one
+reading of the criterion and FOUR and SIX under another, and both report reliability figures for their
+functional quantities.** **A SECOND CODER, given the same protocol and the same full texts, produced the
+lower pair; the four cells that disagree are the ones where the criterion asks whether a reader could
+reproduce a step without the authors' code, and they are enough to flip a pre-registered falsification test.**
+**So the paper does NOT report that test's outcome.** **What it reports is the part both codings agree on:
+both matrices declare several of the dimensions this atlas leaves undeclared, the counts exceed the atlas's
+ONE, and the dimensions are therefore not universally undeclared, while no rate can be quoted from a sample
+of two.** **The second is the stronger case, because a
 reliability analysis of its own measurement is a stated aim rather than a by-product.** **So these dimensions are NOT
 universally undeclared, the counterexample sits in the same citing frame, and the paper's claims are about
 this atlas and about an observed rate rather than about necessity.** **The measurement-error share is a range
