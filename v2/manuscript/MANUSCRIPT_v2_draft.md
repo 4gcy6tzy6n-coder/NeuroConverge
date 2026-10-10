@@ -449,7 +449,11 @@ section 2.1 would fit in a table smaller than the provenance section of most dat
 **Limitations, stated plainly.** **The generalisation test we designed for a second dataset, from the same
 laboratory with a different preparation, could not be run: the download failed three times, the third time
 because of a concurrency error of our own, costing 1.866 GB with no usable files.** **So every result here
-rests on one atlas, and we do not know how far any of it travels.** **The measurement-error share is a range
+rests on one atlas.** **AND A SAME-KIND COMPARISON MAKES THAT CONCRETE: a larval zebrafish whole-brain
+functional matrix, inspected by documentation alone, declares FOUR of the seven dimensions this atlas leaves
+undeclared and reports a reliability figure for its functional quantity.** **So these dimensions are NOT
+universally undeclared, the counterexample sits in the same citing frame, and the paper's claims are about
+this atlas and about an observed rate rather than about necessity.** **The measurement-error share is a range
 over the specifications we varied and not a property of the preparation.** **The pair-specific component is
 ill posed at the unrestricted specification and we have not resolved the estimator.** **And we have had no
 independent review: the review recorded in `../wp5_governance/PREFLIGHT_REVIEW.md` is this line's own.**
