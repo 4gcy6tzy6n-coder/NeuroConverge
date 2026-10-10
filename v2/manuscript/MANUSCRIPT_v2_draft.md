@@ -11,13 +11,21 @@ No number is introduced here that is not already there.**
 is usually reported in terms of files, checksums and licences.** **We show that for one such dataset — a
 whole-brain functional atlas of *Caenorhabditis elegans* — the analysis choices that produced the published
 per-pair values are not recoverable from the artifact at all, and that the dimensions they span move the
-headline estimate by more than the range the original work reports.**
+headline estimate by more than this audit's own widest range across specifications, 0.6437 — a range that
+mixes a weighted pipeline against three unweighted ones and is therefore this audit's construction rather than
+a quantity the source reports.**
 
-**We measure seven specification dimensions, each by varying it alone and holding the others fixed. The
-largest is not a parameter but an ORDER: two defensible normalisations of the same response, applied in the
-two possible sequences, give animal-level estimates of `d = +0.97` and `d = +0.12` at the same post-stimulus
-window, and one sequence is stable across windows to within 0.006 while the other spans 1.064 and changes sign.
-Four further dimensions — per-cell normalisation (0.34), per-event precision weighting (0.34), post-stimulus
+**We measure seven specification dimensions against a declared baseline configuration, six by varying one axis
+and holding the others fixed. The largest at one window is not a parameter but an ORDER, and the finding is
+window-dependent: two normalisations of the same response, applied in the two possible sequences, give
+animal-level estimates of `d = +0.97` and `d = +0.12` at a 24-volume window, where they differ by 0.85, while
+at a 12-volume window the same comparison contributes 0.0234 and is the smallest of the seven. One of the two
+arms is a constructed specification rather than a description of the artifact, because the pipeline applies the
+weighting without any per-cell normalisation, so the order is a choice a user faces only after deciding to add
+one. One sequence's three-window spread is 0.006 and the other's is 1.064, but that contrast rests on three
+nested windows and on a sign-changing cell the source flags as not to be treated as a finding.**
+
+**Four further dimensions — per-cell normalisation (0.34), per-event precision weighting (0.34), post-stimulus
 window (0.24) and baseline convention (0.03 to 0.05) — are each measured, and the dimensions are strongly
 non-additive: two of them whose isolated contributions sum to `-0.008` combine to `+0.571`.**
 
@@ -38,8 +46,14 @@ rather than an appendix to it.**
 **We also report our own corrections, because they are the same phenomenon: four interpretations this line
 published earlier are withdrawn or narrowed, including a claim that the unit error inflated the effect by
 11 to 18 times (it did not; the ratio was a z-score over a Cohen's `d`), and every one is retained in the
-record rather than deleted.** **Across the work, every MEASUREMENT survived re-examination and every
-INTERPRETATION attached to one was revised at least once.**
+record rather than deleted.** **Across the work, the pattern is asymmetric in a specific way. The line made at least five
+MEASUREMENT-level errors, and all five were caught by instrument checks before their numbers were used: a
+connectome indexed by the wrong neuron order gave an implausible `d = 4.74`; a per-cell normalisation
+divided by a baseline SD over 8 volumes and blew up to about `1e11`; a collapse of per-cell quantities to
+scalars let 0 of 3,333 events pass; a zero-inflated within-variance raised an intraclass correlation to
+0.93; and inverse-variance weights spanned thirty-one orders of magnitude. All five are retained as
+`INVALID` artifacts. Every measurement that SURVIVED those checks then withstood re-examination, while
+every INTERPRETATION attached to one was revised at least once.**
 
 **Nothing here is a claim about the biology. The atlas's conclusions may well be correct; we show only that
 they are not reconstructible from the artifact, and we quantify what that costs.**
@@ -133,7 +147,12 @@ equal.**
 | 48 volumes | **-0.0958** | +0.1133 | +0.2091 |
 
 **At a 24-volume window the two orders differ by 0.85 — larger than any dimension in 2.1 and larger than the
-entire span the original work reports.** **Their stability differs as much as their values: the
+this line's own widest reported range across specifications, 0.6437.** **PROVENANCE CAVEAT: that reference
+range is NOT a quantity the source paper reports.** **It is this audit's own span from 0.0852 to 0.7289, and
+`SPECIFICATION_LEDGER.md` records that it "mixes a weighted pipeline against three unweighted ones", so its
+widest extent comes from mixing two families rather than from varying the choices it lists.** **An earlier
+draft of this manuscript called it "the entire span the original work reports", which was an attribution
+error: the span belongs to this audit and not to the source.** **Their stability differs as much as their values: the
 weighting-first order gives 0.1192, 0.1192 and 0.1133 across the three windows, a spread of 0.006, while the
 per-cell-first order gives 0.0958, 0.9685 and -0.0958, a spread of 1.064 and a change of sign.**
 
@@ -267,9 +286,16 @@ committed, the invalid scripts and result files carry `INVALID` markers, and fou
 banner at the top naming the reading that was superseded.** **The count of such events is seventeen numbered
 defects, listed in section 2.7 and in Figure 6.**
 
-**And we state the pattern plainly, because it bears on how the rest of this draft should be read: every
-MEASUREMENT this line produced survived re-examination, and every INTERPRETATION attached to a measurement was
-revised at least once.** **The failure mode was never the computation; it was the step from a number to a
+**And we state the pattern plainly, because it bears on how the rest of this draft should be read, and
+because an earlier version of this sentence overclaimed it.** **The line made at least five measurement-level
+errors, listed in section 2.7 and retained as `INVALID` artifacts, and every one of them was caught by an
+instrument check BEFORE its number was used -- the wrong-neuron-order connectome, the exploding per-cell
+normalisation, the scalar collapse that passed 0 of 3,333 events, the zero-inflated intraclass correlation,
+and the weights spanning thirty-one orders of magnitude.** **Every measurement that survived those checks
+then withstood re-examination, and every interpretation attached to a surviving measurement was revised at
+least once.** **The asymmetry is therefore about WHERE the errors were caught, not about whether they
+occurred: measurement errors were caught by the instrument, and interpretation errors were caught only by
+later measurement.** **The failure mode was never the computation; it was the step from a number to a
 sentence about the number.**
 
 ---
