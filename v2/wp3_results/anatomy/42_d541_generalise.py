@@ -9,7 +9,7 @@ This measures the one half of the reliability structure that this dataset can su
 (= cross-animal) agreement of the per-cell response vector.  It CANNOT measure the within-animal half,
 because each session carries only three chemical stimuli.
 
-    atlas (Pradhan/WormWideWeb, OSF):  cross-animal r_full = 0.0405
+    atlas (Dvali/Leifer/Randi, OSF 10.17605/OSF.IO/E2SYT):  cross-animal r_full = 0.0405
     this dataset:                      measure the same quantity and compare
 
 If it lands near zero, the atlas's cross-animal disagreement is not a property of that one export.  If it does
