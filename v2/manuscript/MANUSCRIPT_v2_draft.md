@@ -22,7 +22,7 @@ window (0.24) and baseline convention (0.03 to 0.05) — are each measured, and 
 non-additive: two of them whose isolated contributions sum to `-0.008` combine to `+0.571`.**
 
 **The artifact reports no reliability for the quantity it publishes. Decomposing the per-animal records behind
-it, within-cell measurement error accounts for 37 to 57 per cent of the variance in a pair's response
+it, within-cell measurement error accounts for 17 to 57 per cent of the variance in a pair's response
 depending on the specification, and is never the smallest component, while the pair-specific animal component
 is negative at the unrestricted specification — an impossible value for a variance share, which bounds which
 specifications are well posed.**
@@ -143,7 +143,11 @@ per-animal offset, a pair-specific animal component, and within-cell measurement
 from the (animal, pair) cells holding repeat measurements.**
 
 **The measurement-error share is 17 to 57 per cent depending on the specification, and it is never the smallest
-component.** **Its value depends on the precision weighting (13.0 points), the read-out (about 13 points), the
+component.** **That range is the union of two grids: an eight-specification grid over the read-out and the
+post-stimulus window gave 38.7 to 57.1 per cent, and adding the per-event weighting widened the lower bound to
+17 per cent.** **An earlier draft of this manuscript quoted 37 to 57 per cent in its abstract and discussion,
+which matched neither grid; the correct figures are 38.7 and 17, and both are stated here so the arithmetic is
+checkable.** **Its value depends on the precision weighting (13.0 points), the read-out (about 13 points), the
 window and the normalisations.**
 
 **The pair-specific animal component is not robust in the same way: it ranges from 5.5 to 46.0 per cent
@@ -269,7 +273,7 @@ defensible dimensions.**
 
 **The second concerns reporting practice.** **Fifteen works in this literature, read at abstract or full-text
 level, none report a reliability figure for the functional quantity they predict.** **Our decomposition finds
-measurement error accounting for 37 to 57 per cent of the variance in a pair's response in this artifact, and
+measurement error accounting for 17 to 57 per cent of the variance in a pair's response in this artifact, and
 the artifact reports no such figure.** **We cannot say whether that is typical — fifteen works and one artifact
 do not establish a norm — but we can say that in the one case where it has been measured, the number is
 large.** **And we note one adjacent framing in tension with it: a 2025 *Communications Biology* paper on the
