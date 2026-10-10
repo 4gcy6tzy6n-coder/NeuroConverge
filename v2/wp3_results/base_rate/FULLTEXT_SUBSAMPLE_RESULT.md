@@ -7,8 +7,15 @@ the coding.**
 ## The subsample and what was codable
 
 **17 records entered the rule.** **8 of them carry a PMCID and are therefore open access; 7 of those 8 full texts
-were retrieved, one failing.** **The 9 records without a PMCID are preprints or closed access and were not
-codable at full text; they are reported as NOT CODABLE rather than counted as N.**
+were retrieved, one failing.** **TEN records in the subsample were NOT codable at full text, and the reason each is not is now
+established rather than assumed.** **Nine carry no PMCID, and a query against the Europe PMC search endpoint
+returns `isOpenAccess=N, inEPMC=N` for every one of them, so their full text is not available through any
+endpoint this environment can reach.** **The tenth carries a PMCID but also returns `isOpenAccess=N`; its
+full-text request returns HTTP 500 and the record itself states it is not open access.**
+
+**Of those ten, ONE is covered by a version already coded: PPR62030 is the preprint of 41874539, whose
+published version is one of the seven coded above.** **So the genuine unknown is NINE records, and they are
+reported as NOT CODABLE rather than counted as N.**
 
 ## The coding, from the full texts
 
@@ -43,9 +50,11 @@ estimate for records that mention the concept.**
 construction and 28.6 per cent is NOT the frame's rate.** **It is an upper-ish estimate for the frame, and the
 census's 0.0 per cent is a lower bound, so the frame's true rate lies between them.** **Nothing here estimates
 where.**
-**The 9 not-codable records are the largest remaining unknown: if they behave like the 7 codable ones, the frame
-rate rises; if they behave like the census, it does not.** **That is a larger study and it is named rather than
-implied to be done.**
+**The nine not-codable records are the largest remaining unknown: if they behave like the seven codable ones**
+**the frame rate rises, and if they behave like the census it does not.** **An attempt was made to resolve
+them to published open-access versions by title search; ONE resolved, and it was the duplicate.** **So the
+nine are a hard limit of this environment and not a step not yet taken, and reaching them would require
+access this line does not have.**
 
 ## A screen failed twice before this was coded by reading
 
