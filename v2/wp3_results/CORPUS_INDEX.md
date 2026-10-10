@@ -103,9 +103,12 @@ least once, and three were withdrawn or narrowed outright.**
    a value above about 0.4 in this corpus is the across-animal ratio and a value near 0.10 is usually the
    per-animal mean.
 4c. **The pool over which a common mode or a normalisation is computed is itself a specification
+   dimension.** **Its contribution is 0.0038 in `d_A`, NOT the 0.34 that
+   `CORRECTION_common_mode_cell_pool.md` attributed to it: `CORRECTION_cell_pool_refuted.md` varied the pool
+   directly and refuted that attribution.** **This item previously read "measured it at 0.34", which sent a
+   reader following this reading order to a superseded value while section 3 of this same index correctly
+   recorded the refutation.** **Corrected at round 68, thirty-seven rounds after the refutation was committed.**
 4d. **Check the ORDER in which a pipeline applies its normalisations, not only whether it applies them.** Two orderings of the same two normalisations differ by 0.85 at one window while agreeing to 0.02 at another. See `ORDER_AXIS.md`.
-   dimension.** `CORRECTION_common_mode_cell_pool.md` measured it at 0.34 in `d_A`, larger than the whole
-   range spanned by window, baseline and normalisation together.
 4b. **Before trusting a specification grid, check it for redundancy: if two levels of an axis give
    bit-identical output, that axis is not a specification.** V2-C2's grid had three transforms that produced
    one result, so twelve rows were four specifications.

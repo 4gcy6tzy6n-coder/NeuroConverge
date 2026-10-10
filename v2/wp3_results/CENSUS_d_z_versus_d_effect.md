@@ -1,6 +1,6 @@
 # Census: which `d` in this corpus is an effect size and which is a z-score
 
-**Status: round 27's owed item, completed. Seventy-six fields across five result files store a z-score in a
+**Status: round 27's owed item, completed. Ninety-one fields across five result files store a z-score in a
 field named `d`, with no corresponding effect size. The files that carry the line's four live claims store
 genuine Cohen's `d`.</** No model was fitted.
 
@@ -34,8 +34,12 @@ showed all twenty were correctly separated.** **Recording the false positives is
 | `RESULT_unit_check.json` | 2 | both, labelled | **correct** |
 | `RESULT_invalid_idorder.json` | 1 | `cohens_d` | **INVALID run, retained** |
 
-> **Seventy-six fields across five files store `diff / SE` in a field named `d`, with no effect size stored
-> alongside. Every file that carries one of the line's four live claims stores a genuine Cohen's `d`.**
+> **Ninety-one fields across five files store a z-score in a field named `d`, with no effect size stored
+> alongside.** **Four of those files compute `diff / SE` and hold 18, 20, 12 and 26 fields, summing to 76; a
+> fifth computes `diff / sp`, where `sp` is the same standard-error form, and holds 15.** **An earlier version
+> of this census said "seventy-six fields across five files", which paired the FOUR-file subtotal with a
+> FIVE-file count so the arithmetic did not reconcile; corrected at round 68 after an isolated reviewer
+> checked it.** Every file that carries one of the line's four live claims stores a genuine Cohen's `d`.**
 
 **`RESULT_corrected.json` uses `sp` rather than `se` as the name, but the expression is the same standard
 error of a difference, so it belongs in the same group.**

@@ -317,8 +317,13 @@ inside.**
 
 ### 2.8 Corrections and withdrawals, which the reader needs in one place
 
-**A paper whose subject is provenance must show its own.** **Four interpretations this line published in
-earlier rounds are withdrawn or narrowed, and three of them are not visible anywhere else in this draft.**
+**A paper whose subject is provenance must show its own.** **FIVE readings recorded in earlier rounds are
+withdrawn or narrowed.** **Four are interpretations this line had published; the fifth, the intraclass
+correlation of 0.93, was withdrawn BEFORE it was published anywhere, so the table's five rows are four
+published interpretations plus one withheld value.** **Three of the five are not visible anywhere else in
+this draft.** **An earlier version of this sentence said "four interpretations", which matched neither its
+own five-row table nor the corpus index's count of three; the table is the authority and this prose now
+describes it.**
 
 | was published | status | why |
 | --- | --- | --- |
@@ -402,7 +407,10 @@ attempts, 2.541 GB against a 10 GB cap.
 animal unit with each animal's connected-minus-unconnected contrast. **Where a z-score (`diff / SE`) appears in
 an intermediate artifact it is labelled as such; `../wp3_results/NOTATION_two_effect_sizes.md` records that `d` means four
 different things across this line's artifacts, and the census in `../wp3_results/CENSUS_d_z_versus_d_effect.md` located
-seventy-six fields in five files where it is a z-score.**
+ninety-one fields in five files where it is a z-score.** **Four of those files compute `diff / SE` and hold
+18, 20, 12 and 26 fields, summing to 76; a fifth computes `diff / sp` with the same standard-error form and
+holds 15.** **An earlier version of this sentence inherited the census's own arithmetic mismatch, which said
+seventy-six across five files.**
 
 **Specification grids.** Each dimension was varied alone with the others fixed, and then jointly. **Every axis
 was checked for redundancy before its results were read: an axis whose levels give bit-identical output is not
