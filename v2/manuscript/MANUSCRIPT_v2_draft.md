@@ -32,9 +32,15 @@ non-additive: two of them whose isolated contributions sum to `-0.008` combine t
 **The artifact reports no reliability for the quantity it publishes. Decomposing the per-animal records behind
 it, within-cell measurement error accounts for 17 to 57 per cent of the variance in a pair's response
 depending on the specification, and is never the smallest component, while the pair-specific animal component
-is negative at the unrestricted specification, which is impossible for a SHARE of a common total and is
+is negative at ONE unrestricted specification, which is impossible for a SHARE of a common total and is
 therefore a property of the estimator rather than of the animal: the four components are obtained by
-subtraction with no non-negativity constraint, so when one is negative the others are not shares of one variance.**
+subtraction with no non-negativity constraint, so when one is negative the others are not shares of one
+variance. **The negativity is also READ-OUT CONDITIONAL: at the same unrestricted minimum it occurs under
+the signed-sum read-out, where `beta` is -10.9, -8.1, -8.1 and -7.5 per cent across four specifications,
+and does NOT occur under the mean-over-the-window read-out, where the same restriction gives +1.9, +6.1,
++6.1 and +6.7 per cent.** **So the unrestricted specification is ill posed under one of the two read-outs
+this line treats as defensible and well posed under the other, and any exclusion of it is partly a choice
+of read-out rather than a property of the data.**.**
 
 **Finally, and as a demonstration rather than a claim: we attempted to re-derive the artifact's own numbers,
 and the attempt failed for six consecutive rounds because our re-implementations differed from the original
@@ -178,12 +184,23 @@ window and the normalisations.**
 
 **The pair-specific animal component is not robust in the same way: it ranges from 5.5 to 46.0 per cent
 depending on a minimum-measurements-per-pair restriction, and at the unrestricted specification it goes
-NEGATIVE, which is impossible for a share of a common total.** **The four components are obtained by
+NEGATIVE under one of the two read-outs, which is impossible for a share of a common total.** **The four components are obtained by
 subtraction with no non-negativity constraint, so a negative term means the printed percentages are component
 contributions and not shares of one variance; at the sharpest specification the positive terms alone reach 111.0
 per cent.** **That negativity is informative rather than merely
 inconvenient: it marks the specification as ill posed, because a pair mean computed from a single animal
 inflates the between-pair term and drives the subtracted component below zero.**
+
+**The condition is not incidental, and the committed grid shows it.** `CORRECTION_eps_is_a_range.md` carries sixteen specifications and the `beta` sign depends on the read-out at the unrestricted minimum:
+
+| read-out | `min_an` | `beta` across four specifications | sign |
+| --- | --- | --- | --- |
+| signed sum over the window | 1 | -10.9, -8.1, -8.1, -7.5 per cent | **all negative** |
+| mean over the window | 1 | +1.9, +6.1, +6.1, +6.7 per cent | all positive |
+| signed sum over the window | 3 | +21.6, +24.4, +24.4, +25.4 per cent | all positive |
+| mean over the window | 3 | +32.2, +34.7, +34.7, +35.5 per cent | all positive |
+
+**So the ill-posedness is a property of the PAIR of an unrestricted minimum and the signed-sum read-out, and not of the unrestricted minimum alone.** **An earlier version of this manuscript described it as a property of the unrestricted specification, which is what an isolated reviewer correctly challenged.**
 
 **What is robust across every specification we computed is the sign structure: measurement error is always the
 largest or second-largest component, and the pair-specific animal component is positive whenever pairs
