@@ -44,7 +44,13 @@ because the reliability analysis is a stated aim rather than a by-product.**
 | 6 | node or parcel pool | **U** | the only pool-like hits are the pupil and the model, not the neural population |
 | 7 | ORDER of operations | **U** | "We first evaluated the accuracy" is narrative order, not an ordering declaration for the computation |
 
-**So this matrix declares TWO of the seven, against the zebrafish's FOUR and the audited atlas's ONE.**
+**SUPERSEDED, and the correction is the point of this note: this line first coded this matrix at TWO of the
+seven, from a packet that was truncated before each paper's Methods.** **On the FULL text, verified to
+contain the Methods, the matrix declares SIX of the seven, which MEETS the protocol's criterion for
+refuting the claim that these dimensions are generally undeclared.** **The corrected coding is in
+`base_rate/DIMENSION_CODER1_v2.md`, and the defect that hid it is in
+`base_rate/DIMENSION_CODING_DEFECT.md`.** **The two-of-seven figure is retained here rather than deleted,
+because it is what an uncorrected truncation produced.**
 
 **AND THE CODING ITSELF IS THE WEAKEST PART OF THIS INSPECTION, WHICH IS STATED RATHER THAN GLOSSED.** **A
 keyword screen produced seven apparent declarations and six of them were false positives: a peer-review

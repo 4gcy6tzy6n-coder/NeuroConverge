@@ -453,8 +453,10 @@ section 2.1 would fit in a table smaller than the provenance section of most dat
 laboratory with a different preparation, could not be run: the download failed three times, the third time
 because of a concurrency error of our own, costing 1.866 GB with no usable files.** **So every result here
 rests on one atlas.** **AND SAME-KIND COMPARISONS MAKE THAT CONCRETE: TWO whole-brain functional matrices, inspected by
-documentation alone, declare FOUR and TWO of the seven dimensions this atlas leaves undeclared, and both
-report reliability figures for their functional quantities.** **The second is the stronger case, because a
+documentation alone, declare FOUR and SIX of the seven dimensions this atlas leaves undeclared, and both
+report reliability figures for their functional quantities.** **The second MEETS the pre-registered criterion
+for refuting any claim that these dimensions are generally undeclared, so the claim is refuted for one of the
+two and the paper's scope is this atlas and an observed rate rather than a necessity.** **The second is the stronger case, because a
 reliability analysis of its own measurement is a stated aim rather than a by-product.** **So these dimensions are NOT
 universally undeclared, the counterexample sits in the same citing frame, and the paper's claims are about
 this atlas and about an observed rate rather than about necessity.** **The measurement-error share is a range

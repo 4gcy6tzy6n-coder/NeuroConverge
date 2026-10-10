@@ -29,7 +29,9 @@ organism, computed as the audited atlas is, from calcium imaging.**
 | 6 | node or parcel pool | **D** | "averaged the activity of neurons within each region"; the regional parcellation is the pool |
 | 7 | ORDER of operations | **D** | "regressing out a global signal ... BEFORE computing FC", an explicit ordering statement |
 
-**So this matrix declares FOUR of the seven, against the audited atlas's ONE.** **Under the protocol's own
+**So this matrix declares FOUR of the seven, against the audited atlas's ONE.** **This count is UNCHANGED by
+the packet correction that changed the second matrix's count from two to six, and it was produced from the
+full text in both packings.** **Under the protocol's own
 falsification rule this is not a refutation of the claim for this matrix, since four is below six, but it is a
 clear counterexample to any claim that these dimensions are UNIVERSALLY undeclared, and it is reported as
 such.**
