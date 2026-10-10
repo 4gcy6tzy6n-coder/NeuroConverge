@@ -35,6 +35,12 @@ ledger -- seventeen numbered self-found errors, each named by the correction doc
 earlier ones referenced in prose and not separately documented -- because it is the evidence for the claim
 rather than an appendix to it.**
 
+**We also report our own corrections, because they are the same phenomenon: four interpretations this line
+published earlier are withdrawn or narrowed, including a claim that the unit error inflated the effect by
+11 to 18 times (it did not; the ratio was a z-score over a Cohen's `d`), and every one is retained in the
+record rather than deleted.** **Across the work, every MEASUREMENT survived re-examination and every
+INTERPRETATION attached to one was revised at least once.**
+
 **Nothing here is a claim about the biology. The atlas's conclusions may well be correct; we show only that
 they are not reconstructible from the artifact, and we quantify what that costs.**
 
@@ -221,6 +227,29 @@ code's `0.7289` and `7.610`.**
 testing it, and each proposed cause was refuted.** **We report that sequence in the defect ledger, because
 four refuted hypotheses followed by one measurement is a description of the specification problem from the
 inside.**
+
+### 2.8 Corrections and withdrawals, which the reader needs in one place
+
+**A paper whose subject is provenance must show its own.** **Four interpretations this line published in
+earlier rounds are withdrawn or narrowed, and three of them are not visible anywhere else in this draft.**
+
+| was published | status | why |
+| --- | --- | --- |
+| **"treating pair measurements as replicates inflates the standardised effect by 11 to 18 times"** | **retracted, and inverted** | the pair-level quantity is `diff / SE`, a z-score, while the animal-level one is `diff / SD`; their ratio is `sqrt(n)`, a definitional identity. **The pair-level effect size is smaller, 0.022 against 0.421.** (section 2.5) |
+| **"the measurements are not noisy, the animals differ"** | **retracted** | a three-level decomposition gives **5.5 per cent** pair-specific animal deviation against **37.5 per cent** within-cell measurement error, so the cross-animal disagreement is better explained by unreliable pair means than by heterogeneous biology. |
+| **"the association is a property of the population, not of the circuit"** | **narrowed** | the between-animal spread is 42.2 per cent measurement noise and 17.7 per cent pair composition, with about 40 per cent unexplained by anything measured; **nine technical covariates account for 0.25 per cent of it, adjusted.** |
+| **"what is reproducible within an animal is which pairs it happened to have measured"** | **narrowed** | measured, that component is **17.7 per cent** of the between-animal variance, not the whole of it. |
+| **an intraclass correlation of 0.93** | **withdrawn before use** | the within-animal variance was computed as `var(vs) if len(vs) > 1 else 0`, and most (animal, pair) cells hold one measurement, so the value was inflated by construction. **The tell was that per-animal centring left it identical to four decimals, which centring must change.** |
+
+**Every one of these is retained in the line's own record rather than deleted: the correction documents are
+committed, the invalid scripts and result files carry `INVALID` markers, and four documents carry a dated
+banner at the top naming the reading that was superseded.** **The count of such events is seventeen numbered
+defects, listed in section 2.7 and in Figure 6.**
+
+**And we state the pattern plainly, because it bears on how the rest of this draft should be read: every
+MEASUREMENT this line produced survived re-examination, and every INTERPRETATION attached to a measurement was
+revised at least once.** **The failure mode was never the computation; it was the step from a number to a
+sentence about the number.**
 
 ---
 
