@@ -108,7 +108,11 @@ dependencies explain most of the variability in neuronal activity.**
 atlas state how reliable the functional quantity is, and measured it rather than impressionistically.** **We
 took the CENSUS of the atlas's citing records -- all 129, not a sample -- retrieved their abstracts, and coded
 each for whether it reports a reliability, reproducibility, agreement, split-half or measurement-error figure
-for the functional quantity it relates to structure.** **ONE of the 125 codable records does.** **The rate is
+for the functional quantity it relates to structure.** **ONE of the 125 codable records does.** **THAT IS A LOWER BOUND AND NOT THE RATE, and a documentation
+inspection found the counterexample that proves it: a same-kind whole-brain functional matrix in larval
+zebrafish reports an inter-individual agreement test on its functional matrix, and the census did not see it
+because the figure is in the Results and not in the abstract.** **The census is a lower bound because its unit
+is the abstract, which the protocol states in advance and which this instance tests.** **The rate is
 0.0 per cent, or 0.8 per cent if a record reporting such a figure for a METHOD's accuracy is counted as an
 instance, and both are far below any rate that would make the omission unremarkable.**
 
@@ -425,8 +429,10 @@ defensible dimensions.**
 **The second concerns reporting practice.** **Fifteen works in this literature, read at abstract or full-text
 level, none report a reliability figure for the functional quantity they predict.** **Our decomposition finds
 measurement error accounting for 17 to 57 per cent of the variance in a pair's response in this artifact, and
-the artifact reports no such figure.** **And the omission is close to universal in the literature built on this atlas: one of 125
-codable citing works states such a figure, a rate of 0.0 per cent.** **That census is bounded by its frame,
+the artifact reports no such figure.** **And the omission is close to universal in the literature built on this atlas: at most one of 125
+codable citing works states such a figure in its abstract, a rate of at most 0.8 per cent and a LOWER BOUND
+rather than the rate, since a figure reported only in a paper's body is invisible to an abstract-level
+census.** **That census is bounded by its frame,
 which is the citers of one paper, and by its unit, which is the abstract; within those bounds it replaces the
 impression the earlier version of this paragraph offered with a measured rate.** **And we note one adjacent framing in tension with it: a 2025 *Communications Biology* paper on the
 same organism states that cross-individual variability "is not noise" but rather "reflects worm
