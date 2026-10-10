@@ -255,7 +255,7 @@ non-empty, and **v2 must not present as new anything that comparison already est
 not bear on NCV2-RQ. Until then, section 3's permitted novelty statement is **provisional**.
 
 **Note on the defect check.** The pre-commit check for "v1 untouched" initially failed. It was wrong:
-it tested whether any path under `manuscript/`, `evidence/`, `workstreams/` or `PROJECT_FREEZE.md` was
+it tested whether any path under `manuscript/`, `evidence/`, `workstreams/` or [`../../PROJECT_FREEZE.md`](../../PROJECT_FREEZE.md) was
 dirty, which flags the other lane's in-flight edits. The correct test is whether the **last commit
 touching that path** is one of this lane's, and by that test every dirty v1 path belongs to another
 workstream. The check was corrected rather than the finding suppressed.

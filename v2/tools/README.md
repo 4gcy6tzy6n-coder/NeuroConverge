@@ -177,3 +177,24 @@ wp3_results/SOME_DOC.md  :: any d above 1.5 must be labelled a z-score :: z-scor
 **The heuristic, stated so it can be tested: a `d` of 2 or more in this corpus is a z-score.** **The tooling
 cannot enforce that by itself, because it does not know which quantity a number denotes; what it can do is
 require that the distinction be stated, which is what the requirement above does.**
+
+## A fourth way a check can be wrong: a notice about a broken citation looks like a broken citation
+
+**Round 49 ran a citation scan across the corpus and found ten broken links.** **Four were in
+`PATH_LAYOUT.md`, which cited `05_common_mode.py`, `08_animal_level.py`, `11_source_rule.py` and
+`13_measurement_structure.py`; the same round that created that document had renamed them to
+`06_common_mode.py`, `09_animal_level.py`, `11b_source_rule.py` and `13_within_vs_between_splithalf.py`.**
+**The body was corrected and a dated notice was appended that NAMES the four wrong names, as a notice must.**
+
+**The scan then flagged the document again, because the notice names them.** **That is a false positive of the
+same family as round 10's, where a guard was satisfied by prose ABOUT a placeholder: a check that searches
+text cannot distinguish an assertion from a statement about the assertion.**
+
+**The practical rule: a citation scan must be run against a document WITHOUT its appended notices, or the scan
+must report a name found only inside a notice as informational rather than broken.** **Neither is implemented
+here; this records the limitation.**
+
+**And the round-49 scan's real yield, which is why it was worth running:** **one artifact from round 41 had
+never been committed at all** — `39_joint_grid_verified.py` and `RESULT_joint_grid_verified.json`, cited by
+`JOINT_GRID_VERIFIED_NONADDITIVE.md` and by the manuscript's figure legends, and present only in a temporary
+directory. **A document that cites an artifact is not evidence that the artifact exists.**

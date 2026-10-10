@@ -78,9 +78,18 @@ locate the file.** **That is a genuine gap in this record and is stated rather t
 
 * Found by a corpus audit that checked, for every document, whether the scripts it names exist, and for
   every script, whether the paths it reads resolve.
-* **Four broken provenance links were found and fixed** (`08_animal_level.py` to `09_animal_level.py`,
-  `11_source_rule.py` to `11b_source_rule.py`, `05_common_mode.py` to `06_common_mode.py`,
-  `13_measurement_structure.py` to `13_within_vs_between_splithalf.py`); **a reader following any of the
+* **Four broken provenance links were found and fixed** (`09_animal_level.py` to `09_animal_level.py`,
+  `11b_source_rule.py` to `11b_source_rule.py`, `06_common_mode.py` to `06_common_mode.py`,
+  `13_within_vs_between_splithalf.py` to `13_within_vs_between_splithalf.py`); **a reader following any of the
   four previously found nothing.**
 * **`neurons.json`'s sha256 prefix and the clarification in section 2 are new in this document.**
 * **No model was fitted. No measurement changed.**
+---
+
+> **BROKEN-CITATION NOTICE, appended round 49.** **Four script names in this document were written
+> incorrectly when it was created in round 25** — `05_common_mode.py`, `08_animal_level.py`,
+> `11_source_rule.py` and `13_measurement_structure.py` — **and the same round that created it renamed
+> them to `06_common_mode.py`, `09_animal_level.py`, `11b_source_rule.py` and
+> `13_within_vs_between_splithalf.py`.** **The names are corrected above; the notice records that a
+> document whose purpose is to list where things are contained four wrong paths, and that nothing
+> checked it for thirty-four rounds.**
