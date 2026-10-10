@@ -299,8 +299,9 @@ independent review: the review recorded in `PREFLIGHT_REVIEW.md` is this line's 
 **Data.** The wild-type atlas export and its `unc-31` counterpart (OSF `10.17605/OSF.IO/E2SYT`;
 `exported_data.tar.gz` 523,093,816 B, sha256 `d6e7b3d93175b40b7ae17bde2182835e9c2144388142c522ee9b3832f6ce836`;
 113 and 18 animals). Connectome tables built by name from `aconnectome_witvliet_2020_8.csv` and
-`aconnectome_white_1986_whole.csv`. Cell-class labels from `neurons.json`, whose provenance and licence status
-are recorded in `../wp1_data/PATH_LAYOUT.md`. Cumulative download across the line, including failed
+`aconnectome_white_1986_whole.csv`. Cell-class labels from NemaNode's `neurons.json`, which is an EXTERNAL dependency rather than a file in
+this repository; its size, sha256 prefix, provenance and licence status are recorded in
+`../wp1_data/PATH_LAYOUT.md`. Cumulative download across the line, including failed
 attempts, 2.541 GB against a 10 GB cap.
 
 **Effect size.** `d_A = mean(across-animal differences) / SD(across-animal differences)`, computed at the
@@ -352,3 +353,59 @@ cross-animal agreement. Source: `RESULT_fig6.json`, `RESULT_fig6_specification_g
 
 **Figure 6 — the defect ledger.** Seventeen numbered self-found defects against the discovery order each document states for itself
 in a measurement, an interpretation, or a re-implementation. Source: `CORPUS_INDEX.md`. Rendered file: `../figures/Fig6_defect_ledger.png`.
+
+---
+
+## 6. References
+
+**Works cited in the text, with the identifier this line used to read each one so the citation can be checked
+rather than trusted.** **Two are cited because they bound the paper's subject -- a review stating the question
+is open and a paper stating no accepted method exists -- and three because they are the nearest published work
+to this paper's findings.**
+
+1. **Randi F, Sharma AK, Dvali S, Leifer AM.** Neural signal propagation atlas of *Caenorhabditis elegans*.
+   *Nature* **623**, 406-414 (2023). doi:10.1038/s41586-023-06683-4. **The source artifact this paper audits.**
+2. **Greaves MD, Novelli L, Mansour L S, Zalesky A, Razi A.** Structurally informed models of directed brain
+   connectivity. *Nature Reviews Neuroscience* (2025). PMID 39663407, doi:10.1038/s41583-024-00881-3.
+   **Quoted in section 1: "it remains unclear whether, at the macroscale, structural (or anatomical)
+   connectivity provides useful constraints on models of directed connectivity".**
+3. **Currier TA, Clandinin TR.** Infrequent strong connections constrain connectomic predictions of neuronal
+   function. *Cell* (2025). **Quoted in section 1: connectomic predictions are accurate for some response
+   properties and "surprisingly poor" for others; the abstract also reports that strong synaptic inputs are
+   more functionally homogeneous than expected by chance.**
+4. **Laasch N, Braun W, Knoff L, Bielecki J, Hilgetag CC.** Comparison of derivative-based and
+   correlation-based methods to estimate effective connectivity in neural networks. *Scientific Reports*
+   (2025). doi:10.1038/s41598-025-88596-y. PMID 39948086. **Quoted in section 1: "no universally accepted
+   method exists" for inferring effective connectivity.**
+5. **Lynn CW.** Simple input-output dependencies explain neuronal activity. *Nature Physics* (2026).
+   doi:10.1038/s41567-026-03306-3. PMID 42370308. **Cited in section 3 as a prior against claims that
+   structure carries additional predictive content beyond simple input-output dependencies.**
+6. **A *Communications Biology* paper on decomposed linear dynamical systems** (2025), PMC12350842. **Cited in
+   section 3 as an adjacent framing in tension with section 2.4: its abstract states that cross-individual
+   variability "is not noise" but "reflects worm individuality".** **The two quantities are not the same and
+   this paper does not resolve the tension.**
+7. **Luo Z, Peng K, Liang Z, Cai S, Xu C, Li D, Hu Y, Zhou C, Liu Q.** Mapping effective connectivity by
+   virtually perturbing a surrogate brain. *Nature Methods* (2025). PMID 40263586,
+   doi:10.1038/s41592-025-02654-x. **Read at abstract level only; not open access, so its methods were not
+   inspected.**
+8. **Pradhan S, *et al.*** The wild-type and *unc-31* atlas exports analysed here. OSF record
+   doi:10.17605/OSF.IO/E2SYT. **The derived data this paper audits.**
+9. **DANDI dandiset 000541.** Whole-brain NeuroPAL calcium imaging with chemical stimulation, 21 sessions,
+   `CC-BY-4.0`. **The second dataset the generalisation test in section 3 was designed for; the fetch failed
+   and the route is closed.**
+
+**Where these identifiers come from, and a defect this section already had.** **Every PMID and DOI above was
+read from the Europe PMC REST API rather than recalled, and the check that established that is recorded because
+the first version of this list was NOT: it was written from memory, and six of its nine identifiers appeared
+nowhere in the committed survey documents.** **Re-querying the API confirmed that the PMIDs and DOIs were
+correct, and found two things the memory-written version had missed -- the DOI for reference 2, the DOI for
+reference 7, and the author lists for both.** **A memory that happens to be right is not a method, and this
+list would have been wrong the first time it was not.** **The identifiers are now reproducible from the
+queries recorded in `../wp3_results/REFERENCE_IDENTIFIERS.md`.**
+
+**A note on citation practice in this paper, which differs from the conventions above.** **The fifteen works
+in the literature survey were read at title-and-abstract level, and four in full text; the survey's own
+document records which is which, and the negative finding in it -- that none of the fifteen reports a
+reliability figure for the functional quantity it predicts -- is a title-and-abstract observation rather than
+a Methods-level one, and is stated as such in `../wp3_results/LITERATURE_SURVEY_SPECIFICATION_AND_RELIABILITY.md`
+and `../wp3_results/METHODS_LEVEL_SURVEY.md`.**
