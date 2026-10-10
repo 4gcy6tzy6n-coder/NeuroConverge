@@ -31,7 +31,7 @@ specifications are well posed.**
 and the attempt failed for six consecutive rounds because our re-implementations differed from the original
 code in ways not visible on reading it. The published pipeline's own authors are its most informed possible
 re-implementers, and the specification still had to be recovered line by line. We report the full defect
-ledger, twenty-one self-found errors, because it is the evidence for the claim rather than an appendix to
+ledger, seventeen numbered self-found errors, because it is the evidence for the claim rather than an appendix to
 it.**
 
 **Nothing here is a claim about the biology. The atlas's conclusions may well be correct; we show only that
@@ -320,5 +320,5 @@ restriction, with the negative region marked as ill posed. Source:
 **Figure 5 — the like-for-like comparison and its bound.** The reproduction in two animals and the target's
 cross-animal agreement. Source: `RESULT_fig6.json`, `RESULT_fig6_specification_grid.json`. Rendered file: `../figures/Fig5_like_for_like.png`.
 
-**Figure 6 — the defect ledger.** Seventeen numbered self-found defects by round, classified by whether the fault was
+**Figure 6 — the defect ledger.** Seventeen numbered self-found defects against the discovery order each document states for itself
 in a measurement, an interpretation, or a re-implementation. Source: `CORPUS_INDEX.md`. Rendered file: `../figures/Fig6_defect_ledger.png`.
