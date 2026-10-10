@@ -305,20 +305,20 @@ deleted, under `v2/wp3_results/`.**
 result artifact named below and retypes nothing.**
 
 **Figure 1 — the specification ledger.** Seven dimensions, each with its isolated contribution, marked by
-whether the artifact declares it. Source: `SPECIFICATION_LEDGER.md`, `FIGURE_SOURCE_DATA.json`.
+whether the artifact declares it. Source: `SPECIFICATION_LEDGER.md`, `FIGURE_SOURCE_DATA.json`. Rendered file: `../figures/Fig1_specification_ledger.png`.
 
 **Figure 2 — non-additivity.** Isolated contributions against the joint effect for the two largest dimensions,
-at three windows. Source: `RESULT_joint_grid_verified.json`.
+at three windows. Source: `RESULT_joint_grid_verified.json`. Rendered file: `../figures/Fig2_nonadditivity.png`.
 
 **Figure 3 — the order is the largest dimension.** The two sequences across three windows, with the stability
-of each marked. Source: `RESULT_order_axis.json`.
+of each marked. Source: `RESULT_order_axis.json`. Rendered file: `../figures/Fig3_order.png`.
 
 **Figure 4 — the decomposition.** Four components as a function of the minimum-measurements-per-pair
 restriction, with the negative region marked as ill posed. Source:
-`RESULT_variance_decomposition_sweep.json`, `RESULT_decomposition_weighted.json`.
+`RESULT_variance_decomposition_sweep.json`, `RESULT_decomposition_weighted.json`. Rendered file: `../figures/Fig4_decomposition.png`.
 
 **Figure 5 — the like-for-like comparison and its bound.** The reproduction in two animals and the target's
-cross-animal agreement. Source: `RESULT_fig6.json`, `RESULT_fig6_specification_grid.json`.
+cross-animal agreement. Source: `RESULT_fig6.json`, `RESULT_fig6_specification_grid.json`. Rendered file: `../figures/Fig5_like_for_like.png`.
 
 **Figure 6 — the defect ledger.** Twenty-one self-found defects by round, classified by whether the fault was
-in a measurement, an interpretation, or a re-implementation. Source: `CORPUS_INDEX.md`.
+in a measurement, an interpretation, or a re-implementation. Source: `CORPUS_INDEX.md`. Rendered file: `../figures/Fig6_defect_ledger.png`.
