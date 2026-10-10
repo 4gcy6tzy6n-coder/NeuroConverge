@@ -31,8 +31,9 @@ specifications are well posed.**
 and the attempt failed for six consecutive rounds because our re-implementations differed from the original
 code in ways not visible on reading it. The published pipeline's own authors are its most informed possible
 re-implementers, and the specification still had to be recovered line by line. We report the full defect
-ledger, seventeen numbered self-found errors, because it is the evidence for the claim rather than an appendix to
-it.**
+ledger -- seventeen numbered self-found errors, each named by the correction document that records it, plus
+earlier ones referenced in prose and not separately documented -- because it is the evidence for the claim
+rather than an appendix to it.**
 
 **Nothing here is a claim about the biology. The atlas's conclusions may well be correct; we show only that
 they are not reconstructible from the artifact, and we quantify what that costs.**
