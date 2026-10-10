@@ -198,3 +198,22 @@ here; this records the limitation.**
 never been committed at all** — `39_joint_grid_verified.py` and `RESULT_joint_grid_verified.json`, cited by
 `JOINT_GRID_VERIFIED_NONADDITIVE.md` and by the manuscript's figure legends, and present only in a temporary
 directory. **A document that cites an artifact is not evidence that the artifact exists.**
+
+## A fifth check, and the two mutation tests that validated it
+
+**`check_figure_values.py` extracts every numeric literal from a figure script, excludes styling and layout
+parameters by line, and requires each remaining value to appear somewhere in the v2 artifact corpus.** **It
+exists because round 50 found Figure 6's table typed from memory.**
+
+**Two mutation tests, because a check that has never failed has not been validated:**
+
+1. **Injecting a fabricated value (`0.3395` replaced by `0.4242`) produced two failures and exit code 2.**
+   **Restoring it produced zero failures and exit 0.**
+2. **Pointing `--root` at a tree with the script but no artifacts produced fourteen failures**, which exposed
+   a real design fault: the check could not distinguish "the artifact disagrees" from "there are no
+   artifacts". **A guard now SKIPs with a reason when the corpus is under 10,000 characters, printing
+   `SKIP REASON: the check cannot see its input; this is NOT a pass.`**
+
+**And the scan's own result on the real corpus: fourteen data literals, zero untraceable.** **Figure 1's
+thirteen values are typed rather than derived, but every one is present in the artifacts, and this check is
+what keeps that true.**
