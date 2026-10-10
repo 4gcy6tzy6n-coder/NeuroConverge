@@ -290,10 +290,25 @@ not comparable.** **What the re-run establishes is structural rather than numeri
 to a value of the latter regardless of the exact numbers.** **The corpus's `z = 11.048` is not claimed to be
 wrong as a z-score; what is claimed is that it IS a z-score.**
 
-**The correct statement is therefore about significance and not about effect size: the reported `p`-value
-corresponds to a sample roughly 464 times larger than the number of independent units.** **The
-pseudo-replication point itself stands, and it is the reason an animal-level analysis exists in this line at
-all.**
+**The correct statement is therefore about significance and not about effect size, and it must use the
+quantities the re-run actually recorded rather than a ratio assembled from two different pair sets.**
+**AN EARLIER VERSION OF THIS SENTENCE SAID THE `p`-VALUE CORRESPONDS TO A SAMPLE "ROUGHLY 464 TIMES LARGER
+THAN THE NUMBER OF INDEPENDENT UNITS", AND THAT WAS WRONG.** **464 is the square root of the pair count
+`19,247 + 195,809 = 215,056`, whose square root is `463.7`; it is not a sample-size ratio at all.** **Worse,
+the two counts were drawn from the CORPUS's pair set while the effect sizes beside them were drawn from the
+RE-RUN's, whose unconnected count is `219,824` -- a substitution this line had already recorded as making the
+two pair sets incomparable.**
+
+**WHAT THE ARTIFACT RECORDS, from one pair set.** **The pair-level `z` is `3.9938` and the animal-level `t` is
+`4.3935`; their ratio is `0.909`, which is the recorded `ratio_of_significance`.** **The recorded
+`sqrt_n_eff` is `188.135`, and it is the quantity that expresses how much the pair-level test overstates its
+own precision: the pair-level standard error is smaller than the animal-level one by about that factor.**
+**The ratio of pair observations to animals, `(19,247 + 219,824) / 109 = 2,193`, is the sample-size ratio, and
+it is NOT the quantity that governs the significance, which is why the effective factor is 188 rather than
+2,193.**
+
+**The pseudo-replication point itself stands, and it is the reason an animal-level analysis exists in this
+line at all.**
 
 **We report the error rather than the correction alone because it is a second instance of the paper's subject:
 a quantity named `d` meant two different things, and the ambiguity survived four rounds of internal review.**
