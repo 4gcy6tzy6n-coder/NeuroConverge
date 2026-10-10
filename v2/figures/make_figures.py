@@ -3,7 +3,7 @@
 Every series is read from a committed JSON or document; nothing is retyped.  The source artifact for each
 panel is named in the legend and recorded in FIGURE_SOURCE_DATA.json's hashes.
 """
-import json, pathlib, matplotlib
+import json, pathlib, re, matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -136,26 +136,34 @@ ax.set_title("...against a target that barely agrees", fontsize=7.5, loc="left")
 fig.savefig(OUT/"Fig5_like_for_like.png"); plt.close(fig)
 
 # ---- Figure 6: the defect ledger
-defects = [("window convention",29,"re-implementation"),("grid family",31,"re-implementation"),
-           ("common-mode axis",32,"re-implementation"),("cache columns",33,"re-implementation"),
-           ("weighting omitted",34,"re-implementation"),("wrong axis",39,"re-implementation"),
-           ("duplicate-name pooling",8,"measurement"),("ratio of medians",8,"measurement"),
-           ("biased read-out",8,"measurement"),("id-order assumption",8,"measurement"),
-           ("per-cell collapse",8,"measurement"),("broadcast error",8,"measurement"),
-           ("zero-pass criterion",8,"measurement"),("pathological weights",8,"measurement"),
-           ("zero-inflated ICC",8,"measurement"),("animal heterogeneity",12,"interpretation"),
-           ("window dependence",12,"interpretation"),("composition account",14,"interpretation"),
-           ("population-level framing",15,"interpretation"),("z as effect size",27,"interpretation"),
-           ("cell pool attribution",32,"interpretation")]
-fig, ax = plt.subplots(figsize=(4.6, 3.0))
-cmap={"measurement":ACC,"interpretation":WARN,"re-implementation":"#e3c07a"}
-rng=np.random.default_rng(0)
-for i,(nm,rd,kind) in enumerate(defects):
-    ax.plot(rd, i, "o", ms=4, color=cmap[kind])
-ax.set_yticks(range(len(defects))); ax.set_yticklabels([d[0] for d in defects], fontsize=6)
-ax.set_xlabel("round in which it was found")
-for k,v in cmap.items(): ax.plot([],[],"o",color=v,label=k)
-ax.legend(frameon=False, fontsize=6, loc="lower right")
-ax.set_title("Twenty-one self-found defects", fontsize=8, loc="left")
+# ---- Figure 6: the numbered defect ledger, DERIVED from the artifacts.
+# Each correction document names its own defect number; that number IS the discovery order and is the axis.
+# The first attempt at this figure hardcoded both the names and the round numbers from memory; both were
+# wrong, and the round a document MENTIONS is not reliably the round of discovery, so the round is not plotted.
+NUM = {"fifth":5,"sixth":6,"seventh":7,"eighth":8,"ninth":9,"tenth":10,"eleventh":11,"twelfth":12,
+       "thirteenth":13,"fourteenth":14,"fifteenth":15,"sixteenth":16,"seventeenth":17,"eighteenth":18,
+       "nineteenth":19,"twentieth":20,"twenty-first":21}
+_rows = {}
+# tools/ is meta-documentation: it DISCUSSES the defects rather than defining them, and would
+# otherwise be matched for whichever number its prose happens to mention.
+for d in sorted((pathlib.Path(__file__).resolve().parents[1]).rglob("*.md")):
+    if "tools" in d.parts or d.name.upper() == "README.MD":
+        continue   # a README discusses the defects; it does not define one
+    txt = d.read_text(errors="replace")
+    m = re.search(r"the (\w+(?:-\w+)?) self-found", txt)
+    if not m or m.group(1).lower() not in NUM:
+        continue
+    _rows[NUM[m.group(1).lower()]] = d.stem
+defects = [(f"#{n}  {_rows[n]}", n) for n in sorted(_rows)]
+fig, ax = plt.subplots(figsize=(5.4, 3.4))
+for i, (lab, n) in enumerate(defects):
+    ax.plot(n, i, "o", ms=5, color=ACC)
+ax.set_yticks(range(len(defects)))
+ax.set_yticklabels([d[0] for d in defects], fontsize=6.5)
+ax.set_xlabel("self-found defect number (the stated discovery order)")
+ax.set_xlim(4, 22)
+ax.set_xticks([5, 10, 15, 20, 21])
+ax.set_title(f"{len(defects)} numbered self-found defects, each from its own correction document",
+             fontsize=7.5, loc="left")
 fig.savefig(OUT/"Fig6_defect_ledger.png"); plt.close(fig)
 print("  已渲染 6 幅图")

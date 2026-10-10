@@ -294,8 +294,8 @@ restriction, because at the unrestricted specification the subtracted component 
 
 **Software.** Python 3.12 with numpy and h5py. **All scripts, result JSONs and the figure source data are
 committed; `FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-two source artifacts.**
-**Twenty-one self-found defects and the invalid runs that produced some of them are retained rather than
-deleted, under `v2/wp3_results/`.**
+**Seventeen numbered self-found defects and the invalid runs that produced some of them are retained rather
+than deleted, under `v2/wp3_results/`.**
 
 ---
 
@@ -320,5 +320,5 @@ restriction, with the negative region marked as ill posed. Source:
 **Figure 5 — the like-for-like comparison and its bound.** The reproduction in two animals and the target's
 cross-animal agreement. Source: `RESULT_fig6.json`, `RESULT_fig6_specification_grid.json`. Rendered file: `../figures/Fig5_like_for_like.png`.
 
-**Figure 6 — the defect ledger.** Twenty-one self-found defects by round, classified by whether the fault was
+**Figure 6 — the defect ledger.** Seventeen numbered self-found defects by round, classified by whether the fault was
 in a measurement, an interpretation, or a re-implementation. Source: `CORPUS_INDEX.md`. Rendered file: `../figures/Fig6_defect_ledger.png`.

@@ -76,8 +76,11 @@ document remains findable by the claim it made.**
 
 ## 5. The defect ledger
 
-**Twenty-one self-found defects, numbered fifth to twenty-first in the committed correction documents, plus
-thirteen self-inflicted check failures recorded in `../tools/README.md`.** **The earlier count here said "nine
+**Seventeen numbered self-found defects, from the fifth to the twenty-first, each named by its own
+committed correction document; defects one to four are referenced in prose but have no document that names
+them. A further thirteen self-inflicted check failures are recorded in `../tools/README.md`.** **The count was
+previously stated as twenty-one, which came from a figure whose table was typed from memory; see
+`CORRECTION_figure_six_was_invented.md`.** **The earlier count here said "nine
 measurement defects and thirteen check failures", which was written at round 22 and used a different
 taxonomy; it is corrected rather than kept, because a ledger whose own count is stale is an instance of the
 defect this corpus documents.**
