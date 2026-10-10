@@ -52,9 +52,11 @@ and does NOT occur under the mean-over-the-window read-out, where the same restr
 this line treats as defensible and well posed under the other, and any exclusion of it is partly a choice
 of read-out rather than a property of the data.**.**
 
-**Finally, and as a demonstration rather than a claim: we attempted to re-derive the artifact's own numbers,
-and the attempt failed for six consecutive rounds because our re-implementations differed from the original
-code in ways not visible on reading it. **This line is NOT the pipeline's author and has no relationship to it
+**Finally, a case study rather than a claim: we attempted to re-derive the artifact's own numbers and failed for
+six rounds because our re-implementations differed from the code in ways not visible on reading it.** **The
+artifact WAS recovered once we stopped reasoning and compared each re-implemented step against the original's
+own intermediate values, which is why this is reported as a case study and NOT as evidence that the
+specification cannot be recovered.** This line is NOT the pipeline's author and has no relationship to it
 beyond reading its published code and its deposited data; it is an independent group, which is the weaker
 and the true version of the claim.** **An earlier draft said "the published pipeline's own authors are its
 most informed possible re-implementers", which asserted an identity between this manuscript's authors and
@@ -317,10 +319,22 @@ functional quantity.** **We note that our grid's third axis, three data transfor
 because correlations are invariant to per-column affine transforms — a redundant axis we had to check for
 rather than assume.**
 
-### 2.7 The demonstration: six consecutive failures to re-derive the artifact's own numbers
+### 2.7 A case study in re-implementation: six consecutive failures, and the step verification that ended them
 
-**The claim of this paper is that a pipeline's specification is not recoverable from its output.** **The
-strongest evidence we can offer is that we tried to recover it, and failed repeatedly.**
+**This section is a case study of a RE-IMPLEMENTATION PROCESS, and an isolated reviewer was right to insist
+that it be labelled as one.** **An earlier version of this paragraph called the failures below the strongest
+evidence for the claim that a pipeline's specification is not recoverable from its output, and that framing
+was wrong: the failures are evidence about THIS LINE, not about the artifact.**
+
+**THE ARTIFACT WAS RECOVERED.** **By comparing a re-implemented step against the original's own intermediate
+values until they matched at machine precision, this line reproduced the pipeline's configuration exactly, and
+all four of V2-C4's values were independently reproduced.** **So the specification IS recoverable from the
+artifact by a reader willing to read the code, and the obstacle the record documents is the re-implementers'
+distance from that code rather than any opacity in the output.** **What the sequence below therefore
+establishes is narrower and still useful: that a competent independent group, reading the code and the
+artifact without the pipeline's own records, can be wrong six times in ways that no amount of re-reading the
+code reveals, and that the remedy which worked was comparing intermediate values rather than reasoning about
+the specification.** **It is NOT evidence that the artifact cannot be re-derived.**
 
 **Every value in section 2.1 was produced by re-implementing the pipeline.** **Six consecutive
 re-implementations were wrong, each in a different way, and none of the errors was visible on reading the
