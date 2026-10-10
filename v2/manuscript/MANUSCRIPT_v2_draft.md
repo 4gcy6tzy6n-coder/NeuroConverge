@@ -67,9 +67,12 @@ inferring effective connectivity.** **And a 2026 *Nature Physics* paper reports 
 dependencies explain most of the variability in neuronal activity.**
 
 **So the field acknowledges that the inference is unsettled.** **What it does not do, as far as we can
-establish from eleven works read at title-and-abstract level and four read in full, is report how reliable the
-functional quantity being predicted is.** **None of those fifteen reports a reliability, reproducibility or
-measurement-error figure for it.**
+establish, is state how reliable the functional quantity being predicted is.** **Of eleven works read at
+title-and-abstract level, none states a reliability, reproducibility or measurement-error figure for it in
+its TITLE OR ABSTRACT; of four read in full, none reports one in its text.** **That is a statement about what
+these fifteen documents say where we read them, and not a claim about the literature: a figure reported only
+in a Methods section would not be seen by an abstract-level reading, and our own survey document states that
+as the first thing this design cannot establish.**
 
 **We examine one such artifact in detail: a whole-brain functional atlas of the nematode
 *Caenorhabditis elegans*, together with the pipeline that produced it.** **We ask a narrow question — what

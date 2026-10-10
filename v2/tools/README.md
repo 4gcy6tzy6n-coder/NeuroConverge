@@ -217,3 +217,22 @@ exists because round 50 found Figure 6's table typed from memory.**
 **And the scan's own result on the real corpus: fourteen data literals, zero untraceable.** **Figure 1's
 thirteen values are typed rather than derived, but every one is present in the artifacts, and this check is
 what keeps that true.**
+
+## A sixth way a check can be wrong: a needle containing a literal backslash-n
+
+**Round 60 verified that a manuscript sentence had been tightened by searching for `in\nits TITLE OR ABSTRACT`,
+where `\n` was written as two characters rather than as a newline.** **The check reported a failure and its
+own near-miss output showed the text was present.**
+
+**This is the fifth occurrence of one family, and the family is now the most common defect in this corpus.**
+**The instances, in order of discovery:**
+
+1. **round 10**, a guard satisfied by prose ABOUT a placeholder;
+2. **round 49**, a citation scan flagging the notice that names the broken citations;
+3. **round 55**, a needle one word different from the manuscript;
+4. **round 59**, an absence check tripped by the sentence that quotes the stale value;
+5. **round 60**, a needle carrying a literal `\n`.
+
+**In every case the artifact was right and the CHECK was wrong, and in every case the near-miss diagnostic is
+what identified it.** **The transferable rule: when a text check fails, read its near-miss output before reading
+the artifact, because five times out of five the fault was in the pattern.**
