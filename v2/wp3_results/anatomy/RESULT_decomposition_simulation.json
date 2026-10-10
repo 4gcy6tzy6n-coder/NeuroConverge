@@ -1,0 +1,43 @@
+{
+  "truth": {
+    "var_alpha": 0.3,
+    "var_beta": 0.55,
+    "var_eps": 0.75
+  },
+  "n_animals": 109,
+  "n_pairs_per_animal": 200,
+  "simulation": [
+    {
+      "min_an": 1,
+      "var_beta_hat": 0.5354887992838842,
+      "var_eps_hat": 0.7518194779247453,
+      "frac_beta_hat": 0.3305213800297081,
+      "n_negative_beta": 0,
+      "n_replicates": 8
+    },
+    {
+      "min_an": 2,
+      "var_beta_hat": 0.5408272826293816,
+      "var_eps_hat": 0.7477168263647418,
+      "frac_beta_hat": 0.3358352083598106,
+      "n_negative_beta": 0,
+      "n_replicates": 8
+    },
+    {
+      "min_an": 3,
+      "var_beta_hat": 0.5571072250323775,
+      "var_eps_hat": 0.7486972205300324,
+      "frac_beta_hat": 0.3469574259560796,
+      "n_negative_beta": 0,
+      "n_replicates": 8
+    },
+    {
+      "min_an": 5,
+      "var_beta_hat": 0.5494204053155092,
+      "var_eps_hat": 0.7481122530250828,
+      "frac_beta_hat": 0.3399260542991557,
+      "n_negative_beta": 0,
+      "n_replicates": 8
+    }
+  ]
+}

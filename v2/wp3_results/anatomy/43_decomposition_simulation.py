@@ -20,7 +20,13 @@ REPEAT_FRAC = 0.20
 N_REPEATS = 2
 
 def simulate(p_repeat=REPEAT_FRAC, n_rpt=N_REPEATS):
-    rows = []                                          # (animal, pair, value)
+    """Generate DIRECTLY IN LOG SPACE, so the truth IS the log-scale variance the estimator targets.
+
+    The first version generated a linear sum and then logged it, which makes the log-scale truth different from
+    the linear truth and therefore makes the comparison against the truth meaningless.  That version reported the
+    estimator underestimating beta by 4.5x, which was an artefact of the mis-specification and not a finding.
+    """
+    rows = []                                          # (animal, pair, value), already in log space
     for a in range(N_ANIMALS):
         al = rng.normal(0, np.sqrt(VAR_ALPHA))
         be = rng.normal(0, np.sqrt(VAR_BETA), N_PAIRS_PER_ANIMAL)
@@ -32,7 +38,7 @@ def simulate(p_repeat=REPEAT_FRAC, n_rpt=N_REPEATS):
 
 def decompose(rows, min_an=1):
     """The manuscript's estimator: mu + alpha[animal] + beta[animal,pair] + eps, rest by subtraction."""
-    y = np.log(np.abs(rows[:, 2]) + 1e-9)              # log space, as the manuscript specifies
+    y = rows[:, 2].copy()                             # already in log space (see simulate)
     a = rows[:, 0].astype(int); p = rows[:, 1].astype(int)
     # restrict to pairs measured in at least min_an distinct animals
     key = {}
@@ -92,6 +98,6 @@ for min_an in (1, 2, 3, 5):
     print(f"  {min_an:>7} {bh:>10.3f} {eh:>10.3f} {bf:>10.3f} {neg:>4}/{len(recs)}")
     out["simulation"].append({"min_an": min_an, "var_beta_hat": float(bh), "var_eps_hat": float(eh),
                               "frac_beta_hat": float(bf), "n_negative_beta": int(neg), "n_replicates": len(recs)})
-pathlib.Path("v2/wp3_results/anatomy/RESULT_decomposition_simulation.json").write_text(
+pathlib.Path(__file__).with_name("RESULT_decomposition_simulation.json").write_text(
     json.dumps(out, indent=2))
 print(f"\n  ==> 真值 beta = {VAR_BETA}；若估计量在 min_an=1 处系统性偏低或为负，则不良态是估计量的性质而非数据的")
