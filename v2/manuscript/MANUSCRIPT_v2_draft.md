@@ -102,13 +102,25 @@ for others.** **A 2025 *Scientific Reports* paper states that "no universally ac
 inferring effective connectivity.** **And a 2026 *Nature Physics* paper reports that simple input-output
 dependencies explain most of the variability in neuronal activity.**
 
-**So the field acknowledges that the inference is unsettled.** **What it does not do, as far as we can
-establish, is state how reliable the functional quantity being predicted is.** **Of eleven works read at
-title-and-abstract level, none states a reliability, reproducibility or measurement-error figure for it in
-its TITLE OR ABSTRACT; of four read in full, none reports one in its text.** **That is a statement about what
-these fifteen documents say where we read them, and not a claim about the literature: a figure reported only
-in a Methods section would not be seen by an abstract-level reading, and our own survey document states that
-as the first thing this design cannot establish.**
+**So the field acknowledges that the inference is unsettled.** **We asked how often the works BUILT ON this
+atlas state how reliable the functional quantity is, and measured it rather than impressionistically.** **We
+took the CENSUS of the atlas's citing records -- all 129, not a sample -- retrieved their abstracts, and coded
+each for whether it reports a reliability, reproducibility, agreement, split-half or measurement-error figure
+for the functional quantity it relates to structure.** **ONE of the 125 codable records does.** **The rate is
+0.0 per cent, or 0.8 per cent if a record reporting such a figure for a METHOD's accuracy is counted as an
+instance, and both are far below any rate that would make the omission unremarkable.**
+
+**THAT IS A MEASUREMENT WITH A STATED FRAME AND NOT A CLAIM ABOUT THE FIELD.** **The frame is the citers of one
+paper; the unit is the abstract, so a figure reported only in a Methods section is invisible to this design;
+the coding was done twice, once by this line and once in an isolated context on the same records, giving 97.7
+per cent agreement with the three disagreements adjudicated toward the isolated coder; and neither coder is
+independent of this line in the sense a review requires.** **The protocol, the frame and both codings are
+committed.**
+
+**And one of the citing works corroborates the finding from inside the field.** **A 2025 review in *Nature
+Reviews Neuroscience* states that "assessments of reliability and out-of-sample validity are lacking" -- a
+statement that such assessments are ABSENT, which is why the census does not count it as an instance of one.**
+
 
 **We examine one such artifact in detail: a whole-brain functional atlas of the nematode
 *Caenorhabditis elegans*, together with the pipeline that produced it.** **We ask a narrow question — what
@@ -399,9 +411,10 @@ defensible dimensions.**
 **The second concerns reporting practice.** **Fifteen works in this literature, read at abstract or full-text
 level, none report a reliability figure for the functional quantity they predict.** **Our decomposition finds
 measurement error accounting for 17 to 57 per cent of the variance in a pair's response in this artifact, and
-the artifact reports no such figure.** **We cannot say whether that is typical — fifteen works and one artifact
-do not establish a norm — but we can say that in the one case where it has been measured, the number is
-large.** **And we note one adjacent framing in tension with it: a 2025 *Communications Biology* paper on the
+the artifact reports no such figure.** **And the omission is close to universal in the literature built on this atlas: one of 125
+codable citing works states such a figure, a rate of 0.0 per cent.** **That census is bounded by its frame,
+which is the citers of one paper, and by its unit, which is the abstract; within those bounds it replaces the
+impression the earlier version of this paragraph offered with a measured rate.** **And we note one adjacent framing in tension with it: a 2025 *Communications Biology* paper on the
 same organism states that cross-individual variability "is not noise" but rather "reflects worm
 individuality".** **That is a different quantity from ours, measured on different data, and we have not
 compared them; we record the tension and not a resolution.**
@@ -451,6 +464,25 @@ intermediate values for a single animal — `sd`, `dv`, `dvs`, `cm`, `dev` and t
 agreement required at machine precision.
 
 **Variance decomposition, and what it can and cannot be read as.** `y = mu + alpha[animal] + beta[animal, pair] + eps`, in log space, with `eps` identified from the (animal, pair) cells holding two or more measurements and the remaining three components obtained BY SUBTRACTION with no non-negativity constraint, so `beta` can be negative. **This matters for how the output may be described.** **When every component is non-negative the four numbers are shares of a common total and sum to 100 per cent.** **When `beta` is negative they do NOT: the four values still add to about 100 per cent, but the positive components alone exceed 100, at one specification reaching 111.0 per cent because `beta` is -10.9 per cent.** **A negative component therefore means the four numbers are a component decomposition with a negative term, and NOT four shares of one variance.** **The decomposition is reported as a function of the min-animals-per-pair restriction, WHICH IS A RESTRICTION ON ANIMALS AND NOT ON MEASUREMENTS because at the unrestricted specification the subtracted component can be negative, and every percentage in this paper that comes from a row with a negative component is labelled as a component share rather than a variance share.**
+
+**Reliability-reporting census.** **The frame is the 129 citing records of the audited atlas (Europe PMC
+`/MED/37914938/citations`), taken as a census rather than a sample.** **Abstracts were retrieved for all of
+them; four carry none, leaving 125 codable.** **Each was coded R (reports a reliability, reproducibility,
+agreement, split-half or measurement-error FIGURE for the functional quantity), R-OTHER (such a figure for
+something else), N, or NC.** **The coding rule, the frame, the reported quantities and the falsification
+thresholds were committed BEFORE any abstract was read, in
+`../wp3_results/PROTOCOL_reliability_reporting_base_rate.md`.** **The coding was done twice: once by this line
+and once in an isolated context that received only the protocol and the records, giving 97.7 per cent
+agreement on three disagreements, each adjudicated toward the isolated coder and each recorded.** **NEITHER
+CODER IS INDEPENDENT OF THIS LINE in the sense a review requires; they are independent of each other, which is
+a weaker guarantee, and the manuscript states that.**
+
+**Simulation of the variance decomposition.** **Data were generated directly in log space from the model the
+decomposition fits, with known `alpha`, `beta` and `eps` variances, and the estimator was applied and
+replicated eight times at each of four minimum-animals-per-pair levels.** **It recovered both components
+within 3 per cent at every level and produced no negative component in thirty-two replicates.** **The limits
+are stated with the result: it validates the ESTIMATOR under its own assumptions and not the ESTIMATE, since
+no external truth exists for the atlas.**
 
 **Software.** Python 3.12 with numpy and h5py. **All scripts, result JSONs and the figure source data are
 committed; `../wp3_results/FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-seven source artifacts,

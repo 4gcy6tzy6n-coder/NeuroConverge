@@ -8,3 +8,4 @@
 | round 69 | d458077794042975c9efeebe47ff07a1afdd1493ce1c20680137062fde0410cf | 593 lines | Figure 1 now parses its declared source; zero typed data literals remain in the figure script |
 | round 71 | 43a2292ae751da832cfe42ff86ab1b4d6ac6e6703fb711947640bb30cf36a7ce | 623 lines | the attenuation point value 0.081 withdrawn; R1-M8 closed; R1 and R3 concerns all addressed |
 | round 74 | 43a2292ae751da832cfe42ff86ab1b4d6ac6e6703fb711947640bb30cf36a7ce | 623 lines | decomposition validated by simulation; base rate measured at 0.0 per cent (two coders, 97.7 per cent agreement) |
+| round 75 | 9627c79f960d4ffd5bd265665f4e209cc4f864fe74d2c2ff115276f29763f90a | 655 lines | the measured base rate and the decomposition simulation are written into the manuscript |
