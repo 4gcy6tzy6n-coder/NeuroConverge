@@ -1,0 +1,7 @@
+# Manuscript revision log
+
+**Each row records the sha256 of the manuscript as committed at that round, so a reviewer can name what they reviewed.** **This exists because an isolated reviewer recorded that the draft carried no revision identifier and that he therefore could not freeze what he had read.**
+
+| round | sha256 | size | change |
+| --- | --- | --- | --- |
+| round 67 | f950e38b28fc4fbdf28bbd2f5ace37dc514316eb6df5d9f970bf2bcb70ffb66b | 578 lines | availability section added, citation claim scoped to 7/9, all paths made relative and verified, revision identifier introduced |

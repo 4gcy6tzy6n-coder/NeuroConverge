@@ -1,9 +1,19 @@
 # Unstated specifications in a derived neuroscience dataset: seven dimensions worth more than the effect they qualify
 
-**Draft, v2 line. Every number below is committed under `v2/wp3_results/` with its own provenance section.
-No number is introduced here that is not already there.**
+**Draft, v2 line. Every number below is committed with its own provenance section, and every path given is
+relative to this file. The specification documents and the figure source data live under `../wp3_results/`; the
+result JSONs live under `../wp3_results/anatomy/`. An earlier version told the reader that every number was
+committed under one directory, and the result files are in a subdirectory of it. No number is introduced here
+that is not already there.**
 
 ---
+
+**Revision reviewed identifier: this draft carries no frozen revision hash in its own text, and an isolated
+reviewer recorded that as a defect because he could not name what he had reviewed.** **The block below is
+generated from the file's own hash at commit time and is updated by the same commit that changes it.**
+
+<!-- MANUSCRIPT_REVISION: the sha256 of this file's body excluding this comment is recorded in
+     ../wp5_governance/review/REVISION_LOG.md -->
 
 ## Abstract
 
@@ -161,7 +171,7 @@ equal.**
 **At a 24-volume window the two orders differ by 0.85 — larger than any dimension in 2.1 and larger than the
 this line's own widest reported range across specifications, 0.6437.** **PROVENANCE CAVEAT: that reference
 range is NOT a quantity the source paper reports.** **It is this audit's own span from 0.0852 to 0.7289, and
-`SPECIFICATION_LEDGER.md` records that it "mixes a weighted pipeline against three unweighted ones", so its
+`../wp3_results/SPECIFICATION_LEDGER.md` records that it "mixes a weighted pipeline against three unweighted ones", so its
 widest extent comes from mixing two families rather than from varying the choices it lists.** **An earlier
 draft of this manuscript called it "the entire span the original work reports", which was an attribution
 error: the span belongs to this audit and not to the source.** **Their stability differs as much as their values: the
@@ -196,7 +206,7 @@ per cent.** **That negativity is informative rather than merely
 inconvenient: it marks the specification as ill posed, because a pair mean computed from a single animal
 inflates the between-pair term and drives the subtracted component below zero.**
 
-**The condition is not incidental, and the committed grid shows it.** `CORRECTION_eps_is_a_range.md` carries sixteen specifications and the `beta` sign depends on the read-out at the unrestricted minimum:
+**The condition is not incidental, and the committed grid shows it.** `../wp3_results/CORRECTION_eps_is_a_range.md` carries sixteen specifications and the `beta` sign depends on the read-out at the unrestricted minimum:
 
 | read-out | `min_an` | `beta` across four specifications | sign |
 | --- | --- | --- | --- |
@@ -223,7 +233,7 @@ pair-level quantity in the pipeline is `diff / SE`, a z-score, while the animal-
 measurement.** **Measured properly, the pair-level effect size is SMALLER than the animal-level one: 0.0221
 against 0.4208.** **Both are Cohen's `d` and are recomputed at both units from the same records under the
 source convention, so their magnitudes ARE comparable, which is the one thing the retracted ratio was not.**
-**SOURCE: `CORRECTION_unit_inflation_is_significance.md`, which is also where the numbers live; they are not
+**SOURCE: `../wp3_results/CORRECTION_unit_inflation_is_significance.md`, which is also where the numbers live; they are not
 in the figure source data, and an earlier draft quoted them without naming their artifact.**
 
 **AND A LIMITATION THE SOURCE STATES AND THIS DRAFT DID NOT.** **The re-run that produced these two values
@@ -295,7 +305,7 @@ result in section 2.2, and the distinction must be stated because the two grids 
 and `7.610`, a difference of `0.0042`, and the explanation first offered for it — a slightly different
 event set — was refuted: the exact match is available, and the `0.0042` is an implementation difference
 that was never identified.** **So the non-additivity result in section 2.2 rests on a grid whose own check
-does not pass, and `JOINT_GRID_VERIFIED_NONADDITIVE.md` states both that its check passes and that it
+does not pass, and `../wp3_results/JOINT_GRID_VERIFIED_NONADDITIVE.md` states both that its check passes and that it
 differs by `0.0042`, which is a contradiction in that document and not a qualification of the result.**
 **We report the non-additivity as provisional on the strength of the ORDER grid, where the same pair of
 normalisations was measured with a check that passes, rather than on the joint grid whose check failed.**
@@ -374,7 +384,7 @@ because of a concurrency error of our own, costing 1.866 GB with no usable files
 rests on one atlas, and we do not know how far any of it travels.** **The measurement-error share is a range
 over the specifications we varied and not a property of the preparation.** **The pair-specific component is
 ill posed at the unrestricted specification and we have not resolved the estimator.** **And we have had no
-independent review: the review recorded in `PREFLIGHT_REVIEW.md` is this line's own.**
+independent review: the review recorded in `../wp5_governance/PREFLIGHT_REVIEW.md` is this line's own.**
 
 ---
 
@@ -383,15 +393,15 @@ independent review: the review recorded in `PREFLIGHT_REVIEW.md` is this line's 
 **Data.** The wild-type atlas export and its `unc-31` counterpart (OSF `10.17605/OSF.IO/E2SYT`;
 `exported_data.tar.gz` 523,093,816 B, sha256 `d6e7b3d93175b40b7ae17bde2182835e9c2144388142c522ee9b3832f6ce836`;
 113 and 18 animals). Connectome tables built by name from `aconnectome_witvliet_2020_8.csv` and
-`aconnectome_white_1986_whole.csv`. Cell-class labels from NemaNode's `neurons.json`, which is an EXTERNAL dependency rather than a file in
+`aconnectome_white_1986_whole.csv`. Cell-class labels from NemaNode's `neurons.json` (external), which is an EXTERNAL dependency rather than a file in
 this repository; its size, sha256 prefix, provenance and licence status are recorded in
 `../wp1_data/PATH_LAYOUT.md`. Cumulative download across the line, including failed
 attempts, 2.541 GB against a 10 GB cap.
 
 **Effect size.** `d_A = mean(across-animal differences) / SD(across-animal differences)`, computed at the
 animal unit with each animal's connected-minus-unconnected contrast. **Where a z-score (`diff / SE`) appears in
-an intermediate artifact it is labelled as such; `NOTATION_two_effect_sizes.md` records that `d` means four
-different things across this line's artifacts, and the census in `CENSUS_d_z_versus_d_effect.md` located
+an intermediate artifact it is labelled as such; `../wp3_results/NOTATION_two_effect_sizes.md` records that `d` means four
+different things across this line's artifacts, and the census in `../wp3_results/CENSUS_d_z_versus_d_effect.md` located
 seventy-six fields in five files where it is a z-score.**
 
 **Specification grids.** Each dimension was varied alone with the others fixed, and then jointly. **Every axis
@@ -405,7 +415,7 @@ agreement required at machine precision.
 **Variance decomposition, and what it can and cannot be read as.** `y = mu + alpha[animal] + beta[animal, pair] + eps`, in log space, with `eps` identified from the (animal, pair) cells holding two or more measurements and the remaining three components obtained BY SUBTRACTION with no non-negativity constraint, so `beta` can be negative. **This matters for how the output may be described.** **When every component is non-negative the four numbers are shares of a common total and sum to 100 per cent.** **When `beta` is negative they do NOT: the four values still add to about 100 per cent, but the positive components alone exceed 100, at one specification reaching 111.0 per cent because `beta` is -10.9 per cent.** **A negative component therefore means the four numbers are a component decomposition with a negative term, and NOT four shares of one variance.** **The decomposition is reported as a function of the minimum-measurements-per-pair restriction because at the unrestricted specification the subtracted component can be negative, and every percentage in this paper that comes from a row with a negative component is labelled as a component share rather than a variance share.**
 
 **Software.** Python 3.12 with numpy and h5py. **All scripts, result JSONs and the figure source data are
-committed; `FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-seven source artifacts,
+committed; `../wp3_results/FIGURE_SOURCE_DATA.json` records a sha256 prefix for each of its twenty-seven source artifacts,
 and those twenty-seven now include every artifact the figure legends below name, which an earlier version did
 not: six of the seven legend sources, including the order grid, the joint grid and the specification ledger,
 were outside the hash chain while the text claimed the chain covered the figures. The file does not carry its
@@ -415,29 +425,73 @@ than deleted, under `v2/wp3_results/`.**
 
 ---
 
+---
+
+## 4b. Data and code availability, and what cannot be deposited
+
+**THE AUDITED PIPELINE.** **The pipeline this paper audits is `pumpprobe`, at
+`github.com/leiferlab/pumpprobe`.** **It is identified here because the manuscript did not identify it at all
+until this revision, and because section 2.7's acceptance criterion is agreement against "the code's own
+intermediate values", which is meaningless without a locator.** **The exact commit has NOT been pinned, so the
+statement that this line reproduced the pipeline's configuration at `d = 0.7289` should be read as applying to
+the revision that was on that repository when it was read, and NOT to a frozen revision.** **The specific
+files consulted are `pumpprobe/Fconn.py` (external) and `pumpprobe/Funatlas.py` (external), whose line numbers are recorded in
+`../wp3_results/ANIMAL_LEVEL_ESTIMATE.md`.** **A reader who wants to check section 2.7 must obtain that
+repository and determine its revision independently; this paper does not pin it, and that is a limitation of
+this package rather than of the pipeline.**
+
+**THE INPUTS.**
+
+| input | locator | checksum | licence |
+| --- | --- | --- | --- |
+| wild-type atlas export | OSF `10.17605/OSF.IO/E2SYT`; `exported_data.tar.gz` 523,093,816 B | **sha256 `d6e7b3d93175b40b7ae17bde2182835e9c2144388142c522ee9b3832f6ce836`** | **no redistribution licence found** |
+| `unc-31` export | same OSF record | **NOT recorded** | **no redistribution licence found** |
+| connectome tables | `wormneuroatlas` package | **NOT recorded** | **not verified** |
+| `neurons.json` (external) | NemaNode, **no URL or commit recorded** | sha256 prefix `c780e0b7cab28b31`, 58,575 B | **UNKNOWN** |
+
+**WHAT A READER CAN AND CANNOT DO.** **They can verify that every committed result JSON contains the numbers
+this paper quotes, and an isolated reviewer did exactly that, recomputing all twenty-two hashes in
+`../wp3_results/FIGURE_SOURCE_DATA.json` and matching twenty-two of twenty-two.** **They CANNOT re-run the analysis end to
+end, for two reasons recorded in `../wp1_data/PATH_LAYOUT.md` and disclosed here rather than only there:**
+**first, forty-seven of the forty-nine committed analysis scripts read their inputs from absolute paths under
+`/tmp`, which is cleared on reboot and will never exist on a reviewer's machine, so the scripts are not runnable
+by anyone but their author; and second, two of the four inputs have no checksum and one has no locator at all.**
+
+**WHAT CANNOT BE DEPOSITED.** **No licence permitting redistribution of the OSF derived records was found, and
+`neurons.json` (external) carries an UNKNOWN redistribution licence, so a supplementary data deposit is currently NOT
+authorised and this paper makes none.** **The result JSONs, the scripts and the figure source data are deposited
+in the repository; the inputs they read are not, and cannot be, under the licences as recorded.**
+
+**THIS IS THE PAPER'S OWN PRESCRIPTION APPLIED TO ITSELF, AND IT FAILS IT.** **The Discussion recommends that a
+derived dataset publish its windows, normalisations, order, weightings, filters and a reliability figure
+alongside its matrix.** **By this repository's own record, this paper's package is not yet at that standard: the
+pipeline it audits is not revision-pinned, its inputs are not all checksummed, and its scripts are not portable.
+That is stated here rather than left for a reader to discover, and it is the strongest available evidence that
+the problem the paper describes is not one that a single group escapes by good intentions.**
+
 ## 5. Figure legends
 
 **All six are rendered by `../figures/make_figures.py`, which reads each series from the committed
 result artifact named below and retypes nothing.**
 
 **Figure 1 — the specification ledger.** Seven dimensions, each with its isolated contribution, marked by
-whether the artifact declares it. Source: `SPECIFICATION_LEDGER.md`, `FIGURE_SOURCE_DATA.json`. Rendered file: `../figures/Fig1_specification_ledger.png`.
+whether the artifact declares it. Source: `../wp3_results/SPECIFICATION_LEDGER.md`, `../wp3_results/FIGURE_SOURCE_DATA.json`. Rendered file: `../figures/Fig1_specification_ledger.png`.
 
 **Figure 2 — non-additivity.** Isolated contributions against the joint effect for the two largest dimensions,
-at three windows. Source: `RESULT_joint_grid_verified.json`. Rendered file: `../figures/Fig2_nonadditivity.png`.
+at three windows. Source: `../wp3_results/anatomy/RESULT_joint_grid_verified.json`. Rendered file: `../figures/Fig2_nonadditivity.png`.
 
 **Figure 3 — the order is the largest dimension.** The two sequences across three windows, with the stability
-of each marked. Source: `RESULT_order_axis.json`. Rendered file: `../figures/Fig3_order.png`.
+of each marked. Source: `../wp3_results/anatomy/RESULT_order_axis.json`. Rendered file: `../figures/Fig3_order.png`.
 
 **Figure 4 — the decomposition.** Four components as a function of the minimum-measurements-per-pair
 restriction, with the negative region marked as ill posed. Source:
-`RESULT_variance_decomposition_sweep.json`, `RESULT_decomposition_weighted.json`. Rendered file: `../figures/Fig4_decomposition.png`.
+`../wp3_results/anatomy/RESULT_variance_decomposition_sweep.json`, `../wp3_results/anatomy/RESULT_decomposition_weighted.json`. Rendered file: `../figures/Fig4_decomposition.png`.
 
 **Figure 5 — the like-for-like comparison and its bound.** The reproduction in two animals and the target's
-cross-animal agreement. Source: `RESULT_fig6.json`, `RESULT_fig6_specification_grid.json`. Rendered file: `../figures/Fig5_like_for_like.png`.
+cross-animal agreement. Source: `../wp3_results/anatomy/RESULT_fig6.json`, `../wp3_results/anatomy/RESULT_fig6_specification_grid.json`. Rendered file: `../figures/Fig5_like_for_like.png`.
 
 **Figure 6 — the defect ledger.** Seventeen numbered self-found defects against the discovery order each document states for itself
-in a measurement, an interpretation, or a re-implementation. Source: `CORPUS_INDEX.md`. Rendered file: `../figures/Fig6_defect_ledger.png`.
+in a measurement, an interpretation, or a re-implementation. Source: `../wp3_results/CORPUS_INDEX.md`. Rendered file: `../figures/Fig6_defect_ledger.png`.
 
 ---
 
@@ -462,9 +516,13 @@ sections 2.2 and 2.7 now disclose, and that finding is attributed to it in
 
 ## 6. References
 
-**Every entry below was verified against the Crossref REST API (`api.crossref.org/works/<DOI>`), which both
-resolves the DOI and returns the record it points to, so a DOI that exists but belongs to a different paper is
-caught.** **The queries, the returned metadata and the two fields where sources disagree are recorded in
+**Seven of the nine entries below were verified against the Crossref REST API (`api.crossref.org/works/<DOI>`),
+which both resolves the DOI and returns the record it points to, so a DOI that exists but belongs to a
+different paper is caught.** **AN EARLIER VERSION OF THIS SENTENCE SAID "EVERY ENTRY", WHICH WAS FALSE: the
+two data records cannot be verified this way by construction, because data DOIs resolve through DataCite and
+not Crossref, and one entry's DOI was not retrieved at all.** **Of the two data records, `10.17605/OSF.IO/E2SYT`
+was resolved against DataCite and its returned metadata is given in entry 8; the DANDI dandiset was not
+resolved against any registry.** **The queries, the returned metadata and the two fields where sources disagree are recorded in
 `../wp3_results/REFERENCE_IDENTIFIERS.md`.** **Volumes, issues, pages or article numbers are as Crossref
 returns them.**
 
