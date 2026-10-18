@@ -9,7 +9,7 @@
 | --- | --- |
 | authorization | DONE (P1-P3, P5-P7 signed; **P4 dual-coder staffing open -- owner names the coders**) |
 | pre-registration | DONE, frozen 2026-10-18 |
-| corpus draw | BLOCKED 2026-10-18 by OpenAlex shared-IP daily quota exhaustion (exact error in `DRAW_ATTEMPT_LOG.md`); re-attempts after 00:00 UTC or with an owner-supplied API key. **Corpus is NOT frozen; the 8-week clock has NOT started.** |
+| corpus draw | BLOCKED, two attempts (2026-10-18): the shared-IP daily quota is exhausted by other users of this network and does not recover by waiting. Needs an owner API key, a different network, or a Scopus export. **Corpus is NOT frozen; the 8-week clock has NOT started.** |
 | draw review / claim-type adjudication | waiting on the draw |
 | coding | waiting on P4 and corpus freeze |
 | checklist skeleton | DONE (`REPORTING_CHECKLIST_DRAFT.md`) |

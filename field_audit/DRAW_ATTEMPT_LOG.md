@@ -18,3 +18,12 @@ Disposition: re-attempt after 00:00 UTC, or earlier with an owner-supplied API k
 holder would be recorded here; the key itself never enters the repository). No candidate list exists yet, the
 corpus is NOT frozen, and the frozen protocol's 8-week clock has not started. No corpus was improvised from
 web-search snippets: the frozen rule requires a scriptable, hash-pinnable snapshot.
+
+## Attempt 2 - 2026-10-18 10:37 UTC - BLOCKED (shared-IP budget burned by others)
+
+Midnight UTC has passed and the endpoint still returns the identical exhausted-budget error. Reading: the
+"free daily budget shared by everyone on your network's IP address" is consumed by other users of this
+network's shared IP within the reset hour, so waiting does not restore access on this network. The draw
+therefore needs one of: an owner-supplied OpenAlex API key (key recorded here by holder name, never in the
+repository), or execution from a different network, or a Scopus export per the frozen rule's alternative
+route. The corpus remains NOT frozen and the 8-week clock remains unstarted.
