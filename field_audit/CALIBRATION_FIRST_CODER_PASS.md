@@ -49,6 +49,14 @@ Known input: RETIRED to Route D. T3 must not exceed E1.
 Known input: NEGATIVE_ACCEPTED, family-scoped (`69_` section 63). T3 at E2 with the negative reading is the
 grade to reproduce; a second coder grading E0 or E3 flags the wording.
 
+Dated amendment 2026-10-18 (evening): iteration 4 of the method loop landed the arc's first MET criterion
+(`74_`, `A_KB_QUERY_PACKET.csv`): an 8-16 bit query packet at the late window converts up to 87.5 percent of
+the privileged reference at (O+R, step 4), crossing the inherited bar, while mid-window cells stay under it.
+The C03 row's grade stands at E2 - controlled evidence, negative at the cell level - but the justification
+now reads "controlled, negative-at-the-bar overall, with a characterized working regime (late-window,
+reward-change, packet-fed)" - the strongest honest statement of what the archive holds. The purchase-timing
+rule that would test self-activation is proposed, not run (`75_`).
+
 ### C04 IRCN (CBCC line) - "budgeted selective computation improves over matched baselines"
 
 | transition | grade | justification |
