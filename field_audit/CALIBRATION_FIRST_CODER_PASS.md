@@ -99,3 +99,27 @@ publishable; neither is assumed.
 
 Owed: the second coder's independent pass on this same sheet (P4), after which the disagreement rate is
 computed per protocol section 5 and this file's draft status is lifted or the wording revised.
+
+## Dated amendment 2026-10-23: the MICA method-loop chain is complete
+
+This amendment records two events of 2026-10-18 that postdate the C03 amendment above; it changes no grade.
+
+1. **The purchase-timing rule was run, not left proposed.** The C03 amendment's closing sentence is
+   superseded on that one point. Under the owner approval recorded in `75_KB_TIMING_RULE_PROPOSAL.md`,
+   `A_TR_TIMING_RULE.csv` (64 rows, exact enumeration, zero fitted parameters) returns **TR1 NOT MET and
+   TR2 HOLDS**: the declared rule fires only at the last step (firing mass 0.012-0.042), where the packet
+   is worth nothing (deltas -0.000002 to -0.000043 per step), because the frozen SE gate opens only at
+   step 5 and the step-4 window that converts 87.5 percent of the privileged value is never reached. The
+   never-buy control equals no-update exactly, and always-at-step-4 reproduces iteration 4's committed
+   fixed-step numbers to 1e-9.
+2. **The chain is consolidated.** `76_METHOD_LOOP_TERMINAL_RECORD.md` records the six chained
+   measurements and their hard cross-checks: KB1 is the arc's only MET criterion; passive statistics cannot
+   sign or time the purchase (iterations 1 and 5), a lived probe costs 1.3-25 times what it delivers (2), a
+   single free readout is conversion-limited at +0.0192 per step (3), and mid-window budgets saturate at
+   18-26 percent of the privileged reference (4). The boundary is joint in budget and timing, and the named
+   missing piece is an in-window change-timing detector.
+
+C03's T3 grade remains E2 with the negative-at-the-bar reading; its justification now reads "controlled,
+negative-at-the-bar overall, with a characterized working regime and a measured timing boundary". This is
+still coder 1, author-coded. The rows remain excluded from every statistic of protocol section 6, and the
+second non-author coder (P4) remains owed.
