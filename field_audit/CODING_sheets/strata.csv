@@ -1,0 +1,19 @@
+claim_id,mechanism_family,venue_tier
+2508.18961v1,neuromorphic hardware,cs.AR
+2107.14654v1,attention/coding,cs.AI
+2401.15661v2,architecture/connectome,cs.CE
+2309.05263v1,architecture/connectome,cs.NE
+2203.14679v1,neuromorphic hardware,cs.CV
+2411.09953v2,neuromorphic hardware,cs.RO
+2406.11778v1,attention/coding,cs.NE
+2601.15865v1,plasticity/learning rules,cs.CV
+2509.00047v1,memory,cs.LG
+1903.12517v1,other,cs.AI
+2511.17687v2,memory,cs.LG
+1711.10563v2,memory,cs.LG
+2311.15474v1,plasticity/learning rules,eess.SY
+1511.04484v2,plasticity/learning rules,cs.NE
+1811.09699v1,attention/coding,cs.CV
+2504.05621v1,other,cs.AI
+2007.04578v1,other,cs.AI
+2102.11450v1,architecture/connectome,cs.NE

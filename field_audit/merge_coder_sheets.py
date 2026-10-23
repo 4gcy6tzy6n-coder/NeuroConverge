@@ -22,8 +22,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 TRANSITIONS = ("T1", "T2", "T3", "T4", "T5")
-GRADES = ("E0", "E1", "E2")
-ORDER = {g: i for i, g in enumerate(GRADES)}
+GRADES = ("E0", "E1", "E2")            # the paper's own evidence strength
+EXTERNAL_GRADES = ("E0", "E3", "E4")   # none / verified independent / verified replication
+ORDER = {"E0": 0, "E1": 1, "E2": 2, "E3": 3, "E4": 4}
 
 
 def fail(problems):
@@ -40,14 +41,18 @@ def read_sheet(path: Path, coder: str):
     problems = []
     if len(rows) != 90:
         problems.append(f"{path.name}: {len(rows)} rows, expected 90 (18 claims x 5 transitions)")
+    letter = coder.rsplit("_", 1)[-1]
     for r in rows:
-        if r["coder"] != coder:
+        if r["coder"] not in (coder, letter):
             problems.append(f"{path.name}: a row claims coder {r['coder']!r}")
         if r["transition"] not in TRANSITIONS:
             problems.append(f"{path.name}: undeclared transition {r['transition']!r}")
-        for field in ("in_paper_grade", "external_evidence_grade"):
-            if r[field] not in GRADES:
-                problems.append(f"{path.name}: {r['claim_id']} {r['transition']} {field}={r[field]!r} outside E0-E2")
+        if r["in_paper_grade"] not in GRADES:
+            problems.append(f"{path.name}: {r['claim_id']} {r['transition']} "
+                            f"in_paper_grade={r['in_paper_grade']!r} outside E0-E2")
+        if r["external_evidence_grade"] not in EXTERNAL_GRADES:
+            problems.append(f"{path.name}: {r['claim_id']} {r['transition']} "
+                            f"external_evidence_grade={r['external_evidence_grade']!r} outside E0/E3/E4")
         if not (r.get("justification_quote") or "").strip():
             problems.append(f"{path.name}: {r['claim_id']} {r['transition']} has no justification")
     keys = [(r["claim_id"], r["transition"]) for r in rows]

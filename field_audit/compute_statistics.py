@@ -309,8 +309,7 @@ def _selftest() -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--selftest", action="store_true")
+    parser.add_argument("--selftest", action="store_true")
     parser.add_argument("--sheet", action="append", required=False, metavar="NAME=PATH",
                         help="a coding sheet; the first two also produce the disagreement statistics")
     parser.add_argument("--headline", help="claim_id,headline_transition map")
