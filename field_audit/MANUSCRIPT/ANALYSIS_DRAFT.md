@@ -222,6 +222,14 @@ above) is reported with its interval. Software: Python 3 analysis scripts commit
 article (versions pinned by repository commit); no statistical package beyond the standard
 library is used.
 
+**Positioning.** The instrument's lineage is deliberate and none of it supplies this paper's
+layer. The conflation this chain decomposition targets was named qualitatively for NeuroAI by
+Momennejad and colleagues [19]; certainty-of-evidence grading descends from clinical medicine
+(GRADE) [20]; and machine-learning meta-science carries paper-level claims-versus-evidence
+instruments [21]. None grades what a transfer paper itself supplies at each transition of its
+inference chain - the layer this audit measures and the layer the reporting standard makes
+checkable.
+
 ## Figure legends
 
 **Fig 1 | In-paper evidence by transition.** Stacked counts of claims (n = 16 per transition;
@@ -278,3 +286,6 @@ rules stated in Methods.]
 16. Hossein Adeli et al. Learning to attend in a brain-inspired deep neural network. arXiv:1811.09699v1 (2018).
 17. Wilson, E. B. Probable inference, the law of succession, and statistical inference. J. Am. Stat. Assoc. 22, 209-212 (1927).
 18. Nosek, B. A., Ebersole, C. R., DeHaven, A. C. & Mellor, D. T. The preregistration revolution. Proc. Natl Acad. Sci. USA 115, 2600-2606 (2018).
+19. Momennejad, I. et al. A rubric for human-like agents and NeuroAI. Phil. Trans. R. Soc. B 378, 20210446 (2023).
+20. GRADE Working Group. Grading quality of evidence and strength of recommendations. BMJ 328, 1490-1494 (2004).
+21. Chong, C. J., Hou, C., Liu, S. & Yao, Z. Measuring reproducibility in LLM research: a rubric and cross-topic corpus study. In Proc. ACM Conf. on Reproducibility and Replicability (ACM REP) (2026).
