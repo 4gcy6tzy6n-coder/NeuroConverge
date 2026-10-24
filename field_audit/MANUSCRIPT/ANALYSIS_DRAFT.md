@@ -15,8 +15,8 @@ hash-pinned corpus of 16 arXiv-declared mechanism claims into a five-transition 
 and grade, transition by transition, what controlled evidence each paper itself supplies. No
 claim evidences its structure-to-computation transition in-paper (16/16 E0): the biological
 foundation is delegated by citation. The computation-to-correspondence transition - the content
-that makes a system "brain-inspired" - is the chain's least-controlled link (12/16 suggestive
-only), while utility comparisons are where controlled evidence concentrates (10/16). A
+that makes a system "brain-inspired" - carries suggestive-only support in 12 of 16 claims and
+controlled support in just 2, while utility comparisons are where controlled evidence concentrates (10/16). A
 preregistered kill rule (80 percent controlled headline evidence) was not triggered (62.5
 percent, 95 percent CI 39-82). We deliver an item-level, dual-coded reporting standard for the
 uncontrolled middle of the chain. The corpus is a first-query candidate sample; no prevalence
@@ -58,7 +58,7 @@ support for the invoked computation one coder could verify route-wise for 15 ext
 two-coder protocol could not merge this layer and it enters the analysis only as a disclosed convention
 divergence - while the distinctive content of
 "brain-inspired", the claimed correspondence between the biological computation and the artificial
-component, is the chain's least controlled link (E1 only in 12 of 16 claims). At the headline,
+component, is supported only suggestively in 12 of 16 claims. At the headline,
 37.5 percent of claims (6/16, 95 percent CI 18-61 percent) rest their abstract's improvement claim
 on a transition with no controlled in-paper evidence; the two coders' own headline maps put this at
 31.25 and 37.5 percent respectively (coder A and coder B).
