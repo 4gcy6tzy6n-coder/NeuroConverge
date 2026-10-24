@@ -1,0 +1,176 @@
+{
+  "sheets": [
+    "A",
+    "B",
+    "merged"
+  ],
+  "grade_distribution": {
+    "A": {
+      "T1": {
+        "E0": 16
+      },
+      "T2": {
+        "E1": 12,
+        "E0": 2,
+        "E2": 2
+      },
+      "T3": {
+        "E2": 10,
+        "E0": 2,
+        "E1": 4
+      },
+      "T4": {
+        "E1": 9,
+        "E0": 6,
+        "E2": 1
+      },
+      "T5": {
+        "E1": 11,
+        "E0": 1,
+        "E2": 4
+      }
+    },
+    "B": {
+      "T1": {
+        "E0": 16
+      },
+      "T2": {
+        "E1": 12,
+        "E0": 1,
+        "E2": 3
+      },
+      "T3": {
+        "E2": 10,
+        "E0": 2,
+        "E1": 4
+      },
+      "T4": {
+        "E1": 11,
+        "E2": 3,
+        "E0": 2
+      },
+      "T5": {
+        "E2": 14,
+        "E0": 1,
+        "E1": 1
+      }
+    },
+    "merged": {
+      "T1": {
+        "E0": 16
+      },
+      "T2": {
+        "E1": 12,
+        "E0": 2,
+        "E2": 2
+      },
+      "T3": {
+        "E2": 10,
+        "E0": 2,
+        "E1": 4
+      },
+      "T4": {
+        "E1": 9,
+        "E0": 6,
+        "E2": 1
+      },
+      "T5": {
+        "E1": 11,
+        "E0": 1,
+        "E2": 4
+      }
+    }
+  },
+  "weaker_merge_distribution": {
+    "T1": {
+      "E0": 16
+    },
+    "T2": {
+      "E0": 2,
+      "E2": 2,
+      "E1": 12
+    },
+    "T3": {
+      "E2": 10,
+      "E1": 4,
+      "E0": 2
+    },
+    "T4": {
+      "E0": 6,
+      "E1": 9,
+      "E2": 1
+    },
+    "T5": {
+      "E1": 11,
+      "E2": 4,
+      "E0": 1
+    }
+  },
+  "headline": {
+    "claims": 16,
+    "headline_e0_e1": 6,
+    "share": 0.375
+  },
+  "scope": {
+    "t5_rows": 48,
+    "match": 35,
+    "rate": 0.7291666666666666
+  },
+  "stratified": {
+    "by_family": {
+      "attention/coding": {
+        "claims": 3,
+        "headline_e0_e1": 1
+      },
+      "neuromorphic hardware": {
+        "claims": 3,
+        "headline_e0_e1": 0
+      },
+      "architecture/connectome": {
+        "claims": 3,
+        "headline_e0_e1": 1
+      },
+      "plasticity/learning rules": {
+        "claims": 3,
+        "headline_e0_e1": 3
+      },
+      "memory": {
+        "claims": 3,
+        "headline_e0_e1": 0
+      },
+      "other": {
+        "claims": 1,
+        "headline_e0_e1": 1
+      }
+    },
+    "by_tier": {
+      "unspecified": {
+        "claims": 16,
+        "headline_e0_e1": 6
+      }
+    }
+  },
+  "sensitivity": {},
+  "reliability": {
+    "disagreement": "not provided",
+    "replacements": "not provided",
+    "uncodable": "not provided"
+  },
+  "headline_per_sheet": {
+    "A": {
+      "claims": 16,
+      "headline_e0_e1": 6,
+      "share": 0.375
+    },
+    "B": {
+      "claims": 16,
+      "headline_e0_e1": 5,
+      "share": 0.3125
+    },
+    "merged": {
+      "claims": 16,
+      "headline_e0_e1": 6,
+      "share": 0.375
+    }
+  }
+}
