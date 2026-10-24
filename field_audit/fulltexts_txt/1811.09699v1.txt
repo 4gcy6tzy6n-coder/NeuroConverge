@@ -1,0 +1,204 @@
+                     Learning to attend in a brain-inspired deep neural network
+                                     Hossein Adeli (hossein.adelijelodar@gmail.com)
+                                                      Department of Psychology
+                                                     Stony Brook University, NY
+
+                                  Gregory Zelinsky (gregory.zelinsky@stonybrook.edu)
+                                         Departments of Psychology and Computer Science
+                                                  Stony Brook University, NY
+
+Abstract:
+
+Recent machine learning models have shown that including             fundamental questions of how attention control signals
+attention as a component results in improved model accuracy          emerge and function in the context of performing a task
+and interpretability, despite the concept of attention in these      (Gottlieb, Hayhoe, Hikosaka, & Rangel, 2014; Gottlieb,
+approaches only loosely approximating the brain’s attention          Oudeyer, Lopes, & Baranes, 2013; Hayhoe & Ballard, 2014;
+mechanism. Here we extend this work by building a more               Tatler, Hayhoe, Land, & Ballard, 2011) or why the brain
+brain-inspired deep network model of the primate ATTention           might even find prioritizing visual inputs and shifting
+Network (ATTNet) that learns to shift its attention so as to
+maximize the reward. Using deep reinforcement learning,
+                                                                     attention to be a useful thing to do. Recent methods in
+ATTNet learned to shift its attention to the visual features of a    machine learning have engaged these difficult questions,
+target category in the context of a search task. ATTNet’s            showing that models able to learn to shift an attention focus
+dorsal layers also learned to prioritize these shifts of attention   yield improved accuracy and interpretability in applications
+so as to maximize success of the ventral pathway classification      ranging from object classification (Wei, Adeli, Zelinsky,
+and receive greater reward. Model behavior was tested against        Hoai, & Samaras, 2016) and detection (Mnih, Heess, &
+the fixations made by subjects searching images for the same         Graves, 2014) to caption generation (Xu et al., 2015) and
+cued category. Both subjects and ATTNet showed evidence for
+attention being preferentially directed to target goals,             language translation (Vaswani et al., 2017). However, the
+behaviorally measured as oculomotor guidance to targets.             focus of these models was on performance, and not on
+More fundamentally, ATTNet learned to shift its attention to         testing against human attention behavior. Their designs
+target like objects and spatially route its visual inputs to         were also not informed, beyond a broad concept of
+accomplish the task. This work makes a step toward a better          “attending”, by cognitive and neural findings on primate
+understanding of the role of attention in the brain and other        attention mechanisms. Here we leverage the potential of
+computational systems.
+                                                                     these three perspectives by introducing ATTNet, an image-
+Keywords: attention; deep RL; selective routing                      computable DNN model of the ATTention Network.
+                                                                     ATTNet is inspired by biased-competition theory and
+                        Introduction                                 trained using deep reinforcement learning. Through the
+                                                                     application of reward in the context of a search task (Fig.
+   Visual attention enables primates to prioritize the               1a), ATTNet learns to shift its attention to the locations of
+selection and further processing of visual inputs for the            features of the rewarded object category.
+purpose of achieving behavioral goals, but how is this
+attention control learned? Most neural and cognitive models                                   Methods
+avoid asking this question, focusing instead on the effects          ATTNet consists of three interacting components: (1) early
+that prioritization and selection have on neural and                 parallel visual processing (2) ventral processing, and (3)
+behavioral responses. For example, neural models of                  dorsal processing. This organization in based on an
+attention control are largely based on Biased Competition            influential characterization of visual processing in the cortex
+Theory (Desimone & Duncan, 1995), which focuses on the               on the division of labor between the two visual pathways
+effects that attending to an object’s location or features has       diverging after the initial parallel processing of visual input
+on neural recordings and brain network dynamics (Deco &              (Ungerleider & Haxby, 1994; Ungerleider & Pessoa, 2008).
+Zihl, 2001; Hamker, 2004; Reynolds & Heeger, 2009).
+Similarly, cognitive computational models of attention aim             In ATTNet, the initial stage is modeled by the
+to predict the selection and guidance of attention shifts to         convolutional layers of a Convolutional Neural Network
+behavioral goals using image-computable methods and                  (CNN) trained for object classification (Fig 1b, right)). CNN
+visually-complex inputs (Adeli, Vitu, & Zelinsky, 2017; Itti         architecture is itself brain-inspired, particularly the
+& Borji, 2015; Itti & Koch, 2000; Miconi, Groomes, &                 hierarchical architecture of the mammalian visual
+Kreiman, 2015; Tsotsos et al., 1995; Zelinsky, Adeli, Peng,          processing (Fukushima, 1980; LeCun et al., 1989). Given
+& Samaras, 2013). These neural and cognitive models of               the success of CNNs in pattern recognition, their brain-
+attention control are therefore engineered to fit (or predict)       inspired hierarchical architecture, and recent work showing
+behavior and/or neural data without addressing the more              the similarity between representations built across a CNN’s
+layers to those of brain areas in the ventral pathway (Cadieu    positioning of V4 between early visual and ventral (and
+et al., 2014; Cichy, Khosla, Pantazis, Torralba, & Oliva,        dorsal) processing makes it a key attention control structure,
+2016; Güçlü & van Gerven, 2015; Khaligh-Razavi &                 which is in line with the literature showing that effects of
+Kriegeskorte, 2014; Yamins et al., 2014), they are well          attention are most strongly observed in this area (Bichot,
+suited as models of representation learning in the visual        Rossi, & Desimone, 2005; Chelazzi, Miller, Duncan, &
+system. The input image will be fed into a commonly used         Desimone, 2001). Our premise is that the direction of
+image classification CNN, VGG16 (Simonyan &                      attention to a location in V4’s activation map determines
+Zisserman, 2014). The convolutional layers of this network       how information from visual inputs is routed to the IT
+grossly approximate visual processing in areas V1 to V4,         structures for the purpose of improving object classification
+with the output of the final convolutional layer being the V4    success. This selective routing is modeled as a 4*4 selection
+activation. As shown in figure 1b this output is a 14*14*512     window centered at the attended location (Fig. 1d; red
+pixel activation map, which codes the filter responses from      rectangle). ATTNet models IT processing using two
+each of 512 relatively high-level features over a coarse but     trainable fully-connected layers, with the output feeding into
+spatially-organized 14*14 pixel map of visual space. This is     a prefrontal layer that eventually makes the decision on
+assumed to be the rich bottom-up representation of a visual      whether the target object was present or absent.
+input that is produced by parallel early visual processing.        The dorsal “where” pathway extends dorsally from early
+  The ventral “what” pathway, long assumed to endow              visual processing into Posterior Parietal Cortex (PPC), long
+primates with their ability to recognize objects and scenes      believed to be responsible for the spatial prioritization of
+(Felleman & Van Essen, 1991; Ungerleider & Haxby,                visual inputs and the guidance of actions to objects (Bisley
+1994), extends temporally , from early visual areas, to          & Goldberg, 2010; Ptak, 2012; Szczepanski, Pinsk,
+Posterior inferotemporal (PIT) and then Anterior                 Douglas, Kastner, & Saalmann, 2013). ATTNet’s dorsal
+inferotemporal (AIT) cortex (IT). Under ATTNet,                  network serves the same function; it spatially prioritizes and
+
+
+
+
+      Figure 1. (a) Behavioral experiment procedure. (b) Anatomy of ATTNet. (c) ATTNet’s PPC. (d) Routing
+   windows. (e) ATTNet’s eye-movements on two sample search displays with the corresponding dorsal priority and
+   fixation density maps. (f) Guidance to the target quantified as the proportion of trials where target was fixated at
+   each eye-movement.
+selects visual inputs for selective routing through the ventral                           Discussion
+pathway, thereby imposing seriality on behavior requiring
+confident classification decisions. Dorsal processing is             Understanding computational principles of selective
+modeled using two PPC layers (Fig. 1b). PPC1 takes input          attention is key to understanding brain function and building
+from a wide-angle window of the V4 activation map (Fig.           brain-inspired     AI    systems      (Hassabis,   Kumaran,
+1d, green box), which has coarse retinotopy, and learns to        Summerfield, & Botvinick, 2017; Lake, Ullman,
+weight the input to create a priority map indicating evidence     Tenenbaum, & Gershman, 2017; Marblestone, Wayne, &
+for the target category in the scene. PPC2 then combines          Kording, 2016). This work studies the computational benefit
+this priority map with another map holding the locations of       of attention as a dynamic selective routing of information
+all previously attended areas, and from this combined map         for performing a difficult visual search task.
+the most active location is selected and used to position the
+next ventral selective routing window. This cycle of                                     References
+prioritization and selection repeats 5 times, with PFC
+summing the 5 ventral outputs to make the target                  Adeli, H., Vitu, F., & Zelinsky, G. J. (2017). A model of the
+present/absent decision.                                                   superior colliculus predicts fixation locations
+                                                                           during scene viewing and visual search. Journal of
+  ATTNet was trained using policy gradient reinforcement                   Neuroscience, 37(6), 1453-1467.
+learning (Mnih et al., 2014; Williams, 1992) to respond           Bichot, N. P., Rossi, A. F., & Desimone, R. (2005). Parallel
+target present or target absent for a microwave target                     and serial neural mechanisms for visual search in
+(category selected to have minimal center bias in the test                 macaque area V4. Science, 308(5721), 529-534.
+set) in 2000 kitchen scenes (half target present) from COCO       Bisley, J. W., & Goldberg, M. E. (2010). Attention,
+(Lin et al., 2014). A behavioral ground truth was obtained                 intention, and priority in the parietal lobe. Annual
+by having 30 subjects perform present/absent categorical                   review of neuroscience, 33, 1.
+search for a microwave target (Fig. 1a) in 80 images, also        Cadieu, C. F., Hong, H., Yamins, D. L., Pinto, N., Ardila,
+from COCO but a disjoint set from those used during                        D., Solomon, E. A., . . . DiCarlo, J. J. (2014). Deep
+training.                                                                  neural networks rival the representation of primate
+                          Results                                          IT cortex for core visual object recognition. PLoS
+                                                                           Comput Biol, 10(12), e1003963.
+Figure 1e shows the process of prioritization-selection-          Chelazzi, L., Miller, E. K., Duncan, J., & Desimone, R.
+routing-classification. Like subjects, ATTNet started each                 (2001). Responses of neurons in macaque area V4
+trial fixating at the center of the scene. The information                 during memory-guided visual search. Cerebral
+from this area is routed along the ventral and dorsal                      cortex, 11(8), 761-772.
+pathways (the boxes show the visual areas that are routed         Cichy, R. M., Khosla, A., Pantazis, D., Torralba, A., &
+ventrally). The priority map generated in the dorsal pathway               Oliva, A. (2016). Deep neural networks predict
+guides attention to a new location and the process repeats.                hierarchical spatio-temporal cortical dynamics of
+The model is only trained on the overall target present and                human visual object recognition. arXiv preprint
+target absent judgment without prior knowledge on the                      arXiv:1601.02970.
+target object category. But over the course of the training       Deco, G., & Zihl, J. (2001). Top-down selective visual
+the model detects that certain patterns are rewarding and                  attention: A neurodynamical approach. Visual
+attends to these patterns to be able to make a more informed               Cognition, 8(1), 118-139.
+decision. Left column shows the priority map that is              Desimone, R., & Duncan, J. (1995). Neural mechanisms of
+generated at the initial fixation in the dorsal pathway for the            selective visual attention. Annual review of
+two sample displays indicating that the model learns to bias               neuroscience, 18(1), 193-222.
+the visual space for visual input reflecting target-category.     Felleman, D. J., & Van Essen, D. C. (1991). Distributed
+The routing windows are colored based on the ventral                       hierarchical processing in the primate cerebral
+response from blue to green to red with warmer colors                      cortex. Cerebral cortex, 1(1), 1-47.
+showing more confidence in the routed pattern being the           Fukushima, K. (1980). Neocognitron: A self-organizing
+target. The right column on figure 1e shows the fixation                   neural network model for a mechanism of pattern
+density maps from the 30 subjects for comparison to the                    recognition unaffected by shift in position.
+priority map.                                                              Biological cybernetics, 36(4), 193-202.
+                                                                  Gottlieb, J., Hayhoe, M., Hikosaka, O., & Rangel, A.
+  To quantify ATTNet’s attention being preferentially                      (2014). Attention, reward, and information seeking.
+guided to the target, we plot the proportion of trials where               Journal of Neuroscience, 34(46), 15497-15504.
+the target was first fixated at each eye-movement for             Gottlieb, J., Oudeyer, P.-Y., Lopes, M., & Baranes, A.
+ATTNet (red) and individual subjects (cyan) in figure 1f. As               (2013). Information-seeking, curiosity, and
+shown in this plot, while not as strong as the subjects,                   attention: computational and neural mechanisms.
+ATTNet shows guidance to the target by preferentially                      Trends in cognitive sciences, 17(11), 585-593.
+fixating the target in earlier eye-movements.
+Güçlü, U., & van Gerven, M. A. (2015). Deep neural                 Simonyan, K., & Zisserman, A. (2014). Very deep
+           networks reveal a gradient in the complexity of                  convolutional networks for large-scale image
+           neural representations across the ventral stream.                recognition. arXiv preprint arXiv:1409.1556.
+           The Journal of Neuroscience, 35(27), 10005-             Szczepanski, S. M., Pinsk, M. A., Douglas, M. M., Kastner,
+           10014.                                                           S., & Saalmann, Y. B. (2013). Functional and
+Hamker, F. H. (2004). A dynamic model of how feature                        structural architecture of the human dorsal
+           cues guide spatial attention. Vision research, 44(5),            frontoparietal attention network. Proceedings of
+           501-521.                                                         the National Academy of Sciences, 110(39), 15806-
+Hassabis, D., Kumaran, D., Summerfield, C., & Botvinick,                    15811.
+           M. (2017). Neuroscience-inspired artificial             Tatler, B. W., Hayhoe, M. M., Land, M. F., & Ballard, D.
+           intelligence. Neuron, 95(2), 245-258.                            H. (2011). Eye guidance in natural vision:
+Hayhoe, M., & Ballard, D. (2014). Modeling task control of                  Reinterpreting salience. Journal of vision, 11(5), 5-
+           eye movements. Current Biology, 24(13), R622-                    5.
+           R628.                                                   Tsotsos, J., Culhane, S. M., Wai, W. Y. K., Lai, Y., Davis,
+Itti, L., & Borji, A. (2015). Computational models: Bottom-                 N., & Nuflo, F. (1995). Modeling visual attention
+           up and top-down aspects. arXiv preprint                          via selective tuning. Artificial intelligence, 78(1),
+           arXiv:1510.07748.                                                507-545.
+Itti, L., & Koch, C. (2000). A saliency-based search               Ungerleider, L. G., & Haxby, J. V. (1994). ‘What’and
+           mechanism for overt and covert shifts of visual                  ‘where’in the human brain. Current opinion in
+           attention. Vision research, 40(10), 1489-1506.                   neurobiology, 4(2), 157-165.
+Khaligh-Razavi, S.-M., & Kriegeskorte, N. (2014). Deep             Ungerleider, L. G., & Pessoa, L. (2008). What and where
+           supervised, but not unsupervised, models may                     pathways. Scholarpedia, 3(11), 5342.
+           explain IT cortical representation. PLoS Comput         Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones,
+           Biol, 10(11), e1003915.                                          L., Gomez, A. N., . . . Polosukhin, I. (2017).
+Lake, B. M., Ullman, T. D., Tenenbaum, J. B., &                             Attention is all you need. Paper presented at the
+           Gershman, S. J. (2017). Building machines that                   Advances in Neural Information Processing
+           learn and think like people. Behavioral and brain                Systems.
+           sciences, 40.                                           Wei, Z., Adeli, H., Zelinsky, G., Hoai, M., & Samaras, D.
+LeCun, Y., Boser, B., Denker, J. S., Henderson, D.,                         (2016). Learned Region Sparsity and Diversity
+           Howard, R. E., Hubbard, W., & Jackel, L. D.                      Also Predict Visual Attention. Paper presented at
+           (1989). Backpropagation applied to handwritten                   the NIPS.
+           zip code recognition. Neural computation, 1(4),         Williams, R. J. (1992). Simple statistical gradient-following
+           541-551.                                                         algorithms for connectionist reinforcement
+Lin, T.-Y., Maire, M., Belongie, S., Hays, J., Perona, P.,                  learning. Machine learning, 8(3-4), 229-256.
+           Ramanan, D., . . . Zitnick, C. L. (2014). Microsoft     Xu, K., Ba, J., Kiros, R., Cho, K., Courville, A.,
+           coco: Common objects in context. Paper presented                 Salakhutdinov, R., . . . Bengio, Y. (2015). Show,
+           at the European Conference on Computer Vision.                   attend and tell: Neural image caption generation
+Marblestone, A. H., Wayne, G., & Kording, K. P. (2016).                     with     visual     attention.     arXiv     preprint
+           Toward an integration of deep learning and                       arXiv:1502.03044, 2(3), 5.
+           neuroscience.      Frontiers    in    Computational     Yamins, D., Hong, H., Cadieu, C. F., Solomon, E. A.,
+           Neuroscience, 10, 94.                                            Seibert, D., & DiCarlo, J. J. (2014). Performance-
+Miconi, T., Groomes, L., & Kreiman, G. (2015). There's                      optimized hierarchical models predict neural
+           Waldo! A normalization model of visual search                    responses in higher visual cortex. Proceedings of
+           predicts single-trial human fixations in an object               the National Academy of Sciences, 111(23), 8619-
+           search task. Cerebral cortex, 26(7), 3064-3082.                  8624.
+Mnih, V., Heess, N., & Graves, A. (2014). Recurrent                Zelinsky, G. J., Adeli, H., Peng, Y., & Samaras, D. (2013).
+           models of visual attention. Paper presented at the               Modelling eye movements in a categorical search
+           Advances in Neural Information Processing                        task. Phil. Trans. R. Soc. B, 368(1628), 20130058.
+           Systems.
+Ptak, R. (2012). The frontoparietal attention network of the
+           human brain action, saliency, and a priority map of
+           the environment. The Neuroscientist, 18(5), 502-
+           515.
+Reynolds, J. H., & Heeger, D. J. (2009). The normalization
+           model of attention. Neuron, 61(2), 168-185.
+

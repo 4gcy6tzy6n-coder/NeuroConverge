@@ -1,0 +1,17 @@
+rank,claim_id,arxiv_id_version,title,primary_category,mechanism_family,published
+1,C003,2207.08533v2,BrainCog: A Spiking Neural Network based Brain-inspired Cognitive Intelligence Engine for Brain-inspired AI and Brain Simulation,cs.NE,attention/coding,2022-07-18
+2,C006,2508.18961v1,TaiBai: A fully programmable brain-inspired processor with topology-aware efficiency,cs.AR,neuromorphic hardware,2025-08-26
+3,C008,2412.08875v1,Brain-inspired AI Agent: The Way Towards AGI,cs.NE,architecture/connectome,2024-12-12
+4,C010,2107.14654v1,Brain-Inspired Deep Imitation Learning for Autonomous Driving Systems,cs.AI,attention/coding,2021-07-30
+5,C011,2401.15661v2,Brain-Inspired Physics-Informed Neural Networks: Bare-Minimum Neural Architectures for PDE Solvers,cs.CE,architecture/connectome,2024-01-28
+6,C016,2309.05263v1,Brain-inspired Evolutionary Architectures for Spiking Neural Networks,cs.NE,architecture/connectome,2023-09-11
+7,C018,2203.14679v1,Brain-inspired Multilayer Perceptron with Spiking Neurons,cs.CV,neuromorphic hardware,2022-03-28
+8,C021,2411.09953v2,Brain-inspired Action Generation with Spiking Transformer Diffusion Policy Model,cs.RO,neuromorphic hardware,2024-11-15
+9,C028,2601.15865v1,A Lightweight Brain-Inspired Machine Learning Framework for Coronary Angiography: Hybrid Neural Representation and Robust Learning Strategies,cs.CV,plasticity/learning rules,2026-01-22
+10,C032,2509.00047v1,Teaching AI to Remember: Insights from Brain-Inspired Replay in Continual Learning,cs.LG,memory,2025-08-24
+11,C036,1903.12517v1,Towards Brain-inspired System: Deep Recurrent Reinforcement Learning for Simulated Self-driving Agent,cs.AI,other,2019-03-29
+12,C043,2511.17687v2,Boosting Brain-inspired Path Integration Efficiency via Learning-based Replication of Continuous Attractor Neurodynamics,cs.LG,memory,2025-11-21
+13,C045,2305.11252v1,Brain-inspired learning in artificial neural networks: a review,cs.NE,plasticity/learning rules,2023-05-18
+14,C046,1711.10563v2,FearNet: Brain-Inspired Model for Incremental Learning,cs.LG,memory,2017-11-28
+15,C049,2311.15474v1,Demonstration of Programmable Brain-Inspired Optoelectronic Neuron in Photonic Spiking Neural Network with Neural Heterogeneity,eess.SY,plasticity/learning rules,2023-11-27
+16,C077,1811.09699v1,Learning to attend in a brain-inspired deep neural network,cs.CV,attention/coding,2018-11-23

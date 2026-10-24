@@ -1,0 +1,601 @@
+                                                                                                                                                                              1
+
+
+
+
+                                             Brain-inspired AI Agent: The Way Towards AGI
+                                                    Bo Yu, Jiangning Wei, Minzhen Hu, Zejie Han, Tianjian Zou, Ye He, Jun Liu, Member, IEEE,
+
+
+
+                                            Abstract—Artificial General Intelligence (AGI), widely re-       language models are widely considered a critical step toward
+                                         garded as the fundamental goal of artificial intelligence, rep-     the realization of AGI [15, 16].
+                                         resents the realization of cognitive capabilities that enable the      The concept of an AI agent, introduced in the 1980s,
+                                         handling of general tasks with human-like proficiency. Re-
+                                         searchers in brain-inspired AI seek inspiration from the oper-      refers to a framework within artificial intelligence designed
+                                         ational mechanisms of the human brain, aiming to replicate its      to exhibit intelligent behavior, defined by characteristics such
+                                         functional rules in intelligent models. Moreover, with the rapid    as autonomy, reactivity, pro-activeness, and social ability [17].
+
+
+
+
+arXiv:2412.08875v1 [cs.NE] 12 Dec 2024
+                                         development of large-scale models in recent years, the concept of   With the rapid advancements in deep learning and the emer-
+                                         agents has garnered increasing attention, with researchers widely   gence of large language models [18], agents have increasingly
+                                         recognizing it as a necessary pathway toward achieving AGI.
+                                         In this article, we propose the concept of a brain-inspired AI      been recognized as a pivotal area for the future trajectory
+                                         agent and analyze how to extract relatively feasible and agent-     of AI research. In recent years, the application of agents
+                                         compatible cortical region functionalities and their associated     has expanded significantly across diverse fields, including
+                                         functional connectivity networks from the complex mechanisms        autonomous driving [19, 20], game AI [21], autonomous
+                                         of the human brain. Implementing these structures within an         robotics [22, 23], and intelligent healthcare [24].
+                                         agent enables it to achieve basic cognitive intelligence akin
+                                         to human capabilities. Finally, we explore the limitations and         However, current agent architectures are still largely task-
+                                         challenges for realizing brain-inspired agents and discuss their    specific, with their workflows constructed based on the task
+                                         future development.                                                 characteristics and heavily reliant on the processing capa-
+                                           Index Terms—AGI, brain-inspired AI, agent.                        bilities of large language models (LLMs). There remains a
+                                                                                                             significant gap between the capabilities of these architectures
+                                                                                                             and the cognitive processing capabilities of the human brain.
+                                                               I. I NTRODUCTION                              Although some agent architectures have incorporated elements
+                                                GI refers to creating (semi-)autonomous and adaptive         that mimic brain structures to some extent, such as the Talker-
+                                         A      computer systems with the general cognitive capabilities
+                                         typical for humans, including the ability to support abstraction,
+                                                                                                             Reasoner dual-system architecture proposed in [25], which
+                                                                                                             simulates the brain’s fast and slow thinking systems, or the
+                                         analogy, planning and problem-solving [1]. The concept of           integration of Theory of Mind (ToM) into Spiking Neural Net-
+                                         artificial intelligence dates back to the 1950s, when the term      works (SNNs) as seen in [26], aimed at enhancing decision-
+                                         “artificial intelligence” was introduced during the 1956 Dart-      making capabilities of multi-agent systems in both cooperative
+                                         mouth Summer Research Project [2]. Since then, researchers          and competitive scenarios, notable limitations still persist.
+                                         have persistently explored the feasibility of achieving AGI [3–        While agent-based AI has made significant progress, brain-
+                                         5], despite numerous failed attempts. Over time, the increasing     inspired AI has also advanced considerably. Recent studies
+                                         complexity of AGI led to a shift during the 1970s and 1980s         have shown a strong similarity between Artificial Neural
+                                         from general-purpose intelligent systems to domain-specific         Networks (ANNs) and Biological Neural Networks (BNNs)
+                                         problem-solving approaches. The introduction of the back-           [27–31], prompting many researchers to devote to this field.
+                                         propagation algorithm [6] in the 1980s provided the foundation      For example, [32] was one of the first to propose using brain
+                                         for modern deep learning networks, such as Convolutional            regions as model nodes with simple connection rules. The BI-
+                                         Neural Networks (CNNs) [7] and Recurrent Neural Networks            AVAN network in [33] mimics the human visual system’s bias
+                                         (RNNs) [8]. The Transformer model, which leverages self-            competition process to decode visual attention. Additionally,
+                                         attention mechanisms, has become the foundation of a number         Spiking Neural Networks (SNNs) [34] have been used to
+                                         of state-of-the-art artificial neural networks, such as BERT [9]    model neuronal behavior in the brain, effectively bridging
+                                         and GPT [10]. The emergence of these models signifies the           the gap between brain-inspired AI and brain simulation [35].
+                                         explosive growth of modern artificial intelligence.                 Despite significant advancements in both agent-based AI and
+                                            To date, the artificial intelligence systems discussed above     brain-inspired AI fields, research has yet to focus on the design
+                                         remain within the domain of special purpose AI. In fact,            of agent architectures derived from brain-inspired structures.
+                                         research of general-purpose artificial intelligence systems,           Based on the aforementioned discussion, we propose that
+                                         considered the ultimate goal of AI, was revitalized at the          brain-inspired agent architecture offers a promising pathway
+                                         turn of the 21st century and has become a central theme in          toward realizing AGI. The perception-planning-decision-action
+                                         scholarly discourse [11–13]. The concept of AGI was further         (PPDA) model in agent architectures is typically interpreted
+                                         developed in 2007 by Ben Goertzel in his book [14], which           in terms of human cognitive and behavioral patterns. Al-
+                                         has since garnered significant attention. Recent breakthroughs      though significant progress has been made, this model and
+                                         in deep learning, particularly with the advent of large language    its extensions remain at a macro level of mimicking human
+                                         models, have reignited interest in AGI, with these models           cognition, without delving into the actual mechanisms of brain
+                                         being regarded as sparks to AGI. Architectures based on large       function. In fact, the human brain is an extraordinarily intricate
+                                                                                                                                   2
+
+
+
+structure, and its complex neural systems and brain region         contribute to AGI. While the human brain, as the most intricate
+functional connectivity remain incompletely explored [36, 37].     structure known, cannot be fully replicated in artificial in-
+Although we cannot directly model the neural circuits, we          telligence, ongoing research and technological advancements,
+can shift our focus to the mesoscale cortical networks. In this    particularly the emergence of large language models, have
+architecture, we view different brain cortical areas as func-      renewed our hope of achieving general functionality in AI
+tional modules of the brain-inspired agent, with each module       by progressively approximating the brain’s architecture. The
+responsible for one or more tasks. Different functional mod-       proposed agent architecture offers a promising framework for
+ules cooperate to accomplish specific tasks, which researchers     this endeavor, bringing us closer to the realization of AGI with
+often associate with the small-world property of the brain [38].   cognitive abilities comparable to, or even surpassing, those of
+These functional modules, determined by task complexity and        humans. Chapter II will discuss research related to the human
+specific functional requirements, could be implemented using       brain; Chapter III will systematically analyze the development
+large language models (LLMs) or other appropriate tools. For       of agent architectures and their relationship to brain functions,
+instance, the V1 cortical area in the human brain is responsible   validating the feasibility of our approach; Chapter IV will
+for primary extraction of complex visual features, which can       address the limitations of the current method and propose
+be implemented using CNN or YOLO [39]; another example             directions for future research.
+is the FPC region in the prefrontal cortex, one of the most
+complex areas in the human brain, responsible for higher-order                               II. B RAIN
+cognitive functions, which we seek to emulate using LLMs.             The brain, one of the most complex systems known, is
+Additionally, the entire prefrontal cortex, as a large cortical    responsible for regulating the body’s physiological, cognitive,
+area in the human brain, would be controlled by a core module      and behavioral functions. It processes sensory information,
+and interact with other large cortical regions.                    executes motor commands, supports higher cognitive functions
+   Simultaneously, the agent can replicate the brain’s pro-        like thought, decision-making, and memory, and controls the
+cess of extracting various types of information, with distinct     body’s fundamental physiological processes. As the core of
+cortical regions responsible for processing modality-specific      the central nervous system, the brain consists of multiple
+features, such as visual, auditory, and olfactory, rather than     hierarchical structures. From a macroscopic perspective, it
+being restricted to a single feature input. Upon entering the      includes various components such as the cerebral hemispheres,
+system, the information undergoes feature extraction in the        cerebellum, and brainstem. On the microscopic level, the
+relevant functional modules and is stored in the associated        brain comprises over 86 billion neurons [41], each capable
+memory modules. Only when the brain region responsible             of forming up to 10,000 synapses with other neurons [42],
+for execution issues a command will the information be             resulting in a remarkably intricate network of connections that
+transmitted from the memory module to the designated brain         facilitates the emergence of intelligence. As a highly hierar-
+region for analysis.                                               chical structure, the brain is challenging to be modeled solely
+   In the previous section, we discussed the functional imple-     from either macroscopic or microscopic perspectives. In fact,
+mentation of brain-inspired agents. Another important aspect       at the mesoscale level of the human brain, different cortical
+is how we reference the brain’s cortical region connectivity       regions are functionally independent but interconnected, with
+mechanism, activating different regions and connection path-       highly efficient functional connectivity mechanisms [43, 44].
+ways for different types of tasks. According to [40], brain re-    However, owing to the complexity of the brain’s structural
+gion connections are generally categorized into structural con-    organization, studying the distribution of cortical regions has
+nectivity and functional connectivity. Our connectivity design     been a key focus of biological research [40, 45, 46].
+primarily follows the functional connectivity model, which
+supports parallel task processing and cross-region information
+integration. In this connectivity model, the roles of different    A. Brain Cortex
+brain regions are clearly defined, the task execution sequence        The cerebral cortex, the outermost structure of the brain,
+is explicit, and parallel task execution is possible. First, we    is divided into two hemispheres, each containing four pri-
+simplify the complex functional connectivity of the human          mary functional areas: the frontal lobe, parietal lobe, occipital
+brain into regional connections between cortical areas. Each       lobe, and temporal lobe. Each area is responsible for distinct
+large cortical region contains multiple smaller cortical areas,    functions and collaborates with others. The regions within
+with a core module responsible for their functional realization    each lobe can be further subdivided into smaller cortical
+and interaction. The interactions between cortical regions         areas, with a core module responsible for controlling the
+facilitate the activation of distinct pathways corresponding to    functions of the lobe and managing interactions with other
+specific functional requirements. We argue that this brain-        lobes. Taking the frontal lobe as an example, the prefrontal
+inspired connectivity mechanism has the potential to enable        cortex (PFC), as its core module, is responsible for decision-
+the agent to attain a level of intelligence that approximates      making, regulating planning, execution, and task management
+human cognitive capabilities.                                      [47]. The parietal lobe is responsible for processing sensory
+   In summary, the widespread implementation of agent archi-       information (e.g., touch and spatial orientation) related to the
+tectures marks a significant step forward in the pursuit of AGI.   body. The superior parietal lobule and inferior parietal lobule
+Inspired by the human brain, we propose a brain-inspired agent     serve as its core control modules, with the prefrontal cortex
+architecture designed to maximize the potential of agents and      (PFC) integrating this sensory information through interaction
+                                                                                                                                   3
+
+
+
+with them to guide complex motor behaviors or decisions             framework for the brain’s network operations. Functional
+[48]. The interaction between the frontal and occipital lobes       connectivity refers to the activation of brain cortical regions
+is related to visual perception and cognition, with visual input    under different functions, with these typical functional network
+processed through the primary visual cortex, while the PFC          pathways playing a crucial role in the brain’s cognitive func-
+helps formulate action decisions [49]. The connection between       tions and being widely studied [53–55]. The most well-known
+the frontal and temporal lobes plays a vital role for memory        is the Default Mode Network (DMN), which is typically
+processing, particularly for language, facial recognition, and      activated during rest, reflection, or memory processing. It
+the retrieval of long-term memories. In addition, the PFC           primarily includes regions such as the medial prefrontal cortex,
+itself can be divided into multiple core modules, including         posterior cingulate cortex, hippocampus, and inferior temporal
+the Dorsolateral Prefrontal Cortex (DLPFC), Ventromedial            cortex. Another key network is the Executive Control Network
+Prefrontal Cortex (VMPFC), and Anterior Cingulate Cortex            (ECN), which is responsible for higher-order cognitive tasks
+(ACC), with each module further subdivided into different           such as working memory, decision-making, problem-solving,
+functions [50], such as cognitive flexibility, risk assessment,     and planning. Other important functional networks include the
+and emotional regulation.                                           emotion regulation network, auditory-visual network, motor
+                                                                    network, language network, and self-related network.
+B. Frameworks of Cerebral Cortex Division                              Based on the aforementioned cortical division methods and
+   1) Brodmann Areas Framework: Brodmann Areas, pro-                functional connectivity mechanisms, we can selectively model
+posed by German neuroanatomist Korbinian Brodmann in                the mesoscale operational mechanisms of the brain into the
+1909, categorized different regions of the cerebral cortex          agent architecture. Different cortical regions of the brain are
+based on structural differences, particularly the arrangement of    designed as functional modules based on their functional prop-
+cellular layers [45]. Brodmann divided the cerebral cortex into     erties, each implementing specific functions. Upon receiving
+52 regions based on its microscopic anatomical features. Each       corresponding task instructions, key functional connectivity
+area is assigned a number based on its morphological and func-      mechanisms and their associated functional modules will be
+tional characteristics, providing a framework for identifying       activated. The goal is to construct a brain-inspired agent
+specific brain regions. A key feature of the Brodmann Areas         architecture and validate whether this structure can perform
+is that different regions typically perform different functions,    well on general cognitive tasks.
+although some of these functions may be revised as research
+progresses. Although the Brodmann Areas were not defined                          III. B RAIN - INSPIRED AI AGENT
+using modern neuroimaging techniques (such as fMRI), they              Agent is considered a pivotal step towards AGI, and the
+provide an important theoretical framework for understanding        rapid development of large language models in recent years
+the functional organization of the brain.                           has drawn significant attention to Agent. However, a unified
+   2) Human Connectome Project Framework: Human Con-                agent architecture has not yet been well studied and estab-
+nectome Project (HCP), proposed by Van Essen et al. in              lished, and current agent structures and workflows are tailored
+2012, used multimodal magnetic resonance images from the            to specific target tasks, resulting in a lack of flexibility and
+Human Connectome Project and combined an objective semi-            generality. Therefore, we aim to define a brain-inspired Agent
+automated neuroanatomical approach to delineate 180 regions         structure based on the functional partitioning and connectivity
+per hemisphere in the precisely aligned group average of 210        networks of mesoscale cortical regions. This structure incor-
+healthy young adults. These regions are defined by sharp            porates other fundamental brain functions and corresponding
+changes in cortical architecture, function, connectivity, and       functional connectivity networks to the classic Perception-
+topography. The method characterizes 97 new regions and             Planning-Action framework [56], as illustrated in Figure 1.
+83 previously reported regions identified using post-mortem         In Chapter III-A , we will describe in detail how our brain-
+microscopy or other specialized study-specific approaches,          inspired structure is defined. Additionally, in Chapter III-B,
+resulting in the final delineation of 180 regions. By inte-         we will analyze existing Agent architectures and compare
+grating multimodal MRI techniques with a semi-automated             the differences between current Agent models and the brain-
+neuroanatomical approach, HCP provides a new perspective            inspired structure.
+on the parcellation of the brain cortex and offers important
+foundational data for understanding the brain’s complexity and
+functional networks.                                                A. Brain-inspired AI Agent
+   3) Brain Cortical Region Connectivity Mechanism Frame-              The brain-inspired AI agent, as an agent model based on
+work: The network connectivity mechanisms between cortical          the structure of the brain’s cortex, moves away from the
+areas of the brain can be divided into structural connectivity      traditional concept of using large language models (LLM) as
+and functional connectivity [51]. Structural connectivity is        the brain of the agent, treating the agent as a machine-like
+established through anatomical neural fiber bundles (e.g.,          intelligence. Instead, it is conceptualized as a brain-inspired
+white matter tracts), which connect the brain regions via           intelligent entity capable of managing a broad spectrum of
+axons. These connections are static, remaining unchanged            general tasks. Its capabilities include, but are not limited
+with fluctuations in brain activity. Major structural connections   to, perception, planning, decision-making, action, memory,
+include local circuits, long-range fiber pathways, and cortico-     reflection, optimization, emotion, language, and other common
+cortical axonal pathways [52], which establish the fundamental      brain functions. These capabilities represent the human-like
+                                                                                                                                                                                                                                4
+
+
+
+            TABLE I: Summary of Cortical Area Nodes and Functional Connectivity Networks for Brain-Like Functions.
+ Agent Functional Module                 Corresponding Core Cortical Area                                  Main Function                                            Corresponding Cortical Network
+ Perception                      Primary Visual Cortex, Primary Auditory Cortex                     Visual and Auditory Perception             Visual Input-Visual Cortex Network, Auditory Input-Auditory Cortex Network
+ Planning                                         Prefrontal Cortex                            High-level Cognitive Functions, Planning     Prefrontal Cortex-Motor Cortex Network, Prefrontal Cortex-Parietal Cortex Network
+ Decision-making                           Dorsolateral Prefrontal Cortex                       Logical Reasoning, Decision Execution        Anterior Cingulate Cortex-Dorsolateral Prefrontal Cortex-Parietal Cortex Network
+ Action                                        Primary Motor Cortex                            Motor Planning, Motor Execution Motor                                       Cortex-Motor Network
+ Memory                                   Hippocampus, Prefrontal Cortex                      Memory Retrieval, Memory Transformation       Hippocampus-Neocortex Pathway, Prefrontal Cortex-Hippocampus-Parietal Pathway
+ Reasoning                 Dorsolateral Prefrontal Cortex, Ventromedial Prefrontal Cortex        Logical Reasoning, Causal Analysis             Prefrontal Cortex-Parietal Pathway, Prefrontal Cortex-Hippocampus Pathway
+ Reflection                                   Medial Prefrontal Cortex                            Self-reflection, Emotion Regulation                                 Default Mode Network Pathway
+ Optimization                              Dorsolateral Prefrontal Cortex                        Cognitive Control, Task Optimization                            Frontal Cortex-Lateral Prefrontal Pathway
+ Emotion                                Amygdala, Anterior Cingulate Cortex                   Emotion Recognition, Emotion Regulation     Amygdala-VMPFC-Anterior Cingulate Cortex Pathway, Amygdala-Hippocampus Pathway
+ Language                                  Broca’s Area, Wernicke’s Area                    Language Production, Language Comprehension           Language Network (Arcuate Fasciculus) (Broca’s Area-Wernicke’s Area)
+
+
+
+
+                                                                                                                   capability modules depending on specific tasks, indicating that
+                                                                                                                   researchers consistently acknowledge the necessity of brain-
+                                                                                                                   inspired capabilities to augment agent performance beyond
+                                                                                                                   that achievable by LLMs alone. This approach yields signif-
+                                                                                                                   icant results in handling specialized tasks but remains insuf-
+                                                                                                                   ficient for advancing general artificial intelligence. Therefore,
+                                                                                                                   it is crucial to explore and implement an agent architecture
+                                                                                                                   with general brain-like functions. Additionally, we abandon
+                                                                                                                   the traditional task-oriented workflow approach and instead
+                                                                                                                   design the agent’s workflow based on the brain’s functional
+                                                                                                                   connectivity mechanisms. We posit that these advancements
+                                                                                                                   will establish a robust foundation for achieving AGI.
+
+                                                                                                                                      IV. D ISCUSSION AND F UTURE W ORK
+                                                                                                                      In this paper, we designed a brain-inspired agent architec-
+         Fig. 1: Schematic Diagram of Brain Regions in a                                                           ture and proposed the concept of a general-purpose artificial
+                      Brain-Inspired Agent.                                                                        intelligence agent by emulating the structure of the human
+                                                                                                                   brain, while exploring its feasibility. However, significant
+                                                                                                                   limitations and challenges remain before realizing a brain-
+intelligence features that current agents aim to achieve. Based                                                    inspired agent capable of human-level intelligence, including:
+on the above functions, we identified the main cortical areas
+                                                                                                                      1) Limited Understanding of the Human Brain: Despite
+of the brain associated with these functions as functional
+                                                                                                                   notable progress in neuroscience and brain-inspired intelli-
+nodes within the brain-inspired agent. Additionally, we sim-
+                                                                                                                   gence, achieving a comprehensive understanding of the hu-
+plified the corresponding functional connectivity networks,
+                                                                                                                   man brain and replicating its intelligent functions within AI
+restricting interactions solely to the existing functional nodes.
+                                                                                                                   continues to be a formidable challenge for researchers.
+Each functional node is configured as one or more functional
+                                                                                                                      2) Insufficient Definition of Brain-Inspired Architecture:
+modules for its primary function and external interactions. For
+                                                                                                                   Our research primarily focuses on mesoscale cortical regions
+example, the primary visual cortex is set as a Visual Language
+                                                                                                                   and their associated connectivity networks, with limited at-
+Model (VLM) along with other object detection models to
+                                                                                                                   tention to subcortical areas and more fine-grained neural
+extract sufficient visual information for subsequent analysis.
+                                                                                                                   connections. We believe that these regions, along with their
+Table I summarizes the corresponding cortical area nodes and
+                                                                                                                   corresponding functional connectivity networks, are also cru-
+functional connectivity networks for each brain-like function.
+                                                                                                                   cial for achieving brain-inspired intelligence.
+Furthermore, we set an activation state for each functional
+                                                                                                                      3) Computational Resource Consumption: Brain-inspired
+node at every moment. This state depends on whether the node
+                                                                                                                   agents will inevitably require significant computational re-
+is currently involved in processing tasks within the relevant
+                                                                                                                   sources. Therefore, how to allocate these resources efficiently
+functional connectivity network.
+                                                                                                                   poses an unavoidable challenge for our work.
+                                                                                                                      4) Framework Integration: Integrating numerous func-
+B. Survey of Current Agent Architectures                                                                           tional nodes and connectivity networks poses another critical
+   We have summarized and reviewed some of the agent ar-                                                           challenge. We aim to transcend existing integrated frameworks
+chitectures emerging in the past two years and discussed their                                                     by developing a novel, specialized framework designed specif-
+relationship with brain-inspired structures, including but not                                                     ically for brain-inspired agents.
+limited to embodied agents, virtual world scene agents, log-                                                          The future of brain-inspired agents is promising, with the
+ical innovation agents, web indexing agents, and multimodal                                                        potential for rapid growth, similar to the recent rise of large
+agents. Table II primarily focuses on LLM-based single-agent                                                       language models (LLMs). It is foreseeable that the era of
+architectures, which are of the same dimension as the brain-                                                       agents is approaching, making it timely to focus on agents
+inspired agent we propose. As illustrated in Table II, currently                                                   capable of closely approximating human-like intelligence.
+implemented agent architectures share similar brain-inspired                                                       Such agents will inject new energy and limitless possibilities
+structural ideas. Agents are equipped with different brain-like                                                    into numerous industries. The realization of brain-inspired
+                                                                                                                                                  5
+
+
+
+                 TABLE II: Focus on LLM-Based Single-Agent Architectures Aligned with Brain-Inspired Agents.
+ Agent                   Perception   Planning   Decision-making   Action   Memory   Reasoning   Reflection   Optimization   Emotion   Language
+ GEAP[57]                                ✓             ✓             ✓        ✓
+ WebShop[58]                 ✓           ✓             ✓             ✓                               ✓
+ AT-agent[59]                            ✓                                    ✓         ✓            ✓                                    ✓
+ LLift[60]                               ✓                                                                                                ✓
+ Intelligent-Agent[61]                   ✓                                                                                                ✓
+ ChemCrow[62]                ✓           ✓             ✓             ✓
+ ChatMOF[63]                 ✓           ✓             ✓
+ DEPS[64]                    ✓           ✓                           ✓                               ✓
+ Voyager[65]                             ✓                           ✓                               ✓
+ DECKARD [66]                ✓           ✓             ✓                      ✓                                                           ✓
+ Plan4MC[67]                 ✓           ✓             ✓
+ PET[68]                     ✓           ✓             ✓             ✓
+ WebAgent [69]                           ✓                           ✓                               ✓
+ InterAct[70]                            ✓                                                                                                ✓
+ WebGUM[71]                              ✓                                                           ✓
+ RCI-agent[72]               ✓                                                          ✓
+ Synapse[73]                             ✓             ✓                                             ✓
+ Mind2Web[74]                ✓           ✓             ✓             ✓                                                                    ✓
+ Agent-Pro[75]                           ✓             ✓                                                                                  ✓
+ Self-Contrast[76]                                     ✓             ✓        ✓                      ✓             ✓
+ UALA[77]                                                                                            ✓             ✓
+ OSWorld[78]                 ✓           ✓             ✓                                             ✓             ✓
+ RAG-agent[79]               ✓           ✓                           ✓                               ✓                                    ✓
+ Brain-inspired-agent        ✓           ✓             ✓             ✓        ✓         ✓            ✓             ✓           ✓          ✓
+
+
+
+agents will not only provide a new paradigm for achieving                        19-22, 1981. Amsterdam, Netherlands: North-Holland
+AGI, but also serve as a essential reference for addressing                      Publishing Company, 1982.
+various general intelligence tasks.                                          [6] Y. LeCun, B. Boser, J. S. Denker, D. Henderson, R. E.
+   Moreover, advancements in fundamental computer science                        Howard, W. Hubbard, and L. D. Jackel, “Backpropaga-
+algorithms and hardware capabilities will continue to sig-                       tion applied to handwritten zip code recognition,” Neural
+nificantly impact the development of artificial intelligence.                    Computation, vol. 1, no. 4, pp. 541–551, 1989.
+Technologies such as Retrieval-Augmented Generation (RAG)                    [7] A. Krizhevsky, I. Sutskever, and G. E. Hinton, “Imagenet
+[79], Reinforcement Learning [80], and Imitation Learning                        classification with deep convolutional neural networks,”
+[81] have also played an essential role in advancing AI.                         Commun. ACM, vol. 60, no. 6, p. 84–90, May 2017.
+   Ultimately, we will aim to refine the relevant components                     [Online]. Available: https://doi.org/10.1145/3065386
+of our work in the future to maximize the realization of brain-              [8] I. Sutskever, O. Vinyals, and Q. V. Le, “Sequence to
+inspired agent structures and meaningfully contribute to the                     sequence learning with neural networks,” in Advances
+achievement of AGI.                                                              in Neural Information Processing Systems (NeurIPS),
+                                                                                 vol. 27, 2014, pp. 3104–3112.
+                              R EFERENCES                                    [9] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova,
+                                                                                 “BERT: Pre-training of deep bidirectional transformers
+ [1] P. Voss and M. Jovanovic, “Why we don’t have agi
+                                                                                 for language understanding,” in Proceedings of the
+     yet,” 2023. [Online]. Available: https://arxiv.org/abs/
+                                                                                 2019 Conference of the North American Chapter of
+     2308.03598
+                                                                                 the Association for Computational Linguistics: Human
+ [2] J. McCarthy, M. Minsky, N. Rochester, and C. Shannon,
+                                                                                 Language Technologies, Volume 1 (Long and Short
+     “Proposal for the dartmouth summer research project
+                                                                                 Papers), J. Burstein, C. Doran, and T. Solorio, Eds.
+     on artificial intelligence,” Unpublished Manuscript,
+                                                                                 Minneapolis, Minnesota: Association for Computational
+     Dartmouth College Archives, Hanover, New Hampshire,
+                                                                                 Linguistics, Jun. 2019, pp. 4171–4186. [Online].
+     USA, 1956. [Online]. Available: https://en.wikipedia.
+                                                                                 Available: https://aclanthology.org/N19-1423
+     org/wiki/Dartmouth workshop
+                                                                            [10] A. Radford and K. Narasimhan, “Improving
+ [3] A. Roland and P. Shiman, Strategic Computing: DARPA
+                                                                                 language understanding by generative pre-training,”
+     and the Quest for Machine Intelligence. Cambridge,
+                                                                                 2018. [Online]. Available: https://api.semanticscholar.
+     MA, USA: MIT Press, 2002.
+                                                                                 org/CorpusID:49313245
+ [4] A. Newell and H. A. Simon, “Gps, a program that
+                                                                            [11] J.    Moor,     “The     dartmouth     college    artificial
+     simulates human thought,” in Computers and Thought,
+                                                                                 intelligence conference: The next fifty years,” AI
+     E. Feigenbaum and J. Feldman, Eds. New York, NY,
+                                                                                 Magazine, vol. 27, no. 4, pp. 87–91, 2006.
+     USA: McGraw-Hill, 1961, pp. 279–293.
+                                                                                 [Online]. Available: https://onlinelibrary.wiley.com/doi/
+ [5] T. Motooka, Ed., Fifth Generation Computer Systems:
+                                                                                 abs/10.1609/aimag.v27i4.1911
+     Proceedings of the International Conference on Fifth
+                                                                            [12] J. Hawkins and S. Blakeslee, On Intelligence. New
+     Generation Computer Systems, Tokyo, Japan, October
+                                                                                                                                6
+
+
+
+     York, NY, USA: Henry Holt and Co., 2004.                         pii/S0278612520301916
+[13] T. Everitt and M. Hutter, Universal Artificial              [25] K. Christakopoulou, S. Mourad, and M. Matarić,
+     Intelligence.    Cham: Springer International Pub-               “Agents thinking fast and slow: A talker-reasoner
+     lishing, 2018, pp. 15–46. [Online]. Available:                   architecture,” 2024. [Online]. Available: https://arxiv.
+     https://doi.org/10.1007/978-3-319-64816-3 2                      org/abs/2410.08328
+[14] B. Goertzel and P. Wang, Eds., Advances in Artificial       [26] Z. Zhao, F. Zhao, Y. Zhao, Y. Zeng, and Y. Sun, “A
+     General Intelligence: Concepts, Architectures and Algo-          brain-inspired theory of mind spiking neural network
+     rithms. Amsterdam, Netherlands: IOS Press, 2007.                 improves multi-agent cooperation and competition,”
+[15] M. Wooldridge and N. R. Jennings, “Intelligent agents:           Patterns, vol. 4, 2023. [Online]. Available: https:
+     theory and practice,” The Knowledge Engineering Re-              //api.semanticscholar.org/CorpusID:259256823
+     view, vol. 10, no. 2, p. 115–152, 1995.                     [27] M. T. C. Olmedo, M. Paegelow, J.-F. Mas, and
+[16] S. Bubeck, V. Chandrasekaran, R. Eldan, J. A.                    F. Escobar, “Geomatic approaches for modeling land
+     Gehrke, E. Horvitz, E. Kamar, P. Lee, Y. T. Lee,                 change scenarios,” Geomatic Approaches for Modeling
+     Y.-F. Li, S. M. Lundberg, H. Nori, H. Palangi,                   Land Change Scenarios, 2018. [Online]. Available:
+     M. T. Ribeiro, and Y. Zhang, “Sparks of artificial               https://api.semanticscholar.org/CorpusID:134145688
+     general intelligence: Early experiments with gpt-4,”        [28] Y. Chen, Y. Du, Z. Xiao, L. Zhao, L. Zhang, D. Liu,
+     ArXiv, vol. abs/2303.12712, 2023. [Online]. Available:           D. Zhu, T. Zhang, X. Hu, T. Liu, and X. Jiang,
+     https://api.semanticscholar.org/CorpusID:257663729               “A unified and biologically-plausible relational graph
+[17] R. Goodwin, “Formalizing properties of agents,” USA,             representation of vision transformers,” IEEE transactions
+     Tech. Rep., 1993.                                                on neural networks and learning systems, vol. PP,
+[18] A. Radford and K. Narasimhan, “Improving                         2022. [Online]. Available: https://api.semanticscholar.
+     language understanding by generative pre-training,”              org/CorpusID:249926529
+     2018. [Online]. Available: https://api.semanticscholar.     [29] L. Zhao, H. Dai, Z. Wu, Z. Xiao, L. Zhang, D. Liu,
+     org/CorpusID:49313245                                            X. Hu, X. Jiang, S. Li, D. Zhu, and T. Liu, “Coupling
+[19] M. Bojarski, D. W. del Testa, D. Dworakowski,                    visual semantics of artificial neural networks and human
+     B. Firner, B. Flepp, P. Goyal, L. D. Jackel, M. Monfort,         brain function via synchronized activations,” IEEE
+     U. Muller, J. Zhang, X. Zhang, J. Zhao, and                      Transactions on Cognitive and Developmental Systems,
+     K. Zieba, “End to end learning for self-driving cars,”           vol. 16, pp. 584–594, 2022. [Online]. Available:
+     ArXiv, vol. abs/1604.07316, 2016. [Online]. Available:           https://api.semanticscholar.org/CorpusID:249927004
+     https://api.semanticscholar.org/CorpusID:15780954           [30] X. Liu, M. Zhou, G. Shi, Y. Du, L. Zhao, Z. Wu, D. Liu,
+[20] B. R. Kiran, I. Sobh, V. Talpaert, P. Mannion, A. A. A.          T. Liu, and X. Hu, “Coupling artificial neurons in bert
+     Sallab, S. Yogamani, and P. Pérez, “Deep reinforcement          and biological neurons in the human brain,” Proceedings
+     learning for autonomous driving: A survey,” IEEE Trans-          of the AAAI Conference on Artificial Intelligence, vol. 37,
+     actions on Intelligent Transportation Systems, vol. 23,          no. 7, pp. 8888–8896, Jun. 2023. [Online]. Available:
+     no. 6, pp. 4909–4926, 2022.                                      https://ojs.aaai.org/index.php/AAAI/article/view/26068
+[21] D. Silver, A. Huang, C. J. Maddison, A. Guez, L. Sifre,     [31] J. You, J. Leskovec, K. He, and S. Xie, “Graph
+     G. van den Driessche, J. Schrittwieser, I. Antonoglou,           structure of neural networks,” in Proceedings of the
+     V. Panneershelvam, M. Lanctot, S. Dieleman, D. Grewe,            37th International Conference on Machine Learning,
+     J. Nham, N. Kalchbrenner, I. Sutskever, T. P. Lillicrap,         ser. Proceedings of Machine Learning Research, H. D.
+     M. Leach, K. Kavukcuoglu, T. Graepel, and D. Hassabis,           III and A. Singh, Eds., vol. 119. PMLR, 13–
+     “Mastering the game of go with deep neural networks              18 Jul 2020, pp. 10 881–10 891. [Online]. Available:
+     and tree search,” Nature, vol. 529, pp. 484–489,                 https://proceedings.mlr.press/v119/you20b.html
+     2016. [Online]. Available: https://api.semanticscholar.     [32] K. E. Joyce, P. J. Laurienti, and S. Hayasaka,
+     org/CorpusID:515925                                              “Complexity in a brain-inspired agent-based model,”
+[22] R. Stern, Multi-Agent Path Finding – An Overview.                Neural Networks, vol. 33, pp. 275–290, 2012. [Online].
+     Cham: Springer International Publishing, 2019, pp.               Available: https://www.sciencedirect.com/science/article/
+     96–115. [Online]. Available: https://doi.org/10.1007/            pii/S0893608012001578
+     978-3-030-33274-7 6                                         [33] H. Huang, L. Zhao, X. Hu, H. Dai, L. Zhang,
+[23] W. Zhao, J. P. Queralta, and T. Westerlund, “Sim-to-real         D. Zhu, and T. Liu, “Bi avan: Brain inspired adversarial
+     transfer in deep reinforcement learning for robotics: a          visual attention network,” ArXiv, vol. abs/2210.15790,
+     survey,” in 2020 IEEE Symposium Series on Computa-               2022. [Online]. Available: https://api.semanticscholar.
+     tional Intelligence (SSCI), 2020, pp. 737–744.                   org/CorpusID:253223845
+[24] Y. G. Kim, S. Lee, J. Son, H. Bae, and B. D.                [34] S. Ghosh-Dastidar and H. Adeli, “Spiking neural net-
+     Chung, “Multi-agent system and reinforcement learning            works,” International Journal of Neural Systems, vol. 19,
+     approach for distributed intelligence in a flexible              no. 4, pp. 295–308, August 2009.
+     smart manufacturing system,” Journal of Manufacturing       [35] Y. Zeng, D. Zhao, F. Zhao, G. Shen, Y. Dong, E. Lu,
+     Systems, vol. 57, pp. 440–450, 2020. [Online].                   Q. Zhang, Y. Sun, Q. Liang, Y. Zhao, Z. Zhao,
+     Available: https://www.sciencedirect.com/science/article/        H. Fang, Y. Wang, Y. Li, X. Liu, C. Du, Q. Kong,
+                                                                                                                              7
+
+
+
+     Z. Ruan, and W. Bi, “Braincog: A spiking neural                  536, pp. 171 – 178, 2016. [Online]. Available:
+     network based, brain-inspired cognitive intelligence             https://api.semanticscholar.org/CorpusID:205249949
+     engine for brain-inspired ai and brain simulation,”         [46] E. K. Miller and J. D. Cohen, “An integrative theory
+     Patterns, vol. 4, no. 8, p. 100789, 2023. [Online].              of prefrontal cortex function,” Annual Review of Neu-
+     Available: https://www.sciencedirect.com/science/article/        roscience, vol. 24, no. Volume 24, 2001, pp. 167–202,
+     pii/S2666389923001447                                            2001. [Online]. Available: https://www.annualreviews.
+[36] L. Zhao, L. Zhang, Z. Wu, Y. Chen, H. Dai, X. Yu,                org/content/journals/10.1146/annurev.neuro.24.1.167
+     Z. Liu, T. Zhang, X. Hu, X. Jiang, X. Li, D. Zhu,           [47] R. C. O’Reilly, S. A. Herd, and W. M. Pauli,
+     D. Shen, and T. Liu, “When brain-inspired ai meets agi,”         “Computational models of cognitive control,” Current
+     Meta-Radiology, vol. 1, no. 1, p. 100005, 2023. [Online].        Opinion in Neurobiology, vol. 20, no. 2, pp.
+     Available: https://www.sciencedirect.com/science/article/        257–261, 2010, cognitive neuroscience. [Online].
+     pii/S295016282300005X                                            Available: https://www.sciencedirect.com/science/article/
+[37] B. C. M. van Wijk, C. J. Stam, and A. Daffertshofer,             pii/S0959438810000097
+     “Comparing brain networks of different size and             [48] J. M. Fuster, “Frontal lobe and cognitive development,”
+     connectivity density using graph theory,” PLOS ONE,              Brain Research Bulletin, vol. 57, no. 5, pp. 367–370,
+     vol. 5, no. 10, pp. 1–13, 10 2010. [Online]. Available:          March 2002.
+     https://doi.org/10.1371/journal.pone.0013701                [49] P. S. Goldman-Rakic, “Circuitry of primate prefrontal
+[38] X. Liao, A. V. Vasilakos, and Y. He, “Small-                     cortex and regulation of behavior by representational
+     world human brain networks: Perspectives and                     memory,” in Handbook of Physiology: The Nervous
+     challenges,” Neuroscience & Biobehavioral Reviews,               System: Higher Functions of the Brain, F. Plum, Ed.
+     vol. 77, pp. 286–300, 2017. [Online]. Available:                 Bethesda, MD, USA: American Physiological Society,
+     https://api.semanticscholar.org/CorpusID:13001431                1987, vol. V, pp. 373–417.
+[39] J. Redmon, S. Divvala, R. Girshick, and A. Farhadi, “You    [50] T. E. Behrens and O. Sporns, “Human connectomics,”
+     only look once: Unified, real-time object detection,”            Current Opinion in Neurobiology, vol. 22, no. 1,
+     2016. [Online]. Available: https://arxiv.org/abs/1506.           pp. 144–153, 2012, neurotechnology. [Online].
+     02640                                                            Available: https://www.sciencedirect.com/science/article/
+[40] L. Fan, H. Li, J. Zhuo, Y. Zhang, J. Wang, L. Chen,              pii/S0959438811001449
+     Z. Yang, C. Chu, S. Xie, A. R. Laird, P. T.                 [51] P. Hagmann, L. Cammoun, X. Gigandet, R. Meuli,
+     Fox, S. B. Eickhoff, C. Yu, and T. Jiang, “The                   C. J. Honey, V. J. Wedeen, and O. Sporns, “Mapping
+     human brainnetome atlas: A new brain atlas based on              the structural core of human cerebral cortex,” PLOS
+     connectional architecture,” Cerebral Cortex (New York,           Biology, vol. 6, no. 7, pp. 1–15, 07 2008. [Online].
+     NY), vol. 26, pp. 3508 – 3526, 2016. [Online]. Available:        Available: https://doi.org/10.1371/journal.pbio.0060159
+     https://api.semanticscholar.org/CorpusID:21767790           [52] R. Buckner, J. Andrews-Hanna, and D. Schacter,
+[41] J. Zhang, “Basic neural units of the brain:                      “The brain’s default network: Anatomy, function, and
+     Neurons, synapses and action potential,” arXiv:                  relevance to disease,” Annals of the New York Academy of
+     Neurons and Cognition, 2019. [Online]. Available:                Sciences, no. 1124, pp. 1–38, 2008. [Online]. Available:
+     https://api.semanticscholar.org/CorpusID:174799219               http://www.nyas.org/Publications/Annals/Default.aspx
+[42] E. T. Bullmore and O. Sporns, “Complex brain                [53] W. W. Seeley, R. K. Crawford, J. Zhou, B. L.
+     networks: graph theoretical analysis of structural and           Miller, and M. D. Greicius, “Neurodegenerative
+     functional systems,” Nature Reviews Neuroscience,                diseases target large-scale human brain networks,”
+     vol. 10, pp. 186–198, 2009. [Online]. Available:                 Neuron, vol. 62, no. 1, pp. 42–52, 2009. [Online].
+     https://api.semanticscholar.org/CorpusID:205504722               Available: https://www.sciencedirect.com/science/article/
+[43] M. D. Fox, A. Z. Snyder, J. L. Vincent, M. Corbetta,             pii/S0896627309002499
+     D. C. V. Essen, and M. E. Raichle, “The human brain         [54] S. M. Smith, P. T. Fox, K. L. Miller, D. C. Glahn, P. M.
+     is intrinsically organized into dynamic, anticorrelated          Fox, C. E. Mackay, N. Filippini, K. E. Watkins, R. Toro,
+     functional networks.” Proceedings of the National                A. R. Laird, and C. F. Beckmann, “Correspondence of
+     Academy of Sciences of the United States of America,             the brain’s functional architecture during activation and
+     vol. 102 27, pp. 9673–8, 2005. [Online]. Available:              rest,” Proceedings of the National Academy of Sciences
+     https://api.semanticscholar.org/CorpusID:512175                  of the United States of America, vol. 106, no. 31,
+[44] K. Brodmann, “Vergleichende lokalisationslehre der               p. 13040—13045, August 2009. [Online]. Available:
+     großhirnrinde : in ihren prinzipien dargestellt auf              https://europepmc.org/articles/PMC2722273
+     grund des zellenbaues,” 1985. [Online]. Available:          [55] S. Russell and P. Norvig, Artificial Intelligence: A Mod-
+     https://api.semanticscholar.org/CorpusID:142722366               ern Approach, 3rd ed. USA: Prentice Hall Press, 2009.
+[45] M. F. Glasser, T. S. Coalson, E. C. Robinson,               [56] W. Huang, P. Abbeel, D. Pathak, and I. Mordatch,
+     C. D. Hacker, J. W. Harwell, E. Yacoub, K. Uğurbil,             “Language models as zero-shot planners: Extracting
+     J. L. R. Andersson, C. F. Beckmann, M. Jenkinson,                actionable knowledge for embodied agents,” in
+     S. M. Smith, and D. C. V. Essen, “A multi-modal                  Proceedings of the 39th International Conference
+     parcellation of human cerebral cortex,” Nature, vol.             on Machine Learning, ser. Proceedings of Machine
+                                                                                                                            8
+
+
+
+     Learning Research, K. Chaudhuri, S. Jegelka, L. Song,          large language models,” Trans. Mach. Learn.
+     C. Szepesvari, G. Niu, and S. Sabato, Eds., vol. 162.          Res., vol. 2024, 2023. [Online]. Available:
+     PMLR, 17–23 Jul 2022, pp. 9118–9147. [Online]. Avail-          https://api.semanticscholar.org/CorpusID:258887849
+     able: https://proceedings.mlr.press/v162/huang22a.html    [66] K. Nottingham, P. Ammanabrolu, A. Suhr, Y. Choi,
+[57] M. Gramopadhye and D. Szafir, “Generating executable           H. Hajishirzi, S. Singh, and R. Fox, “Do embodied
+     action plans with environmentally-aware language mod-          agents dream of pixelated sheep?: Embodied decision
+     els,” in 2023 IEEE/RSJ International Conference on             making using language guided world modelling,”
+     Intelligent Robots and Systems (IROS), 2023, pp. 3568–         in International Conference on Machine Learning,
+     3575.                                                          2023. [Online]. Available: https://api.semanticscholar.
+[58] S. Yao, H. Chen, J. Yang, and K. Narasimhan,                   org/CorpusID:256389514
+     “Webshop: Towards scalable real-world web interaction     [67] H. Yuan, C. Zhang, H. Wang, F. Xie, P. Cai,
+     with grounded language agents,” in Advances in                 H. Dong, and Z. Lu, “Plan4mc: Skill reinforcement
+     Neural Information Processing Systems, S. Koyejo,              learning and planning for open-world minecraft tasks,”
+     S. Mohamed, A. Agarwal, D. Belgrave, K. Cho,                   ArXiv, vol. abs/2303.16563, 2023. [Online]. Available:
+     and A. Oh, Eds., vol. 35. Curran Associates, Inc.,             https://api.semanticscholar.org/CorpusID:257805102
+     2022, pp. 20 744–20 757. [Online]. Available: https:      [68] Y. Wu, S. Y. Min, Y. Bisk, R. Salakhutdinov, A. Azaria,
+     //proceedings.neurips.cc/paper files/paper/2022/file/          Y.-F. Li, T. M. Mitchell, and S. Prabhumoye, “Plan,
+     82ad13ec01f9fe44c01cb91814fd7b8c-Paper-Conference.             eliminate, and track - language models are good teachers
+     pdf                                                            for embodied agents,” ArXiv, vol. abs/2305.02412,
+[59] R. Feldt, S. Kang, J. Yoon, and S. Yoo, “Towards               2023. [Online]. Available: https://api.semanticscholar.
+     autonomous testing agents via conversational large             org/CorpusID:258480064
+     language models,” 2023 38th IEEE/ACM International        [69] I. Gur, H. Furuta, A. V. Huang, M. Safdari, Y. Matsuo,
+     Conference on Automated Software Engineering (ASE),            D. Eck, and A. Faust, “A real-world webagent with
+     pp. 1688–1693, 2023. [Online]. Available: https://api.         planning, long context understanding, and program
+     semanticscholar.org/CorpusID:259108951                         synthesis,” in The Twelfth International Conference on
+[60] H. Li, Y. Hao, Y. Zhai, and Z. Qian,                           Learning Representations, 2024. [Online]. Available:
+     “The hitchhiker’s guide to program analysis:                   https://openreview.net/forum?id=9JQtrumvg8
+     A journey with large language models,” ArXiv,             [70] P.-L. Chen and C.-S. Chang, “Interact: Exploring
+     vol. abs/2308.00245, 2023. [Online]. Available:                the potentials of chatgpt as a cooperative agent,”
+     https://api.semanticscholar.org/CorpusID:260351308             ArXiv, vol. abs/2308.01552, 2023. [Online]. Available:
+[61] D. A. Boiko, R. MacKnight, and G. Gomes, “Emergent             https://api.semanticscholar.org/CorpusID:260438734
+     autonomous scientific research capabilities of large      [71] H. Furuta, K.-H. Lee, O. Nachum, Y. Matsuo, A. Faust,
+     language models,” 2023. [Online]. Available: https:            S. S. Gu, and I. Gur, “Multimodal web navigation with
+     //arxiv.org/abs/2304.05332                                     instruction-finetuned foundation models,” in The Twelfth
+[62] A. M. Bran, S. Cox, O. Schilter, C. Baldassari,                International Conference on Learning Representations,
+     A. White, and P. Schwaller, “Augmenting large language         2024. [Online]. Available: https://openreview.net/forum?
+     models with chemistry tools,” in NeurIPS 2023 AI               id=efFmBWioSc
+     for Science Workshop, 2023. [Online]. Available:          [72] G. Kim, P. Baldi, and S. McAleer, “Language
+     https://openreview.net/forum?id=wdGIL6lx3l                     models can solve computer tasks,” in Advances
+[63] Y. S. Kang and J. Kim, “Chatmof: An autonomous                 in Neural Information Processing Systems, A. Oh,
+     ai system for predicting and generating metal-                 T. Naumann, A. Globerson, K. Saenko, M. Hardt, and
+     organic frameworks,” ArXiv, vol. abs/2308.01423,               S. Levine, Eds., vol. 36. Curran Associates, Inc.,
+     2023. [Online]. Available: https://api.semanticscholar.        2023, pp. 39 648–39 677. [Online]. Available: https:
+     org/CorpusID:260438479                                         //proceedings.neurips.cc/paper files/paper/2023/file/
+[64] Z. Wang, S. Cai, G. Chen, A. Liu, X. S.                        7cc1005ec73cfbaac9fa21192b622507-Paper-Conference.
+     Ma, and Y. Liang, “Describe, explain, plan and                 pdf
+     select: Interactive planning with llms enables            [73] L. Zheng, R. Wang, X. Wang, and B. An, “Synapse:
+     open-world multi-task agents,” in Advances in                  Trajectory-as-exemplar prompting with memory for
+     Neural Information Processing Systems, A. Oh,                  computer control,” 2024. [Online]. Available: https:
+     T. Naumann, A. Globerson, K. Saenko, M. Hardt, and             //arxiv.org/abs/2306.07863
+     S. Levine, Eds., vol. 36. Curran Associates, Inc.,        [74] X. Deng, Y. Gu, B. Zheng, S. Chen, S. Stevens,
+     2023, pp. 34 153–34 189. [Online]. Available: https:           B. Wang, H. Sun, and Y. Su, “Mind2web: Towards a
+     //proceedings.neurips.cc/paper files/paper/2023/file/          generalist agent for the web,” 2023. [Online]. Available:
+     6b8dfb8c0c12e6fafc6c256cb08a5ca7-Paper-Conference.             https://arxiv.org/abs/2306.06070
+     pdf                                                       [75] W. Zhang, K. Tang, H. Wu, M. Wang, Y. Shen,
+[65] G. Wang, Y. Xie, Y. Jiang, A. Mandlekar,                       G. Hou, Z. Tan, P. Li, Y. Zhuang, and W. Lu, “Agent-
+     C. Xiao, Y. Zhu, L. J. Fan, and A. Anandkumar,                 pro: Learning to evolve via policy-level reflection
+     “Voyager: An open-ended embodied agent with                    and optimization,” in Proceedings of the 62nd Annual
+                                                                  9
+
+
+
+     Meeting of the Association for Computational Linguistics
+     (Volume 1: Long Papers), L.-W. Ku, A. Martins, and
+     V. Srikumar, Eds. Bangkok, Thailand: Association
+     for Computational Linguistics, Aug. 2024, pp. 5348–
+     5375. [Online]. Available: https://aclanthology.org/2024.
+     acl-long.292
+[76] W. Zhang, Y. Shen, L. Wu, Q. Peng, J. Wang, Y. Zhuang,
+     and W. Lu, “Self-contrast: Better reflection through
+     inconsistent solving perspectives,” in Proceedings of
+     the 62nd Annual Meeting of the Association for
+     Computational Linguistics (Volume 1: Long Papers),
+     L.-W. Ku, A. Martins, and V. Srikumar, Eds. Bangkok,
+     Thailand: Association for Computational Linguistics,
+     Aug. 2024, pp. 3602–3622. [Online]. Available: https:
+     //aclanthology.org/2024.acl-long.197
+[77] J. Han, W. Buntine, and E. Shareghi, “Towards
+     uncertainty-aware language agent,” in Findings of
+     the Association for Computational Linguistics: ACL
+     2024, L.-W. Ku, A. Martins, and V. Srikumar, Eds.
+     Bangkok, Thailand: Association for Computational
+     Linguistics, Aug. 2024, pp. 6662–6685. [Online].
+     Available: https://aclanthology.org/2024.findings-acl.398
+[78] T. Xie, D. Zhang, J. Chen, X. Li, S. Zhao, R. Cao,
+     T. J. Hua, Z. Cheng, D. Shin, F. Lei, Y. Liu,
+     Y. Xu, S. Zhou, S. Savarese, C. Xiong, V. Zhong,
+     and T. Yu, “Osworld: Benchmarking multimodal agents
+     for open-ended tasks in real computer environments,”
+     ArXiv, vol. abs/2404.07972, 2024. [Online]. Available:
+     https://api.semanticscholar.org/CorpusID:269042918
+[79] P. Lewis, E. Perez, A. Piktus, F. Petroni,
+     V. Karpukhin, N. Goyal, H. Küttler, M. Lewis,
+     W. tau Yih, T. Rocktäschel, S. Riedel, and
+     D. Kiela, “Retrieval-augmented generation for
+     knowledge-intensive nlp tasks,” in Advances in
+     Neural Information Processing Systems (NeurIPS),
+     vol.     33,    2020,     pp.    9459–9474.     [Online].
+     Available: https://proceedings.neurips.cc/paper/2020/file/
+     6b493230205f780e1bc26945df7481e5-Paper.pdf
+[80] R. S. Sutton and A. G. Barto, Reinforcement Learning:
+     An Introduction. Cambridge, MA, USA: MIT Press,
+     1998.
+[81] P. Abbeel and A. Y. Ng, “Apprenticeship learning via
+     inverse reinforcement learning,” in Proceedings of the
+     Twenty-first International Conference on Machine Learn-
+     ing (ICML). ACM, 2004, pp. 1–8.
+

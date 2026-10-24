@@ -1,0 +1,1865 @@
+                                                                                                                                                                                        1
+
+
+
+
+                                                BrainCog: A Spiking Neural Network based
+                                               Brain-inspired Cognitive Intelligence Engine for
+                                                   Brain-inspired AI and Brain Simulation
+                                         Yi Zeng, Dongcheng Zhao, Feifei Zhao, Guobin Shen, Yiting Dong, Enmeng Lu, Qian Zhang, Yinqian Sun, Qian
+                                          Liang, Yuxuan Zhao, Zhuoya Zhao, Hongjian Fang, Yuwei Wang, Yang Li, Xin Liu, Chengcheng Du, Qingqun
+                                                                                Kong, Zizhe Ruan, Weida Bi
+
+
+
+
+arXiv:2207.08533v2 [cs.NE] 12 Jul 2023
+                                            Abstract—Spiking neural networks (SNNs) have attracted                     (Microcircuit and Cortical Column), and whole brain structure
+                                         extensive attentions in Brain-inspired Artificial Intelligence and            simulation of Mouse brain, Macaque brain, and Human brain.
+                                         computational neuroscience. They can be used to simulate                      An AI engine named BORN is developed based on BrainCog,
+                                         biological information processing in the brain from multiple                  and it demonstrates how the components of BrainCog can be
+                                         scales, including membrane potential, neuronal firing, synap-                 integrated and used to build AI models and applications. To
+                                         tic transmission, synaptic plasticity, and multiple brain areas               enable the scientific quest to decode the nature of biological
+                                         coordination. More importantly, SNNs serve as an appropriate                  intelligence and create Artificial Intelligence, BrainCog aims to
+                                         level of abstraction to bring inspirations from brain and cog-                provide necessary, easy-to-use, and essential building blocks,
+                                         nition to Artificial Intelligence. Existing software frameworks               and infrastructural support to develop brain-inspired spiking
+                                         support SNNs in machine learning, brain simulations, and                      neural network based Artificial Intelligence, and to simulate
+                                         specific hardware devices from certain perspectives respectively.             the cognitive brains at multiple scales. The online repository of
+                                         However, the community requires an open-source platform that                  BrainCog can be found at http://www.brain-cog.network.
+                                         can support building and integrating computational models for
+                                         brain-inspired AI and brain simulation at multiple scales. In                    Index Terms—Spiking Neural Network, Brain-inspired Cogni-
+                                         this paper, we present the Brain-inspired Cognitive Intelligence              tive Intelligence Engine, Multi-scale Plasticity Principles, Brain
+                                         Engine (BrainCog) for creating brain-inspired AI and brain                    Simulation, Computational Neuroscience
+                                         simulation models. BrainCog incorporates different types of
+                                         spiking neuron models, learning rules, brain areas, etc., as
+                                         essential modules provided by the platform. Based on these                                          I. I NTRODUCTION
+                                         easy-to-use modules, BrainCog supports various brain-inspired                    The human brain can self-organize and coordinate different
+                                         cognitive functions, including Perception and Learning, Decision              cognitive functions to flexibly adapt to complex and chang-
+                                         Making, Knowledge Representation and Reasoning, Motor Con-
+                                         trol, and Social Cognition. These brain-inspired AI models have               ing environments. A major challenge for Artificial Intelli-
+                                         been effectively validated on various supervised, unsupervised,               gence and computational neuroscience is integrating multi-
+                                         and reinforcement learning tasks, and they can be used to                     scale biological principles to build biologically plausible brain-
+                                         enable AI models to be with multiple brain-inspired cognitive                 inspired intelligent models. As the third generation of neural
+                                         functions. For brain simulation, BrainCog realizes the function               networks [1], Spiking Neural Networks (SNNs) are more
+                                         simulation of Drosophila decision-making and prefrontal cortex
+                                         working memory, the structure simulation of the Neural Circuit                biologically realistic at multiple scales, more biologically in-
+                                                                                                                       terpretable, more energy-efficient, and naturally more suitable
+                                            Yi Zeng is with the Research Center for Brain-inspired Intelligence, the   for modeling various cognitive functions of the brain and
+                                         National Laboratory of Pattern Recognition, at the Institute of Automation,   creating biologically plausible AI.
+                                         Chinese Academy of Sciences, Beijing 100190, China, and University of Chi-
+                                         nese Academy of Sciences, Beijing 100049, China, and Center for Excellence       Existing neural simulators attempted to simulate elaborate
+                                         in Brain Science and Intelligence Technology, Chinese Academy of Sciences,    biological neuron models or build large-scale neural network
+                                         Shanghai 200031, China. (e-mail: yi.zeng@ia.ac.cn, yi.zeng@braincog.ai).      simulations, neural dynamics models, deep SNNs. Neuron [2]
+                                            Dongcheng Zhao, Feifei Zhao, Enmeng Lu, Qian Liang, Yuxuan Zhao,
+                                         Yuwei Wang, Xin Liu, Zizhe Ruan, and Weida Bi are with the Research Center    focuses on simulating elaborate biological neuron models.
+                                         for Brain-inspired Intelligence, Institute of Automation, Chinese Academy     NEST [3] implements large-scale neural network simulations.
+                                         of Sciences, Beijing 100190, China. (e-mail: dongcheng.zhao@braincog.ai,      Brian/Brian2 [4], [5] provides an efficient and convenient
+                                         feifei.zhao@braincog.ai)
+                                            Guobin Shen, Yiting Dong, Yinqian Sun, Zhuoya Zhao, Hongjian Fang,         tool for modeling spiking neural networks. Shallow SNNs
+                                         and Qingqun Kong are with the Research Center for Brain-Inspired In-          implemented by Brian2 can realize unsupervised visual classi-
+                                         telligence, Institute of Automation, Chinese Academy of Sciences, Beijing     fication [6]. Further, BindsNET [7] builds SNNs with coordi-
+                                         100190, China, and also with the School of Future Technology, Univer-
+                                         sity of Chinese Academy of Sciences, Beijing 100049, China. (e-mail:          nation of various neurons and connections and incorporates
+                                         guobin.shen@braincog.ai, yiting.dong@braincog.ai)                             multiple biological learning rules for training SNNs. Such
+                                            Qian Zhang, Yang Li and Chengcheng Du are with the Research Center         learning SNNs can perform machine learning tasks, including
+                                         for Brain-Inspired Intelligence, Institute of Automation, Chinese Academy
+                                         of Sciences, Beijing 100190, China, and also with the School of Artificial    simple supervised, unsupervised, and reinforcement learning.
+                                         Intelligence, University of Chinese Academy of Sciences, Beijing 100049,      However, supporting more complex tasks would be great
+                                         China.                                                                        challenge for these SNNs frameworks, and there is a large
+                                            Yi Zeng, Dongcheng Zhao, Feifei Zhao, Guobin Shen, and Yiting Dong
+                                         contributed equally to this work, and serve as co-first authors.              gap in performance compared with traditional deep neural
+                                            The corresponding author is Yi Zeng.                                       networks (DNNs). Deep SNNs trained by surrogate gradient
+                                                                                                                                 2
+
+
+
+
+                     Fig. 1: The architecture of Brain-inspired Cognitive Intelligence Engine (BrainCog).
+
+
+or converting well-trained DNNs to SNNs have achieved great       a large-scale brain function model consisting of 2.5 million
+progress in the fields of speech recognition [8], [9], computer   simulated neurons and implemented by Nengo [16], integrates
+vision [10], [11], and reinforcement learning [12]. Motivated     multiple brain areas and realizes multiple brain cognitive func-
+by this, SpikingJelly [13] develops a deep learning SNN           tions, including image recognition, working memory, question
+framework (trained by surrogate gradient or converting well-      answering, reinforcement learning, and fluid reasoning. How-
+trained DNNs to SNNs), which integrates deep convolutional        ever, it is not suitable for solving challenging and complex
+SNNs and various deep reinforcement learning SNNs for mul-        AI tasks that can be handled by deep learning models. In
+tiple benchmark tasks. Platforms as SpikingJelly are relatively   summary, there is still a lack of open-source spiking neural
+more inspired by the field of deep learning and focuse on         network frameworks that could incorporate the ability of
+improving the performance of different tasks. They are cur-       simulating brain structures, cognitive functions at large scale,
+rently lack of in-depth inspiration from the brain information    while keep itself effective for creating complex and efficient
+processing mechanisms and may not aim at, hence short at          AI models at the same time.
+simulating large scale functional brains.
+                                                                    Considering the various limitations of existing frameworks
+   BrainPy [14] excels at modeling, simulating, and analyzing     mentioned above, in this paper, we present the Brain-inspired
+the dynamics of brain-inspired neural networks from multi-        Cognitive Intelligence Engine (BrainCog), a spiking neural
+ple perspectives, including neurons, synapses, and networks.      network based open source platform for both brain-inspired
+While it focuses on computational neuroscience research, it       AI and brain simulation at multiple scales. As shown in
+fails to consider the learning and optimization of deep SNNs or   Fig. 1, some basic modules (such as different types of neuron
+the implementation of brain-inspired functions. SPAUN [15],       models, learning rules, encoding strategies, etc.) are provided
+                                                                                                                                    3
+
+
+
+as building blocks to construct different brain areas and          quantum information theory, BrainCog provides a quantum
+neural circuits to implement brain-inspired cognitive functions.   superposition spiking neural network, which encodes com-
+BrainCog is an easy-to-use framework that can flexibly replace     plement information to neuronal spike trains with different
+different components according to various purposes and needs.      frequency and phase [26].
+BrainCog tries to achieve the vision “the structure and mech-         2) Decision Making: For decision making, BrainCog pro-
+anism are inspired by the brain, and the cognitive behaviors       vides multi-brain areas coordinated decision-making spik-
+are similar to humans” for Brain-inspired AI [17]. BrainCog        ing neural network [27]. The biologically inspired decision-
+is developed based on the deep learning framework (currently       making model implemented by BrainCog achieves human-like
+it is based on PyTorch, while it is easy to migrate to other       learning ability on the Flappy Bird game and supports UAVs’
+frameworks such as PaddlePaddle, TensorFlow, etc.). This           online decision-making tasks. In addition, BrainCog combines
+approach aims at greatly facilitating researchers to quickly       SNNs with deep reinforcement learning and provides the
+familiarize themselves with the platform and implement their       brain-inspired spiking deep Q network [28].
+own algorithms.                                                       3) Motor Control: Embodied cognition is crucial to realiz-
+                                                                   ing biologically plausible AI. As part of the embodied cogni-
+A. Brain-inspired AI                                               tion modules, and inspired by the motor control mechanism of
+                                                                   the brain, BrainCog provides a multi-brain areas coordinated
+   BrainCog is aimed at providing infrastructural support
+                                                                   robot motion spiking neural networks model, which includes
+for Brain-inspired AI. Currently, it provides cognitive func-
+                                                                   premotor cortex (PMC), supplementary motor areas (SMA),
+tions components that can be classified into five categories:
+                                                                   basal ganglia and cerebellum functions. With proper mapping,
+Perception and Learning, Decision Making, Motor Control,
+                                                                   the spiking motor network outputs can be used to control
+Knowledge Representation and Reasoning, and Social Cog-
+                                                                   various robots.
+nition. These components collectively form neural circuits
+                                                                      4) Knowledge Representation and Reasoning: BrainCog
+corresponding to 28 brain areas in the mammalian brains, as
+                                                                   incorporates multiple neuroplasticity and population coding
+shown in Fig. 2. These brain-inspired AI models have been
+                                                                   mechanisms for knowledge representation and reasoning. The
+effectively validated on various supervised and unsupervised
+                                                                   brain-inspired music memory and stylistic composition model
+learning, deep reinforcement learning, and several complex
+                                                                   implements the knowledge representation and memory of
+brain-inspired cognitive tasks.
+                                                                   note sequences and can generate music according to different
+                                                                   styles [29], [30]. Sequence Production Spiking Neural Net-
+                                                                   work (SPSNN) achieves the memory of the symbol sequence
+                                                                   and can reconstruct the symbol sequence in the light of
+                                                                   different rules [31]. Commonsense Knowledge Representa-
+                                                                   tion Graph SNN (CKR-GSNN) realizes the representation of
+                                                                   commonsense knowledge through incorporating multi-scale
+                                                                   neural plasticity and population coding mechanism into a
+                                                                   graph SNN model [32]. Causal Reasoning Spiking Neural
+                                                                   Network (CRSNN) encodes the causal graph into a spiking
+                                                                   neural network and realizes deductive reasoning tasks accord-
+                                                                   ingly [33].
+                                                                      5) Social Cognition: BrainCog provides a brain-inspired
+                                                                   social cognition model with biological plausibility. This model
+                                                                   gives the agent a preliminary ability to perceive and understand
+                                                                   itself and others and can enable the robots pass the Multi-
+                                                                   Robots Mirror Self-Recognition Test [34] and the AI Safety
+                                                                   Risks Experiment [35]. The former is a classic experiment of
+                                                                   self-perception in social cognition, and the latter is a variation
+Fig. 2: Multiple cognitive functions integrated in BrainCog,       and application of the theory of mind experiment in social
+their related brain areas and neural circuits.                     cognition.
+
+   1) Perception and Learning: BrainCog provides a variety         B. Brain Simulation
+of supervised and unsupervised methods for training spiking           1) Brain Cognitive Function Simulation: To demonstrate
+neural networks, such as the biologically-plausible Spike-         the capability of BrainCog for cognitive function simula-
+Timing-Dependent Plasticity (STDP) [18], the backpropaga-          tion, we provide Drosophila decision-making and prefrontal
+tion based on surrogate gradients [19], [20], [21], and the        cortex working memory function simulation [36], [37]. For
+conversion-based algorithms [22], [23], [24]. In addition to       Drosophila nonlinear and linear decision-making simulation,
+high performance in common perception and learning process,        BrainCog verifies the winner-takes-all behaviors of the nonlin-
+it also shows strong adaptability in small samples and noisy       ear dopaminergic neuron-GABAergic neuron-mushroom body
+scenarios. BrainCog also provides a multi-sensory integration      (DA-GABA-MB) circuit under a dilemma and obtains consis-
+framework for human-like concept learning [25]. Inspired by        tent conclusions with Drosophila biological experiments [36].
+                                                                                                                                        4
+
+
+
+For the working memory performance of the prefrontal cortex           (4) The Izhikevich spiking neuron [42]:
+network implemented by BrainCog, we discover that using                        
+                                                                                  dV
+human neurons to replace rodent neurons without changing
+                                                                               
+                                                                                     = 0.04V 2 + 5v + 140 − u + I
+                                                                                  dt                                          (4)
+network structure can significantly improve the accuracy and
+                                                                                du = a(bv − u)
+                                                                               
+completeness of an image memory task [37], and this implies                        dt
+the evolution of the brains are not only on their structures, but
+                                                                     When the membrane potential is greater than the threshold:
+also applies to single computational units such as neurons.                                (
+   2) Multi-scale Brain Structure Simulation: BrainCog pro-                                  V =c
+vides simulations of brain structures at different scales, from                                                               (5)
+                                                                                              u=u+d
+microcircuits, and cortical columns, to whole-brain structure
+simulations. Anatomical and imaging multi-scale connectivity         u represents the membrane recovery variable, and a, b, c, d are
+data is used to support whole-brain simulations from mouse           the dimensionless parameters [42].
+brain, macaque brain to human brain at different scales.               (5) The Hodgkin-Huxley spiking neuron (H-H) [43]:
+                                                                            dV
+                                                                     I=C        +g K n4 (V −VK )+g N a m3 h(V −VN a )+g L (V −VL )
+                   II. BASIC C OMPONENTS                                     dt
+                                                                                                                                    (6)
+                                                                                      dn
+                                                                                  
+   BrainCog provides essential and fundamental components                         
+                                                                                        = αn (V )(1 − n) − βn (V )n
+                                                                                   dt
+                                                                                  
+to model biological and artificial intelligence. It includes                      
+                                                                                  
+various biological neuron models, learning rules, encoding                           dm
+                                                                                         = αm (V )(1 − m) − βm (V )m                (7)
+strategies, and models of different brain areas. One can build                    
+                                                                                     dt
+                                                                                   dh = αn (V )(1 − h) − βn (V )h
+                                                                                  
+                                                                                  
+brain-inspired SNN models through reusing and refining these                      
+building blocks. Expanding and refining the components and                            dt
+cognitive functions included in BrainCog is an ongoing effort.          αi and βi are used to control the ith ion channel, n, m,
+We believe this should be a continuous community effort,             h are dimensionless probabilities between 0 and 1. g i is the
+and we welcome researchers and practitioners to enrich and           maximal value of the conductance [43].
+improve the work together in a complementary way.                       The H-H model shows elaborate modeling of biological neu-
+                                                                     rons. In order to apply it more efficiently to AI tasks, BrainCog
+                                                                     incorporates a simplified H-H model (C = 0.02µF/cm2 , Vr =
+A. Neuron Models                                                     0, Vth = 60mV ), as illustrated in [44].
+  BrainCog supports various models for spiking neurons, such
+as the following :                                                   B. Learning Rules
+  (1) Integrate-and-Fire spiking neuron (IF) [38]:                     BrainCog provides various plasticity principles and rules to
+                              dV                                     support biological plausible learning and inference, such as:
+                                 =I                           (1)      (1) Hebbian learning theory [45]:
+                              dt
+                                                                                                 t
+  I denotes the input current from the pre-synaptic neurons.                                   ∆wij = xti xtj                        (8)
+Once the membrane potential reaches the threshold Vth , the          where wijt
+                                                                                  means the ith synapse weight of jth neuron at the
+neuron j fires a spike [38].                                         time t. xti is the input of ith synapse at time t. xtj is the output
+  (2) Leaky Integrate-and-Fire spiking neuron (LIF) [39]:            of jth neuron at time t [45].
+                            dV                                          (2) Spike-Timing-Dependent Plasticity (STDP) [18]:
+                        τ      = −V + I                       (2)
+                            dt
+                                                                                            N X
+                                                                                              N
+τ = RC denote the time constant, R and C denotes the
+                                                                                            X
+                                                                                   ∆wj =               W (tfi − tnj )
+membrane resistance and capacitance respectively [39].                                      f =1 n=1
+  (3) The adaptive Exponential Integrate-and-Fire spiking                                                                           (9)
+                                                                                                A+ e −∆t
+                                                                                                      τ+
+                                                                                                                 if ∆t > 0
+neuron (aEIF) [40], [41]:
+                                                                                   W (∆t) =
+                                                                                               −A− e τ∆t
+                                                                                                        −        if ∆t < 0
+      dV                           V − Vth
+  
+  C
+        = −gL (V − EL ) + gL exp(         )+I −w                    where ∆wj is the modification of the synapse j, and W (∆t)
+      dt                             ∆T
+                                                                     is the STDP function. t is the time of spike. A+ , A− mean
+  τw dw = a(V − EL ) − w
+  
+                                                                     the modification degree of STDP. τ+ and τ− denote the time
+      dt
+                                                               (3)   constant [18].
+   where gL is the leak conductance, EL is the leak reversal            (3) Bienenstock-Cooper-Munros theory (BCM) [46]:
+potential, Vr is the reset potential, ∆T is the slope factor, I is
+                                                                                        ∆w = y (y − θM ) x − ϵw                     (10)
+the background currents. τw is the adaptation time constant.
+When the membrane potential is greater than the threshold Vth ,        Where x and y denote the firing rates of pre-synaptic
+V = Vr , and w = w + b. a is the subthreshold adaptation, and        and post-synaptic neurons, respectively, threshold θM is the
+b is the spike-triggered adaptation [40], [41].                      average of historical activity of the post-synaptic neuron [46].
+                                                                                                                                     5
+
+
+
+  (4) Short-term Synaptic Plasticity (STP) [47]:                     (3) Temporal Coding [51]:
+  Short-term plasticity is used to model the synaptic efficacy       The characteristic of the neuron spike is that the form of the
+changes over time.                                                spike is fixed, and there are only differences in quantity and
+                                                                  time. The most common implementation is to express infor-
+                         ak = uk · Rk                     (11)    mation regarding the timing of individual spike. The stronger
+                                                                  the stimulus received, the earlier the spike generated [52]. Let
+          uk+1 = U + uk (1 − U ) exp (−∆tk /τfac )        (12)    the total simulation time be T, and the input x of the neuron
+    Rk+1 = 1 + (Rk − uk Rk − 1) exp (−∆tk /τrec )         (13)    can be encoded as the spike at time ts :
+
+   a denotes the synaptic weight, U denotes the fraction of                             ts = T − round(T x)                      (18)
+synaptic resources. τfac and τrec denotes the time constant          (4) Population Coding [53]:
+for recovery from facilitation and depression. The variable          Population coding helps to solve the problem of the am-
+Rn models the fraction of synaptic efficacy available for the     biguity of information carried by a single neuron. The am-
+(k)th spike,and un Rn models the fraction of synaptic effi-       biguity of information carried can be understood as: the
+cacy [47].                                                        original information is input into a neuron, which makes
+   (5) Reward-modulated Spike-Timing-Dependent Plasticity         the network hard to distinguish some overlapping or similar
+(R-STDP) [48]:                                                    related information [54], [55]. The intuitive idea of population
+   R-STDP uses synaptic eligibility trace e to store temporary    coding is to make different neurons to be with different
+information of STDP. The eligibility trace accumulates the        sensitivity to different types of inputs, which is also reflected in
+STDP ∆wST DP and decays with a time constant τe [48].             biology. For example, rats’ whiskers have different sensitivity
+                            e                                     to different directions [54]. The inputs will be transformed into
+                   ∆e = −      + ∆wST DP                  (14)    a spike train with a period by population coding. A classical
+                            τe
+                                                                  population coding method is the neural information coding
+   Then, synaptic weights are updated when a delayed reward       method based on the Gaussian tuning curve referred to Eq. 19.
+r is received, as Eq. 15 shown [48].                              This method is more suitable when the amount of data is
+                                                                  small, and the information is concentrated. A Gaussian neuron
+                         ∆w = r ∗ ∆e                      (15)    covers a range of analog quantities in the form of Gaussian
+                                                                  function [53], [56]. Suppose that m (m > 2) neurons are used
+C. Encoding Strategies                                            to encode a variable x with a value range of [Imin , Imax ].
+                                                                  f (x) can be firing time or voltage.
+   BrainCog supports a number of different encoding strategies
+to help encode the inputs to the spiking neural networks.                                             (x−µ)2
+                                                                                          f (x) = x− 2σ2                         (19)
+   (1) Rate Coding [49]:
+   Rate coding is mainly based on spike counting to ensure that     The corresponding mean with adjustable parameters β and
+the number of spikes issued in the time window corresponds to     variance of the ith (i = 1, 2, ..., m) neuron are as follows:
+the real value. Poisson distribution can describe the number of
+random events occurring per unit of time, which corresponds                                     2i − 3 Imax − Imin
+                                                                                 µ = Imin +                                      (20)
+to the firing rate [49]. Set α ∼ U(0, 1), the input can be                                         2     m−2
+encoded as               (                                                                    1 Imax − Imin
+                            1, if x > α                                                 σ=                                       (21)
+                  s(t) =                                   (16)                               β   m−2
+                            0, else
+                                                                  D. Brain Areas Models
+   (2) Phase Coding [50]:
+   The idea of phase coding can be used to encode the analog         Brain-inspired models of several functional brain areas are
+quantity changing with time. The value of the analog quantity     constructed for BrainCog from different levels of abstraction.
+in a period can be represented by a spike time, and the change       (1) Basal Ganglia (BG):
+of the analog quantity in the whole time process can be              Basal ganglia facilitates desired action selection and inhibit
+represented by the spike train obtained by connecting all the     competing behavior (making winner-takes-all decisions) [57],
+periods. Each spike has a corresponding phase weighting under     [58]. It cooperates with PFC and the thalamus to realize the
+phase encoding, and generally, the pixel intensity is encoded     decision-making process in the brain [59]. BrainCog models
+as a 0/1 input similar to binary encoding. ≫ denotes the shift    the basal ganglia brain area, including excitatory and in-
+operation to the right, K is the phase period [50]. Pixel x is    hibitory connections among striatum, Globus pallidus internas
+enlarged to x′ = x ∗ (2K − 1) and shifted k = K − 1 − (t          (Gpi), Globus pallidus external (Gpe), and subthalamic nucleus
+mod K) to the right, where mod is the remainder operation.        (STN) of basal ganglia [60], as shown in the orange areas of
+If the lowest bit is one, s will be one at time t. & means bit-   Fig. 14. The BG brain area component adopts the LIF neuron
+wise AND operation.                                               model in BrainCog, as well as the STDP learning rule and
+                     (                                            CustomLinear to build internal connections of the BG. Then,
+                      1, if (x′ ≫ k)&1 = 1                        the BG brain area component can be used to build brain-
+            s(t) =                                         (17)
+                      0, else                                     inspired decision-making SNNs (see section 3.2.1 for detail).
+                                                                                                                                  6
+
+
+
+   (2) Prefrontal Cortex (PFC):                                   and STS. The IPLV outputs the visual feedback information
+   PFC is of significant importance when human high-level         predicted according to its motion, and the STS outputs the
+cognitive behaviors happen. In BrainCog, many cognitive           motion information detected by vision. If both are consistent,
+tasks based on SNN are inspired by the mechanisms of the          the Insula will be activated.
+PFC [61], such as decision-making, working memory [62],              (7) Thalamus (ThA):
+[63], [64], knowledge representation [65], theory of mind            Studies have shown that the thalamus is composed of a
+and music processing [66]. Different circuits are involved        series of nuclei connected to different brain parts and heavily
+to complete these cognitive tasks. In BrainCog, the data-         contributes to many brain processes. In BrainCog, this area is
+driven PFC column model contains 6 layers and 16 types of         discussed from both anatomic and cognitive perspectives. Un-
+neurons. The distribution of neurons, membrane parameters         derstanding the anatomical structure of the thalamus can help
+and connections of different types of neurons are all derived     researchers to comprehend the mechanisms of the thalamus.
+from existing biological experimental data. The PFC brain area    Based on the essential and detailed anatomic thalamocortical
+component mainly employs the LIF neuron model to simulate         data [73], BrainCog reconstructs the thalamic structure by
+the neural dynamics. The STDP and R-STDP learning rules           involving five types of neurons (including excitatory and
+are utilized to compute the weights between different neural      inhibitory neurons) to simulate the neuronal dynamics and
+circuits.                                                         building the complex synaptic architecture according to the
+   (3) Primary Auditory Cortex (PAC):                             anatomic results. Inspired by the structure and function of
+   The primary auditory cortex is responsible for analyzing       the thalamus, the brain-inspired decision-making model imple-
+sound features, memory, and the extraction of inter-sound         mented by BrainCog takes into account the transfer function of
+relationships [67]. This area exhibits a topographical map,       the thalamus and cooperates with the PFC and basal ganglia to
+which means neurons respond to their preferred sounds. In         realize multi-brain areas coordinated decision-making model.
+BrainCog, neurons in this area are simulated by the LIF              (8) Ventral Visual Pathway:
+model and organized as minicolumns to represent different            Cognitive neuroscience research has shown that the brain
+frequencies of sounds. To store the ordered note sequences,       can receive external input and quickly recognize objects due
+the excitatory and inhibitory connections are updated by STDP     to the hierarchical information processing of the ventral visual
+learning rule.                                                    pathway. The ventral pathway is mainly composed of V1,
+   (4) Inferior Parietal Lobule (IPL):                            V2, V4, IT, and other brain areas, which mainly process
+   The function of IPL is to realize motor-visual associative     information such as object shape and color [74], [75]. These
+learning [68]. The IPL consists of two subareas: IPLM (mo-        visual areas form connections through forward, feedback, and
+tor perception neurons in IPL) and IPLV (visual perception        self-layer projections. The interaction of different visual areas
+neurons in IPL). The IPLM receives information generated          enables humans to recognize visual objects. The primary visual
+by self-motion from ventral premotor cortex (vPMC), and the       cortex V1 is selective for simple edge features. With the
+IPLV receives information detected by vision from superior        transmission of information, high-level brain areas combine
+temporal sulcus (STS). The motor-visual associative learning      with lower-level receptive fields to form more complex large
+is established according to the STDP mechanism and the            receptive fields to recognize more complex objects [76].
+spiking time difference of neurons in IPLM and IPLV.              Inspired by the structure and function of the ventral visual
+   (5) Hippocampus (HPC):                                         pathway, BrainCog builds a deep forward SNN with layer-
+   The hippocampus is part of the limbic system and plays         wise information abstraction and a feedforward and feedback
+an essential role in the learning and memory processes of         interaction deep SNN. The performance is verified on several
+the human brain. Epilepsy patients with bilateral hippocampus     visual classification tasks.
+removed (e.g. the patient H.M.) have symptoms of anterograde         (9) Motor Cortex:
+amnesia. They are unable to form new long-term declarative           The control of biological motor function involves the coop-
+memories [69]. This case study has proved that the hippocam-      eration of many brain areas. The extra circuits consisting of the
+pus is in the key process of converting short-term memory to      PMC, cerebellum, and BA6 motor cortex area are primarily
+long-term memory and plays a vital role [70].                     associated with motor control elicited by external stimuli such
+   Furthermore, through electrophysiological means, it was        as visual, auditory, and tactual inputs. Internal motor circuits,
+found that the hippocampal region is also crucial for forming     including the basal ganglia and SMA, predominate in self-
+new concepts. Specific neurons in the hippocampus only re-        guided, learned movements [77], [78], [79]. Population activity
+spond selectively to specific concepts, completing the specific   of motor cortical neurons encodes movement direction. Each
+encoding between different concepts. Moreover, it was through     neuron has its preferred direction. The more consistent the
+the study of the hippocampus that neuroscientists discovered      target movement direction is with its preferred direction, the
+the STDP learning rule [71], which further demonstrated the       stronger the neuron activities are [80], [81]. The cerebellum
+high plasticity of the hippocampus.                               receives input from motor-related cortical areas such as PMC,
+   (6) Insula:                                                    SMA, and the prefrontal cortex, which are important for the
+   The function of the Insula is to realize self-                 completion of fine movements, maintaining balance and coor-
+representation [72], that is, when the agent detects that         dination of movements [82]. Inspired by the organization of
+the movement in the field of vision is generated by itself, the   the brain’s motor cortex, we use spiking neurons to construct
+Insula is activated. The Insula receives information from IPLV    a motion control model, and apply it to the iCub robot, which
+                                                                                                                                                                                                      7
+
+
+
+enables the robot to play the piano according to music pieces.
+
+                  III. B RAIN - INSPIRED AI
+   Computational units (different neuron models, learning
+
+                                                                    input layer                                                                                                             output layer
+rules, encoding strategies, brain area models, etc.) at multiple
+scales, provided by BrainCog serve as a foundation to develop
+functional networks. To enable BrainCog for Brain-inspired
+AI, cognitive function centric networks need to be built and
+provided as reusable functional building blocks to create more
+                                                                                                                                                                        Feedforward Pathway
+complex brain-inspired AI. This section introduces various
+                                                                                                                                                                        Feedback Pathway
+functional building blocks developed based on BrainCog.
+                                                                    Fig. 3: The feedforward and feedback pathway in the SNN
+A. Perception and Learning                                          model. The global feedback pathway propagates the target of
+                                                                    the hidden layer, modified from [91].
+   In this subsection, we will introduce the supervised and
+unsupervised perception and learning spiking neural networks
+based on the fundamental components of BrainCog. Inspired
+                                                                      ŜL−1 denotes the target of the penultimate layer, and is
+by the global feedback connections, the neural dynamics
+                                                                    calculated as shown in Eq. 22, WL−1 denotes the forward
+of spiking neurons, and the biologically plausible STDP
+                                                                    weight between the (L − 1)th layer and the Lth . ηt represents
+learning rule, we improve the performance of the spiking
+                                                                    the learning rate of the target [91].
+neural networks. We show great adaption in the small training
+                                                                                                             T
+sample scenario. In addition, our model has shown excellent                ŜL−1 = SL−1 − ηt ∆S = SL−1 − ηt WL−1 (Sout − S T ) (22)
+robustness in noisy scenarios by taking inspiration from the
+multi-component spiking neuron and the quantum mechanics.             The target of the other hidden layer can be obtained through
+The burst spiking mechanism is used to help our converted           the feedback connections:
+SNNs with higher performance and lower latency. Based on
+this engine, we also present a human-like concept learning                                                Ŝl = Sl − Gl (Sout − S T )                                                      (23)
+framework to generate representations with five types of
+                                                                       By combining the feedforward representation and feedback
+perceptual strength information.
+                                                                    target, we compute the local MSE loss. We can compute the
+   1. Learning Model
+                                                                    local update of the parameters with the surrogate gradient.
+   (1) SNN with global feedback connections
+                                                                    We have conducted experiments on the MNIST and Fashion-
+   The spiking neural network transmits information in discrete
+                                                                    MNIST datasets, and achieved 98.23% and 89.68% test accu-
+spike sequences, which is consistent with the information
+                                                                    racy with three hidden layers. Each hidden layer is set with
+processing in the human brain [1]. The training of spiking
+                                                                    800 neurons. The details are shown in Fig. 4.
+neural networks has been widely concerned by researchers.
+Most researchers take inspiration from the mechanism of                                              MNIST                                                        FashionMNIST
+                                                                              100                                                          100
+synaptic learning and updating between neurons in the human                                                                                          Train
+                                                                                                                                                     Test
+                                                                                  98
+brain, and propose biologically plausible learning rules, such                                                                             95
+                                                                                  96
+as Hebbian theory [45], STDP [18], and STP [83], which have                       94                                                       90
+
+been adopted into the training of spiking neural networks [84],    Accuracy       92                                            Accuracy
+                                                                                                                                           85
+                                                                                  90
+[85], [6], [86], [87], [88]. However, most SNNs are based                         88                                                       80
+on feedforward structures, while the importance of the brain-                     86                                    Train
+                                                                                                                        Test               75
+                                                                                  84
+inspired structures has been ignored. The anatomical and                               0   20   40            60   80     100                    0           20    40            60   80      100
+                                                                                                     Epochs                                                             Epochs
+physiological evidences show that in addition to feedforward
+connections, numerous feedback connections exist in the brain,      Fig. 4: The test accuracy on MNIST and Fashion-MNIST
+especially among sensory areas [89], [90]. The feedback             datasets of the SNNs with global feedback connections.
+connections will carry out the predictions from the top layer
+to cooperate with the local plasticity rules to formulate the          (2) Biological-BP SNN
+learning and inference in the brain.                                   The backpropagation algorithm is an efficient optimization
+   Here, we introduce the global feedback connections and the       method that is widely used in deep neural networks and has
+local differential learning rule [91] in the training of SNNs.      promoted the great success of deep learning. However, due to
+   We use the LIF spiking neuron model in the BrainCog to           the non-smoothness of neurons in SNNs, the backpropagation
+simulate the dynamical process of the membrane potential            optimization is difficult to be applied to train SNNs directly.
+V (t) as shown in Eq. 2. We use the mean firing rates Sl            To solve the above problem, Bengio et al. [92] proposed four
+of each layer to denote the representation of the lth layer in      gradient approximation methods, including Straight-Through
+the forward pathway, and the corresponding target is denoted        Estimator to enable the application of the backpropagation
+as Ŝl . Here we use the mean squared loss (MSE) as the final       algorithm to neural networks containing nonsmooth neurons.
+loss function.                                                      Wu et al. [19] proposed the Spatio-Temporal Backpropagation
+                                                                                                                                                                8
+
+
+
+(STBP) algorithm to train SNNs by using a differentiable           TABLE I: The energy efficiency study. The former repre-
+function to approximate spiking neurons through a surro-           sents our method, the latter represents the baseline, adopted
+gate gradient method. Based on the spatio-temporal dynamic         from [94].
+of SNNs, they achieved the backpropagation of SNNs in
+                                                                         Dataset                Accuracy            Firing-rate           EE = E AN N
+both time and space dimensions. Zheng et al. [20] proposed                                                                                     E    SN N
+
+threshold-dependent batch normalization (tdBN) to improve                MNIST             99.58%/99.42%           0.082/0.183                35.1x/15.7x
+the performance of deep SNNs. Fang et al. [21] proposed a               N-MNIST            99.61%/99.32%           0.097/0.176                29.6x/16.3x
+                                                                        CIFAR10            92.33%/89.49%           0.108/0.214                26.6x/13.4x
+parametric LIF (PLIF) model to further improve the perfor-             DVS-Gesture         98.26%/93.92%           0.083/0.165                34.6x/17.4x
+mance of SNNs by optimizing the time constants of neurons             DVS-CIFAR10          77.76%/71.40%           0.097/0.177                29.5x/16.2x
+during the training process.
+   Most of these BP-based SNNs often simply regard SNN as a
+substitute for RNN, but ignore the dynamic of spiking neurons.                                                Adaptive Lateral
+                                                                                     Adaptive               Inhibition Connection
+To solve the problem of non-differentiable neuronal models,                        Synaptic Filter
+
+                                                                                                                             SpikeNorm
+Bohte et al. [93] approximated the backpropagation process
+of neuronal models using the surrogate gradient method.
+However, this method results in gradient leakage and does                               ASF
+
+not allow for proper credit assignment in both temporal and
+spatial dimensions. Also, due to the reset operation after the                                       Conv               Pooling          FC            Voting
+                                                                                                                        Adaptive
+spikes are emitted, the errors in the backward process can                                                          Threshold Balance
+not propagate across spikes. To solve the above problem, we
+propose Backpropagation with biologically plausible spatio-        Fig. 6: The framework of the unsupervised STDP-based
+temporal adjustment [94], as shown in Fig. 5, which can            spiking neural network model, which introduces the adaptive
+correctly assign credit according to the contribution of the       synaptic filter (ASF), the adaptive threshold balance (ATB),
+neuron to the membrane potential at each moment.                   and the adaptive lateral inhibitory connection (ALIC) mech-
+                                                                   anisms to improve the information transmission and feature
+                                                                   extraction of STDP-based SNNs. This figure is from [95].
+
+               𝑤 𝑙−1             𝑤 𝑙−1
+                       𝑣𝑡ℎ   𝑠            𝑣𝑡ℎ   𝑠
+                                                                      Unsupervised learning is an important cognitive function of
+
+
+    𝑇𝑒𝑚𝑝𝑜𝑟𝑎𝑙
+                                                                   the brain. The brain can complete the task of object recognition
+                                                                   by summarizing the characteristics and features of objects.
+                                                                   Unsupervised learning does not require explicit labels, but
+               𝑤 𝑙−1             𝑤 𝑙−1
+                       𝑣𝑡ℎ                𝑣𝑡ℎ
+                                                                   extracts the features of samples adaptively in learning process.
+                             𝑠                  𝑠
+                                                                   Modeling of this ability of the brain is critical. There are
+                                                                   multiple learning rules in the brain to accomplish various
+                                                                   learning tasks. STDP is a widespread rule of synaptic weight
+                                 𝑆𝑝𝑎𝑡𝑖𝑜                            modification in the brain. It updates the synaptic weights
+Fig. 5: The forward and backward process of biological BP-         according to the temporal relationship of the pre- and post-
+based SNNs for BrainCog.                                           synaptic spikes. Compared with the backpropagation algorithm
+                                                                   widely used in DNN with gradient calculation, STDP is more
+   Based on LIF spiking neuron, the direct input encoding          biological plausible. However, unlike the backpropagation
+strategy, the MSE loss function and the surrogate gradient         algorithm that relies on a large number of sample labels, STDP
+function supplied in BrainCog, we propose a Biologically           is a local optimization algorithm. Due to the lack of global
+Plausible Spatio-Temporal Adjustment (BPSTA) to help BP            information, the ability of self-organization and coordination
+algorithm with more reasonable error adjustment in the spatial     between neurons is insufficient. In the SNN model, it will
+temporal dimension [94]. The algorithm realizes the reason-        lead to disorder and uncertainty of spikes discharge, and
+able adjustment of the gradient in the spatial dimension, avoids   it is difficult to achieve a stable release balance state of
+the unnecessary influence of the neurons that do not generate      neurons. To this end, we design an unsupervised STDP-based
+spikes on the weight update, and extracts more important           spiking neural network model based on BrainCog, and bring
+features. By applying the temporal residual pathway, our           unsupervised learning to BrainCog as a functional module. As
+algorithm helps the error to be transmitted across multiple        shown in Fig. 6.
+spikes, and enhances the temporal dependency of the BP-               To solve the above problems, we introduced various adap-
+based SNNs. Compared with SNNs and ANNs with the same              tive mechanisms to improve the self-organization ability of the
+structure that only used the BP algorithm, our model greatly       overall network. STP is another synaptic learning mechanism
+improves the performance of SNNs on the DVS-CIFAR10 and            that exists in the brain. Inspired by STP, we designed an
+DVS-Gesture datasets, while also greatly reducing the energy       adaptive synaptic filter (ASF) that integrates input currents
+consumption and decay of SNNs, as shown in Tab. I.                 through nonlinear units, and an adaptive threshold balance
+   (3) Unsupervised STDP-based SNN                                 (ATB) that dynamically changes the threshold of each neuron
+                                                                                                                                                                   9
+
+
+
+                                                                                                  in the form of quantum superposition state and then transform
+                                                                      Adaptive Threshold
+                                                                           Balance                this state to spike trains with different phase. Spiking neural
+                             I >> Vthreshold                                                      network with time differential convolution kernel (TCK) is
+                                                                                                  used to do further classification shown in Fig. 8.
+     ASF                                          Adaptive
+
+                                                Synaptic Filter
+                              I << Vthreshold
+
+    (a) Adaptive Synapse Filter (ASF) and Adpative Threshold Balance (ATB)
+     Sample 1               Sample 2                    Sample 3           Sample 4
+
+
+
+
+                (b) Adaptive Lateral Inhibition Connection (ALIC)
+
+
+
+Fig. 7: (a) The adaptive synaptic filter and the adaptive
+threshold balance jointly regulate the neuron spikes balance
+of neuron. (b) The adaptive lateral inhibitory connection has
+different connections for different samples, preventing neurons
+from learning the same features. This figure is from [95].                                        Fig. 8: Quantum superposition inspired spiking neural net-
+                                                                                                  work, adopted from [26].
+to avoid excessively high or low firing rates. The combination
+of the two controls the firing balance of neurons. As the
+Fig. 7 shows. We also address the problem of coordinating
+neurons within a single layer with an adaptive lateral inhibitory
+connection (ALIC). The mechanism have different connection
+structures for different input samples. Finally, in order to solve
+the problem of low efficiency of STDP training, we designed a
+sample temporal batch STDP. It combines the information be-
+tween temporal and samples to uniformly update the synaptic
+weights, as shown by the following formula.
+                (t) +       NX
+                             batch TX     N
+                                    batch X
+           dwj
+                        =                                   W (tf,m
+                                                                i   − tn,m
+                                                                       j   )               (24)
+            dt              m=0        n=0 f =1
+
+where W (x) is the function of STDP, Nbatch is the batchsize
+of the input, Tbatch is the batch of time step, N is the number
+of neurons. We verified our model on MNIST and Fashion-
+MNIST, achieving 97.9% and 87.0% accuracy, respectively.
+To the best of our knowledge, these are the state-of-the-art                                      Fig. 9: Performance of QS-SNN on background MNIST
+results for unsupervised SNNs based on STDP.                                                      inverse image, adopted from [26].
+   2. Adaptability and Optimization
+                                                                                                     The effort tries to incorporate the quantum superposition
+   (1) Quantum superposition inspired SNN
+                                                                                                  mechanism to SNNs as a new form of encoding strategy
+   In the microscopic size, quantum mechanics dominates the
+                                                                                                  for BrainCog, and the model finally shows its capability on
+rules of operation of objects, which reveals the probabilistic
+                                                                                                  robustness for learning. The proposed QS-SNN model is tested
+and uncertainties of the world. New technologies based on
+                                                                                                  on color inverted MNIST datasets. The background-inverted
+quantum theory like quantum computation and quantum com-
+                                                                                                  picture is encoded in the quantum superposition form as shown
+munication provide an alternative to information processing.
+                                                                                                  in Eq. 25 and 26.
+Researches show that biological neurons spike at random and
+the brain can process information with huge parallel potential                                                    2n
+                                                                                                               2 −1
+                                                                                                             1 X
+like quantum computing.                                                                             |I(θ)⟩ = n     (cos(θi ) |xi ⟩ + sin(θi ) |x̄i ⟩) ⊗ |i⟩ ,   (25)
+   Inspired from this, we propose the Quantum Superposition                                                 2 i=0
+Inspired Spiking Neural Network (QS-SNN) [26], comple-                                                                    π
+menting quantum image (CQIE) method to represent image                                                         θi ∈ [0,     ], i = 1, 2, 3, . . . , 22n − 1.    (26)
+                                                                                                                          2
+                                                                                                                                 10
+
+
+
+   Spike sequences of different frequencies and phases are         time step, so the maximum firing rate of the neuron is 1. After
+generated from the picture information of the quantum super-       normalizing the weight of trained ANN, some activation values
+position state. Furthermore we use two-compartment spiking         greater than 1 cannot be effectively represented by IF neurons.
+neural networks to process these spike trains.                     Therefore, the residual membrane potential in neurons will
+   We compare the QS-SNN model with other convolutional            affect the performance of the conversion to some extent. In
+models. The result in Fig. 9 shows that our QS-SNN model           addition, since IF receives pre-synaptic neuron spikes for
+overtakes other convolutional neural networks in recognizing       information transmission, the synaptic current received by
+background-inverted image tasks.                                   the neuron at each time is unstable, but its sum can be
+   (2) Unsupervised SNN with adaptive learning rule and            approx to the converted value by increasing the simulation
+structure                                                          time. However, the total number of spikes is the time-varying
+   Brain can accomplish specific tasks by adaptively learning      extremum of the sum of the synaptic currents received. When
+to organize the features of a small number of samples. Few-        the activation value corresponding to the IF neuron is negative
+shot learning is an important ability of the brain. In the above   and the total synaptic current received by the neuron in a short
+section, an unsupervised STDP-based spiking neural network         time exceeds the threshold, the neuron that should be resting
+is introduced [95]. To better illustrate the power of our model    will issue the spike, and the influence of the spike on the
+on small sample training, we tested the model with small           later layers cannot be eliminated by increasing the simulation
+samples and find that this model has stronger small sample         time. Finally, in the conversion of the MaxPooling layer, the
+processing ability than ANN with similar structures, as shown      previous work has enabled spikes from the neuron with the
+in Tab. II [95].                                                   maximum firing rate to pass through. However, due to the
+                                                                   instability of synaptic current, neurons with the maximum
+TABLE II: The performance of unsupervised SNN compared
+                                                                   firing rate are often not fixed, which makes the output of the
+with ANN on MNIST dataset with different number of training
+                                                                   converted MaxPooling layer usually larger.
+samples [95].
+
+        samples       200      100        50        10                a
+        ANN       79.77%    71.40%    68.72%    47.12%
+        Ours      81.45%    75.44%    72.88%    51.45%
+                   1.68%     4.04%     4.16%     4.33%
+
+   (3) Efficient and Accurate Conversion of SNNs
+   SNNs have attracted attention due to their biological plau-
+sibility, fast inference, and low energy consumption. However
+the training methods based on the plasticity [96] and surrogate
+gradient algorithms [11] need much memory and perform
+                                                                      b                             c
+worse than ANN on large networks and complex datasets. For
+users of BrainCog, we are certain there will be clear need to
+use SNNs while keep the benifit from ANNs. As an efficient
+method, the conversion method combines the characteristics of
+backpropagation and low energy consumption and can achieve
+the same excellent performance as ANN with lower power
+consumption [22], [23], [24]. However, the converted SNNs          Fig. 11: The conversion methods. (a) Burst spikes increase the
+typically suffer from severe performance degradation and time      upper limit of firing rates; (b) spike calibration corrects the
+delays.                                                            effect of faulty spikes on conversion, and (c) LIPooling uses
+                                                                   lateral inhibition mechanisms to achieve accurate conversion
+                                                                   of the MaxPooling layers. Refined based on [97], [98].
+
+                                                                      To solve the problem of the residual membrane potential
+                                                                   of neurons, we introduce the burst mechanism, as shown
+                                                                   in Fig. 11 (a), which enables neurons to send more than
+                                                                   one spike between two time steps, depending on the current
+                                                                   membrane potential. Once some neurons have residual infor-
+                                                                   mation remaining, they can send spikes between two time
+Fig. 10: The conversion errors from IF neuron, time dimen-         steps. In this way, the firing rate of SNN can be increased,
+sion, and MaxPooling, adopted from [97].                           and the membrane potential remaining in the neuron can be
+                                                                   transmitted to the neuron of the next layer.
+  We divide the performance loss to IF neurons, time di-              For classification problems, SNN only needs to ensure that
+mension, and MaxPooling layer [97], as shown in Fig. 10.           the index of the maximum output is correct, but for more
+In SNN, the neuron can only send one spike at most in each         demanding conversion tasks, such as object detection, the
+                                                                                                                                               11
+
+
+
+solution of SIN problem is worth exploring. Note that the          employ five common perceptual strength: visual, auditory, hap-
+spikes emitted by hidden layer neurons are unstable, but the       tic, olfactory and gustatory. During the data preparation step,
+mean of its inter-spike interval distribution is related to its    we min-max normalize all kinds of perceptual strength of the
+corresponding activation value [98]. We monitor each neuron’s      concept in the multi-sensory dataset so that each value of the
+spiking time in the forward propagation process and update its     vector is in [0, 1]. We regard them as stimuli to the presynaptic
+average inter-spike interval, as shown in Fig. 11 (b). Under a     neurons. It’s a 2-layer SNN model, with 5 neurons in the first
+certain time allowance, the neuron that does not emit spikes       layer matching the concept’s 5 kinds of perceptual strength,
+will be determined to be Inactivated Neuron. Then, the twin        and 1 neuron in the second layer representing the neural state
+weights emit spikes to suppress the influence of historical        following multi-sensory integration. In this paradigm, we use
+errors and calibrate the influence of wrong spikes to a certain    perceptual strength based presynaptic Poisson neurons and LIF
+extent to ensure accurate conversion.                              or Izhikevich as the postsynaptic neural model.
+   Inspired by the lateral inhibition mechanism [99], we pro-         The weights between the neurons are W i = Σgnigi where
+                                                                                                                           i
+pose LIPooling for converting the maximum pooling layer,           gi = σ12 ,σi2 is the variance of each kind of percep-
+                                                                              i
+as shown in Fig. 11 (c). From the operation perspective, the       tual strength. We convert the postsynaptic neuron’s spiking
+inhibition of other neurons by the winner in LIPooling is -1, so   train S  post
+                                                                                 ([0, T ]) in [0, T ] into integrated representations
+the neuron with the largest firing rate at the current time step   B IM ([0, T ]) for the concept in this form:
+may not spike due to the inhibition of other neurons in history.
+From the output perspective, LIPooling sums up the output of       B IM ([0, T ]) = [T (S post ((0, tol])), T (S post ((tol, 2 ∗ tol])), · · · ,
+all neurons during simulation. So the key is that LIPooling uses                  T (S post (((k − 1) ∗ tol, k ∗ tol])), · · · ,
+competition between neurons to get an accurate sum (equal to                                    T
+the actual maximum), instead of picking the winner.                               T (S post ((⌊ ⌋ ∗ tol, T ]))]
+                                                                                               tol
+   3. Multi-sensory Integration                                                                                                 (27)
+   One can build SNN models through BrainCog to process            Here if the interval has any spikes, the bit is 1. Otherwise it
+different types of sensory inputs, while the human brain learns    is 0, according to the T (interval) function.
+and makes decisions based on multi-sensory inputs. When               The AM paradigm presupposes that each kind of modality
+information from various sensory inputs is combined, it can        is associated before integration [25]. It includes 5 neurons,
+lead to increased perception, quicker response times, and          matching the concept’s 5 distinct modal information sources.
+better recognition. Hence, enabling BrainCog to process and        They are linked with each other and are not self-connected.
+integrate multi-sensory inputs are of vital importance.            The input spike trains to the network are generated using
+   In this section, we focus on concept learning with multi-       a Poisson event-generation algorithm based on perceptual
+sensory inputs. We present a multi-sensory concept learning        strength. For each concept, we turn the spike trains of these
+framework based on BrainCog to generate integrated vectors         neurons into the ultimate integrated representations.
+with the multi-sensory representation of the concept.                 The weight value is defined by the correlation between
+   Embodied theories, which emphasize that meaning is rooted       each two modalities, i.e. W = Corr(i, j), where i, j ∈
+in our sensory and experiential interactions with the envi-        [A, G, H, O, V ]. We convert the spike trains S i ([0, T ]) of all
+ronment, supports multi-sensory representations. Based on          neurons into binarycode B i ([0, T ]) and conjoin them as the
+SNNs, we present a human-like framework to learn concepts          ultimate vector B([0, T ]) as follows:
+which can generate integrated representations with five types         B i ([0, T ]) = [T (S i ((0, tol])), T (S i ((tol, 2 ∗ tol])), · · · ,
+of perceptual strength information [25]. The framework is
+                                                                                  T (S i (((k − 1) ∗ tol, k ∗ tol])), · · · ,
+developed with two distinct paradigms: Associate Merge (AM)
+                                                                                             T
+and Independent Merge (IM), as Fig. 12 shows.                                     T (S i ((⌊ ⌋ ∗ tol, T ]))]
+                                                                                            tol
+                                                                                                                                          (28)
+
+                                                                      B AM ([0, T ]) = [B A ([0, T ]) ⊕ B H ([0, T ]) ⊕ B G ([0, T ])
+                                                                                      ⊕ B O ([0, T ]) ⊕ B V ([0, T ])]
+                                                                                                                             (29)
+                                                                      To test our framework, we conducted experiments with
+                                                                   three multi-sensory datasets (LC823 [100], [101], BBSR [102],
+                                                                   Lancaster40k [103]) for the IM and AM paradigms, respec-
+                                                                   tively. We used WordSim353 [104] and SCWS1994 [105] as
+                                                                   metrics [25]. The resuls show that integrated representations
+Fig. 12: The Framework of Concept Learning Based on SNNs           are closer to human beings than the original ones based on
+with multi-sensory Inputs.                                         our framework, according to the overall results: 37 submod-
+                                                                   els outperformed a total of 48 tests for both AM and IM
+  IM is based on the widely accepted cognitive psychology          paradigm [25]. Meanwhile, to compare the two paradigms, we
+premise that each type of sense for the concept is independent     introduce concept feature norms datasets which represent con-
+before integration [25]. As the input to the model, we will        cepts with systematic and standardized feature descriptions. In
+                                                                                                                                 12
+
+
+
+this study, we use the datasets McRae [106] and CSLB [107]
+as criteria. The findings show that the IM paradigm performs
+better at multi-sensory integration for concepts with higher
+modality exclusivity. The AM paradigm benefits the concept
+of uniform perceptual strength distribution. Furthermore, we
+present perceptual strength-free metrics to demonstrate that
+both paradigms of our framework have excellent general-
+ity [25].
+
+
+
+
+                                                                   Fig. 14: The architecture of DA-regulated BDM-SNN, refined
+                                                                   based on [27].
+
+
+                                                                   the ability to support UAV online decision-making. For the
+                                                                   Flappy Bird game, our method achieves a performance level
+                                                                   similar to humans, stably passing the pipeline on the first try.
+                                                                   Fig. 15a illustrates the changes in the mean cumulative rewards
+                                                                   for LIF and simplified H-H neurons while playing the game.
+                                                                   The simplified H-H neuron achieves similar performances to
+                                                                   that of LIF neurons. BDM-SNN with different neurons can
+                                                                   quickly learn the correct rules and keep obtaining rewards.
+Fig. 13: The Correlation Results Between Modality Exclusiv-        We also analyze the role of different ion channels in the
+ity and Average of 3 Neighbors’ Rankings.                          simplified H-H model. From Fig. 15b, we find that sodium and
+                                                                   potassium ion channels have opposite effects on the neuronal
+                                                                   membrane potential. Removing sodium ion channels will make
+B. Decision Making                                                 the membrane potential decay, while the membrane potential
+   This subsection introduces how BrainCog implements              rises faster and fires earlier when removing potassium ion
+decision-making functions from the perspective of brain neu-       channels. These results indicate that sodium ion channels
+ral mechanism modeling and deep SNN-based reinforcement            can help increase the membrane potential, and potassium
+learning models. Using BrainCog, we build a multi-brain areas      ion channels have the opposite effect. Experimental results
+coordinated SNN model and a spiking deep Q-network to              also indicate that BDM-SNN with simplified H-H model that
+solve decision-making and control problems.                        removes sodium ion channels fails to learn the Flappy Bird
+   1. Brain-inspired Decision-Making SNN                           game.
+   For mammalian brain-inspired decision-making, we take
+inspiration from the PFC-BG-ThA-PMC neural circuit and
+build brain-inspired decision-making spiking neural network
+(BDM-SNN) model [27] by BrainCog as shown in Fig. 14.
+BDM-SNN contains the excitatory and inhibitory connections
+within the basal ganglia nuclei and direct, indirect, and hyper-
+direct pathways from the PFC to the BG [108], [109]. This
+BDM-SNN model incorporates biological neuron models (LIF
+and simplified H-H models), synaptic plasticity learning rules,
+and interactive connections among multi-brain areas developed
+by BrainCog. On this basis, we extend the dopamine (DA)-           Fig. 15: (a) Experimental result of BrainCog based BDM-SNN
+regulated BDM-SNN, which modulates synaptic learning for           on Flappy Bird. The y-axis is the mean of cumulative rewards.
+PFC-to-striatal direct and indirect pathways via dopamine.         (b) Effects of different ion channels on membrane potential for
+Different from the DA regulation method in [27] which              simplified H-H model.
+uses multiplication to modulate the specified connections, we
+improve it by introducing R-STDP [48] (from Eq. 14 and               In addition, for the UAV decision-making tasks in the real
+Eq. 15) to modulate the PFC-to-striatal connections.               scene, our model could perform potential applications includ-
+   The BDM-SNN model implemented by BrainCog could                 ing flying over doors and windows and obstacle avoidance,
+perform different tasks, such as the Flappy Bird game and has      which have been realized in [27]. Users only need to divide
+                                                                                                                                                                        13
+
+
+
+the state space and action space according to different tasks,                  Breakout                       CrazyClimber                    MsPacman
+
+call the DA-regulated BDM-SNN decision-making model, and
+combine the UAV’s action control instructions to complete the         Score
+
+UAV’s decision-making process.
+   This part of the work mainly draws on the neural struc-                        Step          1e7                Step           1e7               Step          1e7
+
+
+ture and learning mechanism of brain decision-making and                       NameThisGame                    SpaceInverder                   VideoPinball
+
+proposes the multi-brain areas coordinated decision-making
+spiking neural network constructed by BrainCog, and verifies           Score
+
+the ability of reinforcement learning in different application
+scenarios.                                                                         Step         1e7                Step            1e7              Step         1e7
+
+   2. Spiking Deep Q Network with potential based layer
+normalization                                                      Fig. 17: PL-SDQN performance on Atari games, adopted
+   Deep Q network is widely used for decision-making tasks,        from [28].
+and it is required to have SNN based deep Q network for
+BrainCog so that it can be used for SNN based decision mak-
+ing. We propose potential-based layer normalization spiking        C. Motor Control
+deep Q network (PL-SDQN) model to combine SNN with                    Neuromorphic models on robot control can achieve more
+deep reinforcement learning [28]. We use the LIF neuron            robust and energy efficient effects than conventional methods.
+model in BrainCog to simulate neurodynamics. Deep spiking          Spiking neural networks have been used in robot control
+neural networks are difficult to be applied to reinforcement       studies like navigation [110] and robot arm control [111].
+learning tasks. On the one hand, it is due to the complexity       Inspired by the brain motor circuit, we construct a multi-
+of reinforcement learning task itself, on the other hand, it       brain areas coordinated SNN robot motor control model, to
+is challenging to train spiking neural networks and transmit       extend BrainCog to control various robots to model embodied
+spiking signal characteristics in deep layers. We find that the    intelligence.
+spiking deep Q network quickly dissipates the spiking signal          We construct the brain-inspired motor control model with
+in the convolutional layer. Inspired by how local environmental    LIF neuron provided by BrainCog. The whole network model
+potentials influence brain neurons, we propose the potential-      architecture is shown in Fig. 18. The high-level motion infor-
+based layer normalization (pbLN) method. The xt , the post-        mation is produced by SMA and PMC modules. As discussed
+synaptic potential of convolution layers, are normalized as        above, the function of SMA is to process internal movement
+                             xt − x̄t                              stimuli and is responsible for the planning and abstraction of
+                       xˆt = √                              (30)   advanced actions. The SMA model contains LIF neurons and
+                               σxt + ϵ
+                                                                   receives input signals. One part of the output pulse of the
+                                1 X
+                                   H                               SMA module stimulates the PMC module, and the other part
+                       x̄t =          xt,i                  (31)   is received by the BG module. The output of the BG module is
+                                H i=1
+                                                                   used as a supplementary signal for action planning, and serves
+                        v
+                        uH                                         as the input to the PMC together with the SMA signal.
+                       1uX
+                  σxt = t (xt,i − x̄t )                     (32)                                                               Cerebellum
+                       H i=1                                                                                                             PC
+                                                                                                      PMC                                     DCN
+
+
+  We construct PL-SDQN model as shown in Fig. 16. Atari                                                                           GC
+                                                                                                                                                              Control
+                                                                      Input
+game images are processed by spiking convolution network              Signal                                                                                  Signal
+
+and pbLN method and input into a fully connected LIF neural                                                         Fusion
+
+network. The spiking output of PL-SDQN is weighted and                           SMA
+summed to continue state-action values.                                               Basal ganglia    Population coding
+
+
+                                                                   Fig. 18: A spiking neural network for motor control based on
+                         pbLN                 pbLN
+                                                                   BrainCog.
+
+                                                                     In order to expand the dimension of neuron direction
+                                                          Value    representation, we use neuron population coding to output
+                Conv                   Conv          FC
+                                                                   the high-level action abstraction. Population-coded spiking
+                                                                   neural network has been used for energy-efficient continuous
+ Fig. 16: The framework of PL-SDQN. Refined from [28].             control [112], showing population coding can increase the
+                                                                   ability of spiking neurons to represent precise continuous
+  We compared our model with the original ANN-based DQN            values. In our work, we are inspired by neural mechanisms
+model, and the results are shown in Fig. 17. It shows that         of population encoding of motion directions in the brain and
+our model achieved better performance compared with vanilla        use LIF neuron groups to process the output spikes from PMC
+DQN model.                                                         module.
+                                                                                                                               14
+
+
+
+   The cerebellum plays an important role in motor coordi-
+nation and fine regulation of movements. We built spiking
+neural network based cerebellum model to process the high-
+level motor control population embedding. The outputs of
+populations are fused to encode motor control information
+generated by high-level cortex area inputs to a three-layer
+cerebellum spiking neural network, including GCs, PCs and
+DCN modules. And the cerebellum takes pathway connections
+like DenseNet [113]. The DCN layer generates the final joint
+control outputs.                                                  Fig. 19: The architecture of the music memory model, refined
+                                                                  based on [29].
+D. Knowledge Representation and Reasoning
+   This subsection shows how the BrainCog platform achieve
+the ability of knowledge representation and reasoning. Via           Storing: Based on the encoding process, as the notes input
+neuroplasticity and population coding mechanisms, spiking         sequently, the neurons in pitch and duration subnetworks with
+neural networks acquire music and symbolic knowledge.             different preferences respond to these sequential notes and
+Moreover, on this basis, cognitive tasks such as music gener-     fire orderly. Meanwhile, connections between these neurons
+ation, sequence production, deductive reasoning and inductive     are computed and updated by the STDP learning rule. It is
+reasoning are realized.                                           important to indicate that the neurons and synapses are grown
+   1. Music Memory and Stylistic Composition SNN                  dynamically. Besides, synaptic connections between the title
+   Music is part of human nature. Listening to melodies in-       cluster and other two subnetworks are generated and updated
+volves sensory perception, personal memory, action, emotion,      by the STDP learning rule simultaneously. The details of note
+and even creative behaviors, etc [67]. Music memory is a fun-     sequence memorizing can be found in our previous work [29].
+damental part of musical behaviors, and humans have strong           Retrieving: Given the title of a musical work, the ordered
+abilities to store a sequence of notes in the brain. Learning     notes can be recalled accurately. Since the weights of con-
+and creating music are also essential processes. A musician       nections are updated in storing process, neural activities in
+engages his memory, emotion, musical knowledge and skills to      the title cluster lead to the excitations of neurons in pitch
+write a beautiful melody. Actually, neuroscientists have found    and duration subnetworks. Then, the notes are retrieved in
+that many brain areas need to collaborate to complete the         order. We use a public corpus that contains 331 classical piano
+cognitive behaviors with music. Inspired by brain mechanisms,     works [117] recorded by MIDI standard format to evaluate
+this paper focuses on the two key issues of music memory and      the model. The experiments have shown that our model can
+composition, which are modeled by spiking neural networks         memorize and retrieve the melodies with an accuracy of 99%.
+based on the BrainCog platform.                                   The details of the experiments have been discussed in our
+   1) Musical Memory Spiking Neural Network: A musical            previous work [29].
+melody is composed of a sequence of notes. Pitch and duration        2) Stylistic Composition Spiking Neural Network: How
+are two essential attributes of a note. Scientists have found     to learn and make music are quite complex processes for
+that the primary auditory cortex provides a tonotopic map         humans. Scientists have found that the memory system and
+to encode the pitches, which means that neurons in this           knowledge experience participate in human creative behav-
+region have their preferences of pitches [114]. Meanwhile,        iors [118]. Many brain areas like the prefrontal cortex are
+neural populations in the medial premotor cortex have the         engaged in human creativity [119]. However, the details of
+preferences of all the time intervals covered in hundreds of      brain mechanisms are still unclear. Inspired by the current
+milliseconds [115]. Besides, researchers have emphasized the      neuroscientific findings, the BrainCog introduces a spiking
+contribution of the hippocampus in sequence memory [116].         neural network for learning musical knowledge and creating
+Inspired by these mechanisms, this work proposes a spiking        melodies with different styles [30].
+neural model, which contains collaborated subnetworks to
+encode, store and retrieve the music melodies [29].
+   Encoding: As is shown in Fig. 19, this work defines pitch
+subnetwork and duration subnetwork to encode pitches and
+durations of musical notes respectively. These two subnet-
+works are composed of numbers of minicolumns with different
+preferences. Synaptic connections with transmission delays
+exist between neurons from different layers. Besides, a cluster
+that represents the title of a musical melody is composed
+of numerous individual neurons. This cluster has the feed-
+forward and feedback connections with pitch and duration
+subnetworks. Since the BrainCog platform supports various
+neural models, this work takes LIF model to simulate neural       Fig. 20: Stylistic composition model inspired by brain mech-
+dynamics.                                                         anisms. Refined based on [30].
+                                                                                                                                15
+
+
+
+   Musical Learning: This work proposes a spiking neural               For Population Coding, this model utilizes populations of
+model which is composed of a knowledge network and a                neurons to represent different symbols. The whole neural
+sequence memory network. As is shown in Fig. 20, the                loop of SPSNN is divided into Working Memory Circuit,
+knowledge network is designed as a hierarchical structure for       Reinforcement Learning Circuit, and Motor Neurons [31],
+encoding and learning musical knowledge. These layers store         shown in Fig. 22. The Working Memory Circuit is mainly
+the genre (such as Baroque, Classical, and Romantic), the           responsible for completing the memory of the sequence. The
+names of famous composers and the titles of musical pieces.         Reinforcement Learning Circuit is responsible for acquiring
+Neurons in the upper layers project their synapses to the           different rules during the reinforcement learning process. The
+lower layers. The sequence memory network stores the ordered        Motor Neurons can be regarded as the network’s output.
+notes which have been discussed in section III-D1. During              In the working process of the model, the Working Mem-
+the learning process, synaptic connections are also projected       ory Circuit and the Reinforcement Learning Circuit coop-
+from the knowledge network to the sequence memory network.          erate to complete the memory and production of different
+This work also takes LIF model which is supported by the            sequences [31]. It is worth mentioning that with the in-
+BrainCog platform to simulate neural dynamics. Furthermore,         crease of background noise, the recall accuracy of symbols
+all the connections are generated and updated dynamically by        at different positions in a sequence gradually decreases, and
+the STDP learning rule.                                             the overall change trend follows the ”U-shaped accuracy”,
+                                                                    which is consistent with experiments in psychology and
+                                                                    neuroscience [123]. The results are highly consistent due
+                                                                    to the superposition of primacy and recency effects. Our
+                                                                    model provides a possible explanation for both effects from a
+                                                                    computational perspective.
+
+Fig. 21: A sample of a generated melody with Bach’s charac-
+teristic.
+
+   Musical Composition: Based on the learning process, genre-
+based and composer-based melody compositions are discussed
+in this paper. Given the beginning notes and the length of
+the melody to be generated, the genre-based composition can
+produce a single-part melody with a specific genre style.
+This task is achieved by the neural circuits of genre cluster
+and sequential memory system. Similarly, the composer-based
+composition can produce melodies with composers’ charac-
+ters. The composer cluster and sequential memory system
+circuits contribute to this process [30]. We also use a classical
+piano dataset including 331 musical works recorded by MIDI
+format [117] to train the model. Fig. 21 shows a sample of
+the generated melody with Bach’s style. The details of stylistic
+composition can be referred to our previous work [30].
+   A total of 41 human listeners are invited to evaluate the          Fig. 22: The architecture of SPSNN, adopted from [31].
+quality of the generated melodies, and they are divided into
+two groups, one of which has a musical background. Exper-              3. Commonsense Knowledge Representation Graph SNN
+iments have shown that the pieces produced by the model                Commonsense knowledge representation and reasoning are
+have strong characteristics of different styles and some of them    important cornerstones on the way to realize human-level gen-
+sound nice.                                                         eral AI [124]. In this module, we build Commonsense Knowl-
+   2. Brain-Inspired Sequence Production SNN                        edge Representation SNN(CKR-SNN) to explore whether
+   Sequence production is an essential function for AI ap-          SNN can complete these cognitive function.
+plications. Components in BrainCog enable the community                The hippocampus plays a critical role in the formation of
+to build SNN models to handle this task. In this paper,             new knowledge memory [125]. Inspired by the population
+we introduce the brain-inspired symbol sequences produc-            coding mechanism found in hippocampus [126], this module
+tion spiking neural network (SPSNN) model that has been             encodes the entities and relations of commonsense knowl-
+incorporated in BrainCog [31]. SPSNN incorporates multiple          edge graph into different populations of neurons. Via spiking
+neuroscience mechanisms including Population Coding [120],          timing-dependent plasticity (STDP) learning principle, the
+STDP [71], Reward-Modulated STDP [121], and Chunking                synaptic connections between neuron populations are formed
+Mechanism [122], mostly covered and provided by BrainCog.           after guiding the sequential firings of corresponding neuron
+After reinforcement learning, the network can complete the          populations [32].
+memory of different sequences and production sequences                 As Fig. 23 shows, neuron populations together constructed
+according to different rules.                                       the giant graph spiking neural networks, which contain the
+                                                                                                                                    16
+
+
+
+
+Fig. 23: Graph Spiking Neural Networks for Commonsense
+Representation, adopted from [32].
+
+
+commonsense knowledge. In this module, Commonsense
+Knowledge Representation SNN(CKR-SNN) represents a sub-                     Fig. 24: CRSNN 3D model, adapted from [33].
+set of Commonsense Knowledge Graph ConceptNet [127].
+After training, CKR-SNN can complete conceptual knowledge
+generation and other cognitive tasks [32].                              An individual’s perception of the world is realized through
+   4. Causal Reasoning SNN                                           his own body, and the importance of knowing oneself is the
+   In BrainCog, we constructed causal reasoning SNN, as an           perception of self-body. Neuroscientific researches show that
+instance to verify the feasibility of spiking neural networks to     the inferior parietal lobule (IPL) is activated when the subjects
+realize deductive and inductive reasoning. Specifically, Causal      see self-generated actions [68] and their own faces [129].
+Reasoning Spiking Neural Network (CRSNN) module con-                 Similar to the IPL, the Insula is activated in bodily ownership
+tains a brain-inspired causal reasoning spiking neural network       and self-recognition tasks [72].
+model [33].                                                             Understanding the mental states of others plays an important
+   This model explores how to encode a static causal graph into      role for understanding other people. Theory of mind is an
+a spiking neural network and implement subsequent reasoning          ability to distinguish between self and others and to infer
+based on a spiking neural network. Inspired by the causal            others’ mental states (such as desires, goals, beliefs, etc.)
+reasoning process of the human brain [128], we try to explore        in the social context [130], [131], [132]. This ability can
+how causal reasoning can be implemented based on spiking             help us reasonably infer other people’s policies and goals.
+neural networks. The 3D model of CRSNN is shown in                   Inspired by this, we believe that applying theory of mind to
+Fig. 24.                                                             the agent’s decision-making process will improve the agent’s
+   Inspired by neuroscience, the CRSNN module adopts the             inference of other agents, so as to take more reasonable
+population coding mechanism and uses neuron populations to           actions. Neuroscientific researches [133], [134], [135], [136]
+represent nodes and relationships in the causal graph. Each          show that the brain areas related to theory of mind are mainly
+node indicates different events in the causal graph, as shown        TPJ, part of PFC, ACC and IFG. The IPL contained in the TPJ
+in Fig. 24. By giving current stimulation to different neuron        is mainly used to represent self-relevant information, while
+populations in the spiking neural networks and combining the         the pSTS is used to represent information related to others.
+STDP learning rule [71], CRSNN can encode the topology               The insula, representing the abstract self, can be stimulated
+between different nodes in a causal graph into a spiking neural      with self-related information [34]. When theory of mind is
+network. Furthermore, according to this network, CRSNN               going on, the IFG will suppress self-relevant information.
+completes the subsequent deductive reasoning tasks.                  Therefore, the TPJ will input other-relevant information into
+   Then, by introducing an external evaluation function, we          the PFC. The ACC evaluates the value of others’ states, so as
+can grasp the specific reasoning path in the working process         to help the PFC to infer others. The process of inferring others’
+of the network according to the firing patterns of the model,        goals or behaviors can be understood as simulating other
+which gives the CRSNN more interpretability compared to              people’s decision-making [137]. Therefore, this process will be
+traditional ANN models [33].                                         regulated by dopamine from substantia nigra compacta/ventral
+                                                                     tegmental area (Snc/VTA).
+E. Social Cognition                                                     With the neuron model and STDP function provided by the
+   The nature and neural correlates of social cognition is           BrainCog framework, a brain-inspired social cognition model
+an advanced topic in cognitive neuroscience. In the field            is constructed, as shown in Fig. 25.
+of artificial intelligence and robotics, there are few in-depth         The brain-inspired social cognition model contains two
+studies that take the neural correlation and brain mechanisms        pathways: the bodily self-perception pathway and the theory
+of biological social cognition seriously. Although the scientific    of mind pathway.
+understanding of biological social cognition is still in a prelim-      The bodily self-perception pathway (shown in Fig. 26)
+inary stage [34], we integrate the biological findings of social     consists of inferior parietal lobule spiking neural network
+cognition into a model to construct a brain-inspired model for       (IPL-SNN) and Insula spiking neural network (Insula-SNN).
+social cognition to extend the functions of BrainCog.                The IPL-SNN realizes motor-visual associative learning. The
+   Understanding ourselves and other people is a prerequisite        Insula-SNN realizes the abstract representation of oneself, that
+for social cognition.                                                is, when the detected movement’s visual results match the
+                                                                                                                               17
+
+
+
+                                                                  own motion, and STS outputs the motion angle information
+                                                                  detected by vision. If the two are consistent, the Insula will
+                                                                  be activated.
+
+
+
+
+                                                                            Fig. 28: The architecture of Insula-SNN.
+       Fig. 25: Brain-inspired social cognition model.
+                                                                     The theory of mind pathway [35] is mainly composed
+expected results of its own movement, the Insula will be          of three modules: the perspective taking module, the policy
+activated, and the robot considers that the moving part in the    inference module, the action prediction module, and the state
+field of vision belongs to itself.                                evaluation module (shown in Fig. 29).
+
+
+
+
+Fig. 26: The architecture and pathway of bodily self-perception
+in the brain-inspired social cognition model.
+
+   The architecture of IPL-SNN and the process of motor-
+visual associative learning is shown in Fig. 27. The vPMC
+generates its own motion angle information, and the STS
+outputs the motion angle information detected by vision.
+According to the STDP mechanism and the spiking time
+difference of neurons in IPLM and IPLV, the motor-visual
+associative learning is established.
+
+                                                                  Fig. 29: The architecture of theory of mind in the brain-
+                                                                  inspired social cognition model, refined based on [35].
+
+                                                                     The perspective taking (also called self-perspective inhi-
+                                                                  bition [34]) module simulates the function of suppressing
+                                                                  self-relevant information in the process of distinguish self
+                                                                  and others. The information related to self can stimulate an
+                                                                  representation of abstract self. When we infer others, the
+                                                                  information related to self can be suppressed. Assuming that
+                                                                  the agent knows the environment. When the agent with the
+                                                                  theory of mind (ToM) infers the observation of others, it only
+                                                                  needs to bring its own observation into the position of others.
+                                                                  A matrix is used to represent the observed environment, where
+Fig. 27: Motor-visual associative learning in IPL, adapted        1 indicates that the area can be observed at the location, and
+from [34].                                                        0 indicates that the area cannot be observed at the location.
+                                                                  Another matrix is used to represent the position of objects.
+   The architecture of Insula-SNN is shown in Fig. 28. The        The position which is occupied by objects is represented by
+Insula receives angle information from IPLV and STS. After        1, otherwise it is represented by 0. By taking the intersection
+the motor-visual associative learning in IPL, IPLV outputs the    of the two matrices, the estimation of others’ states are
+visual feedback angle information predicted according to its      obtained. According to the fact that the IFG helps the brain
+                                                                                                                                     18
+
+
+
+to suppress the performance of self-relevant information in            The test stage is shown in Fig. 31. In the test stage, the
+the process of ToM, agent with the ToM will inhibit its own          robot can predicts the visual feedback generated by its arm
+representation of states, and further infer the behavior of others   movement according to the training results. By comparing
+by these estimation of others’ states. In summary, the input of      the similarity between the predicted visual feedback and the
+this module is the observation vector and the matrix of the          detected visual results, the robot can identify which mirror
+environment. The output is the observation vector of others’         image belongs to it.
+perspective.
+   The dorsolateral prefrontal cortex (DLPFC) has the function
+of storing working memory and predicting others’ behaviors.
+The action prediction module is used to simulate the function
+of the DLPFC. The input is formed by the observation value
+of others’ state output by the perspective taking module. The
+module is a single layer spiking neural network. There is
+lateral suppression in the output layers. The network is trained
+by R-STDP. The source of reward is the difference between
+the predicted value and the real value. When the predicted
+value is consistent with the real value, the reward is positive.
+When the predicted value is not equal to the real value, the
+reward is negative.
+   The state evaluation module composed of a single layer            Fig. 31: Test stage in multi-robots mirror self-recognition test,
+spiking neural network simulates the function of the ACC             adapted from [34].
+brain area. The inputs of the module are the predicted state
+and the output is safe or unsafe.                                       In the bodily self-perception pathway, the input is the
+   Finally, we conducted two experiments to test the brain-          angle of the robot’s random motion and the angle detected
+inspired social cognition model.                                     by the robot’s vision. After training and testing, the output
+   1. Multi-Robots Mirror Self-Recognition Test                      is an image, which is the result of visual motion detection
+   The mirror test is the most representative test of social         and the result of self motion prediction. The motion track
+cognition. Only a few animals passed the test, including             corresponding to the red line in the visual motion detection
+chimpanzees [138], orangutans [139], bonobos [140], go-              result is generated by itself. The result is shown in Fig. 32.
+rillas [141], [142], Asiatic elephant [143], dolphins [144],
+orcas [145], macaque monkeys [146], etc. Based on the mirror
+test, we proposed the Multi-Robots Mirror Self-Recognition
+Test [34], in which three robots with identical appearance
+move their arms randomly in front of the mirror at the same
+time, and each robot needs to determine which mirror image
+belongs to it. The experiment includes training stage and test
+stage.                                                                              Fig. 32: The result of IPL-SNN.
+   The training stage is shown in Fig. 30. Three blue robots
+with identical appearance move randomly in front of the mirror          2. AI Safety Risks Experiment
+at the same time. Each robot establishes the motor-visual               AI safety risks experiment is shown in Fig. 33. After
+association according to the motion angle of its own arm and         observing the behavior of the other two agents, the green agent
+the angle of visual detection.                                       can infer the behaviors of others by utilizing its ToM ability
+                                                                     when safety risks may arise due to environmental changes.
+                                                                     The experiment was conducted in the environments with some
+                                                                     simulated types of safety risks (e.g., the intersection will block
+                                                                     the view of agents and may cause agents to collide in the
+                                                                     crossing).
+                                                                        The experiment shows that the agent can infer others when
+                                                                     they have different perspectives. In the first two environments,
+                                                                     the agent observes the movement of others, and in the third
+                                                                     environment, the agent predicts others’ actions. In the experi-
+                                                                     ment, we verify the effectiveness of the model by taking the
+                                                                     rescue behavior as the standard when other agents might be
+                                                                     in danger. The experimental results show that the agent with
+                                                                     the ToM can predict the danger of the other agent in a slightly
+Fig. 30: Training stage in multi-robots mirror self-recognition      changed environment after watching other agents move in the
+test, adapted from [34].                                             previous environments.
+                                                                                                                                 19
+
+
+
+
+        (a) Green agent observes others’ behaviors (example 1)
+
+
+
+
+        (b) Green agent observes others’ behaviors (example 2)
+
+
+
+
+                                                                   Fig. 34: (a) Linear Pathway. (b) Nonlinear Pathway. (c) Exper-
+                   (c) Test example 1 (with ToM)                   iments for training and choice phases. (d) Experimental results
+                                                                   of linear and nonlinear networks under the dilemma. The X-
+                                                                   axis refers to the color density, and the Y-axis represents the
+                                                                   PI values. Refined based on [36].
+
+
+                  (d) Test example 2 (without ToM)                    Two cues (color and shape) are restructured during the
+Fig. 33: Comparison diagram of experimental results. (a)           testing phase, requiring linear and nonlinear pathways to
+Example 1. The green agent observes others’ behaviors. (b)         make a choice between inverted-green T and upright-blue
+Example 2. The green agent observes others’ behaviors. (c)         T, as shown in Fig. 34c. The linear decision directly uses
+The green agent with ToM can help other agents avoid risks.        the knowledge acquired during the training phase to make
+(d) The green agent without ToM is unable to help other agents     decisions. The nonlinear network models the recurrent loop of
+avoid risks. Similar results can be found in [35].                 the DA-GABA-MB circuit [147], [148], [149]: KC activates
+                                                                   the anterior posterior lateral (APL) neurons, which in turn
+                                                                   releases GABA transmitter to inhibit the activity of KC. KC
+                   IV. B RAIN S IMULATION                          also provides mushroom body output neuron (MBON) with
+                                                                   exciting input in order to generate behavioral choices. When
+   Brain simulation includes two parts: brain cognitive function
+                                                                   faced with conflicting cues, the level of DA increases rapidly
+simulation and multi-scale brain structure simulation. We
+                                                                   and produces mutual inhibition with APL, thereby producing a
+incorporate as much published anatomical data as possible
+                                                                   disinhibitory effect on KC. The excitatory connection between
+to simulate cognitive functions such as decision-making and
+                                                                   DA and MBON also helps speed up decision-making.
+working memory. Anatomical and imaging multi-scale con-
+                                                                      To verify the consistency of drosophila-inspired decision-
+nectivity data is used to make whole-brain simulations from
+                                                                   making SNN with the conclusions from neuroscience [147],
+mouse, macaque to human more biologically plausible.
+                                                                   we count the behavior paradigm of our model under different
+                                                                   color intensities over a period of time. First, we run the
+A. Brain Cognitive Function Simulation                             network for 500 steps to count the time t1 of selecting behavior
+   1. Drosophila-inspired Decision-Making SNN                      1 (avoiding) and the time t2 of selecting behavior 2 (ap-
+   Drosophila decision-making consists of value-based non-         proaching). Then we calculate prefer index (PI) values under
+linear decision and perception-based linear decision, where        different color intensity: P I = |t  1 −t2 |
+                                                                                                      |t1 +t2 | . From Fig. 34d, we
+the nonlinear decision could help to amplify the subtle dis-       find that nonlinear circuits could achieve a gain-gating effect
+tinction between conflicting cues and make winner-takes-           to enhance relative salient cue and suppress less salient cue,
+all choices [147]. In this paper, the BrainCog framework is        thereby displaying the nonlinear sigmoid-shape curve [36].
+used to build Drosophila nonlinear and linear decision-making      However, the linear network couldn’t amplify the difference
+pathways as shown in Fig. 34a-b. The entire model consists         between conflicting cues, thus making an ambiguous choice
+of a training phase and a testing phase as same as [36].           (linear-shape curve) [36]. This work proves that drawing on
+In the training phase, a two-layer SNN with LIF neurons            the neural mechanism and structure of the nonlinear and
+is trained by reward-modulated STDP, which combines local          linear decision-making of the Drosophila brain, the brain-
+STDP synaptic plasticity with global dopamine regulation. The      inspired computational model implemented by BrainCog could
+training phase learns the safe pattern (upright-green T) and the   obtain consistent conclusions with the Drosophila biological
+punished pattern (inverted-blue T) [36]. Therefore, it is safe     experiment [147].
+for green color and upright T shape factors, while blue color         2. PFC Working Memory
+and inverted T shape are dangerous.                                   Understanding the detailed differences between the brains
+                                                                                                                                  20
+
+
+
+of humans and other species on multiple scales will help            Excitatory connections: STN-Gpi, STN-Gpe. (2) Inhibitory
+illuminate what makes us unique as a species [150]. The             connections: StrD1-Gpi, StrD2-Gpe, Gpe-Gpi, Gpe-STN. Di-
+neocortex is associated with many cognitive functions such as       rect pathway (PFC-StrD1), indirect pathway (PFC-StrD2), and
+working memory, attention and decision making [151], [152],         hyperdirect pathway (PFC-STN) from PFC to BG are further
+[153], [154], [65]. Based on the human brain neuron database        constructed. The output from BG transmits an inhibitory
+of the Allen Institute for Brain Science, the key membrane          connection to the thalamus and finally excites PMC [59].
+parameters of human neurons are extracted 1 . Different types       In addition, excitatory connections are also formed between
+of human brain neuron models and rodent neuron models are           PFC and thalamus, and lateral inhibition exists in PMC. Such
+established based on adaptive Exponential Integrate-and-Fire        brain-inspired neural microcircuit, consisting of connections
+(aEIF) model [40], [41], which is supported by BrainCog.            among different cortical and subcortical brain areas, and
+   We refined the model of a single PFC proposed by Haas            incorporating DA-regulated learning rules, enable human-like
+and colleagues 2 [155]. Subsequently, a 6-layer PFC column          decision-making ability.
+model based on biometric parameters was established [156].
+The pyramidal cells and interneurons were proportionally
+distributed from the literature [157], [158] and connected with
+different connection probabilities for different types of neurons
+based on previous studies [159], [155], [160]. Firstly, the
+accuracy of information maintenance was tested on rodent PFC
+network model.
+
+
+
+
+                                                                    Fig. 36: The microcircuit of PFC-BG-ThA-PMC. Refined
+                                                                    based on [27].
+
+
+Fig. 35: Anatomical and network stimulation diagram. (a)               2) Cortical Column: A mammalian thalamocortical column
+The connection of a single PFC column. (b) The distribution         is constructed in BrainCog, which is based on detailed anatom-
+proportion of different types of neurons in each column layer.      ical data [73]. This column is made up of a six-layered cortical
+(c) Network persistent activity performance. Refined based          structure consisting of eight types of excitatory and nine
+on [37].                                                            types of inhibitory neurons. Thalamic neurons cover two types
+                                                                    of excitatory neurons, inhibitory neurons and GABAergic
+   Keeping the network structure and other parameters un-           neurons in the reticular thalamic nucleus (RTN). Neurons
+changed, only using human neurons to replace rodent neurons         are simulated by Izhikevich model, which BrainCog applies
+can significantly improve the accuracy and integrity of image       to exhibit their specific spiking patterns depending on their
+output. From an evolutionary perspective, the lower membrane        different neural morphologies. For example, excitatory neurons
+capacitance of human neurons facilitates firing. This change        (pyramidal and spiny stellate cells) always exhibit RS (Regular
+improves the efficiency of information transmission, which is       Spiking) or Bursting modes, while inhibitory neurons (basket
+consistent with the results of biological experiments [161].        and non-basket interneuron) are of FS (Fasting Spiking) or
+This data-driven PFC column model provides an effective             LTS (Low-threshold Spiking) patterns. Each neuron has a
+simulation-validation platform to study other high-level cog-       number of dendritic branches to accommodate a large number
+nitive functions [162].                                             of synapses. The synaptic distribution and the microcircuits are
+                                                                    reconstructed in BrainCog based on the previous works [73],
+                                                                    [163]. Fig. 37(a) describes the details of the minicolumn.
+B. Multi-scale Brain Structure Simulation                           The column contains 1,000 neurons and more than 4,200,000
+   1. Neural Circuit                                                synapses. To understand the network further, we stimulate the
+   1) Microcircuit: BrainCog implements a BDM-SNN model             spiny stellate cells in layer 4 to observe the activities of the
+inspired by the decision-making neural circuit of PFC-BG-           whole network, Fig. 37(b) shows the result of neural activities
+ThA-PMC in the mammalian brain (as shown in Fig. 36) [27].          after the cells in layer 4 receive the external stimulation.
+The BDM-SNN models the excitatory and inhibitory recipro-              2. Mouse Brain
+cal connections between the basal ganglia nucleus [60]: (1)
+                                                                       The BrainCog mouse brain simulator is a spiking neural
+  1 http://alleninstitute.github.io/AllenSDK/cell types.html        network model covering 213 brain areas of the mouse brain,
+  2 http://senselab.med.yale.edu/ModelDB/                           which are classified according to the Allen Mouse Brain
+                                                                                                                                         21
+
+
+
+
+Fig. 37: The thalamocortical column. (a) shows the structure
+of the column and (b) describes the running activities of
+the unfold column when the neurons in Layer 4 receive the
+external stimulus.
+
+                                                                            Fig. 38: Running of the BrainCog mouse brain simulator. The
+Connectivity Atlas [164] 3 . Each neuron was modeled by                     shining point is the spiking neuron at the time t and the point
+conductance-based spiking neuron model and simulated with                   color represents the neuron belong to respective brain area.
+a resolution of dt= 1 ms. A total of 6 types of neurons
+are included in this model, which are excitatory neurons (E),
+interneuron-basket cells (I-BC), interneuron-Matinotti cell (I-                The BrainCog macaque brain simulator is a large-scale spik-
+MC), thalamocortical relay neurons (TC), thalamic interneu-                 ing neural network model covering 383 brain areas [170]. We
+rons (TI) and thalamic reticular neurons (TRN).                             used the multi-scale connectome transformation method [171]
+                                                                            on the EGFP (enhanced green fluorescent protein) re-
+               J ∈ {E, IBC, IM C, T C, T I, T RN }                          sults [172], [173], [174] to obtain the approximate amount
+                                                                            of cells per region and the approximate number of synaptic
+   We use the aEIF neuron model referring to previous
+                                                                            connections between two connected regions [175]. The final
+work [165], [166], [167], and obtain the parameters of this
+                                                                            macaque model includes 1.21 billion spiking neurons and
+study, which are summarized in Tab. III.
+                                                                            1.3 trillion synapses, which is 1/5 of a real macaque brain.
+TABLE III: Main parameters of different types of neuron                     Specifically, the details of the brain micro-circuit are also
+models.                                                                     considered in the simulation. The types of neurons in the
+                                                                            micro-circuit include excitatory neurons (90 % of the neurons
+                Vth,j (mV )      Vr,j (mV )     τv,j    τw,j    αj    βj    are of this type in the simulation) and inhibitory neurons
+        E       -50              -110           100     -       0     0     (10% of the neurons are of this type in the simulation) [176].
+        I-BC    -44              -110           100     20      -2    4.5   The spiking neuron follows Hodgkin–Huxley model, which
+        I-MC    -45              -66            85      20      -2    4.5   is supported by BrainCog. The running demo of the model
+        TC      -50              -60            200     -       0     0     is shown in Fig. 39(a). To use the macaque model in the
+        TI      -50              -60            20      20      -2    4.5   platform, the parameters of the neuron number in each region,
+        TRN     -45              -65            40      20      -2    4.5   the connectome power between regions, and the proportion
+                                                                            between the excitatory and inhibitory neurons can be set
+   The connections between brain areas are based on the                     flexibly.
+quantitative anatomical dataset Allen Mouse Brain Connectiv-
+ity Atlas. Methods for data generation have been previously
+described in [168]. The proportions of the different types of
+neurons were adopted from a previous study [166], [169].
+   The numbers of each type of neuron in the network are
+shown in Tab. IV.
+TABLE IV: Number of different types of neurons in the
+BrainCog mouse brain simulator.
+                                                                            Fig. 39: Running of the macaque brain (a) and the human
+        Neuron Type      E         I BC       I MC     TC      TI    TRN    brain (b) model. The shining point is the spiking neuron at
+        Neuron Number    56100     14960      7480     1300    260   520    the time t and the point color represents the region which the
+                                                                            neuron belongs to.
+   The spontaneous discharge of the model without external
+stimulation is shown in Fig. 38.                                               4. Human Brain
+   This is an open platform, and both the parameters of the                    The BrainCog human brain simulator is built with the
+neuron model and the number of different types of neurons                   approach similiar to the BrainCog macaque brain. By using
+can be set flexibly.                                                        the EGFP results of the human brainnetom atlas [177], [178],
+   3. Macaque Brain                                                         the BrainCog human brain simulator consists of 246 brain
+                                                                            areas. It should be noted that since there is no directed human
+ 3 http://connectivity.brain-map.org                                        brain connectome available until the release of this paper,
+                                                                                                                                  22
+
+
+
+the BrainCog human brain simulator keeps bidirectional con-        is dedicated to address critical research issues like this. The
+nections among brain areas. The details of the micro-circuit,      learning framework of BORN consists of multi-task continual
+including the excitatory neuron and the inhibitory neuron, are     learning, few-shot learning, multi-modal concept learning, on-
+also considered. The final model (Fig. 39(b) includes 0.86         line learning, lifelong learning, teaching-learning, and transfer
+billion spiking neurons and 2.5 trillion synapses, which is        learning, etc.
+1/100 of a real human brain. To use this model in the platform,       To demonstrate the ability and principles of BORN, we
+the neuron number per region, the connectome power, and the        provide a relatively complex application on emotion depen-
+proportion between the excitatory and inhibitory neurons can       dent robotic music composition and playing. This application
+be set flexibly. Morover, all the simulations were performed       requires a humanoid robot perform music composition and
+on distributed memory clusters [175] at the super computing        playing depending on visual emotion recognition. The appli-
+center affiliated to Institute of Automation, Chinese Academy      cation requires BORN to provide cognitive functions such as
+of Sciences, Beijing, China. The cluster named the fat cluster     visual emotion recognition, sequence learning and generation,
+is composed of 16 blade nodes and 2 “fat” computing nodes.         knowledge representation and reasoning, and motor control,
+In order to imporve the network communication efficiency           etc. This application of BORN starts with perception and
+and the simulation performance, the most connected areas           learning, and ends with motor output.
+were simulated in the ’fat’ computing nodes to minimize the           It includes three modules implemented by BrainCog: the
+inter-node communications, while the other areas is randomly       visual (emotion) recognition module, the emotion-dependent
+distributed in the blade nodes. The simulation shows the ability   music composition module, and the robot music playing
+of the framework to deploy on the supercomputer or large-          module. As shown in Fig. 41, the visual emotion recognition
+scale computer clusters.                                           module enables robots to recognize the emotions expressed in
+                                                                   images captured by the humanoid robot eyes. The emotion-
+                                                                   dependent music composition module can generate music
+    V. BORN: A SPIKING NEURAL NETWORK DRIVEN
+                                                                   pieces according to various emotional inputs. When a picture
+A RTIFICIAL I NTELLIGENCE E NGINE BASED ON B RAIN C OG
+                                                                   is shown to the robot, the Visual Emotion Recognition network
+   BrainCog is designed to be an open source platform to           can firstly identify the emotions expressed in the picture, such
+enable the community to build spiking neural network based         as joy or sadness. The robot then selects or compose the music
+brain-inspired AI models and brain simulators. Based on            piece that best matches the emotions in the picture. And finally,
+the essential components developed for BrainCog, one can           with the help of the robot music playing module, the robot
+develop their own domain specific or general purpose AI            controls its arms and fingers in a series of movements, thus
+engines. To further demonstrate how BrainCog can support           playing the music on the piano. Some details are introduced
+building Brain-inspired AI engine, here we introduce BORN,         as follows:
+an ongoing SNN driven Brain-inspired AI engine, ultimately            1) Visual Emotion Recognition: For emotion recognition,
+designed for general purpose living AI. As shown in Fig. 40,       inspired by the ventral visual pathway, we construct a deep
+the high-level architecture of BORN is to integrate spatial        convolutional spiking neural network with LIF neuron model
+and temporal plasticities to realize perception and learning,      and surrogate gradient provided by BrainCog. The structure
+decision-making, motor control, working memory, long-term          of the network is set as 32C3-32C3-MP-32C3-32C3-300-7.
+memory, attention and consciousness, emotion, knowledge            32C3 means the output channel is set with 32, and the kernel
+representation and reasoning, social cognition and other brain     size is set as 3. MP denotes the max pooling. The mean
+cognitive functions. Spatial plasticity incorporates multi-scale   firing rate is used to make the final prediction. We use the
+neuroplasticity principles at micro, meso and macro scales.        Adam optimizer, and the mean square error loss. The initial
+Temporal plasticity considers learning, developmental and          learning rate is set with 0.001, and it will decay to 1/10 of the
+evolutionary plasticity at different time scales.                  previous value every 40 epochs, for a total of 100 epochs. We
+   As an essential component for BORN, we propose a                use the Emotion6 dataset [181] to train and test our model.
+developmental plasticity-inspired adaptive pruning (DPAP)          The Emotion6 dataset is composed of 6 emotions such as
+model, that enables the complex deep SNNs and DNNs to              anger, disgust, fear, joy, sadness, surprise, and each type of
+gradually evolve into a brain-inspired efficient and compact       emotion consists of 330 samples. On this basis, we extend the
+structure, and eventually improves learning speed and accuracy     original Emotion6 dataset with exciting emotion which we
+in the extremely compressed networks [179]. The evolutionary       collect online. 80% of the images are used as the training set,
+process for the brain includes but not limited to searching        and the remaining 20% are used as the test set.
+for the proper connectome among different building blocks             2) Emotion-dependent Music Composition: Listening to the
+of the brain at multiple scales (e.g. neurons, microcircuits,      the music can make us emotional, while, when people feel
+brain areas). BioNAS for BORN uses brain-inspired neural           happy or sad, they always express their feeling with music.
+architecture search to construct SNNs with diverse motifs in       Amygdala plays a key role in human emotion. Inspired by this
+the brain and experimentally verify that SNNs with rich motif      mechanism, we constructed a simple spiking neural network
+types perform better than plain feedforward SNNs [180].            to simulate this important area to represent different types of
+   How the human brain selects and coordinates various learn-      emotions and learn the relationships with other brain areas
+ing methods to solve complex tasks is crucial for under-           related to music. As shown in Fig. 41, the amygdala network is
+standing human intelligence and inspiring future AI. BORN          composed of several LIF neurons supported through BrainCog,
+                                                                                                                              23
+
+
+
+
+                                   Fig. 40: The functional framework and vision of BORN.
+
+
+
+
+Fig. 41: The procedure of multi-cognitive function coordinated emotion dependent music composition and playing by humanoid
+robot based on BORN.
+
+
+the connections from this cluster are projected to the musical    middle fingers to press the keys. During playing, the robot
+sequence memory networks.                                         controls the movement of the hand in sequence according to
+   During the learning process, amygdala, PFC, and the musi-      the generated sequence of different musical notes, and presses
+cal sequence memory networks cooperate with each other and        the keys with corresponding fingers, thereby completing the
+form complex neural circuits. Here, connections are updated       performance. For each note to be played, the corresponding
+by the STDP learning rule. The dataset used here also contains    playing arm needs to complete the entire process of moving,
+331 MIDI files of classical piano works [117], and it is          waiting, pressing the key, holding, and releasing the key
+important to note that a part of these music works are labeled    according to the beat. During the playing process, we also
+with different types of emotional categories (such as happy,      control the movements of the robot’s head and the non-playing
+depressed, passionate and beautiful).                             hand to match the performance.
+   At the generation process, given the beginning notes and          We have constructed a multi-brain area coordinated robot
+specific emotion type, the model can generate a series of notes   motor control SNN model based on the brain motor control cir-
+and form a melody with particular emotion finally.                cuit. The SNN model is built with LIF neurons and implements
+   3) Robot Music-Playing: A humanoid robot iCub is used to       SMA, PMC, basal ganglia and cerebellum functions. The
+validate the abilities of robotic music composition and playing   music notes is first processed by SMA, PMC and basal ganglia
+depending on the result of visual emotion recognition. The        networks to generate high-level target movement directions,
+iCub robot has a total of 53 degrees of freedoms throughout the   and the output of PMC is encoded by population neurons to
+body. In the piano playing task, we used 6 degrees of freedoms    target movement directions. The fusion of population codings
+of the head, 3 degrees of freedoms of the torso, and 16 degrees   of movement directions is further processed by the cerebellum
+of freedoms for each of the left and right arm (including the     model for low level motor control. The cerebellum SNN
+left and right hand). Besides, we mainly control the index        module consists of Granular Cells (GCs), Purkinje Cells (PCs)
+fingers to press the keys; in the multi-fingered playing mode,    and Deep Cerebellar Nuclei (DCN), which implements the
+we mainly control the thumbs, the index fingers, and the          three level residual learning in motor control. The DCN
+                                                                                                                                                              24
+
+
+
+network generates the final joint control outputs for the robot                   [10] S. Kim, S. Park, B. Na, and S. Yoon, “Spiking-yolo: spiking neural
+arms to perform the playing movement.                                                  network for energy-efficient object detection,” in Proceedings of the
+                                                                                       AAAI Conference on Artificial Intelligence, vol. 34, no. 07, 2020, pp.
+                                                                                       11 270–11 277.
+                           VI. C ONCLUSION                                        [11] Y. Wu, L. Deng, G. Li, J. Zhu, and L. Shi, “Spatio-temporal back-
+                                                                                       propagation for training high-performance spiking neural networks,”
+   BrainCog aims to provide a community based open source                              Frontiers in neuroscience, vol. 12, p. 331, 2018.
+platform for developing spiking neural network based AI                           [12] W. Tan, D. Patel, and R. Kozma, “Strategy and benchmark for
+                                                                                       converting deep q-networks to event-driven spiking neural networks,”
+models and cognitive brain simulators. It integrates multi-scale                       in Proceedings of the AAAI conference on artificial intelligence, vol. 35,
+biological plausible computational units and plasticity princi-                        no. 11, 2021, pp. 9816–9824.
+ples. Different from existing platforms, BrainCog incorporates                    [13] W. Fang, Y. Chen, J. Ding, D. Chen, Z. Yu, H. Zhou, Y. Tian, and
+and provides task ready SNN models for AI, and supports                                other contributors, “Spikingjelly,” https://github.com/fangwei123456/
+                                                                                       spikingjelly, 2020.
+brain function and structure simulations at multiple scales.                      [14] C. Wang, Y. Jiang, X. Liu, X. Lin, X. Zou, Z. Ji, and S. Wu, “A just-in-
+With the basic and functional components provided in the                               time compilation approach for neural dynamics simulation,” in Neural
+current version of BrainCog, we have shown how a variety of                            Information Processing, T. Mantoro, M. Lee, M. A. Ayu, K. W. Wong,
+                                                                                       and A. N. Hidayanto, Eds. Cham: Springer International Publishing,
+models and applications can already be implemented for both                            2021, pp. 15–26.
+brain-inspired AI and brain simulations. Based on BrainCog,                       [15] C. Eliasmith, T. C. Stewart, X. Choo, T. Bekolay, T. DeWolf, Y. Tang,
+we are also committed to building BORN into a powerful                                 and D. Rasmussen, “A large-scale model of the functioning brain,”
+                                                                                       science, vol. 338, no. 6111, pp. 1202–1205, 2012.
+SNN-based AI engine that incorporates multi-scale plasticity
+                                                                                  [16] T. Bekolay, J. Bergstra, E. Hunsberger, T. DeWolf, T. C. Stewart,
+principles to realize brain-inspired cognitive functions towards                       D. Rasmussen, X. Choo, A. R. Voelker, and C. Eliasmith, “Nengo: a
+human level. Powered by 9 years development of BrainCog                                python tool for building large-scale functional brain models,” Frontiers
+modules, components and applications, and inspired by bio-                             in neuroinformatics, vol. 7, p. 48, 2014.
+                                                                                  [17] Y. Zeng, C. Liu, and T. Tan, “Retrospect and outlook of brain-inspired
+logical mechanisms and natural evolution, continuous efforts                           intelligence research (in chinese),” The Chinese Journal of Computers,
+on BORN will enable it to be a general purpose AI engine. We                           vol. 39, no. 1, pp. 212–222, 2016.
+have already started the efforts to extend BrainCog and BORN                      [18] G.-q. Bi and M.-m. Poo, “Synaptic modifications in cultured hip-
+                                                                                       pocampal neurons: dependence on spike timing, synaptic strength, and
+to support high-level cognition such as theory of mind [35],                           postsynaptic cell type,” Journal of neuroscience, vol. 18, no. 24, pp.
+consciousness [34], and morality [35], and it definitely takes                         10 464–10 472, 1998.
+the world to build true and general purpose AI for human and                      [19] Y. Wu, L. Deng, G. Li, J. Zhu, and L. Shi, “Spatio-Temporal Back-
+ecology good. Join us on this explorations to create the future                        propagation for Training High-Performance Spiking Neural Networks,”
+                                                                                       Front. Neurosci., vol. 12, p. 331, May 2018.
+for human-AI symbiotic society.                                                   [20] H. Zheng, Y. Wu, L. Deng, Y. Hu, and G. Li, “Going Deeper With
+                                                                                       Directly-Trained Larger Spiking Neural Networks,” Proceedings of the
+                                                                                       AAAI Conference on Artificial Intelligence, vol. 35, no. 12, pp. 11 062–
+                       ACKNOWLEDGEMENTS                                                11 070, May 2021.
+  This work is supported by the National Key Research and                         [21] W. Fang, Z. Yu, Y. Chen, T. Masquelier, T. Huang, and Y. Tian,
+                                                                                       “Incorporating Learnable Membrane Time Constant to Enhance Learn-
+Development Program (Grant No. 2020AAA0104305), the                                    ing of Spiking Neural Networks,” in 2021 IEEE/CVF International
+Strategic Priority Research Program of the Chinese Academy                             Conference on Computer Vision (ICCV). Montreal, QC, Canada: IEEE,
+of Sciences (Grant No. XDB32070100).                                                   Oct. 2021, pp. 2641–2651.
+                                                                                  [22] Y. Li, S. Deng, X. Dong, R. Gong, and S. Gu, “A free lunch from ann:
+                                                                                       Towards efficient, accurate spiking neural networks calibration,” arXiv
+                              R EFERENCES                                              preprint arXiv:2106.06984, 2021.
+                                                                                  [23] B. Han and K. Roy, “Deep spiking neural network: Energy efficiency
+  [1] W. Maass, “Networks of spiking neurons: the third generation of neural           through time based coding,” in Computer Vision–ECCV 2020: 16th
+      network models,” Neural networks, vol. 10, no. 9, pp. 1659–1671,                 European Conference, Glasgow, UK, August 23–28, 2020, Proceedings,
+      1997.                                                                            Part X 16. Springer, 2020, pp. 388–404.
+  [2] N. T. Carnevale and M. L. Hines, The NEURON book. Cambridge
+                                                                                  [24] B. Han, G. Srinivasan, and K. Roy, “Rmp-snn: Residual membrane
+      University Press, 2006.
+                                                                                       potential neuron for enabling deeper high-accuracy and low-latency
+  [3] M.-O. Gewaltig and M. Diesmann, “Nest (neural simulation tool),”
+                                                                                       spiking neural network,” in Proceedings of the IEEE/CVF Conference
+      Scholarpedia, vol. 2, no. 4, p. 1430, 2007.
+                                                                                       on Computer Vision and Pattern Recognition, 2020, pp. 13 558–13 567.
+  [4] M. Stimberg, R. Brette, and D. F. Goodman, “Brian 2, an intuitive and
+      efficient neural simulator,” Elife, vol. 8, p. e47314, 2019.                [25] Y. Wang and Y. Zeng, “Multisensory concept learning framework
+  [5] D. F. Goodman and R. Brette, “The brian simulator,” Frontiers in                 based on spiking neural networks,” Frontiers in Systems Neuroscience,
+      neuroscience, vol. 3, p. 26, 2009.                                               vol. 16, 2022. [Online]. Available: https://www.frontiersin.org/article/
+  [6] P. U. Diehl and M. Cook, “Unsupervised learning of digit recognition             10.3389/fnsys.2022.845177
+      using spike-timing-dependent plasticity,” Frontiers in computational        [26] Y. Sun, Y. Zeng, and T. Zhang, “Quantum superposition inspired
+      neuroscience, vol. 9, p. 99, 2015.                                               spiking neural network,” iScience, vol. 24, no. 8, p. 102880, 2021.
+  [7] H. Hazan, D. J. Saunders, H. Khan, D. Patel, D. T. Sanghavi, H. T.               [Online]. Available: https://www.sciencedirect.com/science/article/pii/
+      Siegelmann, and R. Kozma, “Bindsnet: A machine learning-oriented                 S2589004221008488
+      spiking neural networks library in python,” Frontiers in neuroinfor-        [27] F. Zhao, Y. Zeng, G. Wang, J. Bai, and B. Xu, “A brain-inspired
+      matics, p. 89, 2018.                                                             decision making model based on top-down biasing of prefrontal cortex
+  [8] J. P. Dominguez-Morales, Q. Liu, R. James, D. Gutierrez-Galan,                   to basal ganglia and its application in autonomous uav explorations,”
+      A. Jimenez-Fernandez, S. Davidson, and S. Furber, “Deep spiking                  Cognitive Computation, vol. 10, no. 2, pp. 296–306, 2018.
+      neural network model for time-variant signals classification: a real-time   [28] Y. Sun, Y. Zeng, and Y. Li, “Solving the spike feature information
+      speech recognition approach,” in 2018 International Joint Conference             vanishing problem in spiking deep q network with potential based
+      on Neural Networks (IJCNN). IEEE, 2018, pp. 1–8.                                 normalization,” arXiv preprint arXiv:2206.03654, 2022.
+  [9] S. Loiselle, J. Rouat, D. Pressnitzer, and S. Thorpe, “Exploration of       [29] Q. Liang, Y. Zeng, and B. Xu, “Temporal-sequential learning with a
+      rank order coding with spiking neural networks for speech recognition,”          brain-inspired spiking neural network and its application to musical
+      in Proceedings. 2005 IEEE International Joint Conference on Neural               memory,” Frontiers in Computational Neuroscience, vol. 14, p. 51, 07
+      Networks, 2005., vol. 4. IEEE, 2005, pp. 2076–2080.                              2020.
+                                                                                                                                                             25
+
+
+
+[30] Q. Liang and Y. Zeng, “Stylistic composition of melodies based               [56] D. Li, J. Wu, and D. Peng, “Online traffic accident spatial-temporal
+     on a brain-inspired spiking neural network,” Frontiers in systems                 post-impact prediction model on highways based on spiking neural
+     neuroscience, vol. 15, p. 21, 2021.                                               networks,” Journal of advanced transportation, vol. 2021, 2021.
+[31] H. Fang, Y. Zeng, and F. Zhao, “Brain inspired sequences production          [57] V. S. Chakravarthy, D. Joseph, and R. S. Bapi, “What do the basal
+     by spiking neural networks with reward-modulated stdp,” Frontiers in              ganglia do? a modeling perspective,” Biological cybernetics, vol. 103,
+     Computational Neuroscience, vol. 15, p. 8, 2021.                                  no. 3, pp. 237–253, 2010.
+[32] H. Fang, Y. Zeng, J. Tang, Y. Wang, Y. Liang, and X. Liu, “Brain-            [58] P. Redgrave, T. J. Prescott, and K. Gurney, “The basal ganglia: a
+     inspired graph spiking neural networks for commonsense knowledge                  vertebrate solution to the selection problem?” Neuroscience, vol. 89,
+     representation and reasoning,” arXiv preprint arXiv:2207.05561, 2022.             no. 4, pp. 1009–1023, 1999.
+[33] H. Fang and Y. Zeng, “A brain-inspired causal reasoning model based          [59] A. Parent and L.-N. Hazrati, “Functional anatomy of the basal gan-
+     on spiking neural networks,” in 2021 International Joint Conference               glia. i. the cortico-basal ganglia-thalamo-cortical loop,” Brain research
+     on Neural Networks (IJCNN). IEEE, 2021, pp. 1–5.                                  reviews, vol. 20, no. 1, pp. 91–127, 1995.
+[34] Y. Zeng, Y. Zhao, J. Bai, and B. Xu, “Toward robot self-consciousness        [60] J. L. Lanciego, N. Luquin, and J. A. Obeso, “Functional neuroanatomy
+     (ii): brain-inspired robot bodily self model for self-recognition,” Cog-          of the basal ganglia,” Cold Spring Harbor perspectives in medicine,
+     nitive Computation, vol. 10, no. 2, pp. 307–320, 2018.                            vol. 2, no. 12, p. a009621, 2012.
+[35] Z. Zhao, E. Lu, F. Zhao, Y. Zeng, and Y. Zhao, “A brain-inspired             [61] A. Bechara, H. Damasio, D. Tranel, and S. W. Anderson, “Dissociation
+     theory of mind spiking neural network for reducing safety risks of                of working memory from decision making within the human prefrontal
+     other agents,” Frontiers in neuroscience, p. 446, 2022.                           cortex,” Journal of neuroscience, vol. 18, no. 1, pp. 428–437, 1998.
+[36] F. Zhao, Y. Zeng, A. Guo, H. Su, and B. Xu, “A neural algorithm for          [62] S. G. Rao, G. V. Williams, and P. S. Goldman-Rakic, “Isodirectional
+     drosophila linear and nonlinear decision-making,” Scientific Reports,             tuning of adjacent interneurons and pyramidal cells during working
+     vol. 10, no. 1, pp. 1–16, 2020.                                                   memory: evidence for microcolumnar organization in pfc,” Journal of
+[37] Q. Zhang, Y. Zeng, T. Zhang, and T. Yang, “Comparison between                     neurophysiology, vol. 81, no. 4, pp. 1903–1916, 1999.
+     human and rodent neurons for persistent activity performance: A bi-          [63] M. D’Esposito, B. R. Postle, and B. Rypma, “Prefrontal cortical
+     ologically plausible computational investigation,” Frontiers in systems           contributions to working memory: evidence from event-related fmri
+     neuroscience, p. 98, 2021.                                                        studies,” Executive control and the frontal lobe: Current issues, pp.
+[38] L. F. Abbott, “Lapicque’s introduction of the integrate-and-fire model            3–11, 2000.
+     neuron (1907),” Brain research bulletin, vol. 50, no. 5-6, pp. 303–304,      [64] A. H. Lara and J. D. Wallis, “The role of prefrontal cortex in working
+     1999.                                                                             memory: a mini review,” Frontiers in systems neuroscience, vol. 9, p.
+[39] P. Dayan and L. F. Abbott, Theoretical neuroscience: computational                173, 2015.
+     and mathematical modeling of neural systems. MIT press, 2005.                [65] J. N. Wood and J. Grafman, “Human prefrontal cortex: processing
+[40] Fourcaud-Trocmé, Nicolas, Hansel, David, V. Vreeswijk, Carl, and                 and representational perspectives,” Nature reviews neuroscience, vol. 4,
+     Brunel, “How spike generation mechanisms determine the neuronal                   no. 2, pp. 139–147, 2003.
+     response to fluctuating inputs.” Journal of Neuroscience, 2003.              [66] P. Frewen and R. Lanius, Healing the traumatized self: consciousness,
+                                                                                       neuroscience, treatment (Norton series on interpersonal neurobiology).
+[41] R. Brette and W. Gerstner, “Adaptive exponential integrate-and-fire
+                                                                                       WW Norton & Company, 2015.
+     model as an effective description of neuronal activity,” Journal of
+     neurophysiology, vol. 94, no. 5, pp. 3637–3642, 2005.                        [67] S. Koelsch, Brain and Music. West Sussex, UK: Wiley-Blackwell;
+                                                                                       1st Edition, 2012.
+[42] E. M. Izhikevich, “Simple model of spiking neurons,” IEEE Transac-
+                                                                                  [68] K. L. Macuga and S. H. Frey, “Selective responses in right inferior
+     tions on neural networks, vol. 14, no. 6, pp. 1569–1572, 2003.
+                                                                                       frontal and supramarginal gyri differentiate between observed move-
+[43] A. L. Hodgkin and A. F. Huxley, “A quantitative description of
+                                                                                       ments of oneself vs. another,” Neuropsychologia, vol. 49, no. 5, pp.
+     membrane current and its application to conduction and excitation in
+                                                                                       1202–1207, 2011.
+     nerve,” The Journal of physiology, vol. 117, no. 4, p. 500, 1952.
+                                                                                  [69] B. Milner, L. R. Squire, and E. R. Kandel, “Cognitive neuroscience
+[44] G. Wang, Y. Zeng, and B. Xu, “A spiking neural network based                      and the study of memory,” Neuron, vol. 20, p. 445–468, 1998.
+     autonomous reinforcement learning model and its application in deci-
+                                                                                  [70] M. L. Smith and B. Milner, “The role of the right hippocampus in
+     sion making,” in International Conference on Brain Inspired Cognitive
+                                                                                       the recall of spatial location,” Neuropsychologia, vol. 19, no. 6, pp.
+     Systems. Springer, 2016, pp. 125–137.
+                                                                                       781–793, 1981.
+[45] D. J. Amit, N. Brunel, and M. Tsodyks, “Correlations of cortical             [71] Y. Dan and M.-m. Poo, “Spike timing-dependent plasticity of neural
+     hebbian reverberations: theory versus experiment,” Journal of Neuro-              circuits,” Neuron, vol. 44, no. 1, pp. 23–30, 2004.
+     science, vol. 14, no. 11, pp. 6435–6445, 1994.
+                                                                                  [72] A. D. Craig, “How do you feel—now? the anterior insula and human
+[46] E. L. Bienenstock, L. N. Cooper, and P. W. Munro, “Theory for the                 awareness,” Nature reviews neuroscience, vol. 10, no. 1, pp. 59–70,
+     development of neuron selectivity: orientation specificity and binocular          2009.
+     interaction in visual cortex,” Journal of Neuroscience, vol. 2, no. 1, pp.   [73] E. M. Izhikevich and G. M. Edelman, “Large-scale model of
+     32–48, 1982.                                                                      mammalian thalamocortical systems,” Proceedings of the National
+[47] W. Maass and H. Markram, “Synapses as dynamic memory buffers,”                    Academy of Sciences, vol. 105, no. 9, pp. 3593–3598, 2008. [Online].
+     Neural Networks, vol. 15, no. 2, pp. 155–161, 2002.                               Available: https://www.pnas.org/doi/abs/10.1073/pnas.0712231105
+[48] E. M. Izhikevich, “Solving the distal reward problem through linkage         [74] A. Ishai, L. G. Ungerleider, A. Martin, J. L. Schouten, and J. V.
+     of stdp and dopamine signaling,” Cerebral Cortex, vol. 17, pp. 2443–              Haxby, “Distributed representation of objects in the human ventral
+     2452, 2007.                                                                       visual pathway,” Proceedings of the National Academy of Sciences,
+[49] E. D. Adrian and Y. Zotterman, “The impulses produced by sensory                  vol. 96, no. 16, pp. 9379–9384, 1999.
+     nerve endings: Part 3. impulses set up by touch and pressure,” The           [75] E. Kobatake and K. Tanaka, “Neuronal selectivities to complex object
+     Journal of physiology, vol. 61, no. 4, p. 465, 1926.                              features in the ventral visual pathway of the macaque cerebral cortex,”
+[50] J. Kim, H. Kim, S. Huh, J. Lee, and K. Choi, “Deep neural networks                Journal of neurophysiology, vol. 71, no. 3, pp. 856–867, 1994.
+     with weighted spikes,” Neurocomputing, vol. 311, pp. 373–386, 2018.          [76] D. H. Hubel and T. N. Wiesel, “Receptive fields, binocular interaction
+[51] S. Thorpe, D. Fize, and C. Marlot, “Speed of processing in the human              and functional architecture in the cat’s visual cortex,” The Journal of
+     visual system,” nature, vol. 381, no. 6582, pp. 520–522, 1996.                    physiology, vol. 160, no. 1, p. 106, 1962.
+[52] B. Rueckauer and S.-C. Liu, “Conversion of analog to spiking neural          [77] G. Geldberg, “Supplementary motor area structure and function: review
+     networks using sparse temporal coding,” in 2018 IEEE international                and hypothesis,” Behav Brain Sci., vol. 8, pp. 567–615, 1985.
+     symposium on circuits and systems (ISCAS). IEEE, 2018, pp. 1–5.              [78] H. Mushiake, M. Inase, and J. Tanji, “Neuronal activity in the primate
+[53] S. M. Bohte, J. N. Kok, and H. La Poutre, “Error-backpropagation                  premotor, supplementary, and precentral motor cortex during visually
+     in temporally encoded networks of spiking neurons,” Neurocomputing,               guided and internally determined sequential movements,” Journal of
+     vol. 48, no. 1-4, pp. 17–37, 2002.                                                neurophysiology, vol. 66, no. 3, pp. 705–718, 1991.
+[54] R. Quian Quiroga and S. Panzeri, “Extracting information from                [79] C. Gerloff, B. Corwell, R. Chen, M. Hallett, and L. G. Cohen,
+     neuronal populations: information theory and decoding approaches,”                “Stimulation over the human supplementary motor area interferes with
+     Nature Reviews Neuroscience, vol. 10, no. 3, pp. 173–185, 2009.                   the organization of future elements in complex motor sequences.”
+[55] S. Grün and S. Rotter, Analysis of parallel spike trains. Springer,              Brain: a journal of neurology, vol. 120, no. 9, pp. 1587–1602, 1997.
+     2010, vol. 7.                                                                [80] A. P. Georgopoulos, “Motor cortex and cognitive processing.” 1995.
+                                                                                                                                                                 26
+
+
+
+ [81] S. Kakei, D. S. Hoffman, and P. L. Strick, “Muscle and movement             [106] K. McRae, G. S. Cree, M. S. Seidenberg, and C. McNorgan, “Semantic
+      representations in the primary motor cortex,” Science, vol. 285, no.              feature production norms for a large set of living and nonliving things,”
+      5436, pp. 2136–2139, 1999.                                                        Behavior research methods, vol. 37, no. 4, pp. 547–559, 2005.
+ [82] P. L. Strick, R. P. Dum, J. A. Fiez et al., “Cerebellum and nonmotor        [107] B. J. Devereux, L. K. Tyler, J. Geertzen, and B. Randall, “The centre
+      function,” Annual review of neuroscience, vol. 32, no. 1, pp. 413–434,            for speech, language and the brain (cslb) concept property norms,”
+      2009.                                                                             Behavior research methods, vol. 46, no. 4, pp. 1119–1127, 2014.
+ [83] R. S. Zucker and W. G. Regehr, “Short-term synaptic plasticity,” Annual     [108] M. J. Frank and E. D. Claus, “Anatomy of a decision: striato-
+      review of physiology, vol. 64, no. 1, pp. 355–405, 2002.                          orbitofrontal interactions in reinforcement learning, decision making,
+ [84] A. Tavanaei and A. S. Maida, “Bio-inspired spiking convolutional                  and reversal.” Psychological review, vol. 113, no. 2, p. 300, 2006.
+      neural network using layer-wise sparse coding and stdp learning,” arXiv     [109] I. Silkis, “The cortico-basal ganglia-thalamocortical circuit with synap-
+      preprint arXiv:1611.03000, 2016.                                                  tic plasticity. i. modification rules for excitatory and inhibitory synapses
+ [85] ——, “Multi-layer unsupervised learning in a spiking convolutional                 in the striatum,” Biosystems, vol. 57, no. 3, pp. 187–196, 2000.
+      neural network,” in 2017 International Joint Conference on Neural           [110] X. Wang, Z.-G. Hou, F. Lv, M. Tan, and Y. Wang, “Mobile robots’
+      Networks (IJCNN). IEEE, 2017, pp. 2023–2030.                                      modular navigation controller using spiking neural networks,” Neuro-
+ [86] P. Falez, P. Tirilly, I. M. Bilasco, P. Devienne, and P. Boulet, “Multi-          computing, vol. 134, pp. 230–238, 2014.
+      layered spiking neural network with target timestamp threshold adap-        [111] J. C. V. Tieck, L. Steffen, J. Kaiser, A. Roennau, and R. Dillmann,
+      tation and stdp,” arXiv preprint arXiv:1904.01908, 2019.                          “Controlling a robot arm for target reaching without planning using
+ [87] T. Zhang, Y. Zeng, D. Zhao, and M. Shi, “A plasticity-centric approach            spiking neurons,” in 2018 IEEE 17th International Conference on
+      to train the non-differential spiking neural networks,” in Thirty-Second          Cognitive Informatics & Cognitive Computing (ICCI*CC), 2018, pp.
+      AAAI Conference on Artificial Intelligence, 2018.                                 111–116.
+ [88] T. Zhang, Y. Zeng, D. Zhao, and B. Xu, “Brain-inspired balanced             [112] G. Tang, N. Kumar, R. Yoo, and K. Michmizos, “Deep reinforcement
+      tuning for spiking neural networks.” in IJCAI, 2018, pp. 1653–1659.               learning with population-coded spiking neural network for continuous
+ [89] D. J. Felleman and D. E. Van, “Distributed hierarchical processing in             control,” in Conference on Robot Learning. PMLR, 2021, pp. 2016–
+      the primate cerebral cortex.” Cerebral cortex (New York, NY: 1991),               2029.
+      vol. 1, no. 1, pp. 1–47, 1991.                                              [113] G. Huang, Z. Liu, L. Van Der Maaten, and K. Q. Weinberger,
+ [90] O. Sporns and J. D. Zwi, “The small world of the cerebral cortex,”                “Densely connected convolutional networks,” in Proceedings of the
+      Neuroinformatics, vol. 2, no. 2, pp. 145–162, 2004.                               IEEE conference on computer vision and pattern recognition, 2017,
+ [91] D. Zhao, Y. Zeng, T. Zhang, M. Shi, and F. Zhao, “Glsnn: A multi-                 pp. 4700–4708.
+      layer spiking neural network based on global feedback alignment and         [114] J. W. Kalat, Biological psychology. Cengage Learning, 2015.
+      local stdp plasticity,” Frontiers in Computational Neuroscience, vol. 14,   [115] H. Merchant, D. L. Harrington, and W. H. Meck, “Neural basis of the
+      2020.                                                                             perception and estimation of time,” Annual Review of Neuroscience,
+ [92] Y. Bengio, N. Léonard, and A. Courville, “Estimating or Propagating              vol. 36, no. 1, pp. 313–336, 2013.
+      Gradients Through Stochastic Neurons for Conditional Computation,”          [116] N. J. Fortin, K. L. Agster, and H. B. Eichenbaum, “Critical role
+      Aug. 2013.                                                                        of the hippocampus in memory for sequences of events,” Nature
+ [93] S. M. Bohte, “Error-backpropagation in networks of fractionally predic-           Neuroscience, vol. 5, no. 5, pp. 458–462, 2002.
+      tive spiking neurons,” in International Conference on Artificial Neural     [117] B. Krueger, “Classical piano midi page,” 2018. [Online]. Available:
+      Networks. Springer, 2011, pp. 60–68.                                              http://piano-midi.de/
+ [94] G. Shen, D. Zhao, and Y. Zeng, “Backpropagation with biologically           [118] A. Dietrich, “The cognitive neuroscience of creativity,” Psychonomic
+      plausible spatiotemporal adjustment for training deep spiking neural              bulletin & review, vol. 11, no. 6, pp. 1011–1026, 2004.
+      networks,” Patterns, p. 100522, 2022.                                       [119] R. Jung, B. Mead, J. Carrasco, and R. Barrow, “The structure of creative
+ [95] Y. Dong, D. Zhao, Y. Li, and Y. Zeng, “An unsupervised spiking                    cognition in the human brain,” Frontiers in Human Neuroence, vol. 7,
+      neural network inspired by biologically plausible learning rules and              p. 330, 2013.
+      connections,” 2022. [Online]. Available: https://arxiv.org/abs/2207.        [120] Y. Xie, P. Hu, J. Li, J. Chen, W. Song, X.-J. Wang, T. Yang, S. Dehaene,
+      02727                                                                             S. Tang, B. Min et al., “Geometry of sequence working memory in
+ [96] Y. Zeng, T. Zhang, and B. Xu, “Improving multi-layer spiking neural               macaque prefrontal cortex,” Science, vol. 375, no. 6581, pp. 632–639,
+      networks by incorporating brain-inspired rules,” Science China Infor-             2022.
+      mation Sciences, vol. 60, no. 5, pp. 1–11, 2017.                            [121] N. Frémaux and W. Gerstner, “Neuromodulated spike-timing-
+ [97] Y. Li and Y. Zeng, “Efficient and accurate conversion of spiking neural           dependent plasticity, and theory of three-factor learning rules,” Fron-
+      network with burst spikes,” arXiv preprint arXiv:2204.13271, 2022.                tiers in Neural Circuits, vol. 9, p. 85, 2016.
+ [98] Y. Li, X. He, Y. Dong, Q. Kong, and Y. Zeng, “Spike calibration: Fast       [122] V. C. Pammi, K. P. Miyapuram, R. S. Bapi, and K. Doya, “Chunking
+      and accurate conversion of spiking neural network for object detection            phenomenon in complex sequential skill learning in humans,” in
+      and segmentation,” arXiv preprint arXiv:2207.02702, 2022.                         International Conference on Neural Information Processing. Springer,
+ [99] C. Blakemore, R. H. Carpenter, and M. A. Georgeson, “Lateral                      2004, pp. 294–299.
+      inhibition between orientation detectors in the human visual system,”       [123] X. Jiang, T. Long, W. Cao, J. Li, S. Dehaene, and L. Wang, “Production
+      Nature, vol. 228, no. 5266, pp. 37–39, 1970.                                      of supra-regular spatial sequences by macaque monkeys,” Current
+[100] D. Lynott and L. Connell, “Modality exclusivity norms for 423 object              Biology, vol. 28, no. 12, pp. 1851–1859, 2018.
+      properties,” Behavior Research Methods, vol. 41, no. 2, pp. 558–564,        [124] M. Minsky, The emotion machine: Commonsense thinking, artificial
+      2009.                                                                             intelligence, and the future of the human mind. Simon and Schuster,
+[101] ——, “Modality exclusivity norms for 400 nouns: The relationship                   2007.
+      between perceptual experience and surface word form,” Behavior              [125] M. L. Schlichting and A. R. Preston, “The hippocampus and memory
+      research methods, vol. 45, no. 2, pp. 516–526, 2013.                              integration: building knowledge to navigate future decisions,” in The
+[102] J. R. Binder, L. L. Conant, C. J. Humphries, L. Fernandino, S. B.                 hippocampus from cells to systems. Springer, 2017, pp. 405–437.
+      Simons, M. Aguilar, and R. H. Desai, “Toward a brain-based compo-           [126] S. Ramirez, X. Liu, P.-A. Lin, J. Suh, M. Pignatelli, R. L. Redondo, T. J.
+      nential semantic representation,” Cognitive neuropsychology, vol. 33,             Ryan, and S. Tonegawa, “Creating a false memory in the hippocampus,”
+      no. 3-4, pp. 130–174, 2016.                                                       Science, vol. 341, no. 6144, pp. 387–391, 2013.
+[103] D. Lynott, L. Connell, M. Brysbaert, J. Brand, and J. Carney, “The          [127] J. C. Robyn Speer and C. Havasi, “Conceptnet 5.5: An open
+      lancaster sensorimotor norms: multidimensional measures of perceptual             multilingual graph of general knowledge,” vol. abs/1612.03975, 2017.
+      and action strength for 40,000 english words,” Behavior Research                  [Online]. Available: http://arxiv.org/abs/1612.03975
+      Methods, pp. 1–21, 2019.                                                    [128] J. Pearl and D. Mackenzie, The book of why: the new science of cause
+[104] E. Agirre, E. Alfonseca, K. Hall, J. Kravalova, M. Pasca, and A. Soroa,           and effect. Basic Books, 2018.
+      “A study on similarity and relatedness using distributional and wordnet-    [129] M. Sugiura, C. M. Miyauchi, Y. Kotozaki, Y. Akimoto, T. Nozawa,
+      based approaches,” 2009.                                                          Y. Yomogida, S. Hanawa, Y. Yamamoto, A. Sakuma, S. Nakagawa
+[105] E. H. Huang, R. Socher, C. D. Manning, and A. Y. Ng, “Improving                   et al., “Neural mechanism for mirrored self-face recognition,” Cerebral
+      word representations via global context and multiple word prototypes,”            Cortex, vol. 25, no. 9, pp. 2806–2814, 2015.
+      in Proceedings of the 50th Annual Meeting of the Association for            [130] S. G. Shamay-Tsoory, S. Shur, L. Barcai-Goodman, S. Medlovich,
+      Computational Linguistics (Volume 1: Long Papers), 2012, pp. 873–                 H. Harari, and Y. Levkovitz, “Dissociation of cognitive from affective
+      882.                                                                              components of theory of mind in schizophrenia,” Psychiatry Research,
+                                                                                                                                                               27
+
+
+
+      vol. 149, no. 1-3, pp. 11–23, Jan. 2007. [Online]. Available:               [152] A. Nieder and E. K. Miller, “Coding of cognitive magnitude: Com-
+      https://linkinghub.elsevier.com/retrieve/pii/S0165178106001934                    pressed scaling of numerical information in the primate prefrontal
+[131] C. L. Sebastian, N. M. G. Fontaine, G. Bird, S.-J. Blakemore,                     cortex,” Neuron, vol. 37, no. 1, pp. 149–157, 2003.
+      S. A. De Brito, E. J. P. McCrory, and E. Viding, “Neural                    [153] S. Bishop, J. Duncan, M. Brett, and A. D. Lawrence, “Prefrontal
+      processing associated with cognitive and affective Theory of                      cortical function and anxiety: controlling attention to threat-related
+      mind in adolescents and adults,” Social Cognitive and Affective                   stimuli,” Nature neuroscience, vol. 7, no. 2, pp. 184–188, 2004.
+      Neuroscience, vol. 7, no. 1, pp. 53–63, Jan. 2012. [Online]. Available:     [154] E. Koechlin, C. Ody, and F. Kouneiher, “The architecture of cognitive
+      https://academic.oup.com/scan/article-lookup/doi/10.1093/scan/nsr023              control in the human prefrontal cortex,” Science, vol. 302, no. 5648,
+[132] M. Dennis, N. Simic, E. D. Bigler, T. Abildskov, A. Agostino, H. G.               pp. 1181–1185, 2003.
+      Taylor, K. Rubin, K. Vannatta, C. A. Gerhardt, T. Stancin et al.,           [155] J. Hass, L. Hertäg, and D. Durstewitz, “A detailed data-driven network
+      “Cognitive, affective, and conative theory of mind (ToM) in children              model of prefrontal cortex reproduces key features of in vivo activity,”
+      with traumatic brain injury,” Developmental cognitive neuroscience,               PLoS computational biology, vol. 12, no. 5, p. e1004930, 2016.
+      vol. 5, pp. 25–39, 2013.                                                    [156] A. Shapson-Coe, M. Januszewski, D. R. Berger, A. Pope, Y. Wu,
+[133] A. Abu-Akel and S. Shamay-Tsoory, “Neuroanatomical and                            T. Blakely, R. L. Schalek, P. H. Li, S. Wang, J. Maitin-Shepard et al., “A
+      neurochemical bases of theory of mind,” Neuropsychologia,                         connectomic study of a petascale fragment of human cerebral cortex,”
+      vol. 49, no. 11, pp. 2971–2984, Sep. 2011. [Online]. Available:                   BioRxiv, 2021.
+      https://linkinghub.elsevier.com/retrieve/pii/S0028393211003368              [157] C. Beaulieu, “Numerical data on neocortical neurons in adult rat, with
+[134] C. E. Hartwright, I. A. Apperly, and P. C. Hansen, “Multiple                      special reference to the gaba population,” Brain research, vol. 609, no.
+      roles for executive control in belief–desire reasoning: Distinct neural           1-2, pp. 284–292, 1993.
+      networks are recruited for self perspective inhibition and complexity of    [158] J. DeFelipe, “The evolution of the brain, the human nature of cortical
+      reasoning,” NeuroImage, vol. 61, no. 4, pp. 921–930, jul 2012. [Online].          circuits, and intellectual creativity,” Frontiers in neuroanatomy, vol. 5,
+      Available: https://doi.org/10.1016%2Fj.neuroimage.2012.03.012                     p. 29, 2011.
+[135] ——, “The special case of self-perspective inhibition in mental,             [159] J. R. Gibson, M. Beierlein, and B. W. Connors, “Two networks of
+      but not non-mental, representation,” Neuropsychologia, vol. 67, pp.               electrically coupled inhibitory neurons in neocortex,” Nature, vol. 402,
+      183–192, jan 2015. [Online]. Available: https://doi.org/10.1016%2Fj.              no. 6757, pp. 75–79, 1999.
+      neuropsychologia.2014.12.015                                                [160] W.-J. Gao, Y. Wang, and P. S. Goldman-Rakic, “Dopamine modulation
+[136] J. Koster-Hale and R. Saxe, “Theory of mind: a neural                             of perisomatic and peridendritic inhibition in prefrontal cortex,” Journal
+      prediction problem,” Neuron, vol. 79, no. 5, pp. 836–848, Sep.                    of Neuroscience, vol. 23, no. 5, pp. 1622–1630, 2003.
+      2013. [Online]. Available: https://linkinghub.elsevier.com/retrieve/pii/    [161] G. Eyal, M. B. Verhoog, G. Testa-Silva, Y. Deitcher, J. C. Lodder,
+      S089662731300754X                                                                 R. Benavides-Piccione, J. Morales, J. DeFelipe, C. P. de Kock, H. D.
+[137] S. Suzuki, N. Harasawa, K. Ueno, J. L. Gardner, N. Ichinohe,                      Mansvelder et al., “Unique membrane properties and enhanced signal
+      M. Haruno, K. Cheng, and H. Nakahara, “Learning to simulate others’               processing in human neocortical neurons,” Elife, vol. 5, p. e16553,
+      decisions,” Neuron, vol. 74, no. 6, pp. 1125–1137, 2012.                          2016.
+[138] G. G. Gallup, “Chimpanzees: self-recognition,” Science, vol. 167, no.       [162] Q. Zhang, Y. Zeng, and T. Yang, “Computational investigation of
+      3914, pp. 86–87, 1970.                                                            contributions from different subtypes of interneurons in prefrontal
+[139] S. D. Suárez and G. G. Gallup Jr, “Self-recognition in chimpanzees               cortex for information maintenance,” Scientific Reports, vol. 10, no. 1,
+      and orangutans, but not gorillas,” Journal of human evolution, vol. 10,           p. 4671, 2020.
+      no. 2, pp. 175–188, 1981.                                                   [163] Binzegger, Tom, Douglas, Rodney, J., Martin, Kevan, A., and C., “A
+[140] V. Walraven, L. Van Elsacker, and R. Verheyen, “Reactions of a group              quantitative map of the circuit of cat primary visual cortex.” Journal
+      of pygmy chimpanzees (pan paniscus) to their mirror-images: Evidence              of Neuroscience, vol. 24, no. 39, pp. 8441–8453, 2004.
+      of self-recognition,” Primates, vol. 36, no. 1, pp. 145–150, 1995.          [164] M. J. Richardson, N. Brunel, and V. Hakim, “From subthreshold to
+[141] F. G. Patterson and R. H. Cohn, “Self-recognition and self-awareness              firing-rate resonance,” Journal of neurophysiology, vol. 89, no. 5, pp.
+      in lowland gorillas,” 1994.                                                       2538–2554, 2003.
+[142] S. Posada and M. Colell, “Another gorilla (gorilla gorilla gorilla)         [165] X. Jiang, S. Shen, C. R. Cadwell, P. Berens, F. Sinz, A. S. Ecker,
+      recognizes himself in a mirror,” American Journal of Primatology:                 S. Patel, and A. S. Tolias, “Principles of connectivity among morpho-
+      Official Journal of the American Society of Primatologists, vol. 69,              logically defined cell types in adult neocortex,” Science, vol. 350, no.
+      no. 5, pp. 576–583, 2007.                                                         6264, p. aac9462, 2015.
+[143] J. M. Plotnik, F. B. De Waal, and D. Reiss, “Self-recognition in an asian   [166] E. M. Izhikevich and G. M. Edelman, “Large-scale model of mam-
+      elephant,” Proceedings of the National Academy of Sciences, vol. 103,             malian thalamocortical systems,” Proceedings of the national academy
+      no. 45, pp. 17 053–17 057, 2006.                                                  of sciences, vol. 105, no. 9, pp. 3593–3598, 2008.
+[144] K. Marten and S. Psarakos, “Evidence of self-awareness in the bot-          [167] T. Tchumatchenko and C. Clopath, “Oscillations emerging from noise-
+      tlenose dolphin (tursiops truncatus),” 1994.                                      driven steady state in networks with electrical synapses and subthresh-
+[145] F. Delfour and K. Marten, “Mirror image processing in three marine                old resonance,” Nature communications, vol. 5, no. 1, pp. 1–9, 2014.
+      mammal species: killer whales (orcinus orca), false killer whales (pseu-    [168] S. W. Oh, J. A. Harris, L. Ng, B. Winslow, N. Cain, S. Mihalas,
+      dorca crassidens) and california sea lions (zalophus californianus),”             Q. Wang, C. Lau, L. Kuan, A. M. Henry et al., “A mesoscale
+      Behavioural processes, vol. 53, no. 3, pp. 181–190, 2001.                         connectome of the mouse brain,” Nature, vol. 508, no. 7495, pp. 207–
+[146] L. Chang, Q. Fang, S. Zhang, M.-m. Poo, and N. Gong, “Mirror-                     214, 2014.
+      induced self-directed behaviors in rhesus monkeys after visual-             [169] H. Markram, M. Toledo-Rodriguez, Y. Wang, A. Gupta, G. Silberberg,
+      somatosensory training,” Current Biology, vol. 25, no. 2, pp. 212–217,            and C. Wu, “Interneurons of the neocortical inhibitory system,” Nature
+      2015.                                                                             reviews neuroscience, vol. 5, no. 10, pp. 793–807, 2004.
+[147] S. Tang and A. Guo, “Choice behavior of drosophila facing contradic-        [170] D. S. Modha and R. Singh, “Network architecture of the long-distance
+      tory visual cues,” Science, vol. 294, no. 5546, pp. 1543–1547, 2001.              pathways in the macaque brain,” Proceedings of the National Academy
+[148] K. Zhang, J. Z. Guo, Y. Peng, W. Xi, and A. Guo, “Dopamine-                       of Sciences, vol. 107, no. 30, pp. 13 485–13 490, 2010.
+      mushroom body circuit regulates saliency-based decision-making in           [171] T. Zhang, Y. Zeng, and B. Xu, “A computational approach towards the
+      drosophila,” science, vol. 316, no. 5833, pp. 1901–1904, 2007.                    microscale mouse brain connectome from the mesoscale,” Journal of
+[149] M. Zhou, N. Chen, J. Tian, J. Zeng, Y. Zhang, X. Zhang, J. Guo, J. Sun,           integrative neuroscience, vol. 16, no. 3, p. 291—306, 2017.
+      Y. Li, A. Guo et al., “Suppression of gabaergic neurons through d2-like     [172] R. Bakker, T. Wachtler, and M. Diesmann, “Cocomac 2.0 and the future
+      receptor secures efficient conditioning in drosophila aversive olfactory          of tract-tracing databases,” Frontiers in neuroinformatics, vol. 6, pp.
+      learning,” Proceedings of the National Academy of Sciences, vol. 116,             30–30, Dec 2012.
+      no. 11, pp. 5118–5125, 2019.                                                [173] R. Chaudhuri, K. Knoblauch, M. A. Gariel, H. Kennedy, and X.-J.
+[150] Q. Zhang, Y. Zeng, T. Zhang, and T. Yang, “Comparison between                     Wang, “A large-scale circuit mechanism for hierarchical dynamical
+      human and rodent neurons for persistent activity performance: A bi-               processing in the primate cortex,” Neuron, vol. 88, pp. 419–431, 2015.
+      ologically plausible computational investigation,” Frontiers in systems     [174] C. E. Collins, D. C. Airey, N. A. Young, D. B. Leitch, and J. H. Kaas,
+      neuroscience, p. 98, 2021.                                                        “Neuron densities vary across and within cortical areas in primates,”
+[151] E. K. Miller, “The prefontral cortex and cognitive control,” Nature               Proceedings of the National Academy of Sciences, vol. 107, no. 36, pp.
+      reviews neuroscience, vol. 1, no. 1, pp. 59–65, 2000.                             15 927–15 932, 2010.
+                                                                                    28
+
+
+
+[175] X. Liu, Y. Zeng, T. Zhang, and B. Xu, “Parallel brain simulator: A
+      multi-scale and parallel brain-inspired neural network modeling and
+      simulation platform,” Cognitive Computation, vol. 8, no. 5, pp. 967–
+      981, Oct 2016.
+[176] T. L. Davis and P. Sterling, “Microcircuitry of cat visual cortex:
+      Classification of neurons in layer iv of area 17, and identification of the
+      patterns of lateral geniculate input,” Journal of Comparative Neurology,
+      vol. 188, no. 4, pp. 599–627, 1979.
+[177] L. Fan, H. Li, J. Zhuo, Y. Zhang, J. Wang, L. Chen, Z. Yang, C. Chu,
+      S. Xie, A. R. Laird, P. T. Fox, S. B. Eickhoff, C. Yu, and T. Jiang, “The
+      human brainnetome atlas: A new brain atlas based on connectional
+      architecture,” Cerebral cortex (New York, N.Y. : 1991), vol. 26, no. 8,
+      pp. 3508–3526, Aug 2016.
+[178] A. Klein and J. Tourville, “101 labeled brain images and a consistent
+      human cortical labeling protocol,” Frontiers in neuroscience, vol. 6,
+      pp. 171–171, Dec 2012.
+[179] B. Han, F. Zhao, Y. Zeng, and G. Shen, “Developmental plasticity-
+      inspired adaptive pruning for deep spiking and artificial neural net-
+      works,” 2022.
+[180] G. Shen, D. Zhao, Y. Dong, and Y. Zeng, “Bio-inspired neural
+      architecture search for efficient spiking neural networks,” 2022.
+[181] K.-C. Peng, T. Chen, A. Sadovnik, and A. C. Gallagher, “A mixed
+      bag of emotions: Model, predict, and transfer emotion distributions,”
+      in Proceedings of the IEEE conference on computer vision and pattern
+      recognition, 2015, pp. 860–868.
+

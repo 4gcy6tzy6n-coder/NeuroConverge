@@ -1,0 +1,477 @@
+                                         Teaching AI to Remember: Insights from Brain-Inspired
+                                                     Replay in Continual Learning
+                                                                                Jina Kim
+                                                                      School of Computing, KAIST
+
+                                                                                     Abstract
+                                                  Artificial neural networks (ANNs) continue to face challenges in continual learning,
+
+
+
+
+arXiv:2509.00047v1 [cs.LG] 24 Aug 2025
+                                              particularly due to catastrophic forgetting, the loss of previously learned knowledge
+                                              when acquiring new tasks. Inspired by memory consolidation in the human brain,
+                                              we investigate the internal replay mechanism proposed by [Van de Ven et al., 2020],
+                                              which reactivates latent representations of prior experiences during learning. As inter-
+                                              nal replay was identified as the most influential component among the brain-inspired
+                                              mechanisms in their framework, it serves as the central focus of our in-depth inves-
+                                              tigation. Using the CIFAR-100 dataset in a class-incremental setting, we evaluate
+                                              the effectiveness of internal replay, both in isolation and in combination with Synap-
+                                              tic Intelligence (SI). Our experiments show that internal replay significantly mitigates
+                                              forgetting, especially when paired with SI, but at the cost of reduced initial task accu-
+                                              racy, highlighting a trade-off between memory stability and learning plasticity. Further
+                                              analyses using log-likelihood distributions, reconstruction errors, silhouette scores, and
+                                              UMAP projections reveal that internal replay increases representational overlap in la-
+                                              tent space, potentially limiting task-specific differentiation. These results underscore
+                                              the limitations of current brain-inspired methods and suggest future directions for bal-
+                                              ancing retention and adaptability in continual learning systems.
+
+
+                                         1    Introduction
+                                              Despite significant advancements in deep learning, artificial neural networks (ANNs)
+                                         still suffer from catastrophic forgetting in continual learning, where training on new tasks
+                                         causes them to easily forget previously learned information. In contrast, the human brain
+                                         retains diverse information through declarative and nondeclarative memory systems ([Bear
+                                         et al., 2020, Figure 24.1, p. 838]), storing it in either short-term or long-term memory. A
+                                         key factor that protects humans from drastic forgetting is thought to be the reactivation
+                                         of neural activity patterns representing previous experiences—referred to as memory replay
+                                         (Wilson and McNaughton [1994], Rasch and Born [2007], Oudiette and Paller [2013], Van de
+                                         Ven et al. [2016]).
+                                              To address catastrophic forgetting in ANNs, previous works have attempted to mimic
+                                         the brain’s memory replay mechanism. Notably, studies such as Van de Ven et al. [2020],
+                                         Millichamp and Chen [2021], Ran et al. [2024] have demonstrated that brain-inspired mech-
+                                         anisms can help retain performance during continual learning in AI. Motivated by these
+                                         findings, we aim to draw inspiration from the brain to develop mechanisms for long-term
+                                         memory in AI. Specifically, we focus on analyzing the impact of brain-inspired components
+                                         on AI performance and providing insights to guide future research directions.
+
+                                                                                          1
+2     Brain-inspired replay for continual learning with ar-
+      tificial neural network
+     To resolve the catastrophic forgetting in ANN, Van de Ven et al. [2020] introduces
+the brain-inspired generative replay(GR) model, which further improves the straightforward
+generative replay(GR) model. The straightforward GR has been introduced as one solution
+for mimicking the memory replay in the brain, by generating the replayed data with a
+generative model learned from past observation and integrated with the new data by the
+main model. The generator that produces the replayed data is considered the hippocampus,
+while the main model, which produces the final output from the integrated new data and
+replayed data, is considered the cortex. Although this model performs well on class-IL
+scenarios unlike other baselines, it still isn’t an optimal solution because of the following
+reasons. First of all, it is hard to scale up to more challenging problems, and during class
+IL, it suffers from managing complex inputs. Also, although it tries to mimic the interaction
+between the cortex and hippocampus, this raises the question of how replay could underlie
+memory consolidation in the brain. Therefore, [Van de Ven et al., 2020, Fig. 7, p. 6, 11]
+proposes a brain-inspired GR model that contains the following brain-inspired components:
+(1) replay through feedback (2) conditional replay (3) gating based on internal context (4)
+internal replay (5) distillation. A detailed explanation of each component can be found in
+B.
+
+
+3     Further Analysis
+    Although Van de Ven et al. [2020] has shown impressive performance([Van de Ven et al.,
+2020, Fig. 5, 6]) and highlighted the importance of each component in the model([Van de Ven
+et al., 2020, Fig. 8]), the actual test accuracy is relatively low, ranging around 0.2([Van de Ven
+et al., 2020, Fig. 8c]). In addition, there are still unresolved questions regarding how and why
+these brain-inspired factors contribute to mitigating catastrophic forgetting. Therefore, we
+provide a further analysis to understand the model’s performance and investigate its actual
+impact as well as potential improvement points. Motivated by the observation that internal
+replay is the most critical component of the model ([Van de Ven et al., 2020, Fig. 8c]), we
+focus on internal replay and seek to answer the following questions: (1) How do the retention
+ratio, forgetting score, initial(final) test accuracy differ for each task? (2) How does internal
+replay influence the log-likelihood distribution and reconstruction error distribution? (3)
+How does internal replay impact hidden layer activations?
+
+3.1    Experiment Settings
+    We compare model with internal replay(w/ IR) and model without internal replay(w/o
+IR), and since brain-inspired replay with synaptic intelligence (BIR + SI) gives the highest
+accuracy([Van de Ven et al., 2020, Fig. 6c]), we conduct experiments both on brain-inspired
+replay(BIR) and brain-inspired replay with synaptic intelligence (BIR + SI). Accordingly, the
+models used in our experiments are as follows: BIR(w/ IR), BIR(w/o IR), BIR + SI(w/ IR),
+BIR + SI(w/o IR). We train and test on CIFAR-100 in class-IL scenario, since the models
+
+                                                2
+mostly suffer on class-IL than task-IL([Van de Ven et al., 2020, Fig. 6b, 6c]) and since
+BIR(w/o IR) has drastic performance degradation for class-IL on CIFAR-100, compared
+to BIR(w/ IR) ([Van de Ven et al., 2020, Fig. 8c]). The used metrics are as follows: (1)
+Test accuracy (initial accuracy, final accuracy, retention ratio, forgetting score) for all tasks
+with retention ratio=final accuracy/initial accuracy, forgetting score=initial accuracy - final
+accuracy (2) Log-likelihood and reconstruction error on the test set (3) Silhouette score
+representing separability of the cluster. For test accuracy, initial accuracy was measured on
+the test set right after the model was trained on each particular task, and final accuracy was
+measured on the test set after the model was sequentially trained on all 10 tasks.
+
+3.2                        Experiment Results
+3.2.1                          Test accuracy comparison throughout all tasks
+
+
+
+                                                         Retention Ratio per task                                                                            Forgetting Score per task
+                     1.0       BIR (w/ IR)                                                                               0.8
+                               BIR (w/o IR)
+                               BIR+SI (w/ IR)                                                                            0.7
+                               BIR+SI (w/o IR)
+                     0.8                                                                                                 0.6
+
+                                                                                                                         0.5
+                     0.6
+
+   Retention Ratio                                                                                       Test Accuracy
+                                                                                                                         0.4
+
+                     0.4                                                                                                 0.3
+
+                                                                                                                         0.2
+                     0.2
+                                                                                                                         0.1       BIR (w/ IR)
+                                                                                                                                   BIR (w/o IR)
+                                                                                                                                   BIR+SI (w/ IR)
+                     0.0                                                                                                 0.0       BIR+SI (w/o IR)
+                           1           2         3   4         5          6         7   8   9   10                             1           2         3   4          5          6         7   8   9   10
+                                                                   Task                                                                                                 Task
+
+
+
+
+Figure 1: Retention ratio and Forgetting score per task. Retention ratio compar-
+ison (left) and forgetting score comparison (right) between BIR(w/ IR), BIR(w/o IR),
+BIR+SI(w/ IR), BIR+SI(w/o IR) for all tasks. Dashed lines refer to as the average test
+accuracy throughout all the tasks for each model.
+
+        As shown in 1, the BIR+SI (w/ IR) model achieves the highest retention ratio and
+lowest forgetting score across all tasks. Although both BIR and BIR+SI models perform
+better in internal replay (w/ IR) conditions than without internal replay (w/o IR), all models
+except BIR+SI (w/ IR) show drastic catastrophic forgetting across the tasks. Considering
+that SI(Zenke et al. [2017]) protects parameters critical to previous tasks by penalizing large
+updates to them, the combination of BIR+SI could provide a stable foundation for BIR
+to replay accurate internal representations. This could be crucial for BIR if the network’s
+parameters drift too much while learning new tasks since BIR depends on the accurate
+generation of internal representations. On the other hand, in 2(left), it is interesting to
+see that the initial accuracy trend shows the exact opposite of the final accuracy, where
+the BIR+SI (w/ IR) performs the worst while the BIR (w/o IR) performs the best. As
+both w/ IR models perform worse than w/o IR models, this shows that internal replay
+leads to performance degradation when trained on the task, thereby lowering the upper
+bound of the model’s capable performance. Also, since both of the BIR+SI models achieve
+lower performance than BIR, this shows that the protection made by SI(Zenke et al. [2017])
+
+                                                                                                     3
+harms the training process, and its contribution comes solely from reducing the catastrophic
+forgetting of the model. This interpretation also matches with 2(right), as the BIR+SI(w/
+IR) shows stable performance in the initial tasks while performing the worst on the last task.
+The results demonstrate that the proposed models (BIR, BIR+SI) in Van de Ven et al. [2020]
+are not yet optimal, and there could be a better way to reduce the forgetting score while
+also maintaining the highly achieved initial accuracy in models without internal replay (w/o
+IR).
+
+
+
+                                                        Initial Accuracy per task                                                                            Final Accuracy per task
+                   0.80                                                                                                            BIR (w/ IR)
+                                                                                                                                   BIR (w/o IR)
+                                                                                                                         0.7       BIR+SI (w/ IR)
+                   0.75                                                                                                            BIR+SI (w/o IR)
+                                                                                                                         0.6
+                   0.70
+                                                                                                                         0.5
+                   0.65
+
+   Test Accuracy                                                                                         Test Accuracy
+                                                                                                                         0.4
+                   0.60
+                                                                                                                         0.3
+                   0.55
+                                                                                                                         0.2
+                   0.50
+                              BIR (w/ IR)
+                              BIR (w/o IR)                                                                               0.1
+                   0.45       BIR+SI (w/ IR)
+                              BIR+SI (w/o IR)                                                                            0.0
+                          1           2         3   4          5          6         7   8   9   10                             1           2         3   4         5          6        7   8   9   10
+                                                                   Task                                                                                                Task
+
+
+
+
+Figure 2: Initial accuracy and Final accuracy per task. Initial test accuracy compar-
+ison (left) and final test accuracy comparison (right) between BIR(w/ IR), BIR(w/o IR),
+BIR + SI(w/ IR), BIR + SI(w/o IR) for all tasks. Dashed lines refer to the average test
+accuracy throughout all the tasks for each model.
+
+
+
+3.2.2                         Log likelihood distribution and reconstruction error distribution
+    Here we present the result of log-likelihood distribution and reconstruction error on the
+test set. We only provide distributions of BIR models(w/ IR, w/o IR), since the models
+with BIR+SI showed consistent results with BIR models. In 3, BIR(w/ IR) shows higher
+log-likelihood values, indicating a better fit to the data compared to BIR(w/o IR), which has
+a longer tail toward more negative values. Moreover, the reconstruction error distribution
+shows that BIR(w/ IR) achieves consistently lower errors, while BIR(w/o IR) exhibits a
+wider range of higher reconstruction errors.
+
+3.2.3                         Silhouette score comparison and UMAP visualization of embedding
+     To see how the internal replay influences the hidden layer activations over sequential
+tasks, we extract the hidden layer activations on fcE.fcLayer2.linear for each model using
+the test set and measure the quality of the clustering using silhouette score for each task.
+Interestingly, in 4(a), all models showed very low silhouette score(near 0) with the same
+tendency across the tasks, indicating poorly separated clusters. In the UMAP visualization
+result on task 7(4(b, c, d, e)), which gave the highest silhouette score compared to other tasks,
+all models show overlapping in the clusters which means that the hidden layer activations
+fail to distinctly encode task-specific representations. This demonstrates that the proposed
+
+                                                                                                     4
+                                Log-Likelihood Distribution                         Reconstruction Error Distribution
+                 2500    BIR (w/ IR)                                                                              BIR (w/ IR)
+                         BIR (w/o IR)                                                                             BIR (w/o IR)
+
+                 2000
+
+
+                 1500
+     Frequency
+                 1000
+
+
+                 500
+
+
+                   0
+                        5000     4000     3000       2000     1000   0       0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75
+                                        Log-Likelihood                                     Reconstruction Error
+
+Figure 3: Log likelihood distribution and Reconstruction error distribution. Com-
+parison of log likelihood distribution (left) and reconstruction error distribution (right) be-
+tween model with internal replay (BIR(w/ IR)) and model without internal replay (BIR(w/o
+IR)).
+
+
+method of Van de Ven et al. [2020] is not yet optimal which also aligns with the fact that
+the final accuracy is not that high(2(right)).
+
+
+4    Conclusion
+    In this report, we investigate the impact of the brain-inspired replay proposed by Van de
+Ven et al. [2020] on model performance and its ability to address the catastrophic forgetting
+problem. Our analysis primarily focuses on internal replay, identified as the most critical
+component of the model. The results show that combining SI (Zenke et al. [2017]) with the
+BIR model, as well as the internal replay itself, helps mitigate catastrophic forgetting (1,
+2(right)) and improves the model’s ability to fit the data (3). However, this combination also
+led to performance degradation during the training process (2(right)). Moreover, 4 shows
+that all the proposed models, regardless of whether they include internal replay, exhibit
+high overlap in cluster representations. These results demonstrate that while the proposed
+brain-inspired concept aids in maintaining AI memory, there is room for improvement in
+addressing the drastic performance degradation observed during training. Therefore, further
+research should focus not only on resolving catastrophic forgetting but also on maintaining
+initial accuracy without performance drops.
+    Additionally, while this report primarily explores the presence or absence of internal
+replay, investigating the sparsity of the mask for ’gating based on internal context’ and the
+location of the layer where internal replay occurs could provide valuable insights into the
+model’s mechanism and performance. Furthermore, interpreting and extending the model
+structure using brain mechanisms, as introduced in Bear et al. [2020], presents an intriguing
+avenue for research. As discussed in A, the memory functions of the hippocampus could offer
+
+                                                                         5
+                                                                                                     6
+                                                                                                                                                          12
+
+
+
+                                                                                                     5                                                    11
+
+
+
+                                                                                                     4                                                    10
+
+
+
+
+                                     Silhouette Scores across Tasks (fcE.fcLayer2.linear)            3
+                                                                                                                                                          9
+
+
+
+                                                                                                                                                          8
+                     0.050                                                                           2
+
+                                                                                                                                                          7
+
+                                                                                                         6       8       10       12       14       16             6            8             10         12
+                     0.025
+
+                     0.000                                                                               (b) BIR (w/ IR)                                 (c) BIR+SI (w/ IR)
+
+  Silhouette Score
+                     0.025
+
+                     0.050                                                                           0                                                    12
+
+
+
+
+                     0.075                                                                           1
+                                                                                                                                                          10
+
+
+                                                                                                     2
+
+
+                     0.100                                BIR (w/ IR)
+                                                                                                                                                          8
+
+
+                                                          BIR (w/o IR)
+                                                                                                     3
+
+
+                                                          BIR+SI (w/ IR)                                                                                  6
+                     0.125                                BIR+SI (w/o IR)                            4
+
+
+
+                                 2               4                  6              8        10       5                                                    4
+
+                                                             Task                                            4       2        0        2        4              8       9   10       11   12        13   14    15
+
+
+
+
+                             (a) Silhouette Score Comparison                                         (d) BIR (w/o IR)                                    (e) BIR+SI (w/o IR)
+
+Figure 4: Silhouette score and UMAP visualization of embeddings on layer
+fcE.fcLayer2.linear. (a) Comparison of silhouette score between model with internal re-
+play (BIR(w/ IR)) and model without internal replay (BIR(w/o IR)). UMAP visualization
+of embeddings on task 7 for (b) BIR (w/ IR), (c) BIR+SI (w/ IR), (d) BIR (w/o IR), (e)
+BIR+SI (w/o IR). The experiments are held on layer fcE.fcLayer2.linear.
+
+
+insights into understanding the generative model in brain-inspired GR, as the generative
+model in the current structure is conceptually aligned with the hippocampus.
+    For instance, the hippocampus binds sensory information for memory consolidation. By
+analogizing sensory information to different classes, it would be interesting to explore how
+the number of classes selected for replay per task impacts performance. Additionally, the
+hippocampus supports spatial memory, such as the location of behaviorally significant ob-
+jects, which could inform the ’conditional replay’ mechanism of the model. Here, the latent
+vector of each class could be treated as a form of spatial memory.
+    Finally, given that both the standard model of memory consolidation and the multiple
+trace model explain memory consolidation through interactions between the neocortex and
+hippocampus, it would be fascinating to investigate how these theories align with the models
+proposed in Van de Ven et al. [2020], Millichamp and Chen [2021], Ran et al. [2024].
+
+
+
+
+                                                                                                 6
+References
+Mark Bear, Barry Connors, and Michael A Paradiso. Neuroscience: exploring the brain,
+ enhanced edition: exploring the brain. Jones & Bartlett Learning, 2020.
+
+Margaret F Carr, Shantanu P Jadhav, and Loren M Frank. Hippocampal replay in the awake
+ state: a potential substrate for memory consolidation and retrieval. Nature neuroscience,
+ 14(2):147–153, 2011.
+
+Daoyun Ji and Matthew A Wilson. Coordinated memory replay in the visual cortex and
+ hippocampus during sleep. Nature neuroscience, 10(1):100–107, 2007.
+
+Jack Millichamp and Xi Chen. Brain-inspired feature exaggeration in generative replay for
+  continual learning. arXiv preprint arXiv:2110.15056, 2021.
+
+Delphine Oudiette and Ken A Paller. Upgrading the sleeping brain with targeted memory
+  reactivation. Trends in cognitive sciences, 17(3):142–149, 2013.
+
+Yu-Lin Qin, Bruce L Mcnaughton, William E Skaggs, and Carol A Barnes. Memory re-
+  processing in corticocortical and hippocampocortical neuronal ensembles. Philosophical
+  Transactions of the Royal Society of London. Series B: Biological Sciences, 352(1360):
+  1525–1533, 1997.
+
+Xuming Ran, Juntao Yao, Yusong Wang, Mingkun Xu, and Dianbo Liu. Brain-
+ inspired continual pre-trained learner via silent synaptic consolidation. arXiv preprint
+ arXiv:2410.05899, 2024.
+
+Björn Rasch and Jan Born. Maintaining memories by reactivation. Current opinion in
+  neurobiology, 17(6):698–703, 2007.
+
+William Beecher Scoville and Brenda Milner. Loss of recent memory after bilateral hip-
+ pocampal lesions. Journal of neurology, neurosurgery, and psychiatry, 20(1):11, 1957.
+
+Larry R Squire. Memory and the hippocampus: a synthesis from findings with rats, monkeys,
+  and humans. Psychological review, 99(2):195, 1992.
+
+Gido M Van de Ven, Stephanie Trouche, Colin G McNamara, Kevin Allen, and David Dupret.
+  Hippocampal offline reactivation consolidates recently formed cell assembly patterns dur-
+  ing sharp wave-ripples. Neuron, 92(5):968–974, 2016.
+
+Gido M Van de Ven, Hava T Siegelmann, and Andreas S Tolias. Brain-inspired replay for
+  continual learning with artificial neural networks. Nature communications, 11(1):4069,
+  2020.
+
+Matthew A Wilson and Bruce L McNaughton. Reactivation of hippocampal ensemble mem-
+ ories during sleep. Science, 265(5172):676–679, 1994.
+
+Friedemann Zenke, Ben Poole, and Surya Ganguli. Continual learning through synaptic
+  intelligence, 2017. URL https://arxiv.org/abs/1703.04200.
+
+                                            7
+A     Memory system in human brain
+     According to [Bear et al., 2020, p. 838], the temporal lobe is the important brain region
+for recording past events. The temporal neocortex in the medial temporal lobe may be a
+site of long-term memory storage, and the medial temporal lobe also contains a group of
+structures interconnected with the neocortex that are critical for forming declarative memo-
+ries. Also, [Bear et al., 2020, p. 846] summarizes the memory function of the hippocampus,
+which has received the greatest attention among the medial temporal lobe region. First of
+all, it plays a critical role in binding sensory information for memory consolidation. Second,
+the hippocampus supports spatial memory of the location of objects of behavioral impor-
+tance. Lastly, the hippocampus is involved in the storage of memories for some length of
+time. Moreover, [Bear et al., 2020, Figure 24.25, p. 855] illustrates two popular hypotheses of
+memory consolidation (i.e. standard model of memory consolidation, multiple trace model
+of consolidation) and both explain the memory consolidation process as the interaction be-
+tween neocortex and hippocampus. The standard model of memory consolidation suggests
+that during synaptic consolidation, memory retrieval requires the hippocampus but after it
+is complete, the systems consolidation occurs in which engrams are moved gradually into
+distributed areas of the neocortex. On the other hand, the multiple trace model of consolida-
+tion proposes the idea that each time an episodic memory is retrieved, it occurs in a context
+different from the initial experience and the recalled information combines with new sensory
+input to form a new memory trace involving both the hippocampus and neocortex.
+     Previous works such as Scoville and Milner [1957], Squire [1992] have led to the general
+hypothesis that the hippocampus could be facilitating the reactivation of neocortical activity
+patterns during ’offline’ periods such as sleep or quiet awake when the neocortex is not
+actively engaged in processing incoming data. This reactivation has been presumed to permit
+recently acquired information to become appropriately integrated into long-term memory.
+On top of that, Qin et al. [1997], Ji and Wilson [2007], Carr et al. [2011] have shown that
+memory replay is orchestrated by the hippocampus but also observed in the cortex, and
+mainly occurs in the sharp-wave/ripples during both sleep and awake. Inspired by the process
+of memory consolidation in the brain, Van de Ven et al. [2020], Millichamp and Chen [2021],
+Ran et al. [2024] have explored the potential of leveraging this biological mechanism in ANNs
+to address the issue of catastrophic forgetting in continual learning.
+
+
+B     Detailed explanation of the model structure
+    Here we provide a detailed explanation of each component of the model in Van de
+Ven et al. [2020]. Inspired by the brain anatomy in which the hippocampus sits atop
+the cortex in the brain processing hierarchy, the replay through feedback merges the gen-
+erator(hippocampus) into the main model(cortex) and uses a single variational autoen-
+coder(VAE) model with additional softmax classification layer to operate as the generator
+and the main model. Therefore, in this model, the early layers are considered the visual
+cortex, and the top layers are considered the hippocampus. Next, since humans can have
+control over what memories to recall while VAE doesn’t, the standard normal prior over
+the VAE’s latent variable is replaced by the Gaussian mixture with a separate mode for
+
+
+                                              8
+each class. This enables the model to generate specific classes by restricting the sampling of
+the latent variables to their corresponding modes. The third component is gating based on
+internal context, which is inspired by the brain processing stimuli differently depending on
+the context or task that is performed and also that the contextual cues bias what memories
+are replayed. Therefore, a context gate that randomly selects a subset of neurons is used in
+each hidden layer depending on which task should be performed. Additionally, considering
+that the brain doesn’t replay memories down to the input level, for example as the mental
+images are not propagated to our retina, the internal replay replays the representations of
+previously learned classes at the hidden level, rather than at the input level (e.g. pixel level).
+Finally, unlike the straightforward GR that labels the generated data into one specific class,
+brain-inspired GR uses soft targets that are labeled with predicted probabilities for all possi-
+ble classes, which it refers to as distillation. Such an approach is especially important when
+the quality of the generated data is low so when it is hard to classify as a single class.
+
+
+
+
+                                                9
+

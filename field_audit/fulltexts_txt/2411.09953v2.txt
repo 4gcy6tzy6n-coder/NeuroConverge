@@ -1,0 +1,539 @@
+                                              Brain-inspired Action Generation with Spiking
+                                                   Transformer Diffusion Policy Model
+
+                                              Qianhao Wang1,2 , Yinqian Sun1 , Enmeng Lu1 , Qian Zhang1,2,4 ⋆ , and Yi
+                                                                          Zeng1,2,3,4 ⋆⋆
+
+                                              Brain-inspired Cognitive Intelligence Lab, Institute of Automation, Chinese
+                                               1
+
+
+
+
+arXiv:2411.09953v2 [cs.RO] 17 Mar 2025
+                                                                   Academy of Sciences, Beijing, China.
+                                         2
+                                           School of Artificial Intelligence, University of Chinese Academy of Sciences,Beijing,
+                                                                                  China.
+                                           3
+                                             Key Laboratory of Brain Cognition and Brain-inspired Intelligence Technology,
+                                                                          CAS, Shanghai, China.
+                                                     4
+                                                       Center for Long-term Artificial Intelligence, Beijing, China.
+
+
+
+                                                    Abstract. Spiking Neural Networks (SNNs) has the ability to extract
+                                                    spatio-temporal features due to their spiking sequence. While previous
+                                                    research has primarily foucus on the classification of image and rein-
+                                                    forcement learning. In our paper, we put forward novel diffusion policy
+                                                    model based on Spiking Transformer Neural Networks and Denoising
+                                                    Diffusion Probabilistic Model (DDPM): Spiking Transformer Modulate
+                                                    Diffusion Policy Model (STMDP), a new brain-inspired model for gen-
+                                                    erating robot action trajectories. In order to improve the performance of
+                                                    this model, we develop a novel decoder module: Spiking Modulate De-
+                                                    coder (SMD), which replaces the traditional Decoder module within the
+                                                    Transformer architecture. Additionally, we explored the substitution of
+                                                    DDPM with Denoising Diffusion Implicit Models (DDIM) in our frame-
+                                                    work. We conducted experiments across four robotic manipulation tasks
+                                                    and performed ablation studies on the modulate block. Our model consis-
+                                                    tently outperforms existing Transformer-based diffusion policy method.
+                                                    Especially in Can task, we achieved an improvement of 8%. The proposed
+                                                    STMDP method integrates SNNs, dffusion model and Transformer ar-
+                                                    chitecture, which offers new perspectives and promising directions for
+                                                    exploration in brain-inspired robotics.
+
+                                                    Keywords: Brain-indpired robotics · Spiking Neural Networks · Trans-
+                                                    former · Diffusion Policy.
+
+
+                                         1         Introduction
+                                         Spiking Neural Networks transmit information through spike sequences, which
+                                         encode both temporal and spatial information. This grants SNNs spatio-temporal
+                                         feature extraction capabilities [1]. The most common models include the Integrate-
+                                         and-Fire (IF) neuron, the Leaky Integrate-and-Fire (LIF) neuron [2], and the
+                                         ⋆
+                                              Corresponding author. Email: q.zhang@ia.ac.cn
+                                         ⋆⋆
+                                              Corresponding author. Email: yi.zeng@ia.ac.cn
+2         Qianhao Wang, Yinqian Sun, Enmeng Lu, Qian Zhang, and Yi Zeng
+
+Hodgkin-Huxley (HH) neuron [3]. Since SNNs are modeled in a more biologically
+plausible manner, their training processes differ slightly from those of artificial
+neural networks (ANNs).
+    Behavior Cloning (BC), a branch of imitation learning, directly learns a pol-
+icy by mapping states to actions based on expert demonstration trajectories [4].
+But, it suffers from compounding errors, resulting in poor generalization and sub-
+optimal performance in practical scenarios. Action Chuncking with Transform-
+ers (ACT) [5] employs a Variational Autoencoder (VAE) for imitation learning,
+generating action trajectories, while diffusion policy [6] uses diffusion models
+for the same purpose. Due to the current transformer-based spiking neural net-
+work models performing poorly in generating action trajectories. We propose the
+Spiking Transformer Modulate Diffusion Policy Model and the Spiking Modulate
+Decoder to enhance the accuracy of robotic manipulation tasks.
+    In this work, we build upon the diffusion policy method [6] and integrate it
+with SNNs to tackle the aforementioned challenges. Diffusion policies offer strong
+generative capabilities, enabling them to learn diverse patterns from data, while
+SNNs’ spatio-temporal feature extraction ensures more coherent action trajec-
+tories. We propose a novel diffusion policy model based on Spiking Transformer
+Neural Networks, along with a novel decoder module.
+    Our key contributions are as follows:
+
+    • We present the Spiking Transformer Modulate Diffusion Policy Model , and
+      its core module of this model: the Spiking Modulate Decoder module.
+    • Additionally, We implemented diffusion policies utilizing a spiking Trans-
+      former architecture, and develop the Spiking Diffusion Transformer (SDIT),
+      which is based on Diffusion with Transformer (DIT) framework.
+    • We conducted experiments on four robotic manipulation tasks, demonstrat-
+      ing that our proposed STMDP model significantly enhanced performance.
+      Specifically, in the Can task, our model outperformed the current best Transformer-
+      based Diffusion Policy model by 8%.
+
+
+2      Related Work
+
+SNNs are composed of various spiking neuron models, each differing in their
+complexity of neuron modeling. SNNs have been widely applied in image pro-
+cessing [7,8] and reinforcement learning [9,10,11]. Common training methods
+include Spike-Timing-Dependent Plasticity (STDP) [12,13], ANN-to-SNN con-
+version [14,15], and direct training methods [16,17]. In our study, we utilized the
+LIF neuron model and the direct training method. Cao [18] introduced the SD-
+DPM, which improved image generation with low energy consumption. Hou [19]
+proposed the SDP, enhancing robotic manipulation performance. While their
+work is based on the Unet architecture, our approach uses a transformer archi-
+tecture. Furthermore, we introduce a more general module: SMD.
+    BC is attractive due to its simplicity, easy of training, and interpretability.
+However, it suffers from compounding errors (distributional drift and cumulative
+                                    Title Suppressed Due to Excessive Length       3
+
+errors) and limited behavior patterns [20]. To address these limitations, numer-
+ous methods have been proposed, such as data augmentation to enhance data
+diversity and mitigate compounding errors [21], and the use of mixture Gaussian
+models [22,23] or implicit models [24] to capture more diverse behavior patterns.
+    The Denoising Diffusion Probabilistic Model (DDPM) [25] improves genera-
+tive performance by predicting noise instead of the noisy image itself, reducing
+the complexity of prediction. DDIM [26] constructs a posterior distribution such
+that its marginal distribution is Gaussian, eliminating the need for the forward
+process to follow a Markov chain. Recent work has explored replacing the typi-
+cal Unet-based diffusion model with transformer-based diffusion models, yielding
+better generative results [27]. Our work differs in that we modify the decoding
+module rather than the encoding module, allowing for more flexible handling
+of conditional inputs, and our model is primarily designed for action trajectory
+generation instead of image generation.
+
+
+3     Method
+3.1   Preliminaries
+Spiking Neural Networks: SNNs imitate the signal transmission process in
+the brain and transmit information in sparse spike sequences. We use the LIF
+neuron model for modeling, which is suitable for deep learning tasks. The dy-
+namic process can be described as Equation (1). In practical applications, we
+discretize it to facilitate forward process and training. It is described as Equation
+(2) and Equation (3).
+                            dV (t)
+                        τ          = −(V (t) − Vreset ) + I(t)                   (1)
+                             dt
+
+                                                         l(n)
+                                                         X
+                 uit+1,n+1 = kuit,n+1 (1 − oit,n+1 ) +          wnij ojt,n+1     (2)
+                                                         j=1
+
+                            oit+1,n+1 = f (uit+1,n+1 − Vth )                     (3)
+where I(t) represents the incoming synaptic current, V (t) denotes the membrane
+potential, τ is the time constant, Vreset is the resetting potential. When the
+membrane potential exceeds the threshold Vth , the neuron fires a spike, and the
+membrane potential is reset to the resetting potential.
+    The training method of our model uses direct training, the derivation process
+of direct training is described in Equation(4) and Equation (5).
+                        l(n+1)
+                 ∂L       X      ∂L ∂oit,n+1    ∂L ∂oit+1,n
+                  i
+                      =          i       i
+                                             + i                                 (4)
+                ∂ot,n     j=1
+                               ∂ot,n+1 ∂ot,n  ∂ot+1,n ∂oit,n
+
+                       ∂L       ∂L ∂oit,n        ∂L ∂oit+1,n
+                             =               +                                   (5)
+                      ∂uit,n   ∂oit,n ∂uit,n   ∂oit+1,n ∂oit,n
+4       Qianhao Wang, Yinqian Sun, Enmeng Lu, Qian Zhang, and Yi Zeng
+
+where n represents the number of layers in the network, t denotes the timestep, i
+refers to the neuroni in a given layer, k is a constant. f (x) is a step function, Vth
+represents the threshold value, L denotes the loss function, and l(n) indicates the
+number of neurons. oit,n represents the output(0/1) of the ith neuron in the nth
+layer at the tth timestep. uit,n represents the membrane potential of the neuron
+and wnij denotes the weight.
+    Becaues of the f (x) is undifferentiable ,we use a surrogate function g(x) to
+solve this problem during the back-propagation process. The surrogate function
+is described as Equation(6).
+                                   
+                                   0,
+                                                x ≤ − 1ϵ ,
+                           g(x) = − 12 ϵ2 |x|, x < | 1ϵ |,                         (6)
+                                                 x ≥ 1ϵ
+                                   
+                                     1,
+                                   
+
+where g(x) represents the surrogate function, ϵ is a constant, we set ϵ = 2.
+    DDPM and DDIM: We constructed STMDP spiking neural based DDPM
+and also explored replacing DDPM with DDIM. Before introducing the architec-
+tures, we briefly review some diffusion model concepts involved in the√ research.
+The diffusion model includes a forward process q(xt | x0 ) = N (xt ; αt x0 , (1 −
+αt )I), which adds noise to the data; and a reverse process qθ (xt−1 | xt ) =
+N (µθ (xt ), Σθ (xt )), which recovers data from random noise. Diffusion models
+are trained to learn qθ , using the variational lower bound[28] for training, sim-
+plified to minimize the KL divergence between qθ and q(xt−1 | xt , x0 ). This
+paper employs a fixed variance ϵθ (xt ) = βI. Finally, the predicted mean is
+converted to predicted noise through the reparameterization process Lt−1 (θ) =
+∥ϵθ (xt ) − ϵ∥2 .The DDPM forward process is a Markov process, whereas DDIM
+eliminats the dependency on the forward Markov process and can generate high-
+quality samples in fewer sampling timesteps.
+
+3.2   Spiking Transformer Modulate Diffusion Policy
+The STMDP model differs from the DIT architecture, which is primarily based
+on the Transformer encoder structure [29]. In contrast, our proposed model
+preserves the encoder-decoder architecture of the Transformer. Additionally,
+STMDP is built upon a spiking neural network. The encoding strategy involves
+direct encoding, where the input is replicated across eight time steps, and de-
+coding is performed by averaging the inputs over these steps to generate the
+output. The overall architecture of the model is illustrated in Figure 1.
+    The diffusion policy process consists of two phases: a training phase and a
+generation phase. During the training phase, a noise prediction model is trained,
+and in the generation phase, the trained model is employed to progressively
+reduce noise and generate robot-executable action trajectories guided by visual
+input. For the training phase, a fixed time step is embedded to high dimension
+vector as T . Image frames are extracted from demonstration videos, and multi-
+angle images are encoded as high dimension vector C. The timestep embedding
+and image embedding are then combined and input into the Spiking Transformer
+                                                   Title Suppressed Due to Excessive Length                                5
+
+      Training
+ Condition                                                (B,1,N)
+                                     Timestep
+               Timestep              Embedding        T
+                                                                           Spiking Transformer Encoder
+                                                                                       (STE)
+                 t1    t2
+                            Image
+        Top
+        Forward                        Image
+        left                           Embedding      C
+        End effector
+                                                              (B,To,N)
+        Right
+
+              Action Tracjectory                          X              Spiking Modulate Decoder
+                                                                                  (SMD)
+
+                                                      (B,T,N)
+                            add
+
+       Noise                                         MSE Loss                                            Predicted Noise
+
+   Generate
+                                                          STE
+                                  Condition
+
+                                                                         Predicted ActionTracjectory
+
+        Random Noise                                      SMD
+
+
+
+
+Fig. 1: The architect of spiking transformer modulate diffusion policy module.
+
+
+Encoder (STE) module, followed by processing in the SMD module for guidance.
+After adding noise to the action trajectory, it is encoded into the X vector and
+decoded by the SMD module together with the output of STE. The decoder
+module outputs a prediction of the noise in the action trajectories, which is
+updated using the Mean Square Error (MSE) with target noise Y . During the
+generation phase, images and inference time steps serve as conditions; however,
+the input to the SMD module is random noise, which is iteratively denoised to
+produce robot-executable action trajectories. This can be represented:
+
+                                    M = SSA(T, C) + F F N (SSA(T, C))                                                  (7)
+                                                                            2
+                                              L = ∥Y − SM DM (M, X)∥                                                   (8)
+where SSA stands for Spiking Self Attention module and F F N stands for Feed
+Forward neural Network module and M stands for the output of the STE module.
+Y is noise and SM DM stands for SMD module.
+
+
+3.3      Base Block
+
+In the Spiking Encoder Module, the core component is the spiking multi-head
+self-attention block, which combines a LIF layer with a multi-head self-attention
+mechanism. The remaining blocks retain the fundamental structure of the stan-
+dard encoder block. In the SMD module, the base block includes a spiking multi-
+head self-attention block, a spiking modulated cross-attention block, and a mod-
+ulated feed-forward network block. The detailed structures of the basic blocks
+within the Spiking Encoder and SMD modules are depicted in Figures 2, re-
+spectively. A key difference in the SMD module is that modulation is applied to
+6      Qianhao Wang, Yinqian Sun, Enmeng Lu, Qian Zhang, and Yi Zeng
+
+the cross-attention module, contrasting with the DIT structure, which primarily
+modulates the self-attention mechanism in the encoder. This design is inspired
+by the architecture of BERT, which is based on encoder modules, and GPT,
+which is built on decoder modules—both of which have demonstrated strong
+generative capabilities.
+
+
+
+                         T+C                  Feed Forward Network      Modulate
+
+
+                Spiking Self Attention        Spiking Cross Attention
+                                                        LIF Layer
+                         LIF Layer
+                                                        w1
+                         w1                        w2
+                    w2
+                              ∑                              ∑
+                         w3              ×N             w3              Modulate      ×N
+
+                                                  Q       Q       Q
+                   Q       Q       Q
+                                                 K V     K V     K V
+                  K V     K V     K V                                   Transformer
+                                                                          Encoder
+                                               Spiking Self Attention
+                         T+C
+                                               X (random noise+trajectory)
+                          (a)                                (b)
+
+
+Fig. 2: The architect of base block.(a) represents the architecture of Spiking
+Encoder;(b) represents the architecture of SMD.
+
+
+
+
+4     Experiment
+
+4.1   Datasets and Experimental Settings
+
+The proposed STMDP model is evaluated across four robotic manipulation tasks:
+PushT, Can, Square and ToolHang (Square and Can is mh version, ToolHang is
+ph verseion). These tasks cover a diverse range of actions, including pushing and
+grasping, as shown in Figure 3, offering a thorough assessment of the model’s
+performance. PushT: Move the T-shaped block to the specified position on the
+desktop; Can: Grasping a can of soda and placing it into a slot; Square: Lifting
+an object with a square hole and fitting it onto a square pillar; ToolHang: As-
+sembling a rack from tools on the table and hanging the remaining tools on the
+rack.
+    We present results derived from the average of the last 10 checkpoints (saved
+every 50 epochs) across 50 initializations of the environment, totaling an average
+of 500 experiments, while all other settings remain consistent with the previous
+configurations[6]. When conducting experiments with DDIM model, we adopt
+the experimental setups: the value of α is set to 0 to make the forward process
+of its diffusion process deterministic, the inference timestep is set to 50 and is
+randomly selected (in contrast to 100 in DDPM).
+                                    Title Suppressed Due to Excessive Length   7
+
+                 PushT             Can           Square      ToolHang
+
+
+
+
+                         Fig. 3: Tasks used for the experiment.
+
+
+4.2   Experiment Results
+To ensure a comprehensive comparison, the experiments have implemented dif-
+fusion policies based on spiking Transformer (SDPT), which utilizing the same
+Transformer architecture as the diffusion policy based on ANN described (DPT)
+in [6], and those based on spiking DIT (SDIT) structures as in [27]. The main
+difference between them is whether there is Spiking Transformer (ST). The Mod-
+ulate Block (M-Block) plays a critical role in the DIT model. This work also
+implements a spiking modulate decoder module based on the M-Block and ex-
+perimentally validates its effectiveness. Additionally, we replace DDPM in our
+model with DDIM and propose STMDP-I to conduct experiments. The experi-
+mental results are shown in Table 1. The STMDP achieved the 75.4% in PushT
+task, it exceeded the previous best result by nearly 5% (achieved by DPT). As
+for the STMDP-I, We guess that because the parameters α and inference step
+are not selected appropriately. While It achieved the best result in the Square
+task, demonstrating its potential.
+
+
+
+            Table 1: Execution results of all models on four tasks.
+                         Blocks              Tasks
+               Model
+                       ST M-Block PushT Can Square ToolHang
+               DPT[6]             0.707 0.860 0.720  0.540
+               DIT[27]       ✓    0.657 0.920 0.800 0.780
+               SDPT    ✓          0.747 0.220 0.040  0.000
+                SDIT   ✓     ✓    0.700 0.920 0.660  0.540
+              STMDP ✓        ✓    0.754 0.940 0.800  0.540
+             STMDP-I ✓       ✓    0.640 0.740 0.880  0.720
+
+
+    Impact of the Modulate Blocks: To validate the effectiveness of our
+proposed core module (SMD module), we compared the performance of ST,
+SDIT and SMD on all datasets. SDPT does not have a modulation block, SDIT
+have a modulation encoder, and our STMDP features a modulation decoder
+(SMD). The results are shown in Table 2. We achieved the best results in all the
+other three experiments. Especially in Can and Square tasks, we achieved 94%
+and 80% respectively. The results show that our SMD module has advantages
+in action trajectory generation. It can be clearly seen from Figure 4.
+8       Qianhao Wang, Yinqian Sun, Enmeng Lu, Qian Zhang, and Yi Zeng
+
+
+                  Table 2: The impact of the modulate block.
+                                                     Tasks
+                  Model   M-Block
+                                          PushT Can Square ToolHang
+                 SDPT                     0.747 0.220 0.040  0.000
+                 SDIT        ✓            0.700 0.920 0.660 0.540
+                STMDP        ✓            0.754 0.940 0.800 0.540
+                                                               PushT
+                             ST
+                                                                      0.754
+                             SDIT                                      0.747
+                                                                          0.7
+                             STDPM
+
+
+
+                                                 0.92
+                                    Can                                                       Square
+                                          0.94          0.22    0.0                    0.80
+                                                                      0.04      0.66
+
+
+
+                                                                      0.54
+                                                                      0.54
+
+
+
+
+                                                          Tool_hang
+
+
+
+                    Fig. 4: The results of the ablation study.
+
+
+5     Conclusion
+In this work, we proposed the Spiking Transformer Modulate Diffusion Policy
+Model, a new diffusion policy architecture based on the Spiking Transformer.
+This model effectively integrates SNNs with diffusion policy’s capability to gen-
+erate action trajectories. As a pioneering attempt based on the Spiking Trans-
+former architecture in the diffusion policy, it achieves high-quality motion tra-
+jectory generation. The Spiking Modulate Decoder module we proposed is mod-
+ulated based on the Transformer Decoder module, demonstrating the superiority
+of modulation based on the Decoder. Although the STMDP model has achieved
+good results, there is still room for further research on the selection of modula-
+tion modules and diffusion models. We will also conduct some experiments on
+the selection of DDIM parameters.
+
+5.1   Data Available
+The model of this research is one of the core and part of BrainCog Embot
+[30] . BrainCog Embot is an Embodied AI platform under the Brain-inspired
+Cognitive Intelligence Engine (BrainCog) framework, which is an open-source
+Brain-inspired AI platform based on Spiking Neural Network.
+
+6     Acknowledgments
+This study was supported by the Postdoctoral Fellowship Program of CPSF
+(Grant No.GZC20232994), the Funding from Institute of Automation, Chinese
+Academy of Sciences(Grant No.E411230101), Special Research Assistant Pro-
+gram of the Chinese Academy of Sciences (Grant No.E4S9230501), Frontier Sci-
+entific Research Program of Chinese Academy of Sciences (ZDBS-LY-JSC013).
+                                    Title Suppressed Due to Excessive Length           9
+
+References
+
+ 1. Hong Qiao, Jiahao Chen, and Xiao Huang. A survey of brain-inspired intelligent
+    robots: Integration of vision, decision, motion control, and musculoskeletal systems.
+    IEEE Transactions on Cybernetics, 52(10):11267–11280, 2021.
+ 2. Wulfram Gerstner and Werner M Kistler. Spiking neuron models: Single neurons,
+    populations, plasticity. Cambridge university press, 2002.
+ 3. Alan L Hodgkin and Andrew F Huxley. A quantitative description of membrane
+    current and its application to conduction and excitation in nerve. The Journal of
+    physiology, 117(4):500, 1952.
+ 4. Yueh-Hua Wu, Nontawat Charoenphakdee, Han Bao, Voot Tangkaratt, and
+    Masashi Sugiyama. Imitation learning from imperfect demonstration. In Inter-
+    national Conference on Machine Learning, pages 6818–6827. PMLR, 2019.
+ 5. Tony Z. Zhao, Vikash Kumar, Sergey Levine, and Chelsea Finn. Learning
+    fine-grained bimanual manipulation with low-cost hardware. arXiv preprint
+    arXiv:2304.13705, 2023.
+ 6. Cheng Chi, Siyuan Feng, Yilun Du, Zhenjia Xu, Eric Cousineau, Benjamin Burch-
+    fiel, and Shuran Song. Diffusion policy: Visuomotor policy learning via action
+    diffusion. arXiv preprint arXiv:2303.04137, 2023.
+ 7. Ziqing Wang, Yuetong Fang, Jiahang Cao, Qiang Zhang, Zhongrui Wang, and
+    Renjing Xu. Masked spiking transformer. In Proceedings of the IEEE/CVF Inter-
+    national Conference on Computer Vision, pages 1761–1771, 2023.
+ 8. Zhaokun Zhou, Yuesheng Zhu, Chao He, Yaowei Wang, Shuicheng Yan, Yonghong
+    Tian, and Li Yuan. Spikformer: When spiking neural network meets transformer.
+    arXiv preprint arXiv:2209.15425, 2022.
+ 9. Duzhen Zhang, Tielin Zhang, Shuncheng Jia, and Bo Xu. Multi-sacle dynamic
+    coding improved spiking actor network for reinforcement learning. In Proceedings
+    of the AAAI Conference on Artificial Intelligence, volume 36, pages 59–67, 2022.
+10. Ding Chen, Peixi Peng, Tiejun Huang, and Yonghong Tian. Fully spiking actor
+    network with intralayer connections for reinforcement learning. IEEE Transactions
+    on Neural Networks and Learning Systems, 2024.
+11. Katerina Maria Oikonomou, Ioannis Kansizoglou, and Antonios Gasteratos. A hy-
+    brid spiking neural network reinforcement learning agent for energy-efficient object
+    manipulation. Machines, 11(2):162, 2023.
+12. Guo-qiang Bi and Mu-ming Poo. Synaptic modifications in cultured hippocampal
+    neurons: dependence on spike timing, synaptic strength, and postsynaptic cell type.
+    Journal of neuroscience, 18(24):10464–10472, 1998.
+13. Sen Song, Kenneth D Miller, and Larry F Abbott. Competitive hebbian learning
+    through spike-timing-dependent synaptic plasticity. Nature neuroscience, 3(9):919–
+    926, 2000.
+14. Bodo Rueckauer, Iulia-Alexandra Lungu, Yuhuang Hu, Michael Pfeiffer, and Shih-
+    Chii Liu. Conversion of continuous-valued deep networks to efficient event-driven
+    networks for image classification. Frontiers in neuroscience, 11:682, 2017.
+15. Abhronil Sengupta, Yuting Ye, Robert Wang, Chiao Liu, and Kaushik Roy. Going
+    deeper in spiking neural networks: Vgg and residual architectures. Frontiers in
+    neuroscience, 13:95, 2019.
+16. Chankyu Lee, Syed Shakib Sarwar, Priyadarshini Panda, Gopalakrishnan Srini-
+    vasan, and Kaushik Roy. Enabling spike-based backpropagation for training deep
+    neural network architectures. Frontiers in neuroscience, 14:497482, 2020.
+10      Qianhao Wang, Yinqian Sun, Enmeng Lu, Qian Zhang, and Yi Zeng
+
+17. Emre O Neftci, Hesham Mostafa, and Friedemann Zenke. Surrogate gradient learn-
+    ing in spiking neural networks: Bringing the power of gradient-based optimization
+    to spiking neural networks. IEEE Signal Processing Magazine, 36(6):51–63, 2019.
+18. Jiahang Cao, Ziqing Wang, Hanzhong Guo, Hao Cheng, Qiang Zhang, and Ren-
+    jing Xu. Spiking denoising diffusion probabilistic models. In Proceedings of the
+    IEEE/CVF Winter Conference on Applications of Computer Vision, pages 4912–
+    4921, 2024.
+19. Zhixing Hou, Maoxu Gao, Hang Yu, Mengyu Yang, and Chio-In Ieong. Sdp: Spiking
+    diffusion policy for robotic manipulation with learnable channel-wise membrane
+    thresholds. arXiv preprint arXiv:2409.11195, 2024.
+20. Mayank Bansal, Alex Krizhevsky, and Abhijit Ogale. Chauffeurnet: Learn-
+    ing to drive by imitating the best and synthesizing the worst. arXiv preprint
+    arXiv:1812.03079, 2018.
+21. Mariusz Bojarski. End to end learning for self-driving cars. arXiv preprint
+    arXiv:1604.07316, 2016.
+22. Ajay Mandlekar, Danfei Xu, Josiah Wong, Soroush Nasiriany, Chen Wang, Rohun
+    Kulkarni, Li Fei-Fei, Silvio Savarese, Yuke Zhu, and Roberto Martín-Martín. What
+    matters in learning from offline human demonstrations for robot manipulation.
+    arXiv preprint arXiv:2108.03298, 2021.
+23. Nur Muhammad Shafiullah, Zichen Cui, Ariuntuya Arty Altanzaya, and Lerrel
+    Pinto. Behavior transformers: Cloning k modes with one stone. In Advances in
+    Neural Information Processing Systems, volume 35, pages 22955–22968, 2022.
+24. Jimmy Wu, Xingyuan Sun, Andy Zeng, Shuran Song, Johnny Lee, Szymon
+    Rusinkiewicz, and Thomas Funkhouser. Spatial action maps for mobile manip-
+    ulation. arXiv preprint arXiv:2004.09141, 2020.
+25. Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic mod-
+    els. Advances in neural information processing systems, 33:6840–6851, 2020.
+26. Jiaming Song, Chenlin Meng, and Stefano Ermon. Denoising diffusion implicit
+    models. arXiv preprint arXiv:2010.02502, 2020.
+27. William Peebles and Saining Xie. Scalable diffusion models with transformers.
+    In Proceedings of the IEEE/CVF International Conference on Computer Vision,
+    pages 4195–4205, 2023.
+28. Diederik P Kingma.           Auto-encoding variational bayes.     arXiv preprint
+    arXiv:1312.6114, 2013.
+29. Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+    Aidan N Gomez, Lukasz Kaiser, and Illia Polosukhin. Attention is all you need.
+    In Advances in Neural Information Processing Systems, 2017.
+30. The braincog embot engine. https://www.brain-cog.network/embot.
+

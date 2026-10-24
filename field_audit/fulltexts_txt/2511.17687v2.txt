@@ -1,0 +1,966 @@
+                                                                                                                                                           1
+><
+
+
+
+   Boosting Brain-inspired Path Integration Efficiency
+     via Learning-based Replication of Continuous
+               Attractor Neurodynamics
+Zhangyu Ge†, Xu He†, Student Member, IEEE, Lingfei Mo*, Member, IEEE, Xiaolin Meng*, Wenxuan Yin, Student
+             Member, IEEE, Youdong Zhang, Student Member, IEEE, Lansong Jiang, Fengyuan Liu
+
+   Abstract—The brain’s Path Integration (PI) mechanism offers                  we cannot broadly and indiscriminately model and simulate all
+profound insights for Brain-Inspired Navigation (BIN). However,                 aspects of the brain’s navigation circuitry. Therefore, many
+numerous advances predominantly rely on Continuous Attractor                    current studies focus on replicating key mechanisms within the
+Neural Networks (CANNs) to implement PI functionality, which                    brain’s navigation-related neural circuits. Among these, the
+introduces considerable computational redundancy and limits                     neural basis of Path Integration (PI) mechanism [2] provides
+operational efficiency, thereby constraining the practicality of BIN
+technologies. To address this, this work proposes an efficient PI
+                                                                                crucial guidance for navigation tasks, such as Dead Reckoning
+framework that leverages representation learning models to                      (DR) and Simultaneous Localization and Mapping (SLAM).
+faithfully replicate the neurodynamic patterns of CANNs.                           A substantial body of existing research simulating the brain’s
+Specifically, lightweight Artificial Neural Networks (ANNs) are                 PI capability adopts the CANN-based approach [3]. Diverging
+employed to accurately emulate the neurodynamics of Head                        from conventional logic of numerical optimization-based
+Direction Cells (HDCs) and Grid Cells (GCs) as modeled by                       uncertainty estimation, these approaches recast spatial state
+CANNs. These AI-based HDC and GC representations are                            estimation as a property of internal state coupling and evolution
+subsequently integrated to achieve brain-inspired PI for Dead                   within neurodynamic models, thereby reformulating spatial
+Reckoning (DR). Benchmark evaluations across diverse
+                                                                                localization as an encoding-decoding process of spatial
+environments, with comparisons against the established
+NeuroSLAM system, demonstrate that the proposed approach not
+                                                                                experiences [4]-[6].
+only successfully replicates the neurodynamic behaviors of                         Although this paradigm sacrifices some accuracy relative to
+navigation-related cells but also achieves comparable positioning               computational methods, its operational principles bear closer
+accuracy to NeuroSLAM. Furthermore, substantial efficiency                      affinity to the brain’s construction of cognitive maps [7].
+gains are observed: approximately 17.5% improvement on                          Consequently, it is regarded as a promising avenue for
+general-purpose computing platforms and 40~50% on edge                          enhancing environmental adaptability under unstructured
+devices. This work thus presents a promising implementation                     conditions [3][4]. This growing recognition has motivated
+strategy for enhancing the practicality of BIN technology and                   considerable research effort toward exploring its scientific
+offers considerable potential for further development. GitHub link:             value, with particular significance lying in the potential to
+https://github.com/BINUCOE/CANN2ANN_for_PI.
+                                                                                enable BIN systems to perform DR in unstructured complex
+  Index Terms—Brain-inspired Navigation, Path Integration,
+                                                                                environments, thereby substantially expanding the application
+Continuous Attractor Neural Networks, Neurodynamics, Dead                       scope of unmanned systems and intelligent robots.
+Reckoning                                                                          While mechanistic modeling and computational paradigms
+                                                                                have evolved considerably, CANN-modeled PI continues to
+                         I. INTRODUCTION                                        present efficiency constraints that warrant attention. Recent
+
+
+
+I
+                                                                                studies by Zheng et al. [8] and Lu et al. [9] have highlighted that
+     N recent years, Brain-Inspired Navigation (BIN) research                   differential equation-based CANNs rely on cumbersome
+    inspired by spatial cognition has attracted increasing                      calculations to implement neurodynamics, motivating their
+    attention and discussion within the research community.                     simplified reformulations within probabilistic frameworks.
+    Current BIN research draws inspiration from the brain’s                     Such adaptations, however, retain the core differential equation
+navigational neural mechanisms, employing brain-inspired                        architecture rather than fundamentally restructure the
+neurodynamic models such as Continuous Attractor Neural                         computational workflow.
+Networks (CANNs), etc. to realize navigation and positioning                       In fact, the theoretical foundations of CANNs were
+capabilities [1]. Given that BIN research is in its nascent stage,
+
+   This paragraph of the first footnote will contain the date on which you         The authors are with the State Key Laboratory of Comprehensive PNT
+submitted your paper for review, which is populated by IEEE. This work was      Network and Equipment Technology, School of Instrument Science and
+supported by the Natural Science Foundation of Jiangsu Province under Grant     Engineering, Southeast University, Nanjing 210096, China (e-mail:
+No. BK20243064. Xu He receives support from the Postgraduate Research &         lfmo@seu.edu.cn & xiaolin_meng@seu.edu.cn).
+Practice Innovation Program of Jiangsu Province under Grant No.                    Xu He, Xiaolin Meng, Wenxuan Yin, Youdong Zhang, Lansong Jiang, and
+SJCX24_0067 and SEU Innovation Capability Enhancement Plan for Doctoral         Fengyuan Liu are also with the China-UK Centre on Intelligent Mobility,
+Students under Grant No. CXJH_SEU 24204.                                        Southeast University, Nanjing 210096, China.
+   Xu He & Zhangyu Ge contributed equally and are co-first authors, with Xu        Color versions of one or more of the figures in this article are available
+He listed first alphabetically by surname. Corresponding author: Lingfei Mo &   online at http://ieeexplore.ieee.org
+Xiaolin Meng.
+                                                                                                                                  2
+><
+
+established decades ago and have since found widespread            NeuroSLAM system while demonstrating notable efficiency
+engineering applications. Their enduring influence is evident in   improvements on general-purpose computing devices,
+the lineage of brain-inspired SLAM systems, from the first-        especially at the edge.
+generation RatSLAM [10] in 2004, through NeuroSLAM [11]               Outlines. Section II presents the related work, Section III
+in 2019, to the recent ORB-NeuroSLAM [12] and many other           details the method design and comparison, Section IV covers
+advances like [13]-[16], all of which employ volumetrically        the experiments and evaluation, Section V includes the
+stacked CANNs to construct core PI capabilities. This              discussion and analysis, and Section VI concludes the paper.
+consistency attests to the CANN’s neurobiological fidelity, yet
+also signals that its computational implementation has remained                          II. RELATED WORK
+largely unchanged. The persistent reliance on iterative               This paper primarily focuses on the replication of the
+differential equation solvers and exhaustive decoding              neurodynamic patterns of CANNs into representation learning-
+procedures, appropriate to early 2000s computational               based ANNs, as well as the reconstructed modeling of
+environments, now conflicts with the efficiency requirements       navigation cells for the integration into the brain-inspired PI
+of modern general-purpose and edge computing platforms in          framework. Given that Zhang et al. [17] have already reported
+the era of Artificial Intelligence (AI).                           foundational studies on the neurodynamic modeling of CANNs,
+   Of course, it is understandable that as an emerging             this section mainly reviews the recent state-of-the-art advances
+technology, the evolution of BIN in terms of its theoretical       in CANN-modeled navigation cells and PI methods.
+principles, computational paradigms, and functional
+implementations cannot be achieved overnight [3][4]. Its           A. CANN-based Modeling of Navigation Cells
+capability enhancement must be realized progressively.                Neuroscience has shown that the brain’s hippocampal-
+Therefore, at this critical stage, new ideas and methodologies     entorhinal cortex neural circuit contains a large number of
+can provide valuable contributions and insights to the research    heterogeneous navigation cells. Their interactions form the
+community of this emerging field. To this end, this paper          basis of spatial cognition and navigation abilities [18]. The PI
+investigates the optimization of computational efficiency in       capability emerging from the complex neural networks formed
+CANN-based modeling of neurodynamics.                              by these cells is a major focus of BIN research. Over time, to
+   Specifically, this paper employs AI-enabled techniques to       simulate this, the CANN models have been widely employed
+replicate the neurodynamic patterns of CANN-modeled                for modeling key navigation cells, such as pose cells, HDCs,
+navigation cells into lightweight Artificial Neural Networks       GCs, and place cells [19]-[21], thereby laying the groundwork
+(ANNs). Then, they are encapsulated into a brain-inspired PI       for brain-inspired PI.
+framework composed of Head Direction Cells (HDCs) and Grid            Yu et al. [11], in reporting the NeuroSLAM system, provided
+Cells (GCs) to realize the PI capability. The objective is to      a detailed presentation of the CANN-based modeling processes
+enhance the practicality of brain-inspired PI methods by           of HDCs and GCs in the entorhinal cortex, which is regarded as
+leveraging lightweight AI techniques, thereby accommodating        the key brain region for PI realization. This modeling method
+the efficiency demands of modern edge computing and general-       was inherited from the RatSLAM’s approach of constructing
+purpose platforms in the current AI era.                           CANN-based pose cells [6], including local excitation, global
+   Furthermore, benchmark tests are conducted to verify the        inhibition, activity normalization, cell state updating, and
+representational fidelity of this AI-replicated neurodynamics.     decoding. The CANN modeling approaches for other types of
+Comparative evaluations against NeuroSLAM [11], a well-            navigation cells are largely similar and can further achieve
+established system in the BIN community, demonstrate the           dimensional extension of navigation cells by altering the
+validity of this work. Results indicate equivalent performance     Gaussian distribution dimensions of the CANN model.
+to the CANN-based NeuroSLAM system in dead reckoning                  The above typical CANN-based navigation cell modeling
+tasks, while achieving operational efficiency gains of             approach can simulate the neural activation patterns of
+approximately 20% on workstation platforms and 40~50% at           navigation neuron clusters, enabling one-to-one mapping
+the edge, contingent upon dataset characteristics.                 between the PI states and the activity states of neuron clusters
+   The main contributions are summarized as follows:               through decoding. Nevertheless, it exhibits considerable
+   1) This paper proposes a learning-based approach to replicate   computational redundancy and computational complexity. As
+the CANN’s neurodynamics, enabling the use of lightweight          [22] stated, at any given time only about 1% of the cells in the
+ANNs as substitutes for CANN models. This facilitates the          CANN model corresponding to pose cells are activated,
+deployment of CANN-based models and their extended                 forming an envelope (i.e., the wave packet synthesis states of
+functions on general-purpose computing platforms or edge           3D CANN in various dimensions) that describes the system
+devices, allowing for more efficient operation.                    state. Moreover, the generation of this envelope follows the
+   2) This paper constructs the functional models of entorhinal    processes of local excitation, global inhibition, and activity
+cortex HDCs and GCs with the AI-replicated CANN                    normalization, each requiring iterative computation within a
+neurodynamics and integrates them into a brain-inspired PI         recurrent framework to establish the matrix states of CANN
+framework to support the implementation of PI functionality,       neuronal connection strengths. In addition, the exhaustive
+enabling DR.                                                       search for the center of the envelope during the state update and
+   3) Through benchmark testing with the NeuroSLAM system,         decoding processes of CANNs further exacerbates the problem
+which is widely recognized within the BIN field, this work         of low computational efficiency.
+developed herein achieves consistent DR performance with the          The above issues motivated Zeng et al. [8] to develop a
+                                                                                                                                                                                            3
+><
+
+Bayesian probabilistic framework in the NeuroBayesSLAM             researchers have focused on the multiscale properties of
+system to simplify CANN modeling and thus construct a more         navigation cells such as GCs, and on this basis developed PI
+efficient PI function. The Bayesian attractor model represents     models with multiscale navigation cell features, such as
+the network state through Gaussian distribution parameters,        [14][15], which achieved certain progress.
+rather than adhering to the neuron activation patterns of local       However, it is not difficult to observe that although
+excitation and global inhibition. Although this parametric         incorporating different functional types of navigation cells into
+representation streamlines the computational process, it neither   the framework of brain-inspired PI construction provides
+alleviates the inefficiencies inherent to the decoding procedure   certain capability improvements, it also significantly increases
+nor transcends the foundational reliance on differential           computational costs. These computational costs are positively
+equation-based neurodynamic modeling.                              correlated with the scale, number, dimensionality, and
+   Therefore, based on the review and analysis of the above        granularity of the navigation cell models built on CANN.
+developments, this paper proposes to employ a non-stacked          Therefore, addressing the computational efficiency of CANN
+structure to model key navigation cells with low-dimensional       models is a worthy research direction, as it would enhance the
+CANN, and to replicate their neurodynamic properties through       practicality of brain-inspired PI models on general-purpose
+lightweight learning-based ANNs. On this basis, we can utilize     computing platforms and even on edge devices.
+end-to-end AI methods to completely reshape the modeling of
+neuronal activities and state decoding of navigation cells,                                                III. METHOD DESIGN
+thereby achieving high computational efficiency.                     Figure 1 provides an overview of the efficient PI method
+B. Advances in Brain-inspired PI Research                          proposed in this paper. The VO implementation adopted in this
+                                                                   paper remains consistent with the method in NeuroSLAM [11],
+   Numerous studies have confirmed that GCs located in the
+                                                                   used only for estimating self-motion cues during the PI process,
+medial entorhinal cortex are critically important for the
+                                                                   and thus no specific extensions are described.
+realization of PI capability. However, in the early years, since
+neuroscience had not yet fully elucidated the contribution and      (A)                                                       AI-Reconstr ucted
+
+role of the entorhinal cortex in spatial cognition, the first-      Image                                    Self-motion           HDCN                   Path
+                                                                     Data                                                                              Integr ation
+generation RatSLAM [10] in 2004 abstracted virtual pose cells                                                   Cues
+
+                                                                                                                                      GCN
+to perform PI functionality, based solely on simulating
+                                                                                   Visual Odometr y                             J oint Pose Cell                         Dead Reckoning
+hippocampal place cells. In the RatSLAM system, Visual
+Odometry (VO) estimated self-motion cues. The pose cell
+                                                                    (B)                 AI-Reconstr ucted J oint Pose Cell for Path Integr ation
+model, responsible for PI, encoded and decoded these cues into
+spatial experiences. RatSLAM then achieved Loop Closure                   Input                                     Output             Input                                       Output
+Detection (LCD) through visual template matching (local view                                           Decode                Decode                                   Decode
+                                                                                                            Labels
+cells) and converted discrete spatial experiences into a                          HDC (CANN)                                                       GC (CANN)
+                                                                                                                                                                          Labels
+
+
+topological experience map.                                                       ……                                         Update            ……
+   At present, many derivative studies have been built upon the                    …
+                                                                                  ……
+                                                                                                                …                               …
+                                                                                                                                               ……
+                                                                                                                                                                               …
+
+
+                                                                                              HDCN                                                           GCN
+open-sourced OpenRatSLAM project [6], which significantly
+advanced the development of BIN research. Many subsequent
+studies, including BatSLAM [23], NeuroSLAM, and among                                                   Path Integr ation for Dead Reckoning
+others, have been derived almost entirely from RatSLAM,
+sharing the common logic of simulating the operational modes                           Spatial Exper ience Cr eation
+of navigation cells to replicate the brain’s PI capability. In
+addition, some researchers have raised concerns that pose cells                        Spatial Exper ience Relaxation
+
+lack physiological evidence, potentially leading to limitations
+in adaptability and generalization [24].
+   Later, with advances in neuroscience, the mechanisms of         Fig. 1. Framework of the proposed PI method. (A) Pipeline overview. (B)
+spatial cognition in the entorhinal cortex were gradually          Specific representation. Where, HDCN and GCN, representing Head
+                                                                   Direction Cell Network and Grid Cell Network respectively, are detailed
+uncovered, and the role of GCs was clarified. Many researchers
+                                                                   in the following subsections.
+began to simulate the multisource information processing
+mechanisms of the entorhinal cortex by compiling PI                   Since the open-sourcing of RatSLAM, a large number of brain-
+information separately through HDC models and GC models,           inspired PI models have adopted CANN models with stacked
+thus moving beyond the paradigm of pose cell modeling.             network structures. This structure causes each virtual neuron (cell)
+Representative studies consistent with these characteristics can   within it to form a subset representing the neurodynamic state. The
+be found in [11]-[16]. Subsequently, more mechanisms of            superposition of these state subsets constitutes the complete
+navigation cells were simulated and integrated into the            envelope (or bump) of the CANN.
+construction of brain-inspired PI capability. For example, Liu        As mentioned before, this modeling approach faces significant
+et al. [16] employed the CANN model to construct speed cell        computational redundancy during state updates of the CANN
+models and virtual distance cell models, which were combined       model, and its decoding efficiency is low. Its computational
+with HDC and GC models to achieve brain-inspired PI                efficiency is positively correlated with the scale, number,
+capability in intelligent mobile applications. Moreover, some      dimensions, and size of the navigational cell model. Therefore,
+                                                                                                                                                                4
+><
+
+when we increase the scale, size, and quantity of the navigational       input of HDCN, and specifies the preference vector for HDC as:
+cell model built with CANNs, the problem of low computational
+efficiency becomes more pronounced. To address this challenge,                                                    Vi = OHE ( i )                               (1)
+this work employs a learning-based approach to fully map the
+                                                                            Where, i corresponds to the neuron index. Based on this, through
+neurodynamic state update pattern and decoding process of the
+                                                                         interpolation, any input can be linearly mapped and transformed
+CANN. This effectively replicates CANN’s neurodynamics, and
+                                                                         into a vector, as shown in formula (2):
+performs a lightweight AI replication of the navigational cell
+patterns with enhanced computational efficiency, as illustrated in                     VIext = (1 − C frac ) OHE (C ) + C fracOHE (C + 1)                      (2)
+Figure 1 (B).
+A. AI Replication of the CANN-modeled HDC                                    Where, 𝐶 = 𝐼𝑒𝑥𝑡 /2𝜋 ∗ 𝑁𝑃 , 𝐶𝑓𝑟𝑎𝑐 refers to the fractional part of
+    By concatenating multiple 1D HDC models, we can achieve the          𝐶, and 𝑁𝑃 is the number of intervals between neurons in the 1D
+encoding and decoding of yaw, pitch, and roll angles. This paper         CANN. The external input (𝐼𝑒𝑥𝑡 ) is constrained to [0, 2𝜋) after a
+uses a multi-layer HDC model to estimate the yaw and pitch angles,       modulo operation.
+temporarily disregarding roll angle information. This is consistent          The training details for HDCN are described as follows. This
+with Yu et al. [11], facilitating subsequent quantitative comparison     paper uses the decoded values of the CANN-modeled HDC as the
+in this paper. The difference is that, since the actual correlation      training labels for the model. For the involved decoding methods,
+between height and angle is not high, two tensors are used to            see formulas (7) and (8). During HDCN training, the Adam
+maintain the hidden states of the temporal layers during cell            optimizer and the Mean Squared Error (MSE) loss function were
+reconstruction. This allows a single ANN fitting a 1D CANN to            adopted, training for a total of 200 epochs, with 12 sequences input
+complete the calculation of the height and angle bumps, whereas          per epoch.
+the original algorithm effectively operates as a 2D CANN.                    The CANN modeling of the HDC neurodynamic pattern to be
+    The design of Head Direction Cell Network (HDCN) for                 fitted is described as follows:
+replicating the CANN-modeled multi-layer HDC patterns follows
+                                                                                                    = aext exp  −bext pext − pi                        
+                                                                                                i                                                   2
+                                                                                              I ext                                                            (3)
+the lightweight principle, including an input layer, two Fully                                                                                         
+Connected (FC) layers with ReLU activation, three Long Short
+                                                                                     𝑖
+Term Memory (LSTM) layers, and two TimeDistributed layers for               Where, 𝐼𝑒𝑥𝑡  represents the stimulus input to the 𝑖 th neuron.
+time-step state decoding. Among them, the two FC layers are used         𝑎𝑒𝑥𝑡 and 𝑏𝑒𝑥𝑡 are constants greater than 0. 𝑝𝑒𝑥𝑡 and 𝑝𝑖 are the
+to extract abstract representations of the input sequence. To            preferences of the external input and the 𝑖 th neuron, respectively,
+facilitate comparison with NeuroSLAM, both FC layers are set to          both taken from the information state set. For example, when
+37 neurons. This is because the first and last neurons in the CANN       constructing HDC via CANN, the preference here is a certain angle
+model are completely equivalent, whereas in the NeuroSLAM’s              within [−𝜋, 𝜋]. When constructing GC, it refers to a coordinate
+CANN modeling, the first and last neurons still have a spatial           within a specified spatial range. At this point, the neuron state
+distance. This number setting ensures that the resolution of the AI-     update equation and the internal connection weights can be
+replicated HDCN remains consistent with the neuronal encoding            described as:
+resolution of the HDC model in NeuroSLAM. The three LSTM
+                                                                                           U i ( t )
+layers each have 37 Units, used to fit the neurodynamic patterns of                                        = −U i ( t ) +   j J ij r j ( t ) + I ext
+                                                                                                                                                    i
+                                                                                                                                                        (t )   (4)
+the CANN; the two TimeDistributed layers have 12 neurons and                                  t
+two neurons respectively, used solely for decoding the head-                Where, 𝜏 and 𝜌 represent the synaptic time constant and neuron
+direction patterns learned through representation learning by the        density, respectively. 𝐽𝑖𝑗 denotes the connection weight between
+LSTM layers.
+                                                                         the 𝑖 th and 𝑗 th neurons. 𝑟 𝑗 (𝑡) represents the firing rate of the 𝑗 th
+    HDCN is trained with supervised learning. The training dataset
+                                                                         neuron. The synaptic input 𝑈 𝑖 (𝑡) for the 𝑖 th neuron can be
+for HDCN is generated by a random process that creates sequential
+                                                                         calculated using formula (4).
+information about angles. The randomized elements include
+sequence length, the pattern of angle changes, the proportion of                                                          − pi − p j 
+                                                                                                                 J0
+duration for different change patterns within the entire sequence,                               J ij =              exp                                     (5)
+and the value when the angle is constant. The split ratio between                                               2 a       2a 2     
+the training set and the validation set is 4:1, and to reduce fitting
+difficulty and training instability, the sequence length is controlled      The connection weights between neurons are initialized using
+to 500. The sequence length of the test set is 7-10 times that of the    the Gaussian function in formula (5), utilizing parameter 𝑎 to
+training set, not less than 3750 frames. The input values of the         control the connection range of the neurons.
+sequence vary linearly within [−𝜋, 𝜋] for different patterns or are
+                                                                                                                          U i ( t ) 
+                                                                                                                                           2
+
+a constant value, aiming to enable the network to fit wave packet                                  r (t ) =
+                                                                                                        i                                  +                   (6)
+                                                                                                                   1 + k   j U j ( t ) 
+                                                                                                                                                2
+activities under different rates of change. Before the input sequence
+                                                                                                                                                +
+is fed into the network, one-hot encoding plus interpolation is used
+to obtain the input vector for the network, allowing HDCN to                Where, 0 < 𝑘 < 𝑘𝑐 ≡ 𝜌𝐽02 ⁄8√2𝜋𝑎 , [𝑈]+ ≡ 𝑚𝑎𝑥(𝑈, 0).
+preemptively capture the spatial proximity relationships between            The divisive normalization in formula (6) limits the intensity of
+different inputs, thereby reducing the fitting difficulty. This paper    the neuronal firing rate, thereby preventing the synaptic input 𝑈(𝑡)
+defines a 37-dimensional vector 𝑥 ∈ {0, 1}37 corresponding to the        from exhibiting an explosive growth trend. Formulas (3)-(6)
+                                                                                                                                                                              5
+><
+
+complete the entire process from CANN receiving external input                 preprocessing, this paper concatenates the input vectors calculated
+to wave packet state update.                                                   for the 3D coordinates according to formula (9).
+   In practical BIN applications, information transfer between
+different modules cannot be directly transmitted through abstract                                                         VIT = VxTI ,VyTI ,VzTI                         (9)
+neural information but relies on paradigms of mathematical
+calculation. Therefore, it is necessary to decode the wave packet                 The modeling process for GC is similar to that of HDC, with the
+state of the CANN to obtain concrete information. For the wave                 difference being that the neuron preference changes from 1D angle
+packet state of a 1D CANN, its decoding formulas are written as                data to a 3D vector describing coordinates. Its modeling process is
+follows:                                                                       shown in formulas (10) and (11):
+                                                                                            U i ( t )
+                                   2  pi                 2  pi                                = −U i ( t ) +   x  y  z J xi , y , z r i ( t ) + I ext
+                                                                                                                                                                 i
+                                                                                                                                                                     (t )   (10)
+ ( t ) = arctan 2  U i ( t ) sin          ,U ( t ) cos  N   (7)
+                                                  i
+                                                                                               t
+                    i              N  i                            
+                                                                                                                                    − px , y , z − px , y , z 
+                                    (t )  N                                                          J xi , y , z =
+                                                                                                                          J0
+                                                                                                                               exp      i i i
+                                                                                                                                                                           (11)
+                         y (t ) =              • mod ( Z )           (8)
+                                                                                                                                             2a 2
+                                                                                                                          2 a                                
+                                   2                                                                                                                       
+                                                                                              𝑖
+   Where, 𝑍 is the number of neurons in the CANN, and 𝑦                            Where, 𝐽𝑥,𝑦,𝑧   represents the connection weight between the 𝑖th
+represents the decoding result of the current wave packet.                     neuron and the neuron at spatial coordinate (𝑥, 𝑦, 𝑧). (𝑥𝑖 , 𝑦𝑖 , 𝑧𝑖 )
+B. AI Replication of the CANN-modeled GC                                       represents the spatial coordinate of the 𝑖 th neuron. 𝑝𝑥,𝑦,𝑧 is the
+                                                                                                                                                       𝑖
+                                                                               preference of the neuron at spatial coordinate (𝑥, 𝑦, 𝑧). Here, 𝐼𝑒𝑥𝑡
+   Similarly, this paper extends the 1D CANN-modeled HDC
+                                                                               is the weighted input obtained through Gaussian encoding, and its
+model into a 3D CANN-modeled GC model. By constructing a 3D
+                                                                               calculation method is similar to Equation (3). Therefore, the right-
+CANN implementation, the encoding capability of GC for 3D
+                                                                               hand side of the state update formula can be regarded as −𝑈 𝑖 (𝑡) +
+coordinate information can be simulated. At this point, the wave
+                                                                               𝐹(𝑥𝑖 , 𝑦𝑖 , 𝑧𝑖 ), and the three inputs of 𝐹(𝑥𝑖 , 𝑦𝑖 , 𝑧𝑖 ) have independent
+packet generated by neuronal activity in the CANN-modeled GC
+                                                                               effects on the mapping results. Hence, from the perspective of the
+also transitions from the 1D ring structure of HDC to a spherical
+                                                                               fitting target, the state update process of the original CANN model
+structure in 3D space. Integrating the PI update rules and decoding
+                                                                               is also independent across the three dimensions and does not
+this spherical wave packet can simulate the GC working mode [12].
+                                                                               possess correlation.
+The modeling of the 3D CANN can be directly extended from the
+                                                                                   The encoding and normalization process for the input sequence
+1D CANN model. However, for a K-dimensional CANN model,
+                                                                               remains consistent with the description in HDCN. When decoding
+assuming each dimension has N neurons, its time and space
+                                                                               the GC wave packet, it is necessary to first sum the cell activity
+complexity are both 𝑂(𝑁 𝐾 ), making the complexity of fitting the
+                                                                               array according to dimensions to obtain 1D neuronal information
+neurodynamic patterns of a 3D CANN model significantly higher
+                                                                               representations on the X, Y, and Z dimensions respectively, as
+than that of a 1D ones.
+                                                                               shown in formula (12):
+   The design of Grid Cell Network (GCN) for replicating the
+CANN-modeled 3D GC patterns is the same as that of HDCN,
+including an Input layer, two ReLU-activated FC layers, three
+                                                                                                                                                                 
+                                                                                                        SX ( x ) = y z U x, y, z , SY ( y ) = x z U x, y, z , SZ ( z ) =
+
+                                                                                                                              
+LSTM layers, and two TimeDistributed layers for time-step state SX ( x ) = y z U x, y , z , SY ( y ) = x z U x, y, z , SZ ( z ) = x y U x, y, z
+                                                                                                                                                (12)
+                                                                                                                                                                   
+decoding. Due to the complexity issues mentioned earlier, for
+multi-dimensional CANN models, this paperSXdoes   ( ) y z
+                                                   x  =
+                                                     not       
+                                                               U
+                                                         directly
+                                                                  x, y, z
+                                                                   fit    , SY ( ) x z
+                                                                                y  =      U x, y, z
+                                                                                                      , SZ () x y
+                                                                                                            z   =    U  x, y, z
+                                                                                                                                
+the activity states of the neurons but instead fit the vectors after
+dimensionality reduction and concatenation during the decoding                  Where, 𝑆𝑋, 𝑆𝑌, 𝑆𝑍 represent the 1D vectors reduced to the 𝑥, 𝑦,
+process. The dimensionality reduction method will be introduced 𝑧 dimensions, respectively. Then, the decoded values for each
+later. This strategy reduces both time and space complexity to dimension are calculated to obtain spatial information. Here, the
+𝑂(𝑁 ∙ 𝐾), which is also the key to the improved running speed of concatenated result of 𝑆𝑋 , 𝑆𝑌 , 𝑆𝑍 is the fitting target for the
+this work, and the pre-reduction wave packet state can be LSTM layer of GCN.
+approximately obtained through inverse transformation.                          The training details for GCN are described as follows. This
+   To ensure that the resolution of GCN is consistent with HDCN paper uses the decoded vectors from the CANN-simulated GC as
+to match the original NeuroSLAM settings, the number of neurons the training labels for the model. These decoded vectors are
+in the FC and LSTM layers of GCN are set to 111, used to replicate concatenated from the numerator and denominator values
+the neurodynamic patterns of the CANN-modeled GC. The two corresponding to the arctangent calculation during the decoding of
+TimeDistributed layers have 37 and 6 neurons, respectively, with 𝑆𝑋, 𝑆𝑌 and 𝑆𝑍 respectively. The GCN training process is identical
+every two output neurons corresponding to one dimension.                     to the HDCN training process and will not be repeated here.
+   The dataset used for supervised training is also generated
+through a random process, identical to the random process used to C. Relaxed Association of Spatial Experiences for DR
+generate input data for training HDCN. When creating the input                  Based on the reconstruction of HDC and GC, HDCN and GCN
+sequence dataset, three 1D random sequences are pre-generated can directly decode the spatial experiences corresponding to the
+and then concatenated to simulate coordinate changes. The range self-motion cues from the original VO input through mutual
+of input values is still controlled within [−𝜋, 𝜋] , and GCs of collaboration. However, it is still necessary to consider the
+different scales can be mapped into this range. During input data geometric relationships between these discrete spatial experiences
+                                                                                                                                                                                                                                   6
+><
+                                                                                                                                                      𝑒𝑥𝑝
+to form a complete PI logic, enabling the basic capability of DR,                                                                              the 𝛿𝑃𝑖𝑗 vector).
+as illustrated in Figure 2.                                                                                                                                                                 𝑒𝑥𝑝
+                                                                                                                                                  Specifically, the calculation rule for 𝛿𝑃𝑖𝑗 is described as
+  (A)                                                                                                                                          follows:
+                                                               ( x j , yj , zj )                                    ( x j , yj , zj , θ j )
+                 GCN
+                                                    ( x i , yi , zi )                    Ej
+                                                                                                                                  Ej                                          Pijexp = Pjexp − Pi exp                           (15)
+  θ i , θ j (yaw)
+ h i , h j (height)                                                                Ei
+                                                                                                        ( x i , yi , zi , θ i )                   On this basis, the newly added spatial experience node 𝐸𝑗 can be
+                                                          θi
+               HDCN                                                                                                  Ei                        represented as:
+                                                                               Exper ience
+                                                                θj
+
+                                                                                                                                                                           E j = Pjgc , Pjhdc , Pi exp +  Pijexp 
+                                                                             Coor dinate Space
+                                                                                                                                                                                                                                 (16)
+                                                                                              Dead Reckoning
+  (B)
+                                                                                                                                                  The above spatial experience creation and update rules are the
+                                                                                                                                               prerequisite for applying relaxation processing to all spatial
+                                   δdij                         θj
+                                                  E j ( x j , yj , zj )
+                                                                                                                                               experience nodes. On this basis, this paper adopts the following
+                                  θi                                                                                                           calculation rule to correct the pose estimate corresponding to the 𝑖
+                      E i ( x i , yi , zi )                                                                                                    th spatial experience node 𝐸𝑖 .
+Fig. 2. Illustration of relaxed association of spatial experiences decoded
+from the PI framework for DR.
+                                                                                                                                                                                                                            
+                                                                                                                                                Pi exp =  k =1 (Pkexp − Pi exp − Pkiexp )+ t =1 (Pt exp − Pi exp − Ptiexp ) (17)
+                                                                                                                                                             N   k                              N      t
+
+
+
+
+   A single spatial experience node is defined as 𝐸𝑖 , represented by                                                                             Where, 𝛼 is the correction rate, 𝑁𝑘 and 𝑁𝑡 represent the number
+the set containing the decoded state of the joint pose estimation                                                                              of transitions from 𝐸𝑖 to other spatial experience nodes, and the
+cells and the current pose state from VO, see (13).                                                                                            number of transitions from other spatial experience nodes to 𝐸𝑖 ,
+                                                                                                                                               respectively. On this basis, integrating the above pose correction
+                                                        Ei = Pi gc , Pi hdc , Pi exp                                                  (13)   rule into the relaxation correction iteration process allows for the
+                        𝑔𝑐
+                                                                                                                                               update of the spatial states (𝑥𝑖 , 𝑦𝑖 , 𝑧𝑖 , 𝜃𝑖 ) corresponding to all
+   Where, 𝑃𝑖 and 𝑃𝑖ℎ𝑑𝑐 represent the decoded states of GCN and                                                                                 discrete spatial experiences, forming complete PI information
+HDCN in the joint pose cells for the 𝑖 th spatial experience,                                                                                  interpretation and generating the DR trajectory.
+                     𝑒𝑥𝑝
+respectively, and 𝑃𝑖     represents the pose representation of the 𝑖th
+spatial experience estimated from the self-motion cues of VO.                                                                                                        IV. EXPERIMENT AND RESULTS
+Since this paper follows the same VO implementation scheme as                                                                                    To demonstrate the effectiveness of this work, experiments
+                                                             𝑒𝑥𝑝
+NeuroSLAM, the definition and connotation of 𝑃𝑖                    are                                                                         were conducted. NeuroSLAM was set as the baseline during the
+consistent with it. Details can be found in [11] and are not repeated                                                                          whole evaluation processes. The aim of this evaluation is to
+                                                               𝑔𝑐
+here. Associating the joint pose estimates provided by 𝑃𝑖 and                                                                                  demonstrate that this work can not only reliably replicate the
+                  𝑒𝑥𝑝
+𝑃𝑖ℎ𝑑𝑐 with the 𝑃𝑖     provided by VO allows the spatial experience                                                                             neurodynamic patterns of navigation cells modeled by CANNs
+node to correspond to a discrete spatial state (𝑥, 𝑦, 𝑧, 𝜃).                                                                                   with different dimensions, but also achieve equally instead
+   The pose of the initial spatial experience node is defined as the                                                                           performance to NeuroSLAM’s PI framework to perform DR.
+zero initial state. To generate a new spatial experience node, the                                                                             Furthermore, real-world testing was carried out in this paper.
+current node must be significantly different from all existing nodes.                                                                          Evaluations demonstrated the computational efficiency
+For convenience, this paper defines 𝑃 𝑔𝑐 and 𝑃ℎ𝑑𝑐 as the decoded                                                                               advantages of the proposed efficient PI method. These
+states concerning GCN and HDCN in the joint pose cells among                                                                                   evaluations were conducted on a Personal Computer (PC) and
+all existing nodes.                                                                                                                            an edge device to showcase its practicality and transferability.
+   This difference evaluation metric can be determined by the                                                                                  A. Data Preparation
+metric score described in formula (14).
+                                                                                                                                                 The first dataset sources from Yu et al.’s NeuroSLAM work
+                                              Si =  gc Pi gc − P gc +  hdc Pi hdc − Phdc                                             (14)    [11]. It was collected in a two-story parking garage
+                                                                                                                                               environment, encompassing both indoor and outdoor scenes. It
+   Where, 𝜇 𝑔𝑐 and 𝜇 ℎ𝑑𝑐 represent the weight contributions of                                                                                 consists of 12583 color images with a resolution of 480*270
+GCN and HDCN, respectively. If all matching scores are below a                                                                                 pixels, covering a total travel distance of approximately 600
+set threshold, the spatial experience node corresponding to the                                                                                meters. However, it lacks Ground Truth (GT) annotation. More
+lowest score (i.e., the 𝐸𝑖 corresponding to the index of 𝑚𝑖𝑛 𝑆𝑖 ) is                                                                           details can be found in the original publication. The parameter
+activated, representing the current PI state of the BIN system. If the                                                                         configuration used on this dataset was identical to that used by
+current metric score exceeds a preset threshold, a new spatial                                                                                 Yu et al., to validate the effectiveness of the AI-replicated
+experience node is generated along with a transition link associated                                                                           neurodynamic representations of navigation cells. This was
+with it. To explain this process conveniently, this paper has drawn                                                                            done to evaluate whether this work can fully substitute the PI
+Figure 2 (B), showing the association logic from an existing spatial                                                                           capability of the NeuroSLAM based on CANN modeling.
+experience node 𝐸𝑖 to a newly added spatial experience node 𝐸𝑗 .                                                                                 Additionally, this study collected a self-built dataset,
+This transition link stores the incremental information of the pose                                                                            described as follows. Representative environmental views
+            𝑒𝑥𝑝
+change 𝛿𝑃𝑖𝑗 , as well as the distance 𝛿𝑑𝑖𝑗 between the two                                                                                     corresponding to this dataset are shown in Figure 3. The
+connected spatial experience nodes (i.e., the Euclidean distance of                                                                            environment is a long, narrow circular corridor with a flat floor
+                                                                                                                                                         7
+><
+
+and vertical walls. Its structure is relatively monotonous,                               Square Error (RMSE).
+exhibiting numerous repetitive visual features and textures with                             Experiment 1: Since the first dataset lacks GT annotations,
+low distinctiveness. During the data collection process,                                  the evaluation primarily aimed to demonstrate that this work
+pedestrians occasionally appeared suddenly in the environment,                            can fully replicate the neurodynamic representations of CANN-
+posing additional challenges to the benchmarking.                                         modeled PI capabilities of NeuroSLAM system.
+                                                                                             Figure 4 visually compares the accuracy of the experience
+                                                                                          maps generated by this work and NeuroSLAM. The relevant
+                                                                                          parameter configurations have been described previously. The
+                                   Nar r ow                                   Open
+                                                                              Ar eas
+                                                                                          DR result using pure VO showed severe trajectory drift due to
+                                   Cor r idor
+                                                                    Star t
+                                                                    Point
+                                                                                          accumulated error after multiple loops, whereas NeuroSLAM
+                                                                                          avoided this issue and produced a stable topological experience
+                                                                                          map. According to Figure 4, the DR trajectories generated by
+High-end
+ LiDAR
+           RealSense
+             D455
+                        J etson
+                       Or in NX
+                                  Low-textur e
+                                    Ar eas
+                                                            Trajectory
+                                                                             Cur ved
+                                                                             Cor r idor
+                                                                                          this work and NeuroSLAM are almost completely coincident.
+                                                                                          This observation proves that this work effectively replicated the
+Fig. 3. Data collection environment and calibration results for the self-                 neurodynamic representations of the CANN-modeled
+built dataset.
+                                                                                          navigation cells, achieving functional equivalence.
+B. Experimental Conditions                                                                   Moreover, compared to NeuroSLAM, the operational
+  Experiments in this paper were conducted on both PC and                                 efficiency of this work improved by 17.5% on the PC platform.
+edge platforms. Training of the relevant ANN models was                                   For fairness, the LCD module was excluded from NeuroSLAM
+performed on a PC equipped with one NVIDIA RTX 4060 GPU                                   during time-cost testing. Similarly, on the Raspberry Pi 4B, the
+(8GB RAM) and one Intel Core i7-12650H CPU (2.7 GHz).                                     operational efficiency improved by approximately 39.4%.
+Training data were generated using the BrainPy framework [25].                            Additionally, the involved algorithms were not quantized or
+The PC’s software environment was configured with PyTorch                                 subjected to computational precision truncation on either PC or
+2.5.1 and Python 3.9. The edge device is a Raspberry Pi 4B                                a Raspberry Pi. Therefore, their accuracy remains consistent
+(8GB RAM). Its system environment was Raspbian                                            across platforms/systems, and this will not be reiterated below
+GNU/Linux, and the software environment was configured                                    to avoid redundancy.
+with Keras 2.3.1 and Python 3.7.                                                             Experiment 2: The following records the test conducted
+  When evaluating on the first dataset (two-story parking                                 using the self-built dataset. Since this dataset possesses GT
+garage), the parameters involved were kept consistent with the                            annotations with a confidence accuracy of 10 cm error.
+original work. The parameter configuration used on the custom                             Therefore, Experiment 2 involved quantitative accuracy
+dataset was tuned via an optimizer. Parameter configurations,                             assessment of various methods. The GT trajectory for this
+except those related to navigation cell modeling, were shared                             dataset is shown in Figure 3. This represents a typical
+between the original NeuroSLAM system and the proposed                                    benchmark test with challenging settings, which is entirely
+efficient PI method. Parameters related to navigation cell                                different from the scenario faced in the benchmark test on the
+modeling remained consistent across different datasets. This                              first dataset in Experiment 1.
+approach ensures fairness in the benchmark tests.                                            As shown in Figure 5, the pure VO’s trajectory did not form
+  Since the AI-replicated HDCN and GCN in this study no                                   a closed loop. Since the test environment of Experiment 2 is
+longer rely on Gaussian functions to construct the                                        rather challenging, so pure-VO drift becomes extremely severe,
+neurodynamic characteristics of CANN (such as local                                       especially in the corridor sequence of this dataset (bottom-left
+excitation, global inhibition, and state update), there are no                            panel of Figure 3’s GT recording), with narrow space, low light
+corresponding parameter settings to specify. Furthermore, the                             and weak texture natures.
+parameter settings for the NeuroSLAM system used as the                                      In contrast, the DR results from both this work and
+baseline in this paper are consistent with the configurations                             NeuroSLAM produced closed trajectories, showing much
+used in [11] and [12]. Relevant descriptions can be found in the                          better geometric consistency with the GT trajectory. Yet, due to
+parameter definitions and accompanying explanations provided                              the severe VO drift, both NeuroSLAM and the proposed PI
+in [11] and [12].                                                                         approach can only guarantee meter-level accuracy. However,
+                                                                                          the performance of this work and NeuroSLAM in the new test
+C. Experimental Results of PI                                                             environment remained almost identical, further supporting its
+   NeuroSLAM does not strictly build its experience map frame                             validity.
+by frame, but rather constructs the map based on spatial                                     To ensure temporal alignment among the trajectories from
+information representation differences at different locations.                            different strategies, all error metrics are computed on the down-
+Consequently, there is only topological similarity between its                            sampled sequences. Table I records the key metrics of
+experience map and the VO trajectory, preventing direct                                   Experiment 2. The travelled distance of the GT trajectory is
+calculation of translational error against a GT trajectory. To                            126.4 m. Under this setting, the proposed method achieves a
+enable error calculation, this study tracked the visual template                          MAE and RMSE of the translational drift of 2.0 % and 2.3 %,
+update information recorded by NeuroSLAM to identify the                                  respectively. The Maximum Trajectory Error (MTE) of the
+image frames corresponding to experience map locations. This                              experience map is about 5.9 m, outperforming the VO
+allowed for sampling and alignment of the map trajectory to                               counterpart (12.3 m). Runtime evaluations further reveal that
+compute the Mean Absolute Error (MAE) and Root Mean                                       the proposed implementation is more efficient, reducing the
+                                                                                                                8
+><
+
+
+
+
+Fig. 4. Accuracy comparison (Experiment 1). (A) DR trajectory from pure VO. (B) DR trajectory from NeuroSLAM.
+(C) DR trajectory from this work. (D) Top-down view comparison within the same reference frame.
+
+
+
+
+Fig. 5. Accuracy comparison (Experiment 2). (A) DR trajectory from pure VO. (B) DR trajectory from NeuroSLAM.
+(C) DR trajectory from this work. (D) Top-down view comparison within the same reference frame.
+                                                                                                                                         9
+><
+
+                                                           TABLE I
+                                              TRAJECTORY PERFORMANCE COMPARISON
+                                 Frame      Resolution      Time Cost (s)             MAE (m)        RMSE (m)        MTE (m)
+              Pure VO [6]                                            --                  7.0             7.5            12.3
+                                                             871.4 @ PC
+           NeuroSLAM [11]        2613        320*180                                     2.5             2.9            5.9
+                                                            1478.1 @ Edge
+                                                             721.6 @ PC
+               This work                                                                 2.5             2.9            5.9
+                                                            756.1 @ Edge
+
+
+total execution time by 17.5 % on the PC and by 48.9% on the                 Figures 6 and 7 show the performance of the fitted 1D CANN
+Raspberry Pi 4B.                                                          and 3D CANN considering nonlinear motion conditions,
+   In addition, this paper modified the HDCN and GCN                      respectively. The generation function used for the input
+network resolutions for further performance evaluations. We               sequences in the figures is exactly the same as the one used in
+trained two additional HDCN and GCN networks with                         the training set. It can be seen that the inputs have a certain
+resolutions of 25/75 and 49/147 neurons, compared to the                  degree of dynamics and nonlinearity, with multiple abrupt
+original 37/111 configuration tested above. Tested on the                 changes and pauses, and the rate of change is not entirely
+Raspberry Pi 4B using the self-built dataset, repeated tests show         consistent at different moments. Judging from the decoding
+execution times for each hyperparameter configuration                     effects in Figures 6 and 7, during long-term operation of more
+consistently range from 730s to 750s, with minimal variation              than 4,800 frames, the decoding effect fitted by ANNs does not
+(about 2%).                                                               deviate significantly from that of CANN, when facing several
+   All the three achieved identical trajectory error performance.         abrupt changes. Therefore, it can be concluded that the AI-
+The identical trajectory accuracy across all hyperparameter               replicated CANNs have sufficient robustness against
+configurations likely stems from the sufficiently redundant               instantaneous changes.
+minimum resolution of the CANN and ANN used for spatial                      It is worth mentioning that this robustness is demonstrated
+experience encoding. Moreover, minor changes in ANN                       not only on the synthetic dataset but also in real-world
+parameters under different hyperparameter fluctuations do not             verification. We considered the impact of instantaneous
+significantly impact inference efficiency on the Raspberry Pi             changes and validated this robustness practically. Experiment 2
+4B. Similarly, during additional PC tests, inference times                featured significant nonlinear motions, including instantaneous
+remained very close across all hyperparameter configurations,             start-up, sharp turns, vertical jolts, lighting changes, and
+making a special explanation unnecessary.                                 pedestrian interference. Despite these challenges, the AI-
+                                                                          replicated navigation cells performed well, with DR trajectories
+D. Evaluations on AI-replicated Neurodynamics
+                                                                          closely matching NeuroSLAM and maintaining consistent
+   The above subsection has demonstrated the quantitative                 accuracy. This confirms that the nonlinear motions did not
+evaluation metrics of this work in practical environments and             seriously affect the encoding and decoding functions of the AI-
+benchmark tests, proving the engineering practical value of the           replicated navigation cells, and their robustness against
+proposed method. This section supplements the functional tests            instantaneous changes was verified experimentally.
+by analyzing the neural activity patterns of the navigation cells.           Next, we present the neurodynamics envelope activity
+It aims to evaluate the fitting effect of AI-replicated CANN              patterns obtained by replicating CANN-modeled HDC and GC
+neurodynamics.                                                            using HDCN and GCN. Figure 8 shows the changes in the
+   This work differs from [26] and [27], which use Recurrent              neurodynamics of the AI-replicated HDCN during changes in
+Neural Networks (RNNs) and Spiking Neural Networks (SNNs)                 altitude. When the system’s altitude state changes, as shown in
+to fit the relationship between self-motion cues and real-world           panels (a-1) to (a-4) and (c-1) to (c-4), the activity bump state
+navigation data with neural constraints, relying on real-world            decoded from the HDCN undergoes corresponding smooth
+GT annotations. Our work aims to replicate CANN-modeled                   movement along the altitude dimension. When the bump
+navigation cells using ANNs, focusing on achieving identical              exceeds the boundary range, the HDCN can excite neighboring
+encoding-decoding capabilities within a brain-inspired PI                 neurons on the opposite side, allowing the bump state to
+framework. Since CANN’s attractor characteristic involves                 transition continuously and smoothly, fully replicating the
+one-to-one mapping of input sequences to state space subsets,             activity continuity of CANN. When the system altitude remains
+capturing its mapping logic ensures functional equivalence.               constant, the bump state decoded from the HDCN remains
+Thus, training ANNs to fit CANNs in this work does not require            stable in altitude and continues to move along the yaw
+real-world navigation data. Instead, comprehensive simulated              dimension, as demonstrated in the groups (b-1) to (b-4) in
+data covering ideal conditions, noise, and nonlinearity is needed         Figure 8.
+to fully replicate CANN’s neurodynamic characteristics.                      Figure 9 shows the bump activation patterns decoded from
+Moreover, we have considered the potential impact of                      the GCN under different altitude change modes. As shown in
+instantaneous acceleration when generating synthetic data and             panels (a-1) to (a-4) and (c-1) to (c-4), when the altitude
+introduced some abrupt situations, which are more realistic to            changes, the bump moves according to the trend of altitude
+actual motions, into the dataset, but not as the main part.               change. The bump, similar to the HDC, activates neighboring
+                                                                                                                                                                                                                                                                                                             10
+><
+
+
+                                                                     0.2                                                                    0.2                                                                   0.2                                                                       0.2
+
+
+
+                                                                           Activity                                                               Activity                                                              Activity                                                                  Activity
+                                                                     0.1                                                                    0.1                                                                   0.1                                                                       0.1
+
+
+                                                                     0                                                                       0                                                                     0                                                                        0
+            0                                                   36                    0                                                36                    0                                               36                        0                                               36
+                  9                                     27                                 9                                    27                                9                                     27                                     9                               27
+                      18                          18                                           18                         18                                          18                         18                                                18                     18
+                H ei     27                   9           w                               H ei     27                 9            w                             H ei     27             9               w                                 H ei 27                   9             w
+                    gh t    36           0             Ya                                     gh t    36         0            Ya                                     gh t    36      0              Ya                                         gh t 36          0          Ya
+                               (a-1)                                                                        (a-2)                                                               (a-3)                                                                        (a-4)
+
+
+                                                                  0.2                                                                       0.2                                                                   0.2                                                                       0.2
+
+
+
+                                                                           Activity                                                               Activity                                                              Activity                                                                  Activity
+                                                                  0.1                                                                       0.1                                                                   0.1                                                                       0.1
+
+
+                                                                     0                                                                       0                                                                     0                                                                         0
+            0                                                   36                    0                                                36                    0                                               36                        0                                               36
+                  9                                     27                                 9                                    27                                9                                     27                                     9                               27
+                      18                          18                                           18                         18                                          18                           18                                              18                     18
+                H ei     27                   9             w                             H ei     27                 9            w                             H ei     27               9             w                                 H ei     27               9             w
+                    gh t    36           0             Ya                                     gh t    36         0            Ya                                     gh t    36      0              Ya                                         gh t    36       0             Ya
+                               (b-1)                                                                        (b-2)                                                               (b-3)                                                                        (b-4)
+
+
+                                                                  0.2                                                                       0.2                                                                   0.2                                                                       0.2
+
+
+
+                                                                           Activity                                                               Activity                                                              Activity                                                                  Activity
+                                                                  0.1                                                                       0.1                                                                   0.1                                                                       0.1
+
+
+                                                                     0                                                                      0                                                                     0                                                                         0
+            0                                                36                       0                                                36                    0                                               36                        0                                               36
+                  9                                    27                                  9                                   27                                 9                                     27                                     9                               27
+                      18                          18                                           18                         18                                          18                         18                                                18                    18
+                H ei     27                   9           w                               H ei     27                9             w                             H ei     27             9               w                                 H ei     27               9             w
+                    gh t    36           0             Ya                                     gh t    36         0            Ya                                     gh t    36      0              Ya                                         gh t    36       0             Ya
+                               (c-1)                                                                        (c-2)                                                               (c-3)                                                                        (c-4)
+
+Fig. 8. Neural activity patterns decoded from the HDCN. (a-1) to (a-4): rising height. (b-1) to (b-4): unchanged height.
+(c-1) to (c-4): falling height.
+
+                                                                      27                                                                    27                                                               27                                                                     27
+                                                                      18                                                                    18                                                               18                                                                     18
+                                                                                 Z                                                                 Z                                                                   Z                                                                    Z
+                                                                         9                                                                  9                                                                 9                                                                     9
+                                                                 0                                                                   0                                                                   0                                                                     0
+                                                               36                                                                  36                                                                  36                                                                    36
+                                                             27                                                                  27                                                                  27                                                                    27
+                0                                          18 Y                       0                                        18 Y                          0                                     18 Y                            0                                     18 Y
+                      9                                                                        9                                                                  9                                                                        9
+                               18                      9                                               18                 9                                               18                   9                                                   18                9
+                                    27                                                                      27                                                                 27                                                                       27
+                           X                 36 0                                                  X             36 0                                                 X             36 0                                                       X             36 0
+                                         (a-1)                                                                (a-2)                                                             (a-3)                                                                   (a-4)
+
+
+                                                                      27                                                                    27                                                               27                                                                     27
+                                                                      18                                                                    18                                                               18                                                                     18
+                                                                                 Z                                                                 Z                                                                   Z                                                                    Z
+                                                                         9                                                                  9                                                                 9                                                                     9
+                                                                 0                                                                   0                                                                   0                                                                     0
+                                                               36                                                                  36                                                                  36                                                                    36
+                                                             27                                                                  27                                                                  27                                                                    27
+                0                                          18 Y                       0                                        18 Y                          0                                     18 Y                            0                                     18 Y
+                      9                                                                        9                                                                  9                                                                        9
+                               18                      9                                               18                 9                                               18                 9                                                     18                9
+                                    27                                                                      27                                                                 27                                                                       27
+                           X                 36 0                                                  X             36 0                                                 X             36 0                                                       X             36 0
+                                         (b-1)                                                                (b-2)                                                             (b-3)                                                                   (b-4)
+
+
+                                                                      27                                                                    27                                                               27                                                                     27
+                                                                      18                                                                    18                                                               18                                                                     18
+                                                                                 Z                                                                 Z                                                                   Z                                                                    Z
+                                                                         9                                                                  9                                                                 9                                                                     9
+                                                                 0                                                                   0                                                                   0                                                                     0
+                                                               36                                                                  36                                                                  36                                                                    36
+                                                             27                                                                  27                                                                  27                                                                    27
+                 0                                         18 Y                       0                                        18 Y                          0                                     18 Y                            0                                     18 Y
+                      9                                                                        9                                                                  9                                                                        9
+                               18                      9                                               18                 9                                               18                   9                                                   18                9
+                                    27                                                                      27                                                                 27                                                                       27
+                           X                 36 0                                                  X             36 0                                                 X             36 0                                                       X             36 0
+                                         (c-1)                                                                (c-2)                                                             (c-3)                                                                   (c-4)
+
+Fig. 9. Neural activity patterns decoded from the GCN. (a-1) to (a-4): rising height. (b-1) to (b-4): unchanged height.
+(c-1) to (c-4): falling height.
+                                                                                                                                         11
+><
+
+neurons on the opposite side, exhibiting the continuous, stable,         for long-endurance navigation, especially for field unmanned
+and periodic activity pattern characteristic of CANN, when the           systems with industrial computers. Moreover, native CANNs,
+cumulative change exceeds the representational range. When               which rely on iterative neurodynamics simulation through
+the altitude is unchanged, as shown in panels (b-1) to (b-4) in          differential equations, can strain resource-constrained devices
+Figure 9, the bump activity decoded from the GCN remains                 and cause computational bottlenecks. Therefore, replacing
+stable on the Z axis and moves along the X axis, crossing                them with lightweight ANNs is practical for edge devices.
+boundaries.                                                                 Moreover, it is worth noting that, for the current version, this
+   From the above analysis, we can qualitatively conclude that           work indeed outperforms the native CANN-based PI
+the learning-based approach for replicating CANN’s                       implementation in computational efficiency. However, during
+neurodynamics proposed in this paper is successful. However,             memory monitoring on the Raspberry Pi, we found that the
+the specific CANN modeling method adopted here is not the                PyTorch and TensorFlow libraries required for ANN inference
+most advanced. For instance, many novel CANN modeling                    occupy an additional 500MB of memory during algorithm
+methods have been reported in recent years, such as [28][29].            initialization. Specifically, in the NeuroSLAM system, the
+Therefore, this work has room for further extension, and we              memory usage for the CANN-based PI algorithm increased
+believe it is worthwhile to explore its application to more              from 64.37MB to 84.14MB from initialization to operation end.
+comprehensive CANN modeling methods. Furthermore, the                    In contrast, our work’s memory usage increased from
+lightweight nature of this work renders its quantization and             514.45MB to 530.04MB.
+acceleration on edge AI chips, and even deployment on                       In the future, we plan to enhance this work using model
+neuromorphic hardware via ANN2SNN transformation [30], as                compression, quantization, and Tiny Machine Learning
+promising directions for future exploration.                             (TinyML) techniques. This will improve efficiency through
+                                                                         matrix calculations (binary file) and eliminate the large library
+                 V. DISCUSSION AND ANALYSIS                              dependencies required by native PyTorch or TensorFlow
+   The traditional navigation pipeline is often described as             frameworks [33]. It will also reduce inference overhead for
+“perception-planning/decision-control”. Building capabilities            ANN components and even enable deployment on resource-
+at the perception level is the foundation of navigation and              constrained Microcontroller Units (MCUs). We also plan to
+localization. Consequently, within the emerging field of BIN,            explore ANN2SNN solutions in future work to develop
+there are numerous advances themed around brain-inspired                 neuromorphic edge solutions.
+SLAM [3][4].                                                                ❑ Discussion on the integration potential with LCD
+   ❑ Why PI is important for BIN?                                           Section IV has conducted benchmark tests after
+   As analyzed in Section II, simulating the PI capability of the        implementing the approach of replicating CANN’s
+entorhinal cortex is a core component in almost all existing brain-      neurodynamics using lightweight ANNs. Apart from the PI
+inspired SLAM systems based on CANNs. Essentially, the core              capability, the main difference between this work and the
+logic of PI involves integrating internal and external cues captured     NeuroSLAM system lies in the LCD. In Experiment 1, the
+by the BIN system by simulating the collaborative logic between          open-source data from the NeuroSLAM work was used. Debug
+GCs and other navigation cells, thereby forming spatial                  its original code, we reveal that, under its default parameters,
+experiences. How to effectively utilize the spatial experiences          the influence of its LCD capability on the construction of the
+generated by PI is the primary concern for BIN systems.                  experience map is relatively weak. As for Experiment 2, we
+   Therefore, simulating PI capability is a core mechanism of            likewise noticed this issue on our self-collected dataset, that is,
+brain-inspired SLAM but is not limited to the SLAM topic. For            the LCD component of NeuroSLAM did not perform the
+instance, Edwards et al. [31][32] utilized CANNs to simulate the         expected map correction.
+PI capability of GCs for vector-based navigation tasks. Yang et al.         After meticulous step-by-step code debugging, we suspect
+[14] directly implemented a DR task with a CANN-based multi-             the reason might be that the parameter configuration for this
+scale GC model to build PI capability, without involving LCD as          dataset was not optimally tuned, leading to short durations for
+in SLAM. The method developed in this study also focuses on              successful visual template matching (triggering effective
+realizing PI capability, aiming to achieve the DR capability for BIN     energy injection) and a very small intervention impact during
+systems directly.                                                        continuous energy injection. Therefore, on this dataset, the
+   After clarifying the essence of simulating the brain’s PI             relaxation and association process within NeuroSLAM’s
+capability, we need to consider its modeling effectiveness and           experience map played the dominant role in modifying and
+computational efficiency. The former aims to enable the BIN              adjusting the spatial experience. Consequently, the DR
+system to achieve a more comprehensive replication of the brain’s        trajectories from both methods almost completely overlapped,
+PI capability, while the latter is pursued to promote the practicality   enabling this work to achieve results on par with NeuroSLAM,
+of brain-inspired PI models. Among existing studies on simulating        despite lacking LCD. Interested readers can verify it themselves
+brain-inspired PI capability, most advances belong to the former         using our open-source Python implementation of NeuroSLAM.
+category, whereas the work presented herein belongs to the latter.       URL: https://github.com/BINUCOE/OpenNeuroSLAM.
+                                                                            Given the differences in computational paradigms between
+  ❑ Discussion on time-cost analysis                                     ANNs and native CANNs, we need to highlight a limitation of
+  Workstations have ample computing power, showing less                  the current work: ANN weights are fixed after training and do
+improvements compared to edge devices like Raspberry Pi, but             not change during inference, unlike the native CANNs, which
+the nearly 20% efficiency gain in this work is still very valuable       allows “energy injection” for state adjustment (though highly
+                                                                                                                                                                   12
+><
+
+influenced by preset parameters). We plan to address this in                         [6]    Ball, D., Heath, S., et al. OpenRatSLAM: an open source brain-based
+                                                                                            SLAM system,” Autonomous Robots, vol. 34, no. 3, pp. 149-176, 2013.
+future work by exploring dynamic neural network technologies
+                                                                                     [7]    Yuan, M., Tian, B., et al., “An entorhinal-hippocampal model for
+to enable adjustable weights [34], allowing similar “energy                                 simultaneous cognitive map building,” AAAI Conference on Artificial
+injection” for state adjustment. Additionally, we have provided                             Intelligence (AAAI), pp. 586-592, 2015.
+a supplementary explanation in the open-source repository of                         [8]    Zeng, T., Tang, F., et al., “NeuroBayesSLAM: neurobiologically
+                                                                                            inspired Bayesian integration of multisensory information for robot
+this work on how to simply integrate it with LCD based on
+                                                                                            navigation,” Neural Networks, vol. 126, pp. 21-35, 2020.
+visual      template      matching.      For     details,    see:                    [9]    Lu, T., Wang, Z., et al., “Hybrid-NeuroSLAM: a neurobiologically
+https://github.com/BINUCOE/CANN2ANN_for_PI.                                                 inspired hybrid visual-inertial SLAM method for large scale
+   In fact, PI merely acts like an accumulator, aggregating self-                           environment,” IEEE Robotics and Automation Letters, vol. 10, no. 7, pp.
+                                                                                            7484-7491, 2025.
+motion cues according to the spatial experience connection
+                                                                                     [10]   Michael M., Wyeth, G.F., et al., “RatSLAM: a hippocampal model for
+relationships stored in each spatial experience node. The                                   simultaneous localization and mapping,” IEEE International Conference
+resulting trajectory error level relies more on the correction of                           on Robotics and Automation (ICRA). pp. 403-408, 2004.
+the relaxation association algorithm. In fact, we are further                        [11]   Yu, F., Shang, J., et al., “NeuroSLAM: a brain-inspired SLAM system
+                                                                                            for 3D environments,” Biological Cybernetics, vol. 113, no. 5-6, pp. 515-
+exploring and analyzing the introduction of methods such as
+                                                                                            545, 2019.
+geometric consistency constraints into the relaxation                                [12]   Shen, D., Liu, G., et al., “ORB-NeuroSLAM: a brain-inspired 3-D
+association process of spatial experience, and combining them                               SLAM system based on ORB features,” IEEE Internet of Things Journal,
+with suitable LCD methods for joint optimization, to further                                vol. 11, no. 7, pp. 12408-12418, 2024.
+                                                                                     [13]   Chen, Y., Xiong, Z., et al., “Brain-inspired multisensor navigation
+improve the accuracy of DR under brain-inspired PI framework.
+                                                                                            information fusion model based on spatial representation cells,” IEEE
+                                                                                            Sensors Journal, vol. 24, no. 11, pp. 18122-18132, 2025.
+                             VI. CONCLUSION                                          [14]   Yang, C., Xiong, Z., et al., “A path integration approach based on
+                                                                                            multiscale grid cells for large-scale navigation,” IEEE Transactions on
+   This paper presents an efficient brain-inspired PI method by                             Cognitive and Developmental Systems, vol. 14, no. 3, pp. 1009-1020,
+replicating the neurodynamics of CANNs using lightweight                                    2022.
+ANNs. This method avoids computational redundancy in the                             [15]   Yang, C., Xiong, Z., et al., “Brain-inspired multimodal navigation with
+                                                                                            multiscale hippocampal-entorhinal neural network,” IEEE Transactions
+RatSLAM-derived PI modeling, enhancing efficiency. It
+                                                                                            on Instrumentation and Measurement, vol. 73, p. 8507217, 2024.
+achieved roughly 17.5% efficiency gains on general-purpose                           [16]   Liu, X., Chen, L., et al., “A neuro-inspired positioning system integrating
+devices and 40~50% on edge devices compared to the well-                                    MEMS sensors and DTMB signals,” IEEE Transactions on Broadcasting,
+known NeuroSLAM. Overall, the benchmark tests consistently                                  vol. 69, no. 3, pp. 823-831, 2023.
+reported performance equivalent to NeuroSLAM. Moreover, on                           [17]   Zhang, Y., Trappenberg, T., et al., “Continuous attractor neural networks:
+                                                                                            candidate of a canonical model for neural information representation,”
+this basis, the computational efficiency improvement brought                                F1000Research, vol. 5, p. 156, 2016.
+by this work also demonstrates its value, particularly for                           [18]   Finkelstein, A., Las, L., et al., “3-D maps and compasses in the brain,”
+applications on edge devices. Thereby, it promotes the                                      Annual Review of Neuroscience, vol. 39, pp. 171-196, 2016.
+practicality of BIN technology.                                                      [19]   Menezes, M.C., Muñoz, M.E., et al., “A Multisession SLAM Approach
+                                                                                            for RatSLAM,” Journal of Intelligent & Robotic Systems, vol. 108, no.
+   In the future, we hope to go beyond the existing ideas and                               4, pp. 61, 2023.
+replicate the neurodynamic characteristics of navigation cells                       [20]   Zeng, T., Si, B., “Cognitive mapping based on conjunctive
+modeled by more advanced CANN models. Moreover, building                                    representations of space and movement,” Frontiers in Neurorobotics, vol.
+                                                                                            11, pp. 61, 2017.
+PI capability is a core issue for brain-inspired SLAM systems,
+                                                                                     [21]   Silveira, L., Guth, F., et al., “An open-source bio-inspired solution to
+but this paper has currently only explored the brain-inspired PI                            underwater SLAM,” IFAC-PapersOnLine, vol. 48, no. 2, pp. 212-217,
+method itself, achieving DR capability. The future research                                 2015.
+directions encompass integrating this work into a complete                           [22]   Milford, M., Wyeth, G.F., “Mapping a suburb with a single camera using
+                                                                                            a biologically inspired SLAM system,” IEEE Transactions on Robotics,
+SLAM pipeline with effective loop closure detection strategies,
+                                                                                            vol. 24, no. 25, pp. 1038-1053, 2008.
+and investigating its deployment potential on edge AI                                [23]   Steckel, J., Peremans, H., “BatSLAM: simultaneous localization and
+accelerators and neuromorphic chips. In summary, this paper                                 mapping using biomimetic sonar,” PLoS ONE, vol. 8, no. 1, p. e54076,
+provides a feasible path to realizing a scalable and efficient BIN                          2013.
+system, with the potential for practicality and continuous                           [24]   Yuan, J., Guo, W., et al., “A bionic spatial cognition model and method
+                                                                                            for robots based on the hippocampus mechanism,” Frontiers in
+expansion.                                                                                  Neurorobotics, vol. 15, p. 769829, 2022.
+                                                                                     [25]   Wang, C., Zhang, T., et al., “BrainPy, a flexible, integrative, efficient,
+                                REFERENCE                                                   and extensible framework for general-purpose brain dynamics
+                                                                                            programming,” eLife, vol. 12, p. e86365, 2023.
+[1]   Bai, Y., Shao, S., et al., “A review of brain-inspired cognition and           [26]    Cueva C., Wei X., “Emergence of grid-like representations by training
+      navigation technology for mobile robots,” Cyborg and Bionic Systems,                  recurrent neural networks to perform spatial localization,” International
+      vol. 5, p. 0128, 2024.                                                                Conference on Learning Representations (ICLR), pp. 1512-1530, 2018.
+[2]   McNaughton, B.L., Battaglia, F.P., et al., “Path integration and the neural    [27]   Lin J., Wang Y., et al., “Path integration based on a recurrent spiking
+      basis of the 'cognitive map',” Nature Reviews Neuroscience, vol. 7, no.               neural network,” Electronic Research Archive, vol. 34, no. 1, pp. 1-30,
+      8, pp. 663-678, 2006.                                                                 2026.
+[3]   He, X., Meng, X., et al., “A comprehensive review of brain-inspired            [28]   Kymn, C.J., Mazelet, S., et al., “Binding in hippocampal-entorhinal
+      navigation,” ACM Computing Surveys, vol. 58, no. 8, p. 200, 2026.                     circuits enables compositionality in cognitive maps,” International
+[4]   He, X., Meng, X., et al., “A preliminary exploration of the differences               Conference on Neural Information Processing Systems (NeurIPS), 2024.
+      and conjunction of traditional PNT and brain-inspired PNT,” ArXiv,             [29]   Dong, X., Ji, Z., et al., “Adaptation accelerating sampling-based
+      abs/2510.16771, 2025.                                                                 Bayesian inference in attractor neural networks,” International
+[5]   Milford, M., Wiles, J., et al., “Solving navigational uncertainty using grid          Conference on Neural Information Processing Systems (NeurIPS), 2024.
+      cells on robots,” PLoS Computational Biology, vol. 6, no. 11, p.               [30]   Fang, W., Chen Y., et al., “SpikingJelly: an open-source machine
+      e1000995, 2010.                                                                       learning infrastructure platform for spike-based intelligence,” Science
+                                                                                                                                                 13
+><
+
+     Advances, vol. 9, no. 40, p. eadi1480, 2023.                                 mainly include intelligent transportation systems and smart
+[31] Edvardsen, V., “Goal-directed navigation based on path integration and
+                                                                                  cities, CAV, structural health monitoring of large infrastructure,
+     decoding of grid cells in an artificial neural network,” Natural
+     Computing, vol. 18, no. 1, pp. 13-27, 2019.                                  and precision agriculture/ livestock farming.
+[32] Edvardsen, V., Bicanski, A., et al., “Navigating with grid and place cells      Dr. Meng is the first-ever Professor of Intelligent Mobility in
+     in cluttered environments,” Hippocampus, vol. 30, no. 3, pp. 220-232,        the UK. He has been selected by the UK’s Research Council as
+     2019.
+                                                                                  Academic Fellow, and is a Fellow of the RIN and IET, and a
+[33] Wu, Y., He, X., et al., “Self-attention-assisted TinyML with effective
+     representation for UWB NLOS identification,” IEEE Internet of Things         Chartered Engineer (CEng) of the UK’s Engineering Council.
+     Journal, vol. 11, no. 15, pp. 25471-25480, 2024.                             He is the Executive Editor, Associate Editor, Guest Editor,
+[34] He, X., Meng, X., et al., “Enhance UWB performance using dynamic AI-         Editor and Reviewer for over 30 important international
+     enabled approach,” IEEE Internet of Things Journal, vol. 12, no. 24, pp.
+                                                                                  journals. His research achievements have been featured in 16
+     52474-52487, 2025.
+                                                                                  special reports by Science and Technology Daily and BBC. He
+                                                                                  has served as the chairman of the Institute of Navigation (ION)
+                  Zhangyu Ge, is with the School of                               session and received the ION Best Paper Award and the 2019
+                  Instrument Science and Engineering,                             UK Engineer “Collaborate to Innovate” Award. He is the
+                  Southeast University, Nanjing, China (e-                        founder of the Sino-UK Geospatial Engineering Center and also
+                  mail: 220233603@seu.edu.cn). He is                              the founder and chief scientist of UbiPOS UK LTD.
+                  pursuing a M.S. degree in instrumentation
+                  science and technology with the School of
+                  Instrument Science and Engineering of                                            Wenxuan Yin, (Student Member, IEEE), is
+Southeast University. His research interests focus on brain-                                       with the School of Instrument Science and
+inspired navigation, SLAM.                                                                         Engineering, Southeast University, Nanjing,
+                                                                                                   China (e-mail: wenxuan_yin@seu.edu.cn).
+                                                                                                   He is pursuing a Ph.D. degree with the
+                   Xu He, (Student Member, IEEE), is with the                                      School of Instrument Science and
+                   School of Instrument Science and                                                Engineering of Southeast University. He has
+                   Engineering, Southeast University, Nanjing,                    authored 3 SCI papers. His research interests focus on brain-
+                   China (e-mail: hexu@seu.edu.cn). He is                         inspired PNT and intelligent control.
+                   pursuing a Ph.D. degree in instrumentation
+                   science and technology with the School of
+                   Instrument Science and Engineering of                                           Youdong Zhang, (Student Member, IEEE),
+Southeast University. He has authored 8 JCR Q1/Q1 TOP                                              is with the School of Instrument Science and
+papers as the first/co-first author. His research interests focus                                  Technology, Southeast University, Nanjing,
+on brain-inspired PNT. He is a student member of IEEE.                                             China (e-mail: ydzhang@seu.edu.cn). He is
+                                                                                                   pursuing a Ph.D. degree in instrumentation
+                                                                                                   science and technology with the School of
+                   Lingfei Mo, (Member, IEEE), is with the                                         Instrument Science and Engineering of
+                   School of Instrument Science and                               Southeast University. He has authored/co-authored 5 JCR
+                   Engineering, Southeast University, Nanjing,                    Q1/Q1 TOP papers. His research interests focus on brain-
+                   China (e-mail: lfmo@seu.edu.cn). He is an                      inspired PNT and brain-inspired intelligence.
+                   Associate Professor at the School of
+                   Instrument Science and Engineering,
+                   Southeast University, Nanjing, China. His                                         Lansong Jiang, is with the School of
+research interests focus on IoT, AI, and brain-like computing.                                       Instrument Science and Technology,
+He has authored over 100 technical publications in standard                                          Southeast University, Nanjing, China (e-mail:
+journals and conferences. Dr. Mo is also a member of the IEEE                                        220243706@seu.edu.cn). She is pursuing a
+and an Associate Editor of the IEEE Journal of Radio                                                 M.S. degree with the School of Instrument
+Frequency Identification (RFID).                                                                     Science and Engineering of Southeast
+                                                                                                     University. Her research interests focus on
+                                                                                  vehicle-to-infrastructure cooperative localization.
+                  Xiaolin Meng, is with the School of
+                  Instrument Science and Engineering,
+                  Southeast University, Nanjing, China, as                                           Fengyuan Liu, received the B.S. degree in
+                  Chair Professor of Intelligent Mobility (e-                                        Intelligent Sensing Engineering from
+                  mail: xiaolin_meng@seu.edu.cn). He was a                                           Southeast University, Nanjing, China, in
+                  Professor of Intelligent Mobility and a                                            2024 (e-mail: 230268565@seu.edu.cn),
+                  Theme Leader of PNT technologies with the                                          where he is currently pursuing the Ph.D.
+University of Nottingham, Nottingham, U.K., until May 2020.                                          degree with the School of Instrument Science
+He has authored more than 400 publications and undertaken a                                          and Engineering. His current research
+research portfolio of more than £20 m. His research interests                     interests include C-V2X collaboration and GNSS PNT.
+

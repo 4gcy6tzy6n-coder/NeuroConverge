@@ -1,0 +1,833 @@
+                                                Brain-inspired learning in artificial neural
+                                                           networks: a review
+                                           Samuel Schmidgall1,      , Jascha Achterberg2,3 , Thomas Miconi4 , Louis Kirsch5 , Rojin Ziaei6 , S. Pardis Hajiseyedrazi6 , and
+                                                                                                Jason Eshraghian7
+                                                                                                1
+                                                                                                 Johns Hopkins University
+                                                                                                2
+                                                                                                   University of Cambridge
+                                                                                                         3
+                                                                                                           Intel Labs
+                                                                                                       4
+                                                                                                         ML Collective
+                                                                                                 5
+                                                                                                   The Swiss AI Lab IDSIA
+
+
+
+
+arXiv:2305.11252v1 [cs.NE] 18 May 2023
+                                                                                          6
+                                                                                            University of Maryland, College Park
+                                                                                           7
+                                                                                             University of California, Santa Cruz
+
+
+                                         Artificial neural networks (ANNs) have emerged as an essential         tinuously learn and adapt like biological brains 13–15 . Unlike
+                                         tool in machine learning, achieving remarkable success across          current models of machine intelligence, animals can learn
+                                         diverse domains, including image and speech generation, game           throughout their entire lifespan, which is essential for stable
+                                         playing, and robotics. However, there exist fundamental dif-           adaptation to changing environments. This ability, known as
+                                         ferences between ANNs’ operating mechanisms and those of               lifelong learning, remains a significant challenge for artifi-
+                                         the biological brain, particularly concerning learning processes.
+                                                                                                                cial intelligence, which primarily optimizes problems con-
+                                         This paper presents a comprehensive review of current brain-
+                                         inspired learning representations in artificial neural networks.
+                                                                                                                sisting of fixed labeled datasets, causing it to struggle gen-
+                                         We investigate the integration of more biologically plausible          eralizing to new tasks or retain information across repeated
+                                         mechanisms, such as synaptic plasticity, to enhance these net-         learning iterations 14 . Addressing this challenge is an active
+                                         works’ capabilities. Moreover, we delve into the potential ad-         area of research, and the potential implications of developing
+                                         vantages and challenges accompanying this approach. Ulti-              AI with lifelong learning abilities could have far-reaching im-
+                                         mately, we pinpoint promising avenues for future research in           pacts across multiple domains.
+                                         this rapidly advancing field, which could bring us closer to un-       In this paper, we offer a unique review that seeks to identify
+                                         derstanding the essence of intelligence.                               the mechanisms of the brain that have inspired current artifi-
+                                                                                                                cial intelligence algorithms. To better understand the biolog-
+                                         Correspondence: sschmi46@jhu.edu
+                                                                                                                ical processes underlying natural intelligence, the first sec-
+                                                                                                                tion will explore the low-level components that shape neuro-
+                                                                                                                modulation, from synaptic plasticity, to the role of local and
+                                         Introduction
+                                                                                                                global dynamics that shape neural activity. This will be re-
+                                         The dynamic interrelationship between memory and learning              lated back to ANNs in the third section, where we compare
+                                         is a fundamental hallmark of intelligent biological systems.           and contrast ANNs with biological neural systems. This will
+                                         It empowers organisms to not only assimilate new knowl-                give us a logical basis that seeks to justify why the brain has
+                                         edge but also to continuously refine their existing abilities,         more to offer AI, beyond the inheritance of current artificial
+                                         enabling them to adeptly respond to changing environmen-               models. Following that, we will delve into algorithms of ar-
+                                         tal conditions. This adaptive characteristic is relevant on            tificial learning that emulate these processes to improve the
+                                         various time scales, encompassing both long-term learning              capabilities of AI systems. Finally, we will discuss various
+                                         and rapid short-term learning via short-term plasticity mech-          applications of these AI techniques in real-world scenarios,
+                                         anisms, highlighting the complexity and adaptability of bi-            highlighting their potential impact on fields such as robotics,
+                                         ological neural systems 1–3 . The development of artificial            lifelong learning, and neuromorphic computing. By doing so,
+                                         systems that draw high-level, hierarchical inspiration from            we aim to provide a comprehensive understanding of the in-
+                                         the brain has been a long-standing scientific pursuit span-            terplay between learning mechanisms in the biological brain
+                                         ning several decades. While earlier attempts were met with             and artificial intelligence, highlighting the potential benefits
+                                         limited success, the most recent generation of artificial in-          that can arise from this synergistic relationship. We hope our
+                                         telligence (AI) algorithms have achieved significant break-            findings will encourage a new generation of brain-inspired
+                                         throughs in many challenging tasks. These tasks include, but           learning algorithms.
+                                         are not limited to, the generation of images and text from
+                                         human-provided prompts 4–7 , the control of complex robotic
+                                         systems 8–10 , and the mastery of strategy games such as Chess         Processes that support learning in the brain
+                                         and Go 11 and a multimodal amalgamation of these 12 .                  A grand effort in neuroscience aims at identifying the un-
+                                         While ANNs have made significant advancements in various               derlying processes of learning in the brain. Several mecha-
+                                         fields, there are still major limitations in their ability to con-     nisms have been proposed to explain the biological basis of
+
+                                                                                                                                           Schmidgall et al.   |   May 22, 2023   |   1–13
+Fig. 1. Graphical depiction of long-term potentiation (LTP) and depression (LTD) at the synapse biological neurons. A. Synaptically connected pre- and post-synaptic neurons.
+B. Synaptic terminal, the connection point between neurons. C. Synaptic growth (LTP) and synaptic weakening (LTD). D. Top. Membrane potential dynamics in the axon
+hillock of the neuron. Bottom. Pre- and post-synaptic spikes. E. Spike-timing dependent plasticity curve depicting experimental recordings of LTP and LTD.
+
+
+learning at varying levels of granularity–from the synapse to                            suggested to play a role in various forms of plasticity, includ-
+population-level activity. However, the vast majority of bi-                             ing short- 19 and long-term plasticity 22 .
+ologically plausible models of learning are characterized by
+plasticity that emerges from the interaction between local and                           Metaplasticity     The ability of neurons to modify both their
+global events 16 . Below, we introduce various forms of plas-                            function and structure based on activity is what characterizes
+ticity and how these processes interact in more detail.                                  synaptic plasticity. These modifications which occur at the
+                                                                                         synapse must be precisely organized so that changes occurs
+Synaptic plasticity     Plasticity in the brain refers to the ca-                        at the right time and by the right quantity. This regulation
+pacity of experience to modify the function of neural circuits.                          of plasticity is referred to as metaplasticity, or the ’plasticity
+The plasticity of synapses specifically refers to the modifica-                          of synaptic plasticity,’ and plays a vital role in safeguarding
+tion of the strength of synaptic transmission based on activity                          the constantly changing brain from its own saturation 24–26 .
+and is currently the most widely investigated mechanism by                               Essentially, metaplasticity alters the ability of synapses to
+which the brain adapts to new information 17,18 . There are                              generate plasticity by inducing a change in the physiolog-
+two broader classes of synaptic plasticity: short- and long-                             ical state of neurons or synapses. Metaplasticity has been
+term plasticity. Short-term plasticity acts on the scale of tens                         proposed as a fundamental mechanism in memory stability,
+of milliseconds to minutes and has an important role in short-                           learning, and regulating neural excitability. While similar,
+term adaptation to sensory stimuli and short-lasting memory                              metaplasticity can be distinguished from neuromodulation,
+formation 19 . Long-term plasticity acts on the scale of min-                            with metaplastic and neuromodulatory events often overlap-
+utes to more, and is thought to be one of the primary pro-                               ping in time during the modification of a synapse.
+cesses underlying long-term behavioral changes and memory
+storage 20 .                                                                             Neurogenesis       The process by which newly formed neu-
+                                                                                         rons are integrated into existing neural circuits is referred
+Neuromodulation In addition to the plasticity of synapses,                               to as neurogenesis. Neurogenesis is most active during em-
+another important mechanism by which the brain adapts to                                 bryonic development, but is also known to occur through-
+new information is through neuromodulation 3,21,22 . Neu-                                out the adult lifetime, particularly in the subventricular zone
+romodulation refers to the regulation of neural activity by                              of the lateral ventricles 27 , the amygdala 28 , and in the den-
+chemical signaling molecules, often referred to as neuro-                                tate gyrus of the hippocampal formation 29 . In adult mice,
+transmitters or hormones. These signaling molecules can                                  neurogenesis has been demonstrated to increase when liv-
+alter the excitability of neural circuits and the strength of                            ing in enriched environments versus in standard laboratory
+synapses, and can have both short- and long-term effects on                              conditions 30 . Additionally, many environmental factors such
+neural function. Different types of neuromodulation have                                 as exercise 31,32 and stress 33,34 have been demonstrated to
+been identified, including acetylcholine, dopamine, and sero-                            change the rate of neurogenesis in the rodent hippocampus.
+tonin, which have been linked to various functions such as at-                           Overall, while the role of neurogenesis in learning is not fully
+tention, learning, and emotion 23 . Neuromodulation has been                             understood, it is believe to play an important role in support-
+
+2                                                                                                            Schmidgall et al.   |   Brain-inspired learning in ANNs: a review
+ing learning in the brain.                                          it fires a binary "spike" to all of its outgoing (postsynaptic)
+                                                                    connections. Spikes have been theoretically demonstrated
+Glial Cells Glial cells, or neuroglia, play a vital role in sup-    to contain more information than rate-based representations
+porting learning and memory by modulating neurotransmitter          of information (such as in ANNS) despite being both binary
+signaling at synapses, the small gaps between neurons where         and sparse in time 41 . Additionally, modelling studies have
+neurotransmitters are released and received 35 . Astrocytes,        shown advantages of SNNs, such as better energy efficiency,
+one type of glial cell, can release and reuptake neurotrans-        the ability to process noisy and dynamic data, and the poten-
+mitters, as well as metabolize and detoxify them. This helps        tial for more robust and fault-tolerant computing 42 . These
+to regulate the balance and availability of neurotransmitters       benefits are not solely attributed to their increased biologi-
+in the brain, which is essential for normal brain function and      cal plausibility, but also to the unique properties of spiking
+learning 36 . Microglia, another type of glial cell, can also       neural networks that distinguish them from conventional ar-
+modulate neurotransmitter signaling and participate in the re-      tificial neural networks. A simple working model of a leaky
+pair and regeneration of damaged tissue, which is important         integrate-and-fire neuron is described below:
+for learning and memory 37 . In addition to repair and modu-
+lation, structural changes in synaptic strength require the in-                       dV
+volvement of different types of glial cells, with the most no-                   τm      = EL − V (t) + Rm Iinj (t)
+                                                                                      dt
+table influence coming from astrocytes 36 . However, despite
+their crucial involvement, we have yet to fully understand the      where V (t) is the membrane potential at time t, τm is the
+role of glial cells. Understanding the mechanisms by which          membrane time constant, EL is the resting potential, Rm is
+glial cells support learning at synapses are important areas of     the membrane resistance, Iinj (t) is the injected current, Vth
+ongoing research.                                                   is the threshold potential, and Vreset is the reset potential.
+                                                                    When the membrane potential reaches the threshold poten-
+                                                                    tial, the neuron spikes and the membrane potential is reset to
+Deep neural networks and plasticity                                 the reset potential (if V (t) ≥ Vth then V (t) ← Vreset ).
+Artificial and spiking neural networks. Artificial neural           Despite these potential advantages, SNNs are still in the early
+networks have played a vital role in machine learning over the      stages of development, and there are several challenges that
+past several decades. These networks have catalyzed tremen-         need to be addressed before they can be used more widely.
+dous progress toward solving a variety of challenging prob-         One of the most pressing challenges is regarding how to op-
+lems. Many of the most impressive accomplishments in AI             timize the synaptic weights of these models, as traditional
+have been realized through the use of large ANNs trained on         backpropagation-based methods from ANNs fail due to the
+tremendous amounts of data. While there have been many              discrete and sparse nonlinearity. Irrespective of these chal-
+technical advancements, many of the accomplishments in AI           lenges, there do exist some works that push the boundaries
+can be explained by innovations in computing technology,            of what was thought possible with modern spiking networks,
+such as large-scale GPU accelerators and the accessibility of       such as large spike-based transformer models 43 . Spiking
+data. While the application of large-scale ANNs have led to         models are of great importance for this review since they
+major innovations, there do exist many challenges ahead. A          form the basis of many brain-inspired learning algorithms.
+few of the most pressing practical limitations of ANNs is that
+they are not efficient in terms of power consumption and they       Hebbian and spike-timing dependent plasticity. Heb-
+are not very good at processing dynamic and noisy data. In          bian and spike-timing dependent plasticity (STDP) are two
+addition, ANNs are not able to learn beyond their training          prominent models of synaptic plasticity that play important
+period (e.g. during deployment) from which data assumes             roles in shaping neural circuitry and behavior. The Heb-
+an independent and identically distributed (IID) form without       bian learning rule, first proposed by Donald Hebb in 1949 44 ,
+time, which does not reflect physical reality where informa-        posits that synapses between neurons are strengthened when
+tion is highly temporally and spatially correlated. These limi-     they are coactive, such that the activation of one neuron
+tations have led to their application requiring vast amounts of     causally leads to the activation of another. STDP, on the
+energy when deployed in large-scale settings 38 and has also        other hand, is a more recently proposed model of synaptic
+presented challenges toward integration into edge computing         plasticity that takes into account the precise timing of pre-
+devices, such as robotics and wearable devices 39 .                 and post-synaptic spikes 45 to determine synaptic strengthen-
+Looking toward neuroscience for a solution, researchers have        ing or weakening. It is widely believed that STDP plays a
+been exploring spiking neural networks (SNNs) as an alter-          key role in the formation and refinement of neural circuits
+native to ANNs 40 . SNNs are a class of ANNs that are de-           during development and in the ongoing adaptation of circuits
+signed to more closely resemble the behavior of biological          in response to experience. In the following subsection, we
+neurons. The primary difference between ANNs and SNNs               will provide an overview of the basic principles of Hebbian
+is the idea that SNNs incorporate the notion of timing into         learning and STDP.
+their communication. Spiking neurons accumulate informa-
+tion across time from connected (presynaptic) neurons (or via       Hebbian learning      Hebbian learning is based on the idea
+sensory input) in the form of a membrane potential. Once            that the synaptic strength between two neurons should be in-
+a neuron’s membrane potential surpasses a threshold value,          creased if they are both active at the same time, and decreased
+
+Schmidgall et al.   |   Brain-inspired learning in ANNs: a review                                                                 3
+if they are not. Hebb suggested that this increase should oc-                  must be centered, that is, replaced by zero-mean fluctuations
+cur when one cell “repeatedly or persistently takes part in                    around its expected value. One possible solution is to cen-
+firing” another cell (with causal implications). However this                  ter the rewards, by subtracting a baseline from R, generally
+principle is often expressed correlatively, as in the famous                   equal to the expected value of R for this trial. While helpful,
+aphorism "cells that fire together, wire together" (variously                  in practice this solution is generally insufficient.
+attributed to Siegrid Löwel 46 or Carla Shatz 47 )1                            A more effective solution is to remove the mean value from
+Hebbian learning is often used as an unsupervised learning                     the outputs. This can be done easily by subjecting neural ac-
+algorithm, where the goal is to identify patterns in the input                 tivations xj to occasional random perturbations ∆xj , taken
+data without explicit feedback 48 . An example of this process                 from a suitable zero-centered distribution - and then using
+is the Hopfield network, in which large binary patterns are                    the perturbation ∆xj , rather than the raw post-synaptic acti-
+easily stored in a fully-connected recurrent network by apply-                 vation xj , int he three-factor product:
+ing a Hebbian rule to the (symmetric) weights 49 . It can also
+be adapted for use in supervised learning algorithms, where                                            ∆wij = ηxi ∆xj R
+the rule is modified to take into account the desired output of
+the network. In this case, the Hebbian learning rule is com-                   This is the so-called "node perturbation" rule proposed by
+bined with a teaching signal that indicates the correct output                 Fiete and Seung 54,55 . Intuitively, notice that the effect of the
+for a given input.                                                             xi ∆xj increment is to push future xj responses (when en-
+A simple Hebbian learning rule can be described mathemati-                     countering the same xi input) in the direction of the pertur-
+cally using the equation:                                                      bation: larger if the perturbation was positive, smaller if the
+                                                                               perturbation was negative. Multiplying this shift by R results
+                            ∆wij = ηxi xj                                      in pushing future responses towards the perturbation if R was
+where ∆wij is the change in the weight between neuron i and                    positive, and away from it if R was negative. Even if R is not
+neuron j, η is the learning rate, and xi "activity" in neurons                 zero-mean, the net effect (in expectation) will still be to drive
+i, often thought of as the neuron firing rate. This rule states                wij towards higher R, though the variance will be higher.
+that if the two neurons are activated at the same time, their                  This rule turns out to implement the REINFORCE algo-
+connection should be strengthened.                                             rithm (Williams’ original paper 56 actually proposes an algo-
+One potential drawback of the basic Hebbian rule is its in-                    rithm which is exactly node-perturbation for spiking stochas-
+stability. For example, if xi and xj are initially weakly pos-                 tic neurons), and thus estimates the theoretical gradient of R
+itively correlated, this rule will increase the weight between                 over wij . It an also be implemented in a biologically plausi-
+the two, which will in turn reinforce the correlation, leading                 ble manner, allowing recurrent networks to learn non-trivial
+to even larger weight increases, etc. Thus, some form of sta-                  cognitive or motor tasks from sparse, delayed rewards 57 .
+bilization is needed. This can be done simply by bounding
+                                                                               Spike-timing dependent plasticity       Spike-timing dependent
+the weights, or by more complex rules that take into account
+                                                                               plasticity (STDP) is a theoretical model of synaptic plasticity
+additional factors such as the history of the pre- and post-
+                                                                               that allows the strength of connections between neurons to
+synaptic activity or the influence of other neurons in the net-
+                                                                               be modified based on the relative timing of their spikes. Un-
+work (see ref. 50 for a practical review of many such rules).
+                                                                               like the Hebbian learning rule, which relies on the simultane-
+Three-factor rules: Hebbian reinforcement learning By in-                      ous activation of pre- and post-synaptic neurons, STDP takes
+corporating information about rewards, Hebbian learning can                    into account the precise timing of the pre- and post-synaptic
+also be used for reinforcement learning. An apparently plau-                   spikes. Specifically, STDP suggests that if a presynaptic neu-
+sible idea is simply to multiply the Hebbian update by the                     ron fires just before a postsynaptic neuron, the connection be-
+reward directly, as follows:                                                   tween them should be strengthened. Conversely, if the post-
+                                                                               synaptic neuron fires just before the presynaptic neuron, the
+                           ∆wij = ηxi xj R                                     connection should be weakened.
+                                                                               STDP has been observed in a variety of biological systems,
+with R being the reward (for this time step or for the whole
+                                                                               including the neocortex, hippocampus, and cerebellum. The
+episode). Unfortunately this idea does not produce reliable
+                                                                               rule has been shown to play a crucial role in the development
+reinforcement learning. This can be perceived intuitively by
+                                                                               and plasticity of neural circuits, including learning and mem-
+noticing that, if wij is already at its optimal value, the rule
+                                                                               ory processes. STDP has also been used as a basis for the de-
+above will still produce a net change and thus drive wij away
+                                                                               velopment of artificial neural networks, which are designed
+from the optimum.
+                                                                               to mimic the structure and function of the brain.
+More formally, as pointed out by Fremaux et al. 53 , to prop-
+                                                                               The mathematical equation for STDP is more complex than
+erly track the actual covariance between inputs, outputs and
+                                                                               the Hebbian learning rule and can vary depending on the spe-
+rewards, at least one of the terms in the xi xj R product
+                                                                               cific implementation. However, a common formulation is:
+  1 As Hebb himself noted, the general idea has a long history. In their re-
+                                                                                                   (
+view, Brown and colleagues cite William James: "When two elementary
+brain-processes have been active together or in immediate succession, one
+                                                                                                       A+ exp(−∆t/τ+ ) if ∆t > 0
+                                                                                         ∆wij =
+of them, on reoccurring, tends to propagate its excitement into the other."                            −A− exp(∆t/τ− ) if ∆t < 0
+
+4                                                                                             Schmidgall et al.   |   Brain-inspired learning in ANNs: a review
+Fig. 2. There are strong parallels between artificial and brain-like learning algorithms. Left. Top. Graphical depiction of a rodent and a cluster of interconnected
+neurons. Middle. Rodent is participating in the Morris water maze task to test its learning capabilities. Bottom A graphical depiction of biological pre- and post-synaptic
+pyramidal neuron. Right. Top. A rodent musculoskeletal physics model with artificial neural network policy and critic heads regulating learning and control (see ref. 51 ).
+Middle. A virtual maze environment used for benchmarking learning algorithms (see ref. 52 ). Bottom. An artificial pre- and post-synaptic neuron with forward propagation
+equations.
+
+
+where ∆wij is the change in the weight between neuron i                                 Backpropagation. Backpropagation is a powerful error-
+and neuron j, ∆t is the time difference between the pre- and                            driven global learning method which changes the weight of
+post-synaptic spikes, A+ and A− are the amplitudes of the                               connections between neurons in a neural network to produce
+potentiation and depression, respectively, and τ+ and τ− are                            a desired target behavior 62 . This is accomplished through
+the time constants for the potentiation and depression, respec-                         the use of a quantitative metric (an objective function) that
+tively. This rule states that the strength of the connection                            describes the quality of a behavior given sensory informa-
+between the two neurons will be increased or decreased de-                              tion (e.g. visual input, written text, robotic joint positions).
+pending on the timing of their spikes relative to each other.                           The backpropagation algorithm consists of two phases: the
+                                                                                        forward pass and the backward pass. In the forward pass,
+                                                                                        the input is propagated through the network, and the output
+Processes that support learning in artificial                                           is calculated. During the backward pass, the error between
+neural networks                                                                         the predicted output and the "true" output is calculated, and
+                                                                                        the gradients of the loss function with respect to the weights
+There are two primary approaches for weight optimization                                of the network are calculated by propagating the error back-
+in artificial neural networks: error-driven global learning and                         wards through the network. These gradients are then used to
+brain-inspired local learning. In the first approach, the net-                          update the weights of the network using an optimization al-
+work weights are modified by driving a global error to its                              gorithm such as stochastic gradient descent. This process is
+minimum value. This is achieved by delegating error to                                  repeated for many iterations until the weights converge to a
+each weight and synchronizing modifications between each                                set of values that minimize the loss function.
+weight. In contrast, brain-inspired local learning algorithms                           Lets take a look at a brief mathematical explanation of back-
+aim to learn in a more biologically plausible manner, by mod-                           propagation. First, we define a desired loss function, which
+ifying weights from dynamical equations using locally avail-                            is a function of the network’s outputs and the true values:
+able information. Both optimization approaches have unique
+benefits and drawbacks. In the following sections we will                                                                     1X
+                                                                                                                L(y, ŷ) =      (yi − ŷi )2
+discuss the most utilized form of error-driven global learn-                                                                  2
+                                                                                                                                   i
+ing, backpropagation, followed by in-depth discussions of
+brain-inspired local algorithms. It is worth mentioning that                            where y is the true output and ŷ is the network’s output. In
+these two approaches are not mutually exclusive, and will                               this case we are minimizing the squared error, but could very
+often be integrated in order to compliment their respective                             well optimize for any smooth and differentiable loss function.
+strengths 58–61 .                                                                       Next, we use the chain rule to calculate the gradient of the
+
+Schmidgall et al.   |   Brain-inspired learning in ANNs: a review                                                                                                        5
+loss with respect to the weights of the network. Let wij      l be     In genetic algorithms 66 , a population of neural networks is
+the weight between neuron i in layer l and neuron j in layer           initialized with random weights, and each network is evalu-
+l + 1, and let ali be the activation of neuron i in layer l. Then,     ated on a specific task or problem. The networks that perform
+the gradients of the loss with respect to the weights are given        better on the task are then selected for reproduction, whereby
+by:                                                                    they produce offspring with slight variations in their weights.
+                                                                       This process is repeated over several generations, with the
+                                 l+1  l+1
+                  ∂L     ∂L ∂aj ∂zj                                    best-performing networks being used for reproduction, mak-
+                      =                                                ing their behavior more likely across generations. Evolution-
+                    l
+                 ∂wij   ∂al+1
+                          j   ∂zjl+1 ∂wij
+                                       l
+                                                                       ary algorithms operate similarly to genetic algorithms but
+where zjl+1 is the weighted sum of the inputs to neuron j in           use a different approach by approximating a stochastic gra-
+layer l + 1. We can then use these gradients to update the             dient 67,68 . This is accomplished by perturbing the weights
+weights of the network using gradient descent:                         and combining the network objective function performances
+                                                                       to update the parameters. This results in a more global search
+                       l     l          ∂L                             of the weight space that can be more efficient at finding op-
+                      wij = wij −α        l
+                                       ∂wij                            timal solutions compared to local search methods like back-
+                                                                       propagation 69 .
+where α is the learning rate. By repeatedly calculating the            One advantage of these algorithms is their ability to search
+gradients and updating the weights, the network gradually              a vast parameter space efficiently, making them suitable
+learns to minimize the loss function and make more accurate            for problems with large numbers of parameters or complex
+predictions. In practice, gradient descent methods are often           search spaces. Additionally, they do not require a differen-
+combined with approaches to incorporate momentum in the                tiable objective function, which can be useful in scenarios
+gradient estimate, which has been shown to significantly im-           where the objective function is difficult to define or calculate
+prove generalization 63 .                                              (e.g. spiking neural networks). However, these algorithms
+The impressive accomplishments of backpropagation have                 also have some drawbacks. One major limitation is the high
+led neuroscientists to investigate whether it can provide a bet-       computational cost required to evaluate and evolve a large
+ter understanding of learning in the brain. While it remains           population of networks. Another challenge is the potential
+debated as to whether backpropagation variants could occur             for the algorithm to become stuck in local optima or to con-
+in the brain 64,65 , it is clear that backpropagation in its current   verge too quickly, resulting in suboptimal solutions. Addi-
+formulation is biologically implausible. Alternative theories          tionally, the use of random mutations can lead to instability
+suggest complex feedback circuits or the interaction of local          and unpredictability in the learning process.
+activity and top-down signals (a "third-factor") could support         Regardless, evolutionary and genetic algorithms have shown
+a similar form of backprop-like learning 64 .                          promising results in various applications, particularly when
+Despite its impressive performance there are still fundamen-           optimizing non-differentiable and non-trivial parameter
+tal algorithmic challenges that follow from repeatedly apply-          spaces. Ongoing research is focused on improving the effi-
+ing backpropagation to network weights. One such challenge             ciency and scalability of these algorithms, as well as discov-
+is a phenomenon known as catastrophic forgetting, where a              ering where and when it makes sense to use these approaches
+neural network forgets previously learned information when             instead of gradient descent.
+training on new data 13 . This can occur when the network
+is fine-tuned on new data or when the network is trained on
+                                                                       Brain-inspired representations of learning in
+a sequence of tasks without retaining the knowledge learned
+from previous tasks. Catastrophic forgetting is a significant          artificial neural networks
+hurdle for developing neural networks that can continuously            Local learning algorithms. Unlike global learning algo-
+learn from diverse and changing environments. Another chal-            rithms such as backpropagation, which require information
+lenge is that backpropagation requires backpropagating infor-          to be propagated through the entire network, local learning
+mation through all the layers of the network, which can be             algorithms focus on updating synaptic weights based on local
+computationally expensive and time-consuming, especially               information from nearby or synaptically connected neurons.
+for very deep networks. This can limit the scalability of deep         These approaches are often strongly inspired by the plastic-
+learning algorithms and make it difficult to train large models        ity of biological synapses. As will be seen, by leveraging
+on limited computing resources. Nonetheless, backpropaga-              local learning algorithms, ANNs can learn more efficiently
+tion has remained the most widely used and successful algo-            and adapt to changing input distributions, making them bet-
+rithm for applications involving artificial neural networks            ter suited for real-world applications. In this section, we will
+                                                                       review recent advances in brain-inspired local learning algo-
+Evolutionary and genetic algorithms. Another class of                  rithms and their potential for improving the performance and
+global learning algorithms that has gained significant atten-          robustness of ANNs.
+tion in recent years are evolutionary and genetic algorithms.
+These algorithms are inspired by the process of natural selec-         Backpropagation-derived              local         learning.
+tion and, in the context of ANNs, aim to optimize the weights          Backpropagation-derived local learning algorithms are
+of a neural network by mimicking the evolutionary process.             a class of local learning algorithms that attempt to emulate
+
+6                                                                                    Schmidgall et al.   |   Brain-inspired learning in ANNs: a review
+the mathematical properties of backpropagation. Unlike              neurons (including short-term adaptation) 59 , in contrast with
+the traditional backpropagation algorithm, which involves           methods like REINFORCE and node-perturbation.
+propagating error signals back through the entire network,          In the work of ref. 75,76 a normative theory for synaptic learn-
+backpropagation-derived local learning algorithms update            ing based on recent genetic findings 77 of neuronal signal-
+synaptic weights based on local error gradients computed            ing architectures is demonstrated. They propose that neu-
+using backpropagation. This approach is computationally             rons communicate their contribution to the learning outcome
+efficient and allows for online learning, making it suitable        to nearby neurons via cell-type-specific local neuromodula-
+for applications where training data is continually arriving.       tion, and that neuron-type diversity and neuron-type-specific
+One prominent example of backpropagation-derived local              local neuromodulation may be critical pieces of the biolog-
+learning algorithms is the Feedback Alignment (FA) algo-            ical credit-assignment puzzle. In this work, the authors in-
+rithm 70,71 , which replaces the weight transport matrix used       stantiate a simplified computational model based on eligi-
+in backpropagation with a fixed random matrix, allowing the         bility propagation to explore this theory and show that their
+error signal to propagate from direct connections thus avoid-       model, which includes both dopamine-like temporal differ-
+ing the need for backpropagating error signals. A brief math-       ence and neuropeptide-like local modulatory signaling, leads
+ematical description of feedback alignment is as follows: let       to improvements over previous methods such as e-prop and
+wout be the weight matrix connecting the last layer of the          feedback alignment.
+network to the output, and win be the weight matrix connect-
+                                                                    Generalization properties       Techniques in deep learning
+ing the input to the first layer. In Feedback Alignment, the
+                                                                    have made tremendous strides toward understanding the gen-
+error signal is propagated from the output to the input using
+                                                                    eralization of their learning algorithms. A particularly useful
+the fixed random matrix B, rather than the transpose of wout .
+                                                                    discovery was that flat minima tend to lead to better general-
+The weight updates are then computed using the product of
+                                                                    ization 78 . What is meant by this is that, given a perturbation 
+the input and the error signal, ∆win = −ηxz where x is the
+                                                                    in the parameter space (synaptic weight values) more signif-
+input, η is the learning rate, and z is the error signal propa-
+                                                                    icant performance degradation is observed around narrower
+gated backwards through the network, similar to traditional
+                                                                    minima. Learning algorithms that find flatter minima in pa-
+backpropagation.
+                                                                    rameter space ultimately lead to better generalization.
+Direct Feedback Alignment 71 (DFA) simplifies the weight            Recent work has explored the generalization properties ex-
+transport chain compared with FA by directly connecting the         hibited by (brain-inspired) backpropagation-derived local
+output layer error to each hidden layer. The Sign-Symmetry          learning rules 79 . Compared with backpropagation through
+(SS) algorithm is similar to FA except the feedback weights         time, backpropagation-derived local learning rules exhibit
+symmetrically share signs. While FA has exhibited impres-           worse and more variable generalization which does not im-
+sive results on small datasets like MNIST and CIFAR, their          prove by scaling the step size due to the gradient approxi-
+performance on larger datasets such as ImageNet is often            mation being poorly aligned with the true gradient. While it
+suboptimal 72 . On the other hand, recent studies have shown        is perhaps unsurprising that local approximations of an op-
+that the SS algorithm algorithm is capable of achieving com-        timization process are going to have worse generalization
+parable performance to backpropagation, even on large-scale         properties than their complete counterpart, this work opens
+datasets 73 .                                                       the door toward asking new questions about what the best ap-
+Eligibility propagation 59,74 (e-prop) extends the idea of feed-    proach toward designing brain-inspired learning algorithms
+back alignment for spiking neural networks, combining the           is. It also opens the question as to whether backpropagation-
+advantages of both traditional error backpropagation and            derived local learning rules are even worth exploring given
+biologically plausible learning rules, such as spike-timing-        that they are fundamentally going to exhibit sub-par general-
+dependent plasticity (STDP). For each synapse, the e-prop al-       ization.
+gorithm computes and maintains an eligibility trace eji (t) =       In conclusion, while backpropagation-derived local learn-
+dzj (t)
+                                                                    ing rules present themselves as a promising approach to de-
+dWji . Eligibility traces measure the total contribution of this
+synapse to the neuron’s current output, taking into account all     signing brain-inspired learning algorithms, they come with
+past inputs 3 . This can be computed and updated in a purely        limitations that must be addressed. The poor generaliza-
+forward manner, without backward passes. This eligibility           tion of these algorithms highlights the need for further re-
+trace is then multiplied by an estimate of the gradient of the      search to improve their performance and to explore alterna-
+                                          dE(t)                     tive brain-inspired learning rules. It also opens the question
+error over the neuron’s output Lj (t) = dz   (t) . to obtain the
+                                                           j        as to whether backpropagation-derived local learning rules
+actual weight gradient dE(t)
+                         dWji . Lj (t) itself is computed from      are even worth exploring given that they are fundamentally
+the error at the output neurons, either by using symmetric          going to exhibit sub-par generalization.
+feedback weights or by using fixed feedback weights, as in
+feedback alignment. A possible drawback of e-prop is that           Meta-optimized plasticity rules. Meta-optimized plastic-
+it requires a real-time error signal Lt at each point in time,      ity rules offer an effective balance between error-driven
+since it only takes into account past events and is blind to        global learning and brain-inspired local learning. Meta-
+future errors. In particular, it cannot learn from delayed er-      learning can be defined as automation of the search for learn-
+ror signals that extend beyond the time scales of individual        ing algorithms themselves, where, instead of relying on hu-
+
+Schmidgall et al.   |   Brain-inspired learning in ANNs: a review                                                                   7
+man engineering to describe a learning algorithm, a search            factor signal using the gradient approximation of e-prop as
+process to find that algorithm is employed 80 . The idea of           the plasticity rule, introducing a meta-optimization form of
+meta-learning naturally extends to brain-inspired learning al-        e-prop 88 . Recurrent neural networks tuned by evolution can
+gorithms, such that the brain-inspired mechanism of learn-            also be used for meta-optimized learning rules. Evolvable
+ing itself can be optimized thereby allowing for discovery of         Neural Units 89 (ENUs) introduce a gating structure that con-
+more efficient learning without manual tuning of the rule. In         trols how the input is processed, stored, and dynamic param-
+the following section, we discuss various aspects of this re-         eters are updated. This work demonstrates the evolution of
+search starting with differentiably optimized synaptic plastic-       individual somatic and synaptic compartment models of neu-
+ity rules.                                                            rons and show that a network of ENUs can learn to solve a
+                                                                      T-maze environment task, independently discovering spiking
+Differentiable plasticity One instantiation of this principle         dynamics and reinforcement-type learning rules.
+in the literature is differentiable plasticity, which is a frame-
+work that focuses on optimizing synaptic plasticity rules in          Plasticity in RNNs and Transformers         Independent of re-
+neural networks through gradient descent 81,82 . In these rules,      search aiming at learning plasticity using update rules, Trans-
+the plasticity rules are described in such a way that the pa-         formers have recently been shown to be good intra-lifetime
+rameters governing their dynamics are differentiable, allow-          learners 5,90,91 . The process of in-context learning works not
+ing for backpropagation to be used for meta-optimization of           through the update of synaptic weights but purely within the
+the plasticity rule parameters (e.g. the η term in the simple         network activations. Like in Transformers, this process can
+hebbian rule or the A+ term in the STDP rule). This allows            also happen in recurrent neural networks 92 . While in-context
+the weight dynamics to precisely solve a task that requires           learning appears to be a different mechanism from synaptic
+the weights to be optimized during execution time, referred           plasticity, these processes have been demonstrated to exhibit
+to as intra-lifetime learning.                                        a strong relationship. One exciting connection discussed in
+Differentiable plasticity rules are also capable of the dif-          the literature is the realization that parameter-sharing of the
+ferentiable optimization of neuromodulatory dynamics 60,82 .          meta-learner often leads to the interpretation of activations as
+This framework includes two main variants of neuromodula-             weights 93 . This demonstrates that, while these models may
+tion: global neuromodulation, where the direction and mag-            have fixed weights, they exhibit some of the same learning
+nitude of weight changes is controlled by a network-output-           capabilities as models with plastic weights. Another connec-
+dependent global parameter, and retroactive neuromodula-              tion is that self-attention in the Transformer involves outer
+tion, where the effect of past activity is modulated by a             and inner products that can be cast as learned weight up-
+dopamine-like signal within a short time window. This is              dates 94 that can even implement gradient descent 95,96 .
+enable by the use of eligibility traces, which are used to keep       Evolutionary and genetic meta-optimization          Much like
+track of which synapses contributed to recent activity, and the       differentiable plasticity, evolutionary and genetic algorithms
+dopamine signal modulates the transformation of these traces          have been used to optimize the parameters of plasticity rules
+into actual plastic changes.                                          on a variety of applications 97 , including: adaptation to limb
+Methods involving differentiable plasticity have seen im-             damage on robotic systems 98,99 . Recent work has also en-
+provements in a wide range of applications from sequential            abled the optimization of both plasticity coefficients and plas-
+associative tasks 83 , familiarity detection 84 , and robotic noise   ticity rule equations through the use of Cartesian genetic pro-
+adaptation 60 . This method has also been used to optimize            gramming 100 , presenting an automated approach for discov-
+short-term plasticity rules 84,85 which exhibit improved per-         ering biologically plausible plasticity rules based on the spe-
+formance in reinforcement and temporal supervised learning            cific task being solved. In these methods, the genetic or evo-
+problems. While these methods show much promise, dif-                 lutionary optimization process acts similarly to the differen-
+ferentiable plasticity approaches take a tremendous amount            tiable process such that it optimizes the plasticity parame-
+of memory, as backpropagation is used to optimize multi-              ters in an outer-loop process, while the plasticity rule opti-
+ple parameters for each synapse through time. Practical ad-           mizes the reward in an inner-loop process. These methods
+vancements with these methods will likely require parameter           are appealing since they have a much lower memory foot-
+sharing 86 or a more memory-efficient form of backpropaga-            print compared to differentiable methods since they do not
+tion 87 .                                                             require backpropagating errors through time. However, while
+                                                                      memory efficient, they often require a tremendous amount of
+Plasticity with spiking neurons      Recent advances in back-         data to get comparable performance to gradient-based meth-
+propagating through the non-differentiable part of spiking            ods 101 .
+neurons with surrogate gradients have allowed for differen-
+tiable plasticity to be used to optimize plasticity rules in spik-    Self-referential meta-learning    While synaptic plasticity
+ing neural networks 60 . In ref. 61 the capability of this opti-      has two-levels of learning, the meta-learner, and the discov-
+mization paradigm is demonstrated through the use of a dif-           ered learning rule, self-referential meta-learning 102,103 ex-
+ferentiable spike-timing dependent plasticity rule to enable          tends this hierarchy. In plasticity approaches only a sub-
+"learning to learn" on an online one-shot continual learning          set of the network parameters are updated (e.g. the synap-
+problem and on an online one-shot image class recognition             tic weights), whereas the meta-learned update rule remains
+problem. A similar method was used to optimize the third-             fixed after meta-optimization. Self-referential architectures
+
+8                                                                                   Schmidgall et al.   |   Brain-inspired learning in ANNs: a review
+Fig. 3. A feedforward neural network computes an output given an input by propagating the input information downstream. The precise value of the output is determined
+by the weight of synaptic coefficients. To improve the output for a task given an input, the synaptic weights are modified. Synaptic Plasticity algorithms represent
+computational models that emulate the brain’s ability to strengthen or weaken synapses-connections between neurons-based on their activity, thereby facilitating learning
+and memory formation. Three-Factor Plasticity refers to a model of synaptic plasticity in which changes to the strength of neural connections are determined by three
+factors: pre-synaptic activity, post-synaptic activity, and a modulatory signal, facilitating more nuanced and adaptive learning processes. The Feedback Alignment algorithm
+is a learning technique in which artificial neural networks are trained using random, fixed feedback connections rather than symmetric weight matrices, demonstrating that
+successful learning can occur without precise backpropagation. Backpropagation is a fundamental algorithm in machine learning and artificial intelligence, used to train
+neural networks by calculating the gradient of the loss function with respect to the weights in the network.
+
+
+enable a neural network to modify all of its parameters in                               and functionality of the biological brain 42,111,112 . This ap-
+recursive fashion. Thus, the learner can also modify the                                 proach seeks to develop artificial neural networks that not
+meta-learner. This in principles allows arbitrary levels of                              only replicate the brain’s learning capabilities but also its en-
+learning, meta-learning, meta-meta-learning, etc. Some ap-                               ergy efficiency and inherent parallelism. Neuromorphic com-
+proaches meta-learn the parameter initialization of such a                               puting systems often incorporate specialized hardware, such
+system 102,104 . Finding this initialization still requires a hard-                      as neuromorphic chips or memristive devices, to enable the
+wired meta-learner. In other works the network self-modifies                             efficient execution of brain-inspired learning algorithms 112 .
+in a way that eliminates even this meta-learner 103,105 . Some-                          These systems have the potential to drastically improve the
+times the learning rule to be discovered has structural search                           performance of machine learning applications, particularly in
+space restrictions which simplify self-improvement where a                               edge computing and real-time processing scenarios.
+gradient-based optimizer can discover itself 106 or an evolu-                            A key aspect of neuromorphic computing lies in the devel-
+tionary algorithm can optimize itself 107 . Despite their dif-                           opment of specialized hardware architectures that facilitate
+ferences, both synaptic plasticity, as well as self-referential                          the implementation of spiking neural networks, which more
+approaches, aim to achieve self-improvement and adaptation                               closely resemble the information processing mechanisms of
+in neural networks.                                                                      biological neurons. Neuromorphic systems operate based
+                                                                                         on the principle of brain-inspired local learning, which al-
+Generalization of meta-optimized learning rules The ex-                                  lows them to achieve high energy efficiency, low-latency pro-
+tent to which discovered learning rules generalize to a wide                             cessing, and robustness against noise, which are critical for
+range of tasks is a significant open question–in particular,                             real-world applications 113 . The integration of brain-inspired
+when should they replace manually derived general-purpose                                learning techniques with neuromorphic hardware is vital for
+learning rules such as backpropagation? A particular obser-                              the successful application of this technology.
+vation that poses a challenge to these methods is that when                              In recent years, advances in neuromorphic computing have
+the search space is large and few restrictions are put on the                            led to the development of various platforms, such as Intel’s
+learning mechanism 92,108,109 , generalization is shown to be-                           Loihi 114 , IBM’s TrueNorth 115 , and SpiNNaker 116 , which
+come more difficult. However, toward amending this, in vari-                             offer specialized hardware architectures for implementing
+able shared meta learning 93 flexible learning rules were pa-                            SNNs and brain-inspired learning algorithms. These plat-
+rameterized by parameter-shared recurrent neural networks                                forms provide a foundation for further exploration of neu-
+that locally exchange information to implement learning al-                              romorphic computing systems, enabling researchers to de-
+gorithms that generalize across classification problems not                              sign, simulate, and evaluate novel neural network architec-
+seen during meta-optimization. Similar results have also                                 tures and learning rules. As neuromorphic computing contin-
+been shown for the discovery of reinforcement learning al-                               ues to progress, it is expected to play a pivotal role in the fu-
+gorithms 110 .                                                                           ture of artificial intelligence, driving innovation and enabling
+                                                                                         the development of more efficient, versatile, and biologically
+Applications of brain-inspired learning                                                  plausible learning systems.
+Neuromorphic Computing        Neuromorphic computing rep-                                Robotic learning     Brain-inspired learning in neural net-
+resents a paradigm shift in the design of computing systems,                             works has the potential to overcome many of the current
+with the goal of creating hardware that mimics the structure                             challenges present in the field of robotics by enabling robots
+
+Schmidgall et al.   |   Brain-inspired learning in ANNs: a review                                                                                                         9
+to learn and adapt to their environment in a more flexi-           known as catastrophic forgetting 13 . Catastrophic forgetting
+ble way 117,118 . Traditional robotics systems rely on pre-        refers to the tendency of an ANN to abruptly forget previ-
+programmed behaviors, which are limited in their ability to        ously learned information upon learning new data. This hap-
+adapt to changing conditions. In contrast, as we have shown        pens because the weights in the network that were initially
+in this review, neural networks can be trained to adapt to new     optimized for earlier tasks are drastically altered to accom-
+situations by adjusting their internal parameters based on the     modate the new learning, thereby erasing or overwriting the
+data they receive.                                                 previous information. This is because the backpropagation
+Because of their natural relationship to robotics, brain-          algorithm does not inherently factor in the need to preserve
+inspired learning algorithms have a long history in                previously acquired information while facilitating new learn-
+robotics 117 . Toward this, synaptic plasticity rules have         ing. Solving this problem has remained a significant hurdle
+been introduced for adapting robotic behavior to domain            in AI for decades. We posit that by employing brain-inspired
+shifts such as motor gains and rough terrain 60,119–121 as well    learning algorithms, which emulate the dynamic learning
+as for obstacle avoidance 122–124 and articulated (arm) con-       mechanisms of the brain, we may be able to capitalize on
+trol 125,126 . Brain-inspired learning rules have also been used   the proficient problem-solving strategies inherent to biologi-
+to explore how learning occurs in the insect brain using           cal organisms.
+robotic systems as an embodied medium 127–130 .
+Deep reinforcement learning (DRL) represents a significant         Toward understanding the brain           The worlds of artificial
+success of brain-inspired learning algorithms, combining the       intelligence and neuroscience have been greatly benefiting
+strengths of neural networks with the theory of reinforcement      from each other. Deep neural networks, specially tailored for
+learning in the brain to create autonomous agents capable of       certain tasks, show striking similarities to the human brain in
+learning complex behaviors through interaction with their en-      how they handle spatial 142–144 and visual 145–147 information.
+vironment 131–133 . By utilizing a reward-driven learning pro-     This overlap hints at the potential of artificial neural networks
+cess emulating the activity of dopamine neurons 134 , as op-       (ANNs) as useful models in our efforts to better understand
+posed to the minimization of an e.g classification or regres-      the brain’s complex mechanics. A new movement referred to
+sion error, DRL algorithms guide robots toward learning opti-      as the neuroconnectionist research programme 148 embodies
+mal strategies to achieve their goals, even in highly dynamic      this combined approach, using ANNs as a computational lan-
+and uncertain environments 135,136 . This powerful approach        guage to form and test ideas about how the brain computes.
+has been demonstrated in a variety of robotic applications, in-    This perspective brings together different research efforts, of-
+cluding dexterous manipulation, robotic locomotion 137 , and       fering a common computational framework and tools to test
+multi-agent coordination 138 .                                     specific theories about the brain.
+                                                                   While this review highlights a range of algorithms that imi-
+Lifelong and online learning     Lifelong and online learning      tate the brain’s functions, we still have a substantial amount
+are essential applications of brain-inspired learning in artifi-   of work to do to fully grasp how learning actually happens in
+cial intelligence, as they enable systems to adapt to chang-       the brain. The use of backpropagation, and backpropagation-
+ing environments and continuously acquire new skills and           like local learning rules, to train large neural networks may
+knowledge 14 . Traditional machine learning approaches, in         provide a good starting point for modelling brain function.
+contrast, are typically trained on a fixed dataset and lack        Much productive investigation has occurred to see what pro-
+the ability to adapt to new information or changing environ-       cesses in the brain may operate similarly to backpropaga-
+ments. The mature brain is an incredible medium for life-          tion 64 , leading to new perspectives and theories in neuro-
+long learning, as it is constantly learning while remaining        science. Even though backpropagation in its current form
+relatively fixed in size across the span of a lifetime 139 . As    might not occur in the brain, the idea that the brain might de-
+this review has demonstrated, neural networks endowed with         velop similar internal representations to ANNs despite such
+brain-inspired learning mechanisms, similar to the brain, can      different mechanisms of learning is an exciting open question
+be trained to learn and adapt continuously, improving their        that may lead to a deeper understanding of the brain and of
+performance over time.                                             AI.
+The development of brain-inspired learning algorithms that         Explorations are now extending beyond static network dy-
+enable artificial systems to exhibit this capability has the po-   namics to the networks which unravel a function of time
+tential to significantly enhance their performance and capa-       much like the brain. As we further develop algorithms in
+bilities and has wide-ranging implications for a variety of ap-    continual and lifelong learning, it may become clear that our
+plications. These applications are particularly useful in situ-    models need to reflect the learning mechanisms observed in
+ations where data is scarce or expensive to collect, such as in    nature more closely. This shift in focus calls for the integra-
+robotics 140 or autonomous systems 141 , as it allows the sys-     tion of local learning rules—those that mirror the brain’s own
+tem to learn and adapt in real-time rather than requiring large    methods—into ANNs.
+amounts of data to be collected and processed before learning      We are convinced that adopting more biologically authentic
+can occur.                                                         learning rules within ANNs will not only yield the aforemen-
+One of the primary objectives in the field of lifelong learn-      tioned benefits, but it will also serve to point neuroscience re-
+ing is to alleviate a major issue associated with the continu-     searchers in the right direction.. In other words, it’s a strategy
+ous application of backpropagation on ANNs, a phenomenon           with a two-fold benefit: not only does it promise to invigorate
+
+10                                                                                Schmidgall et al.   |   Brain-inspired learning in ANNs: a review
+innovation in engineering, but it also brings us closer to un-                                          12. Driess, D. et al. Palm-e: An embodied multimodal language model. arXiv preprint
+                                                                                                            arXiv:2303.03378 (2023).
+ravelling the intricate processes at play within the brain. With                                        13. Kirkpatrick, J. et al. Overcoming catastrophic forgetting in neural networks. Proceedings
+more realistic models, we can probe deeper into the complex-                                                of the national academy of sciences 114, 3521–3526 (2017).
+                                                                                                        14. Parisi, G. I., Kemker, R., Part, J. L., Kanan, C. & Wermter, S. Continual lifelong learning
+ities of brain computation from the novel perspective of arti-                                              with neural networks: A review. Neural networks 113, 54–71 (2019).
+ficial intelligence.                                                                                    15. Kudithipudi, D. et al. Biological underpinnings for lifelong learning machines. Nature Ma-
+                                                                                                            chine Intelligence 4, 196–210 (2022).
+                                                                                                        16. Ho, V. M., Lee, J.-A. & Martin, K. C. The cell biology of synaptic plasticity. Science 334,
+                                                                                                            623–628 (2011).
+Conclusion                                                                                              17. Citri, A. & Malenka, R. C. Synaptic plasticity: multiple forms, functions, and mechanisms.
+                                                                                                            Neuropsychopharmacology 33, 18–41 (2008).
+In this review, we investigated the integration of more biolog-                                         18. Abraham, W. C., Jones, O. D. & Glanzman, D. L. Is plasticity of synapses the mechanism
+ically plausible learning mechanisms into ANNs. This fur-                                                   of long-term memory storage? NPJ science of learning 4, 1–10 (2019).
+                                                                                                        19. Zucker, R. S. & Regehr, W. G. Short-term synaptic plasticity. Annual review of physiology
+ther integration presents itself as an important step for both                                              64, 355–405 (2002).
+neuroscience and artificial intelligence. This is particularly                                          20. Yuste, R. & Bonhoeffer, T. Morphological changes in dendritic spines associated with
+                                                                                                            long-term synaptic plasticity. Annual review of neuroscience 24, 1071–1089 (2001).
+relevant amidst the tremendous progress that has been made                                              21. Frémaux, N. & Gerstner, W. Neuromodulated spike-timing-dependent plasticity, and theory
+in artificial intelligence with large language models and em-                                               of three-factor learning rules. Frontiers in neural circuits 9, 85 (2016).
+                                                                                                        22. Brzosko, Z., Mierau, S. B. & Paulsen, O. Neuromodulation of spike-timing-dependent
+bedded systems, which are in critical need for more energy                                                  plasticity: past, present, and future. Neuron 103, 563–581 (2019).
+efficient approaches for learning and execution. Addition-                                              23. McCormick, D. A., Nestvogel, D. B. & He, B. J. Neuromodulation of brain state and behav-
+                                                                                                            ior. Annual review of neuroscience 43, 391–415 (2020).
+ally, while ANNs are making great strides in these applica-                                             24. Abraham, W. C. & Bear, M. F. Metaplasticity: the plasticity of synaptic plasticity. Trends in
+tions, there are still major limitations in their ability to adapt                                          neurosciences 19, 126–130 (1996).
+                                                                                                        25. Abraham, W. C. Metaplasticity: tuning synapses and networks for plasticity. Nature Re-
+like biological brains, which we see as a primary application                                               views Neuroscience 9, 387–387 (2008).
+of brain-inspired learning mechanisms.                                                                  26. Yger, P. & Gilson, M. Models of metaplasticity: a review of concepts. Frontiers in compu-
+                                                                                                            tational neuroscience 9, 138 (2015).
+As we strategize for future collaboration between neuro-                                                27. Lim, D. A. & Alvarez-Buylla, A. The adult ventricular–subventricular zone (v-svz) and ol-
+science and AI toward more detailed brain-inspired learning                                                 factory bulb (ob) neurogenesis. Cold Spring Harbor perspectives in biology 8, a018820
+                                                                                                            (2016).
+algorithms, it’s important to acknowledge that the past in-                                             28. Roeder, S. S. et al. Evidence for postnatal neurogenesis in the human amygdala. Com-
+fluences of neuroscience on AI have seldom been about a                                                     munications biology 5, 1–8 (2022).
+                                                                                                        29. Kuhn, H. G., Dickinson-Anson, H. & Gage, F. H. Neurogenesis in the dentate gyrus of
+straightforward application of ready-made solutions to ma-                                                  the adult rat: age-related decrease of neuronal progenitor proliferation. Journal of Neuro-
+chines 149 . More often, neuroscience has stimulated AI re-                                                 science 16, 2027–2033 (1996).
+                                                                                                        30. Kempermann, G., Kuhn, H. G. & Gage, F. H. Experience-induced neurogenesis in the
+searchers by posing intriguing algorithmic-level questions                                                  senescent dentate gyrus. Journal of Neuroscience 18, 3206–3212 (1998).
+about aspects of animal learning and intelligence. It has pro-                                          31. Van Praag, H., Shubert, T., Zhao, C. & Gage, F. H. Exercise enhances learning and
+                                                                                                            hippocampal neurogenesis in aged mice. Journal of Neuroscience 25, 8680–8685 (2005).
+vided preliminary guidance towards vital mechanisms that                                                32. Nokia, M. S. et al. Physical exercise increases adult hippocampal neurogenesis in male
+support learning. Our perspective is that by harnessing the in-                                             rats provided it is aerobic and sustained. The Journal of physiology 594, 1855–1873
+                                                                                                            (2016).
+sights drawn from neuroscience, we can significantly acceler-                                           33. Kirby, E. D. et al. Acute stress enhances adult rat hippocampal neurogenesis and activation
+ate advancements in the learning mechanisms used in ANNs.                                                   of newborn neurons via secreted astrocytic fgf2. Elife 2, e00362 (2013).
+                                                                                                        34. Baik, S.-H., Rajeev, V., Fann, D. Y.-W., Jo, D.-G. & Arumugam, T. V. Intermittent fasting
+Likewise, experiments using brain-like learning algorithms                                                  increases adult hippocampal neurogenesis. Brain and behavior 10, e01444 (2020).
+in AI can accelerate our understanding of neuroscience.                                                 35. Todd, K. J., Serrano, A., Lacaille, J.-C. & Robitaille, R. Glial cells in synaptic plasticity.
+                                                                                                            Journal of Physiology-Paris 99, 75–83 (2006).
+                                                                                                        36. Chung, W.-S., Allen, N. J. & Eroglu, C. Astrocytes control synapse formation, function, and
+                                                                                                            elimination. Cold Spring Harbor perspectives in biology 7, a020370 (2015).
+Acknowledgements                                                                                        37. Cornell, J., Salinas, S., Huang, H.-Y. & Zhou, M. Microglia regulation of synaptic plasticity
+                                                                                                            and learning and memory. Neural regeneration research 17, 705 (2022).
+We thank the OpenBioML collaborate workspace from                                                       38. Desislavov, R., Martínez-Plumed, F. & Hernández-Orallo, J. Compute and energy con-
+                                                                                                            sumption trends in deep learning inference. arXiv preprint arXiv:2109.05472 (2021).
+which several of the authors of this work were connected.                                               39. Daghero, F., Pagliari, D. J. & Poncino, M. Energy-efficient deep learning inference on edge
+This material is based upon work supported by the Na-                                                       devices. In Advances in Computers, vol. 122, 247–301 (Elsevier, 2021).
+                                                                                                        40. Pfeiffer, M. & Pfeil, T. Deep learning with spiking neurons: Opportunities and challenges.
+tional Science Foundation Graduate Research Fellowship un-                                                  Frontiers in neuroscience 12, 774 (2018).
+der Grant No. DGE2139757.                                                                               41. Maass, W. Networks of spiking neurons: the third generation of neural network models.
+                                                                                                            Neural networks 10, 1659–1671 (1997).
+  1. Newell, K. M., Liu, Y.-T. & Mayer-Kress, G. Time scales in motor learning and development.         42. Schuman, C. D. et al. Opportunities for neuromorphic computing algorithms and applica-
+     Psychological review 108, 57 (2001).                                                                   tions. Nature Computational Science 2, 10–19 (2022).
+  2. Stokes, M. G. ‘activity-silent’ working memory in prefrontal cortex: a dynamic coding              43. Zhu, R.-J., Zhao, Q. & Eshraghian, J. K. Spikegpt: Generative pre-trained language model
+     framework. Trends in cognitive sciences 19, 394–405 (2015).                                            with spiking neural networks. arXiv preprint arXiv:2302.13939 (2023).
+  3. Gerstner, W., Lehmann, M., Liakoni, V., Corneil, D. & Brea, J. Eligibility traces and plasticity   44. Hebb, D. O. The organization of behavior: A neuropsychological theory (Psychology press,
+     on behavioral time scales: experimental support of neohebbian three-factor learning rules.             2005).
+     Frontiers in neural circuits 12, 53 (2018).                                                        45. Markram, H., Gerstner, W. & Sjöström, P. J. A history of spike-timing-dependent plasticity.
+  4. Beltagy, I., Lo, K. & Cohan, A. Scibert: A pretrained language model for scientific text.              Frontiers in synaptic neuroscience 3, 4 (2011).
+     arXiv preprint arXiv:1903.10676 (2019).                                                            46. Löwel, S. & Singer, W. Selection of intrinsic horizontal connections in the visual cortex by
+  5. Brown, T. et al. Language models are few-shot learners. Advances in neural information                 correlated neuronal activity. Science 255, 209–212 (1992).
+     processing systems 33, 1877–1901 (2020).                                                           47. Shatz, C. J. The developing brain. Scientific American 267, 60–67 (1992).
+  6. Ramesh, A., Dhariwal, P., Nichol, A., Chu, C. & Chen, M. Hierarchical text-conditional             48. Gerstner, W., Kistler, W. M., Naud, R. & Paninski, L. Neuronal dynamics: From single
+     image generation with clip latents. arXiv preprint arXiv:2204.06125 (2022).                            neurons to networks and models of cognition (Cambridge University Press, 2014).
+  7. Saharia, C. et al. Photorealistic text-to-image diffusion models with deep language under-         49. Hopfield, J. J. Neural networks and physical systems with emergent collective computa-
+     standing. arXiv preprint arXiv:2205.11487 (2022).                                                      tional abilities. Proceedings of the national academy of sciences 79, 2554–2558 (1982).
+  8. Kumar, A., Fu, Z., Pathak, D. & Malik, J. Rma: Rapid motor adaptation for legged robots.           50. Vasilkoski, Z. et al. Review of stability properties of neural plasticity rules for implemen-
+     arXiv preprint arXiv:2107.04034 (2021).                                                                tation on memristive neuromorphic hardware. In The 2011 International Joint Conference
+  9. Miki, T. et al. Learning robust perceptive locomotion for quadrupedal robots in the wild.              on Neural Networks, 2563–2569 (IEEE, 2011).
+     Science Robotics 7, eabk2822 (2022).                                                               51. Nayebi, A. et al. Mouse visual cortex as a limited resource system that self-learns an
+ 10. Fu, Z., Cheng, X. & Pathak, D. Deep whole-body control: learning a unified policy for                  ecologically-general representation. BioRxiv 1–37 (2022).
+     manipulation and locomotion. arXiv preprint arXiv:2210.10044 (2022).                               52. Jaderberg, M. et al. Reinforcement learning with unsupervised auxiliary tasks. Interna-
+ 11. Silver, D. et al. A general reinforcement learning algorithm that masters chess, shogi, and            tional Conference on Learning Representations .
+     go through self-play. Science 362, 1140–1144 (2018).                                               53. Frémaux, N., Sprekeler, H. & Gerstner, W. Functional requirements for reward-modulated
+
+
+
+
+Schmidgall et al.     |   Brain-inspired learning in ANNs: a review                                                                                                                                   11
+     spike-timing-dependent plasticity. Journal of Neuroscience 30, 13326–13337 (2010).                     In Artificial Neural Networks—ICANN 2001: International Conference Vienna, Austria, Au-
+ 54. Fiete, I. R. & Seung, H. S. Gradient learning in spiking neural networks by dynamic per-               gust 21–25, 2001 Proceedings 11, 87–94 (Springer, 2001).
+     turbation of conductances. Physical review letters 97, 048104 (2006).                            93.   Kirsch, L. & Schmidhuber, J. Meta learning backpropagation and improving it. Advances
+ 55. Fiete, I. R., Fee, M. S. & Seung, H. S. Model of birdsong learning based on gradient                   in Neural Information Processing Systems 34, 14122–14134 (2021).
+     estimation by dynamic perturbation of neural conductances. Journal of neurophysiology            94.   Schlag, I., Irie, K. & Schmidhuber, J. Linear transformers are secretly fast weight program-
+     98, 2038–2057 (2007).                                                                                  mers. In International Conference on Machine Learning, 9355–9366 (PMLR, 2021).
+ 56. Williams, R. J. Simple statistical gradient-following algorithms for connectionist reinforce-    95.   Akyürek, E., Schuurmans, D., Andreas, J., Ma, T. & Zhou, D. What learning algorithm
+     ment learning. Reinforcement learning 5–32 (1992).                                                     is in-context learning? investigations with linear models. arXiv preprint arXiv:2211.15661
+ 57. Miconi, T. Biologically plausible learning in recurrent neural networks reproduces neural              (2022).
+     dynamics observed during cognitive tasks. Elife 6, e20899 (2017).                                96.   von Oswald, J. et al. Transformers learn in-context by gradient descent. arXiv preprint
+ 58. Whittington, J. C. et al. The tolman-eichenbaum machine: unifying space and rela-                      arXiv:2212.07677 (2022).
+     tional memory through generalization in the hippocampal formation. Cell 183, 1249–1263           97.   Soltoggio, A., Stanley, K. O. & Risi, S. Born to learn: the inspiration, progress, and future
+     (2020).                                                                                                of evolved plastic artificial neural networks. Neural Networks 108, 48–67 (2018).
+ 59. Bellec, G. et al. A solution to the learning dilemma for recurrent networks of spiking neu-      98.   Schmidgall, S. Adaptive reinforcement learning through evolving self-modifying neural
+     rons. Nature communications 11, 3625 (2020).                                                           networks. In Proceedings of the 2020 Genetic and Evolutionary Computation Conference
+ 60. Schmidgall, S., Ashkanazy, J., Lawson, W. & Hays, J. Spikepropamine: Differentiable                    Companion, 89–90 (2020).
+     plasticity in spiking neural networks. Frontiers in neurorobotics 120 (2021).                    99.   Najarro, E. & Risi, S. Meta-learning through hebbian plasticity in random networks. Ad-
+ 61. Schmidgall, S. & Hays, J. Meta-spikepropamine: Learning to learn with synaptic plasticity              vances in Neural Information Processing Systems 33, 20719–20731 (2020).
+     in spiking neural networks. Frontiers in Neuroscience 17, 671.                                  100.   Jordan, J., Schmidt, M., Senn, W. & Petrovici, M. A. Evolving interpretable plasticity
+ 62. Rumelhart, D. E., Hinton, G. E. & Williams, R. J. Learning representations by back-                    for spiking networks. eLife 10, e66273 (2021). URL https://doi.org/10.7554/
+     propagating errors. nature 323, 533–536 (1986).                                                        eLife.66273.
+ 63. Ruder, S. An overview of gradient descent optimization algorithms. arXiv preprint               101.   Pagliuca, P., Milano, N. & Nolfi, S. Efficacy of modern neuro-evolutionary strategies for
+     arXiv:1609.04747 (2016).                                                                               continuous control optimization. Frontiers in Robotics and AI 7, 98 (2020).
+ 64. Lillicrap, T. P., Santoro, A., Marris, L., Akerman, C. J. & Hinton, G. Backpropagation and      102.   Schmidhuber, J. A ‘self-referential’weight matrix. In ICANN’93: Proceedings of the In-
+     the brain. Nature Reviews Neuroscience 21, 335–346 (2020).                                             ternational Conference on Artificial Neural Networks Amsterdam, The Netherlands 13–16
+ 65. Whittington, J. C. & Bogacz, R. Theories of error back-propagation in the brain. Trends in             September 1993 3, 446–450 (Springer, 1993).
+     cognitive sciences 23, 235–250 (2019).                                                          103.   Kirsch, L. & Schmidhuber, J. Eliminating meta optimization through self-referential meta
+ 66. Holland, J. H. Genetic algorithms. Scientific american 267, 66–73 (1992).                              learning. arXiv preprint arXiv:2212.14392 (2022).
+ 67. De Jong, K. Evolutionary computation: a unified approach. In Proceedings of the 2016 on         104.   Irie, K., Schlag, I., Csordás, R. & Schmidhuber, J. A modern self-referential weight matrix
+     genetic and evolutionary computation conference companion, 185–199 (2016).                             that learns to modify itself. In International Conference on Machine Learning, 9660–9677
+ 68. Salimans, T., Ho, J., Chen, X., Sidor, S. & Sutskever, I. Evolution strategies as a scalable           (PMLR, 2022).
+     alternative to reinforcement learning. arXiv preprint arXiv:1703.03864 (2017).                  105.   Kirsch, L. & Schmidhuber, J. Self-referential meta learning. In First Conference on Auto-
+ 69. Zhang, X., Clune, J. & Stanley, K. O. On the relationship between the openai evolution                 mated Machine Learning (Late-Breaking Workshop) (2022).
+     strategy and stochastic gradient descent. arXiv preprint arXiv:1712.06564 (2017).               106.   Metz, L., Freeman, C. D., Maheswaranathan, N. & Sohl-Dickstein, J. Training learned
+ 70. Lillicrap, T. P., Cownden, D., Tweed, D. B. & Akerman, C. J. Random feedback weights                   optimizers with randomly initialized learned optimizers. arXiv preprint arXiv:2101.07367
+     support learning in deep neural networks. arXiv preprint arXiv:1411.0247 (2014).                       (2021).
+ 71. Nøkland, A. Direct feedback alignment provides learning in deep neural networks. Ad-            107.   Lange, R. T. et al. Discovering evolution strategies via meta-black-box optimization. arXiv
+     vances in neural information processing systems 29 (2016).                                             preprint arXiv:2211.11260 (2022).
+ 72. Bartunov, S. et al. Assessing the scalability of biologically-motivated deep learning algo-     108.   Wang, J. X. et al. Learning to reinforcement learn. arXiv preprint arXiv:1611.05763 (2016).
+     rithms and architectures. Advances in neural information processing systems 31 (2018).          109.   Duan, Y. et al. Rl2: Fast reinforcement learning via slow reinforcement learning. arXiv
+ 73. Xiao, W., Chen, H., Liao, Q. & Poggio, T. Biologically-plausible learning algorithms can               preprint arXiv:1611.02779 (2016).
+     scale to large datasets. arXiv preprint arXiv:1811.03567 (2018).                                110.   Kirsch, L. et al. Introducing symmetries to black box meta reinforcement learning. In
+ 74. Bellec, G. et al. Eligibility traces provide a data-inspired alternative to backpropagation            Proceedings of the AAAI Conference on Artificial Intelligence, vol. 36, 7202–7210 (2022).
+     through time. In Real Neurons Hidden Units: Future directions at the intersection of neu-       111.   Schuman, C. D. et al. A survey of neuromorphic computing and neural networks in hard-
+     roscience and artificial intelligence@ NeurIPS 2019 (2019).                                            ware. arXiv preprint arXiv:1705.06963 (2017).
+ 75. Liu, Y. H., Smith, S., Mihalas, S., Shea-Brown, E. & Sümbül, U. Cell-type–specific neuro-       112.   Yang, J.-Q. et al. Neuromorphic engineering: From biological to spike-based hardware
+     modulation guides synaptic credit assignment in a spiking neural network. Proceedings of               nervous systems. Advanced Materials 32, 2003610 (2020).
+     the National Academy of Sciences 118, e2111821118 (2021).                                       113.   Khacef, L. et al. Spike-based local synaptic plasticity: A survey of computational models
+ 76. Liu, Y. H., Smith, S., Mihalas, S., Shea-Brown, E. & Sümbül, U. Biologically-plausible                 and neuromorphic circuits. arXiv preprint arXiv:2209.15536 (2022).
+     backpropagation through arbitrary timespans via local neuromodulators. arXiv preprint           114.   Davies, M. et al. Loihi: A neuromorphic manycore processor with on-chip learning. Ieee
+     arXiv:2206.01338 (2022).                                                                               Micro 38, 82–99 (2018).
+ 77. Smith, S. J. et al. Single-cell transcriptomic evidence for dense intracortical neuropeptide    115.   Akopyan, F. et al. Truenorth: Design and tool flow of a 65 mw 1 million neuron pro-
+     networks. elife 8, e47889 (2019).                                                                      grammable neurosynaptic chip. IEEE transactions on computer-aided design of integrated
+ 78. Hochreiter, S. & Schmidhuber, J. Flat minima. Neural computation 9, 1–42 (1997).                       circuits and systems 34, 1537–1557 (2015).
+ 79. Liu, Y. H., Ghosh, A., Richards, B. A., Shea-Brown, E. & Lajoie, G. Beyond accuracy:            116.   Painkras, E. et al. Spinnaker: A 1-w 18-core system-on-chip for massively-parallel neural
+     generalization properties of bio-plausible temporal credit assignment rules. arXiv preprint            network simulation. IEEE Journal of Solid-State Circuits 48, 1943–1953 (2013).
+     arXiv:2206.00823 (2022).                                                                        117.   Floreano, D., Ijspeert, A. J. & Schaal, S. Robotics and neuroscience. Current Biology 24,
+ 80. Schmidhuber, J. Evolutionary principles in self-referential learning, or on learning how to            R910–R920 (2014).
+     learn: the meta-meta-... hook. Ph.D. thesis, Technische Universität München (1987).             118.   Bing, Z., Meschede, C., Röhrbein, F., Huang, K. & Knoll, A. C. A survey of robotics control
+ 81. Miconi, T., Stanley, K. & Clune, J. Differentiable plasticity: training plastic neural net-            based on learning-inspired spiking neural networks. Frontiers in neurorobotics 12, 35
+     works with backpropagation. In International Conference on Machine Learning, 3559–                     (2018).
+     3568 (PMLR, 2018).                                                                              119.   Grinke, E., Tetzlaff, C., Wörgötter, F. & Manoonpong, P. Synaptic plasticity in a recur-
+ 82. Miconi, T., Rawal, A., Clune, J. & Stanley, K. O. Backpropamine: training self-                        rent neural network for versatile and adaptive behaviors of a walking robot. Frontiers in
+     modifying neural networks with differentiable neuromodulated plasticity. arXiv preprint                neurorobotics 9, 11 (2015).
+     arXiv:2002.10585 (2020).                                                                        120.   Kaiser, J. et al. Embodied synaptic plasticity with online reinforcement learning. Frontiers
+ 83. Duan, Y., Jia, Z., Li, Q., Zhong, Y. & Ma, K. Hebbian and gradient-based plasticity enables            in Neurorobotics 13, 81 (2019).
+     robust memory and rapid learning in rnns. arXiv preprint arXiv:2302.03235 (2023).               121.   Schmidgall, S. & Hays, J. Synaptic motor adaptation: A three-factor learning rule for
+ 84. Tyulmankov, D., Yang, G. R. & Abbott, L. Meta-learning synaptic plasticity and memory                  adaptive robotic control in spiking neural networks. arXiv preprint arXiv (2023).
+     addressing for continual familiarity detection. Neuron 110, 544–557 (2022).                     122.   Arena, P., De Fiore, S., Patané, L., Pollino, M. & Ventura, C. Insect inspired unsuper-
+ 85. Rodriguez, H. G., Guo, Q. & Moraitis, T. Short-term plasticity neurons learning to learn and           vised learning for tactic and phobic behavior enhancement in a hybrid robot. In The 2010
+     forget. In International Conference on Machine Learning, 18704–18722 (PMLR, 2022).                     International Joint Conference on Neural Networks (IJCNN), 1–8 (IEEE, 2010).
+ 86. Palm, R. B., Najarro, E. & Risi, S. Testing the genomic bottleneck hypothesis in hebbian        123.   Hu, D., Zhang, X., Xu, Z., Ferrari, S. & Mazumder, P. Digital implementation of a spiking
+     meta-learning. In NeurIPS 2020 Workshop on Pre-registration in Machine Learning, 100–                  neural network (snn) capable of spike-timing-dependent plasticity (stdp) learning. In 14th
+     110 (PMLR, 2021).                                                                                      IEEE International Conference on Nanotechnology, 873–876 (IEEE, 2014).
+ 87. Gruslys, A., Munos, R., Danihelka, I., Lanctot, M. & Graves, A. Memory-efficient back-          124.   Wang, X., Hou, Z.-G., Lv, F., Tan, M. & Wang, Y. Mobile robots modular navigation con-
+     propagation through time. Advances in neural information processing systems 29 (2016).                 troller using spiking neural networks. Neurocomputing 134, 230–238 (2014).
+ 88. Scherr, F., Stöckl, C. & Maass, W. One-shot learning with spiking neural networks. BioRxiv      125.   Neymotin, S. A., Chadderdon, G. L., Kerr, C. C., Francis, J. T. & Lytton, W. W. Reinforce-
+     2020–06 (2020).                                                                                        ment learning of two-joint virtual arm reaching in a computer model of sensorimotor cortex.
+ 89. Bertens, P. & Lee, S.-W. Network of evolvable neural units can learn synaptic learning                 Neural computation 25, 3263–3293 (2013).
+     rules and spiking dynamics. Nature Machine Intelligence 2, 791–799 (2020).                      126.   Dura-Bernal, S. et al. Cortical spiking network interfaced with virtual musculoskeletal arm
+ 90. Garg, S., Tsipras, D., Liang, P. S. & Valiant, G. What can transformers learn in-context?              and robotic arm. Frontiers in neurorobotics 9, 13 (2015).
+     a case study of simple function classes. Advances in Neural Information Processing Sys-         127.   Ilg, W. & Berns, K. A learning architecture based on reinforcement learning for adaptive
+     tems 35, 30583–30598 (2022).                                                                           control of the walking machine lauron. Robotics and Autonomous Systems 15, 321–334
+ 91. Kirsch, L., Harrison, J., Sohl-Dickstein, J. & Metz, L. General-purpose in-context learning            (1995).
+     by meta-learning transformers. arXiv preprint arXiv:2212.04458 (2022).                          128.   Ijspeert, A. J. Biorobotics: Using robots to emulate and investigate agile locomotion. sci-
+ 92. Hochreiter, S., Younger, A. S. & Conwell, P. R. Learning to learn using gradient descent.              ence 346, 196–203 (2014).
+
+
+
+
+12                                                                                                                          Schmidgall et al.      |   Brain-inspired learning in ANNs: a review
+129. Faghihi, F., Moustafa, A. A., Heinrich, R. & Wörgötter, F. A computational model of condi-
+     tioning inspired by drosophila olfactory system. Neural Networks 87, 96–108 (2017).
+130. Szczecinski, N. S., Goldsmith, C., Nourse, W. & Quinn, R. D. A perspective on the neuro-
+     morphic control of legged locomotion in past, present, and future insect-like robots. Neu-
+     romorphic Computing and Engineering (2023).
+131. Botvinick, M., Wang, J. X., Dabney, W., Miller, K. J. & Kurth-Nelson, Z. Deep reinforcement
+     learning and its neuroscientific implications. Neuron 107, 603–616 (2020).
+132. Arulkumaran, K., Deisenroth, M. P., Brundage, M. & Bharath, A. A. A brief survey of deep
+     reinforcement learning. arXiv preprint arXiv:1708.05866 (2017).
+133. Mnih, V. et al. Human-level control through deep reinforcement learning. nature 518,
+     529–533 (2015).
+134. Watabe-Uchida, M., Eshel, N. & Uchida, N. Neural circuitry of reward prediction error.
+     Annual review of neuroscience 40, 373–394 (2017).
+135. Kaelbling, L. P., Littman, M. L. & Moore, A. W. Reinforcement learning: A survey. Journal
+     of artificial intelligence research 4, 237–285 (1996).
+136. Sutton, R. S. & Barto, A. G. Reinforcement learning: An introduction (MIT press, 2018).
+137. Peng, X. B., Abbeel, P., Levine, S. & Van de Panne, M. Deepmimic: Example-guided deep
+     reinforcement learning of physics-based character skills. ACM Transactions On Graphics
+     (TOG) 37, 1–14 (2018).
+138. Lowe, R. et al. Multi-agent actor-critic for mixed cooperative-competitive environments.
+     Advances in neural information processing systems 30 (2017).
+139. La Rosa, C., Parolisi, R. & Bonfanti, L. Brain structural plasticity: from adult neurogenesis
+     to immature neurons. Frontiers in neuroscience 14, 75 (2020).
+140. Lesort, T. et al. Continual learning for robotics: Definition, framework, learning strategies,
+     opportunities and challenges. Information fusion 58, 52–68 (2020).
+141. Shaheen, K., Hanif, M. A., Hasan, O. & Shafique, M. Continual learning for real-world
+     autonomous systems: Algorithms, challenges and frameworks. Journal of Intelligent &
+     Robotic Systems 105, 9 (2022).
+142. Banino, A. et al. Vector-based navigation using grid-like representations in artificial agents.
+     Nature 557, 429–433 (2018).
+143. Cueva, C. J. & Wei, X.-X. Emergence of grid-like representations by training recurrent
+     neural networks to perform spatial localization. arXiv preprint arXiv:1803.07770 (2018).
+144. Gao, Y. A computational model of learning flexible navigation in a maze by layout-
+     conforming replay of place cells. bioRxiv 2022–09 (2022).
+145. Schrimpf, M. et al. Brain-score: Which artificial neural network for object recognition is
+     most brain-like? BioRxiv 407007 (2018).
+146. Nayebi, A. et al. Shallow unsupervised models best predict neural responses in mouse
+     visual cortex. bioRxiv 2021–06 (2021).
+147. Jacob, G., Pramod, R., Katti, H. & Arun, S. Qualitative similarities and differences in visual
+     object representations between brains and deep networks. Nature communications 12,
+     1872 (2021).
+148. Doerig, A. et al.          The neuroconnectionist research programme.           arXiv preprint
+     arXiv:2209.03718 (2022).
+149. Hassabis, D., Kumaran, D., Summerfield, C. & Botvinick, M. Neuroscience-inspired artifi-
+     cial intelligence. Neuron 95, 245–258 (2017).
+
+
+
+
+Schmidgall et al.     |   Brain-inspired learning in ANNs: a review                                    13
+
