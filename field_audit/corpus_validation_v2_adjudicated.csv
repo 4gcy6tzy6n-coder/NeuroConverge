@@ -1,0 +1,43 @@
+band,fetch_rank,arxiv_id_version,title,primary_category,published,mechanism_family,family_source,query_term,record_role,replaces_candidate
+2015-2019,72,1511.04484v2,Stochastic Synapses Enable Efficient Brain-Inspired Learning Machines,cs.NE,2015-11-14,plasticity/learning rules,keyword:plasticity,brain-inspired,drawn_kept,
+2015-2019,81,1505.07814v2,A CMOS Spiking Neuron for Brain-Inspired Neural Networks with Resistive Synapses and In-Situ Learning,cs.NE,2015-05-28,plasticity/learning rules,keyword:synaptic,brain-inspired,drawn_kept,
+2015-2019,92,1909.11145v2,Brain-Inspired Hardware for Artificial Intelligence: Accelerated Learning in a Physical-Model Spiking Neural Network,cs.NE,2019-09-24,plasticity/learning rules,keyword:plasticity,brain-inspired,drawn_kept,
+2015-2019,127,1702.05596v1,Brain Inspired Cognitive Model with Attention for Self-Driving Cars,cs.CV,2017-02-18,architecture/connectome,keyword:cortex,brain-inspired,drawn_kept,
+2015-2019,144,1901.03690v3,Low-Power Neuromorphic Hardware for Signal Processing Applications,cs.ET,2019-01-11,neuromorphic hardware,keyword:neuromorphic,brain-inspired,drawn_kept,
+2015-2019,151,1905.12171v1,Brain-inspired reverse adversarial examples,cs.LG,2019-05-28,attention/coding,keyword:attention,brain-inspired,drawn_kept,
+2015-2019,161,1910.03913v1,A Brain-Inspired Compact Cognitive Mapping System,cs.RO,2019-10-09,other,fallback,brain-inspired,drawn_kept,
+2015-2019,179,1801.02797v1,Dendritic-Inspired Processing Enables Bio-Plausible STDP in Compound Binary Synapses,cs.NE,2018-01-09,plasticity/learning rules,keyword:plasticity,brain-inspired,drawn_kept,
+2015-2019,198,1506.03264v1,Memory and information processing in neuromorphic systems,cs.NE,2015-06-10,architecture/connectome,keyword:cortical,brain-inspired,drawn_kept,
+2020-2022,25,2210.09531v4,The Brain-Inspired Cooperative Shared Control Framework for Brain-Machine Interface,cs.RO,2022-10-18,neuromorphic hardware,keyword:spiking,brain-inspired,drawn_kept,
+2020-2022,53,2210.16530v1,BIMRL: Brain Inspired Meta Reinforcement Learning,cs.LG,2022-10-29,other,fallback,brain-inspired,drawn_kept,
+2020-2022,66,2104.09034v1,Few-shot Continual Learning: a Brain-inspired Approach,cs.LG,2021-04-19,plasticity/learning rules,keyword:plasticity,brain-inspired,drawn_kept,
+2020-2022,85,2106.02749v2,Predify: Augmenting deep neural networks with brain-inspired predictive coding dynamics,cs.CV,2021-06-04,attention/coding,keyword:predictive coding,brain-inspired,drawn_kept,
+2020-2022,95,2210.15790v1,BI AVAN: Brain inspired Adversarial Visual Attention Network,cs.CV,2022-10-27,attention/coding,keyword:attention,brain-inspired,drawn_kept,
+2020-2022,105,2003.03143v1,Triple Memory Networks: a Brain-Inspired Method for Continual Learning,cs.LG,2020-03-06,memory,keyword:hippocamp,brain-inspired,drawn_kept,
+2020-2022,138,2201.02262v1,A unified software/hardware scalable architecture for brain-inspired computing based on self-organizing neural models,cs.NE,2022-01-06,plasticity/learning rules,keyword:hebbian,brain-inspired,drawn_kept,
+2020-2022,153,2010.11931v1,Brain-Inspired Learning on Neuromorphic Substrates,cs.NE,2020-10-22,plasticity/learning rules,keyword:plasticity,brain-inspired,drawn_kept,
+2020-2022,168,2204.07050v7,Recent Advances and New Frontiers in Spiking Neural Networks,cs.NE,2022-03-12,attention/coding,keyword:attention,brain-inspired,drawn_kept,
+2020-2022,178,2207.08591v1,The Brain-Inspired Decoder for Natural Visual Image Reconstruction,cs.CV,2022-07-18,architecture/connectome,keyword:cortex,brain-inspired,drawn_kept,
+2020-2022,184,2111.10844v3,Denoised Internal Models: a Brain-Inspired Autoencoder against Adversarial Attacks,cs.CV,2021-11-21,architecture/connectome,keyword:cortex,brain-inspired,drawn_kept,
+2020-2022,187,2209.15186v3,Leveraging Probabilistic Switching in Superparamagnets for Temporal Information Encoding in Neuromorphic Systems,cs.ET,2022-09-30,neuromorphic hardware,keyword:neuromorphic,brain-inspired,drawn_kept,
+2020-2022,188,2010.12197v3,Quantum Superposition Inspired Spiking Neural Network,cs.NE,2020-10-23,neuromorphic hardware,keyword:spiking,brain-inspired,drawn_kept,
+2020-2022,195,2204.05682v1,A Robust Learning Rule for Soft-Bounded Memristive Synapses Competitive with Supervised Learning in Standard Spiking Neural Networks,cs.ET,2022-04-12,neuromorphic hardware,keyword:spiking,brain-inspired,drawn_kept,
+2023-2026,9,2504.12480v1,Boosting Reservoir Computing with Brain-inspired Adaptive Dynamics,cs.NE,2025-04-16,other,fallback,brain-inspired,drawn_kept,
+2023-2026,17,2509.05919v1,A brain-inspired paradigm for scalable quantum vision,quant-ph,2025-09-07,other,fallback,brain-inspired,drawn_kept,
+2023-2026,23,2505.01685v2,A brain-inspired generative model for EEG-based cognitive state identification,eess.SP,2025-05-03,attention/coding,keyword:attention,brain-inspired,drawn_kept,
+2023-2026,26,2406.11778v1,Brain-inspired Computational Modeling of Action Recognition with Recurrent Spiking Neural Networks Equipped with Reinforcement Delay Learning,cs.NE,2024-06-17,attention/coding,keyword:attention,brain-inspired,drawn_kept,
+2023-2026,30,2603.26787v1,Brain-Inspired Multimodal Spiking Neural Network for Image-Text Retrieval,cs.CV,2026-03-25,neuromorphic hardware,keyword:spiking,brain-inspired,drawn_kept,
+2023-2026,37,2506.07118v1,RBA-FE: A Robust Brain-Inspired Audio Feature Extractor for Depression Diagnosis,cs.SD,2025-06-08,attention/coding,keyword:attention,brain-inspired,drawn_kept,
+2023-2026,42,2406.17285v1,EON-1: A Brain-Inspired Processor for Near-Sensor Extreme Edge Online Feature Extraction,cs.NE,2024-06-25,neuromorphic hardware,keyword:spiking,brain-inspired,drawn_kept,
+2023-2026,55,2503.11299v8,BriLLM: Brain-inspired Large Language Model,cs.CL,2025-03-14,architecture/connectome,keyword:cortical,brain-inspired,drawn_kept,
+2023-2026,56,2510.09893v1,HIPPD: Brain-Inspired Hierarchical Information Processing for Personality Detection,cs.CL,2025-10-10,plasticity/learning rules,keyword:dopamine,brain-inspired,drawn_kept,
+2023-2026,58,2312.09257v2,Brain-Inspired Machine Intelligence: A Survey of Neurobiologically-Plausible Credit Assignment,cs.NE,2023-12-01,plasticity/learning rules,keyword:plasticity,brain-inspired,drawn_kept,
+2023-2026,91,2503.12635v1,Hybrid Learners Do Not Forget: A Brain-Inspired Neuro-Symbolic Approach to Continual Learning,cs.LG,2025-03-16,architecture/connectome,keyword:neural architecture,brain-inspired,drawn_kept,
+2023-2026,109,2601.14628v2,NeuroVLA: A Brain-inspired Embodied Intelligence for Fluid and Fast Reflexive Robotics Control,cs.RO,2026-01-21,architecture/connectome,keyword:cortical,brain-inspired,drawn_kept,
+2020-2022,164,2205.10117v1,DDDM: a Brain-Inspired Framework for Robust Classification,cs.NE,2022-05-01,other,fallback,brain-inspired,replacement,2103.08668v1
+2020-2022,163,2209.10818v2,Memory-Augmented Graph Neural Networks: A Brain-Inspired Review,cs.LG,2022-09-22,other,fallback,brain-inspired,replacement,2205.06978v3
+2023-2026,106,2503.03084v1,Hopfield Networks Meet Big Data: A Brain-Inspired Deep Learning Framework for Semantic Data Linking,cs.LG,2025-03-05,other,fallback,brain-inspired,replacement,2107.06676v2
+2023-2026,41,2303.01309v2,BIFRNet: A Brain-Inspired Feature Restoration DNN for Partially Occluded Image Recognition,cs.CV,2023-03-02,other,fallback,brain-inspired,replacement,2510.19229v2
+2023-2026,126,2511.06470v1,Brain-Inspired Planning for Better Generalization in Reinforcement Learning,cs.AI,2025-11-09,attention/coding,keyword:attention,brain-inspired,replacement,2502.18923v1
+2023-2026,171,2603.26722v1,Brain-inspired AI for Edge Intelligence: a systematic review,cs.NE,2026-03-19,neuromorphic hardware,keyword:neuromorphic,brain-inspired,replacement,2410.22352v1
+2023-2026,169,2406.15488v1,Orangutan: A Multiscale Brain Emulation-Based Artificial Intelligence Framework for Dynamic Environments,q-bio.NC,2024-06-18,plasticity/learning rules,keyword:synaptic,brain-inspired,replacement,2511.04455v1
