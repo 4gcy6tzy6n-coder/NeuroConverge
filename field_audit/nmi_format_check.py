@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
-"""NMI Analysis-format compliance check for ANALYSIS_DRAFT.md (the 2026-10-23 readiness
-review's locked requirements, executed mechanically; the 'nature skill' does not exist in
-this session, so this checker is the codified equivalent).
+"""NMI Article-format compliance check for ANALYSIS_DRAFT.md.
 
-Checks: section structure; word limits (main text excluding references; abstract 100-150);
-figure and reference caps; the frozen forbidden-wording list; citation symmetry; stale-number
-scan (the corrected A/B order and the retired 'least-controlled' superlative); and cross-checks
-of every load-bearing number against the frozen artifacts.
+Comparator: the frozen record NMI_ARTICLE_FORMAT_REQUIREMENTS_2026-10-25.md (venue pivot
+2026-10-25, VENUE_DECISION_20261025.md; the Analysis-type comparator it supersedes is kept
+inside that record for contrast). The requirements were fetched from nature.com
+(natmachintell/content and the submission-guidelines sub-pages) on 2026-10-25.
+
+Checks: section structure; Article word limits (main text excluding references; abstract
+up to 150, unreferenced bound); figure and reference caps; the frozen forbidden-wording
+list; citation symmetry; stale-number scan; cross-checks of every load-bearing number
+against the frozen artifacts; Article structural rules (Results/Methods topical
+subheadings, Discussion without subheadings, Introduction heading as draft-only WARN).
+
+--selftest exercises the Article-mode logic on fabricated inputs (workspace rule: one
+runnable check per non-trivial logic; the selftest must fail when the logic is broken).
 """
 import json
 import re
@@ -17,6 +24,57 @@ ROOT = Path(__file__).resolve().parent
 MD = ROOT / "MANUSCRIPT" / "ANALYSIS_DRAFT.md"
 S = json.load(open(ROOT / "CODING_sheets_v2/statistics_final_20261024.json"))
 R = json.load(open(ROOT / "CODING_sheets_v2/reportability_summary_final_20261024.json"))
+
+
+def abstract_fails(n):
+    # Article: "Abstract - up to 150 words, unreferenced." No lower bound binds.
+    out = []
+    if n > 150:
+        out.append(f"abstract {n} words > 150")
+    warn = [] if n >= 100 else [f"abstract {n} words below 100 (compliant for Article, flagged as unusual)"]
+    return out, warn
+
+
+def structure_fails(results, discussion, methods):
+    out, warn = [], []
+    # Article: "Results and Methods should be divided by topical subheadings" - our
+    # subheading style is the bold paragraph lead.
+    for name, sec in (("Results", results), ("Methods", methods)):
+        leads = re.findall(r"^\*\*[^*].*\*\*", sec, re.M)
+        if len(leads) < 3:
+            out.append(f"{name} lacks topical subheadings ({len(leads)} bold leads < 3)")
+    # Article: "the Discussion does not contain subheadings".
+    subs = re.findall(r"^#{3,} .*$", discussion, re.M)
+    if subs:
+        out.append(f"Discussion contains subheadings: {subs[:2]}")
+    return out, warn
+
+
+def selftest():
+    ok = []
+    # abstract bound: >150 fails, 145 passes, 99 warns-not-fails
+    ok.append(("abstract 151 fails", abstract_fails(151)[0] != []))
+    ok.append(("abstract 145 passes", abstract_fails(145) == ([], [])))
+    ok.append(("abstract 99 warn only", abstract_fails(99)[0] == [] and abstract_fails(99)[1] != []))
+    # structure: discussion with a subheading fails; clean discussion passes
+    d_bad = "para\n\n### A subheading\n\npara\n"
+    d_ok = "para with **inline bold** only\n"
+    r_ok = "**Lead one.** x\n\n**Lead two.** y\n\n**Lead three.** z\n"
+    ok.append(("discussion subheading detected", structure_fails(r_ok, d_bad, r_ok)[0] != []))
+    ok.append(("clean structure passes", structure_fails(r_ok, d_ok, r_ok) == ([], [])))
+    # structure: results without leads fails
+    ok.append(("results without leads detected", structure_fails("plain text only", d_ok, r_ok)[0] != []))
+    bad = [name for name, passed in ok if not passed]
+    if bad:
+        print("SELFTEST FAIL:", bad)
+        sys.exit(1)
+    print(f"SELFTEST PASS ({len(ok)} assertions)")
+
+
+if __name__ == "__main__" and "--selftest" in sys.argv:
+    selftest()
+    sys.exit(0)
+
 text = MD.read_text()
 fail = []
 warn = []
@@ -31,10 +89,12 @@ def wc(s):
     return len(re.findall(r"\S+", s))
 
 
-# 1. structure
+# 1. structure (Article: Introduction without heading - the draft heading is scaffolding)
 for sec in ("Abstract", "Introduction", "Results", "Discussion", "Methods", "References"):
     if f"## {sec}" not in text:
         fail.append(f"missing section: {sec}")
+if "## Introduction" in text:
+    warn.append("draft carries an '## Introduction' heading: remove in the submission build (Article: Introduction without heading)")
 
 # 2. word limits (main text = everything except the References section and its entries)
 main = text.split("## References")[0]
@@ -44,8 +104,14 @@ if n_main > 3500:
     fail.append(f"main text {n_main} words > 3500")
 abstract = section("Abstract")
 n_abs = wc(abstract)
-if not 100 <= n_abs <= 150:
-    fail.append(f"abstract {n_abs} words outside 100-150")
+f_, w_ = abstract_fails(n_abs)
+fail += f_
+warn += w_
+
+# 2b. Article structural rules
+f_, w_ = structure_fails(section("Results"), section("Discussion"), section("Methods"))
+fail += f_
+warn += w_
 
 # 3. figure and reference caps
 figs = sorted(set(re.findall(r"Fig (\d)", text)))
@@ -74,7 +140,7 @@ if over:
 
 # 5. forbidden wordings (frozen list from HARDENING_PLAN_AND_RESTATED_FINDINGS_20261023)
 forbidden = [
-    (r"no biological evidence", "forbidden: equates in-paper E0 with absence of evidence"),
+    (r"no biological evidence", "equates in-paper E0 with absence of evidence"),
     (r"the field'?s evidence is better", "pilot kill-rule wording outside its scope"),
     (r"least[- ]controlled link", "retired superlative (T4 1/16 < T2 2/16); use the factual phrasing"),
     (r"37\.5 and 31\.25", "stale A/B order (correct: A 31.25, B 37.5)"),
@@ -122,13 +188,13 @@ for i in range(1, 7):
     if not (ROOT / "MANUSCRIPT" / "figures" / f"fig{i}_{['chain','gap','headline','reportability','agreement','standard'][i-1]}.png").is_file():
         fail.append(f"figure file missing: fig{i}")
 
-print(f"main words {n_main}/3500 | abstract {n_abs}/100-150 | figures {len(figs)}/6 | refs {n_refs}/50")
+print(f"NMI ARTICLE FORMAT: main words {n_main}/3500 | abstract {n_abs}/150 | figures {len(figs)}/6 | refs {n_refs}/50")
 if warn:
     for w in warn:
         print("WARN:", w)
 if fail:
-    print("NMI FORMAT CHECK: FAIL")
+    print("NMI ARTICLE FORMAT CHECK: FAIL")
     for f_ in fail:
         print("  -", f_)
     sys.exit(1)
-print("NMI FORMAT CHECK: PASS")
+print("NMI ARTICLE FORMAT CHECK: PASS")

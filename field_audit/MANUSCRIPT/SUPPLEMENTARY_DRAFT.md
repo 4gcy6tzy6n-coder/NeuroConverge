@@ -52,3 +52,38 @@ demonstration, not as evidence about the field.
 
 [Slot: the full commit/artifact chain - frozen protocol, dated amendments, binding records with hashes,
 review records, the recompute STEPS - one table for the reproducibility statement.]
+
+## SI Note 4: pilot-corpus specificity verification of delegated foundations (11/14 specific)
+
+**Status: pilot evidence, superseded in scope by the final corpus.** Before the owner's scope
+narrowing to the 16-claim final corpus, the 18-claim pilot corpus's T1 (structure-to-computation)
+transitions were all delegated by citation (in-paper E0, 18/18). For the 14 of those 18 whose
+cited sources could be graded, each cited source was verified against the claimed computation on a
+frozen three-point scale: `S-specific` (the source establishes the very computation claimed, at the
+specificity used), `S-general` (the source establishes a related general phenomenon, not the
+specific computation at that specificity), `S-absent` (the source does not address the claimed
+link). Frozen record: `T1_SPECIFICITY_VERIFICATION_20261023.md` (per-claim table with sources).
+
+**Tally: 11 S-specific, 3 S-general, 0 S-absent.** The three S-general cases, named: FearNet's
+tri-partition switch (the cited complementary-learning-systems line establishes the dual-memory
+core, not the paper's specific BLA-switching extension); locality/modularity/sparsity as claimed
+brain-architecture priorities (the cited network-neuroscience reviews establish sparse modular
+brain networks; the paper's own text calls the inspiration loose and claims no specific
+computation); and reward-neurotransmitter control of myelination (activity-pattern control of
+myelination is established; the reward-transmitter-specific control is the stronger, unestablished
+part). One S-specific case carries a noted caveat (the strongest external support for the
+heterogeneity-exploitation claim is itself computational modeling, not biological experiment -
+reported as its own layer, not folded into the grade).
+
+**Why this is pilot evidence and not a final-corpus statistic.** On the final 16-claim corpus the
+two coders' external-evidence conventions diverged (one recorded 15 cells at E3 with verification
+routes, the other recorded none under its stricter no-verification rule) and the preregistered
+weaker-grade merge resolves all of them to E0; the external layer therefore enters the main text
+only through that disclosed convention divergence. The specificity tally above was measured under
+the pilot protocol on the pilot corpus and is NOT re-derived as a merged statistic on the final
+corpus. It is reported here because it bounds the interpretation of delegation: where the pilot
+instrument could verify routes, delegated biology was usually delegated to sources that
+specifically support the invoked computation (11/14) - the pilot's three-layer T1 picture (18/18
+in-paper E0; 14/18 externally established; 11/14 specifically). Promoting this to a final-corpus
+statistic requires a single external-verification convention frozen before coding, a named
+successor version, and a fresh pass; none is claimed here. No prevalence claim is made.

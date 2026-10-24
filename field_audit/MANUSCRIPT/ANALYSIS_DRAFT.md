@@ -1,13 +1,16 @@
-# Biological-to-artificial intelligence transfer: an analysis of evidence supporting mechanistic claims
+# Biological-to-artificial intelligence transfer: a transition-level audit of evidence supporting mechanistic claims
 
 **Draft status: Introduction, Results, Discussion and Methods carry the post-coding numbers; every
 Results number is re-derived by `field_audit/fill_results_numbers.py` from the committed frozen
-artifacts.** Working draft for the Nature Machine Intelligence Analysis format (<= 3,500 main
-words, abstract 100-150, <= 6 figures, <= 50 references). Figures are specified with their
-numbers below; production follows the figure contracts. Author list, affiliations and
-correspondence: owner-side.
+artifacts.** Working draft for the Nature Machine Intelligence **Article** type (venue decision
+2026-10-25, `field_audit/VENUE_DECISION_20261025.md`; comparator
+`field_audit/NMI_ARTICLE_FORMAT_REQUIREMENTS_2026-10-25.md`): <= 3,500 main words, abstract up to
+150 words, <= 6 display items, references as a guideline up to 50. The `## Introduction` heading is
+draft scaffolding and is removed in the submission build (Article: Introduction without heading).
+Figures are specified with their numbers below; production follows the figure contracts. Author
+list, affiliations and correspondence: owner-side.
 
-## Abstract (136 words)
+## Abstract (145 words)
 
 Evidence audits of biological-to-artificial intelligence transfer have concentrated on utility;
 the mechanistic pedigree of a design choice is usually accepted as stated. We decompose a frozen,
