@@ -97,7 +97,12 @@ on T2 (merged map; the coders disagreed on 2/16, resolved by the frozen weaker-e
 Evaluating each claim at its headline transition, 10/16 (62.5 percent, 95 percent CI 39-82
 percent, Wilson interval [17]) carry controlled in-paper evidence; 6/16 (37.5 percent, CI 18-61 percent) rest on E0/E1.
 The preregistered kill rule - 80 percent controlled headline evidence ends the analysis with the
-opposite conclusion - was not triggered. The T5 scope-match rate on the merged sheet is 11/16
+opposite conclusion - was not triggered. A preregistered validation pass - a fresh,
+year-stratified 42-claim corpus from the same first-query pool, the same frozen instruments, two
+new isolated-context coders - replicates the reading: 26/42 (61.9 percent, CI 47-75) carry
+controlled headline evidence, the kill rule is again not triggered, and the structure-to-
+computation transition is delegated in 42 of 42 claims (Methods, validation corpus). The T5
+scope-match rate on the merged sheet is 11/16
 (68.8 percent): five claims' abstract scope exceeds what their evidence setting supports.
 
 **Reportability, item by item (Fig 4).** No item is aggregated into a score (by protocol). Of the
@@ -144,7 +149,10 @@ disclosed as a convention divergence; the pilot-corpus specificity verification,
 delegated foundations were supported specifically, is reported in the Supplementary as pilot evidence).
 The framework's own validity is checked against five workspace projects as calibration case studies
 (Supplementary). Limitations are as follows: the quota sample's width (16 claims; Wilson 39-82 percent
-on the headline statistic); the same-model coder pair with disclosed correlated-error risk; the
+on the headline statistic - the 42-claim validation corpus narrows this to 47-75 at a replicated
+61.9 percent, and both corpora remain first-query candidate samples); the same-model coder pair with
+disclosed correlated-error risk (in-paper disagreement 22.5 percent on the final corpus, 30.5 percent
+on the validation round); the
 AI-instrument, AI-coding and AI-adjudication roles, each under human supersession; the exclusion of
 non-arXiv and non-English literatures; and the absence, by protocol, of any overall reportability score
 (aggregation is sealed).
@@ -169,6 +177,16 @@ corpus to the first query term; the full-text eligibility second review then rem
 categories and mechanism families as drawn (2017-2026). Every exclusion and replacement is logged.
 The corpus is a candidate sample of arXiv-declared mechanism claims; it
 is not representative of the field, and no prevalence claim is made anywhere in this article.
+
+**Validation corpus.** A preregistered validation pass (rule frozen 2026-10-23; scope-corrected
+and resumed 2026-10-25 under a dated acceptance amendment, after the original pooled draw was
+found to cross the first-query boundary and was superseded before coding) draws 42 claims from
+the same pinned snapshot's first-query pool: year bands 9/16/17, pilot-disjoint, family and
+category caps as frozen, claim-type adjudicated with logged replacements (35 drawn-kept, 7
+stratum-matched; six corpus members are surveys or reviews without an own artifact, a
+composition carried from the draw). Two new isolated-context coders graded all five transitions
+under the identical frozen instructions (evidence layer only, per the frozen validation scope);
+the weaker-grade merge and weaker-evidence headline resolution apply unchanged.
 
 **Coding.** Each claim's five transitions were graded independently by two coders working from the pinned
 texts under frozen instructions, with quoted justifications and location pointers. The coders are
