@@ -77,7 +77,14 @@ present; coder B's REPORTED adopted).
 - T2 merged: E1 12, E0 2, E2 2 - the correspondence content remains the least-evidenced
   content transition, as in the pilot.
 - T5 scope-match rate: 35/48 = 72.9 pct (48 = 16 claims x 3 sheets).
-- Headline E0/E1 share (merged): 6/16 = 37.5 pct (A 37.5, B 31.25).
+- Headline E0/E1 share (merged): 6/16 = 37.5 pct (A 31.25, B 37.5). ERRATUM 2026-10-25: the
+  original line inverted A and B, inheriting the `headline_per_sheet` defect of
+  `compute_statistics.py` (it evaluates the MERGED headline map against each coder's grades
+  instead of that coder's own map). Direct recomputation from the frozen sheets: coder A
+  5/16 (31.25 pct, claims C008 C028 C036 C045 C077), coder B 6/16 (37.5 pct, those plus
+  C049). The merged value 6/16 = 37.5 pct is unaffected. The per-sheet JSON field carries
+  the defect and is superseded by this erratum; the manuscript's re-derivation script now
+  computes both coders' shares from the primary sheets.
 - **Kill rule: NOT TRIGGERED** - E2+ on the headline transition in 10/16 = 62.5 pct, below the
   80 pct bar of the frozen rule (prereg section 10). The audit proceeds to drafting.
 

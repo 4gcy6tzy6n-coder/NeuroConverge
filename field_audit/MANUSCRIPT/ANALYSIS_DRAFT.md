@@ -61,7 +61,7 @@ divergence - while the distinctive content of
 component, is the chain's least controlled link (E1 only in 12 of 16 claims). At the headline,
 37.5 percent of claims (6/16, 95 percent CI 18-61 percent) rest their abstract's improvement claim
 on a transition with no controlled in-paper evidence; the two coders' own headline maps put this at
-37.5 and 31.25 percent respectively.
+31.25 and 37.5 percent respectively (coder A and coder B).
 The constructive deliverable is a reporting standard for that middle of the chain: item-level, dual-coded,
 with the same expectation of controlled disclosure the field already applies to utility comparisons.
 
@@ -79,9 +79,12 @@ delegation is not absence of biological support: an in-paper E0 records that the
 supplies no evidence for the transition, a different fact from the transition being unevidenced
 anywhere (Methods, external layer).
 
-**The correspondence gap (Fig 2).** T2 is the least-controlled content transition in the chain:
-its controlled-evidence share (2/16) sits below T3's (10/16) by a factor of five, and below every
-other transition's in-paper mass except T1, which is definitionally delegated. T1 and T3 are also
+**The correspondence gap (Fig 2).** The two thinnest transitions are the correspondence link
+(T2: controlled in 2/16) and the generality link (T4: controlled in 1/16); utility comparisons
+concentrate the controlled evidence (T3: 10/16). What distinguishes T2 is that suggestive-only
+support is its mode - 12/16 claims, the highest E1-only share of any transition - so the claimed
+instantiation of the invoked computation typically rests on a single setting with no control
+named for this transition. T1 and T3 are also
 the two transitions on which the coders fully agree (18/80 in-paper disagreements overall,
 22.5 percent, fall on T5 (10), T4 (6) and T2 (2)); the correspondence judgements that do disagree
 are resolved to the weaker grade, so the gap as reported is the conservative reading.
