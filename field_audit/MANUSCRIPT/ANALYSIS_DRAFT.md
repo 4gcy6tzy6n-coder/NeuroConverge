@@ -198,6 +198,57 @@ scoring code under synthetic failure-class checks; manifests pinning snapshot, P
 instruments); nothing in Results is transcribed by hand. [Slot: data and code availability statements;
 the independent verification record.]
 
+**Statistics.** No null-hypothesis significance test is reported anywhere in this article, and no
+p value, t, F or star annotation appears; every analysis is a descriptive count or share over a
+frozen corpus, and the only interval reported is a two-sided Wilson score interval at the 95
+percent level, computed by script for binomial proportions. The independent unit of analysis is
+the claim (n = 16) for headline, scope and per-item reportability counts; the claim-transition
+cell (n = 80 per coder, 16 x 5) for grade distributions and in-paper disagreement; and the
+claim-item cell (n = 176 per coder, 16 x 11) for reportability disagreement. Each figure legend
+states its n, unit and interval definition. Replication is by dual independent coding (two
+isolated-context coders plus one adjudicator, same AI model family, disclosed above) over one
+frozen corpus; the earlier 18-claim pilot corpus is reported separately in the Supplementary and
+is never pooled with the final corpus. Inclusion and exclusion are frozen and logged (the
+preregistered draw, claim-type adjudication with replacements, and the full-text eligibility
+second review removing two claims); there is no post-hoc exclusion. Coders were blind to each
+other's judgements, to all prior grading and to every result; the corpus was frozen before
+coding, so no randomization arises (not applicable with that reason). No multiple-comparison
+question arises because no test family is used; the kill rule is a preregistered decision
+threshold (80 percent), not a statistical test, and its comparison (62.5 percent, interval
+above) is reported with its interval. Software: Python 3 analysis scripts committed with the
+article (versions pinned by repository commit); no statistical package beyond the standard
+library is used.
+
+## Figure legends
+
+**Fig 1 | In-paper evidence by transition.** Stacked counts of claims (n = 16 per transition;
+unit: the claim) at each in-paper evidence grade (E0 no in-paper evidence, E1 suggestive, E2
+controlled), under the preregistered weaker-grade merge of the two coders. Bars total 16 by
+construction; no interval or test applies (complete enumeration of the corpus, not a sample
+statistic).
+
+**Fig 2 | Controlled evidence concentrates at utility.** Counts of claims (n = 16 per
+transition; unit: the claim) whose in-paper evidence grade is E2. T1 (grey) is zero by the
+delegation finding, not by sampling; no interval or test applies.
+
+**Fig 3 | Headline reliance, with uncertainty.** Point estimates of the share of claims whose
+abstract improvement claim rests on an E0/E1 transition (unit: the claim; n = 16 per map: coder
+A's own map, coder B's own map, and the merged map), with two-sided Wilson score 95 percent
+intervals as whiskers. The dashed line is the preregistered kill-rule threshold (80 percent), a
+decision rule, not a significance threshold. No p value is computed anywhere in the figure.
+
+**Fig 4 | Reportability by item.** Counts of claims (n = 16 per item; unit: the claim) with
+complete reporting for each of the 11 items, after preregistered adjudication. By protocol no
+score aggregates across items; no interval or test applies.
+
+**Fig 5 | Coder agreement by transition.** Counts of claims (n = 16 per transition; unit: the
+claim) on which the two coders' in-paper grades disagree. Both coders are isolated-context
+instances of the same AI assistant; mechanical isolation is real and error independence is not
+claimed. No interval or test applies.
+
+**Fig 6 | The eleven-item reporting standard.** A checklist table; no data are displayed and no
+statistical definition applies.
+
 ## Author contributions, competing interests, data/code availability
 
 [Owner-side; the AI-assistance disclosure per NMI policy: instrument construction, coding passes, and
