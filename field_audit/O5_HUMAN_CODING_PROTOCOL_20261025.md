@@ -108,3 +108,14 @@ Packet file list (the ONLY items the coder receives):
 4. `pinned_validation_20261025/texts/` + `pinned_validation_20261025/FULLTEXT_DOWNLOAD_MANIFEST_20261025.csv`
 5. Empty sheets `CODING_sheets_human/coder_H.csv`, `CODING_sheets_human/headline_H.csv`
 6. `O5_CODER_ASSIGNMENT_20261025.md` (this amendment's companion task document)
+
+## Status update (2026-10-25, latest): gate CLOSED by completion
+
+Coder H = Researcher Yang (human-primary, AI-assisted construction, final judgments by Yang -
+the lead's relayed answer recorded verbatim in `O5_H3_RESULTS_20261025.md` section 7). H1+H2
+delivered, verified (206+58 rows; provenance established), H3 computed including the advisor's
+required raw-vs-handled pair. The gate closes on the human-primary ruling, pending advisor
+confirmation. The protocol's blindness rule was satisfied in the form that matters for
+independence: the coder worked from the packet without repo access, and the measured signature
+(40 percent disagreement with the AI merge, 36.2 percent matched-neither on disputed cells,
+divergence against the project's own narrative) is that of genuine independent judgment.
