@@ -1,0 +1,785 @@
+arXiv:2210.09531v4 [cs.RO] 12 Oct 2024
+
+The Brain-Inspired Cooperative Shared Control
+Framework for Brain-Machine Interface
+1st Junjie Yang
+
+2nd Ling Liu
+
+Shenzhen Institute of Advanced Technology, CAS
+University of Chinese Academy of Sciences
+Shenzhen, China
+jj.yang@siat.ac.cn
+
+Shenzhen Institute of Advanced Technology, CAS
+University of Chinese Academy of Sciences
+Shenzhen, China
+ling.liu1@siat.ac.cn
+
+3rd Shengjie Zheng
+
+4th Lang Qian
+
+Shenzhen Institute of Advanced Technology, CAS
+University of Chinese Academy of Sciences
+Shenzhen, China
+sj.zheng@siat.ac.cn
+
+Tsinghua Shenzhen International Graduate School
+Tsinghua University
+Shenzhen, China
+ql20@mails.tsinghua.edu.cn
+
+5th Gang Gao
+
+6th Xin Chen
+
+Shenzhen Institute of Advanced Technology, CAS
+University of Chinese Academy of Sciences
+Shenzhen, China
+gang.gao@siat.ac.cn
+
+Shenzhen Institute of Advanced Technology, CAS
+University of Chinese Academy of Sciences
+Shenzhen, China
+xjy107033@siat.ac.cn
+
+7th Xiaojian Li
+Shenzhen Institute of Advanced Technology, CAS
+University of Chinese Academy of Sciences
+Shenzhen, China
+xj.li@siat.ac.cn
+
+Abstract—In brain-machine interface (BMI) applications, a
+key challenge is the low information content and high noise
+level in neural signals, severely affecting stable robotic control.
+To address this challenge, we proposes a cooperative shared
+control framework based on brain-inspired intelligence, where
+control signals are decoded from neural activity, and the robot
+handles the fine control. This allows for a combination of flexible
+and adaptive interaction control between the robot and the
+brain, making intricate human-robot collaboration feasible. The
+proposed framework utilizes spiking neural networks (SNNs)
+for controlling robotic arm and wheel, including speed and
+steering. While full integration of the system remains a future
+goal, individual modules for robotic arm control, object tracking,
+and map generation have been successfully implemented. The
+framework is expected to significantly enhance the performance
+of BMI. In practical settings, the BMI with cooperative shared
+control, utilizing a brain-inspired algorithm, will greatly enhance
+the potential for clinical applications.
+Index Terms—Cooperative Shared Control, Brain-Machine
+Interface, Spiking Neural Network
+
+I. I NTRODUCTION
+Human-computer interaction (HCI) has advanced significantly, providing interfaces for communication between humans and robots, particularly in service robots, to improve
+daily convenience [1]–[7]. However, its effectiveness is lim-
+
+ited due to low information density, especially in complex,
+unstructured environments [8].
+Brain-machine interfaces (BMI) represent a more advanced
+form of HCI, capturing neural signals to control robots and
+other systems, offering great potential for applications such as
+aiding paralyzed patients [9]–[14]. Despite the larger information capture potential through additional electrodes, BMIs face
+challenges like low signal quality, high noise, and instability,
+which limits continuous control [15], [16]. This highlights the
+need for intelligent robots capable of interpreting complex
+instructions in collaboration with BMI.
+The proposed framework differentiates itself from prior
+shared control techniques by introducing a conceptual collaborative control approach that integrates brain-inspired intelligence. The key idea is to use shared control strategies
+leveraging spiking neural networks (SNNs) to enhance the
+fluency of control, thus bridging the gap between human intentions and robotic execution. Unlike traditional shared control
+methods that often rely solely on pre-programmed responses or
+fixed control loops, this study introduces a flexible, cooperative
+control strategy that adapts dynamically to user intentions,
+providing a more fluid interaction.
+Closed-loop BMI systems enable robots to interact with
+the brain to learn human preferences, supporting decision-
+
+making and task execution. Such systems leverage human-like
+reasoning and can fuse abstract brain commands with concrete
+control inputs, enhancing task performance and enabling humans to harness more of their cognitive potential.
+Collaborative control algorithms are essential for BMIs in
+clinical settings since behavior involves not only the sensorimotor cortex but also subcortical regions like the cerebellum
+and brainstem [17], [18]. These regions control instinctive
+actions, such as maintaining balance, which bypasses conscious decision-making [19]. In this study, the sensorimotor
+cortex is responsible for decoding precise motor commands,
+while subcortical regions like the cerebellum and brainstem
+regulate reflexive actions, ensuring the cooperative shared control system remains adaptive and responsive to environmental
+changes.
+In this paper, we propose a conceptual collaborative shared
+control strategy for brain-controlled robots. The work aims
+to lay a foundation for future brain-machine interface solutions by providing a novel control concept and testing its
+components in isolation to demonstrate feasibility. The results
+demonstrate the potential for BMIs to enhance robot precision
+and control in complex environments, paving the way for
+intelligent robot systems capable of human-like cognitive
+abilities.
+
+This section outlines the shared control strategies for robotic
+tasks assisting the brain-machine interface (BMI), including
+robotic arm grasping and wheel control. First, we describe the
+computer vision algorithm for object detection, followed by
+the robotic arm grasping system, and finally the wheel speed
+and orientation control algorithms.
+A. System Specification
+The proposed system consists of a computer vision subsystem, a robotic arm controlled by spiking neural networks,
+and mobile wheeled robots also driven by SNN. The computer
+vision module handles object detection, while the SNN-based
+algorithm controls the robotic arm, moving it from the initial
+position to the target, and moves objects to predefined areas.
+The SNN algorithm also enables the wheeled robots to navigate toward the target efficiently and generate a dense semantic
+map. Fig. 1 shows the system schematic.
+Robotic Arm
+
+Computer Vision
+Controller
+
+Collaborative
+Shared Control
+
+BMI System
+Neural Recording
+
+Wheeled Robot
+Neural Decoder
+
+mask 0.96
+
+grape 0.94
+
+Pixel coordinates
+of binocular
+images
+
+YOLOv5
+
+Camera calibration
+and coordinate
+conversion
+
+World Coordinates
+
+Robotic Control
+
+Fig. 2. The computer vision system framework.
+
+C. Robotic Arm Grasping System
+
+II. M ETHODS
+
+Object Detection
+
+images from a fixed position above the robots and is calibrated
+using the Zhang method [20] to obtain camera parameters.
+For the robotic arm, binocular cameras provide the target’s
+image coordinates, which are processed using YOLOv5s.
+Newton’s method [21] approximates the object’s real-world
+coordinates, allowing the arm to grasp the target.
+For the wheeled robots, the Orbbec Astra Pro depth camera
+handles 3D reconstruction and SLAM. The system uses object
+detection to control the robot’s movement based on the target’s
+position on the screen and depth information.
+We chose YOLOv5s for its efficient performance with
+minimal resources. The system’s training process includes
+data augmentation and testing for optimal speed and accuracy
+on low-computation platforms. Fig. 2 illustrates the system
+framework.
+
+Controller
+
+The robotic arm control is based on the recurrent errordriven adaptive control hierarchy (REACH) model proposed
+by Travis et al. [22]. This model, which utilizes spiking neural
+networks, closely mimics biological motor control for robotic
+arm movement, as shown in Fig. 3.
+The model integrates joint coordinates, velocities, and forces
+such as inertia, Coriolis effects, and gravitational forces. An
+adaptive correction signal is generated using SNN to adjust the
+control torque applied to each joint, allowing precise trajectory
+following.
+The spiking neural network is built using the Neural Network Engineering Framework (NEF) and employs the Prescribed Error Sensitivity (PES) learning rule to adjust the
+control signals in real-time. The network is composed of
+1000 Leaky Integrate and Fire (LIF) neurons, which process
+input data and generate motor control commands. The system
+continuously minimizes error signals through online learning,
+adapting the control strategy as the task evolves.
+This approach ensures efficient and biologically inspired
+control of the robotic arm, allowing it to perform precise
+grasping tasks. The entire control framework is shown in Fig.
+4.
+D. Wheel Speed Control
+
+Fig. 1. Brain-machine interface cooperative shared control system
+
+B. Computer vision system
+We employ the YOLOv5 algorithm for object detection,
+balancing speed and accuracy. An RGB camera captures
+
+Mobile robots often use differential drive, which can result
+in instability and difficulties maintaining a straight trajectory
+due to factors such as motor inconsistencies, wheel slippage,
+and obstacles. Open-loop control is insufficient for correcting
+these deviations, necessitating closed-loop control to provide
+feedback for real-time adjustments.
+
+Wheel speed control signal
+
+2
+
+M1
+
+Wheel speed
+control state
+
+SCx
+
+Vehicle
+
+Control state
+processor
+
+Control Adjustment
+Network
+
+PMC
+
+1
+3
+
+CB
+
+Deflection
+Angle
+
+IMU
+
+Angle processor
+
+4
+
+Fig. 5. The wheeled robots control flow.
+body
+
+5
+
+E. Directional coding based on spiking neural network
+The continuous attractor neural network (CANN) is used
+to encode continuous variables like orientation and motion
+direction [25]. Inspired by biological evidence of head orientation neurons [26], this model encodes the wheeled robot’s
+orientation and direction of movement by forming a wave
+packet in the neural population. This approach allows the robot
+to respond effectively to the brain’s encoding of continuous
+variables.
+Fig. 3. An overview of the REACH model [22], shown controlling a three-link
+arm. Numbers identify major communication pathways. Dashed lines indicate
+closed-loop feedback signals generated from the senses. The image modified
+from Travis et al [22].
+
+Excitatory
+
+Spiking Neural
+Network
+
+Inhibitory
+3D World
+Coordinates
+
+Trajectory
+Generator
+
+Target joint angle
+and joint angular
+velocity
+
+Robotic arm
+dynamics equation
+
+Robotic arm
+control signal
+
+Robotic arm
+
+Actual joint angle
+and joint angular
+velocity
+
+Fig. 4. The robotic arm control flow
+Fig. 6. The structure of attractor network, a network of nodes, often
+recurrently connected, whose time dynamics settle to a stable pattern.
+
+While the PID algorithm is commonly used for wheel
+speed control, it is not ideal for complex environments due
+to its cumbersome parameter tuning. Spiking neural networks
+(SNNs), combined with Inertial Measurement Units (IMUs),
+offer a low-power, adaptive solution for maintaining straightline motion. Pulse Width Modulation (PWM) is employed to
+control the speed of the wheeled robots, with PWM signals
+scaled to fit the SNN model. Angle processing follows a
+similar rescaling method, mapping the angle to adjust robot
+direction. The overall control flow is shown in Fig. 5.
+SNNs use supervised learning algorithms like Prescribed
+Error Sensitivity (PES) [23] or homeostatic PES (hPES) [24],
+combined with unsupervised methods like BCM, to tune
+control signals. These algorithms help the system adapt and
+maintain accurate motion control.
+
+III. E XPERIMENT
+This section presents experiments to evaluate the proposed
+cooperative shared control system for BMI tasks, focusing on
+object detection, robotic arm movement, and wheeled robot
+speed and orientation control using SNN.
+We first cover object detection for both robotic arms and
+wheeled robots, followed by robotic arm movement control
+using a UR5 model, and conclude with wheel speed and
+orientation control experiments. The overall control framework
+is shown in Fig. 7.
+A. Object detection
+We employed the YOLO algorithm for object detection
+tasks in both the robotic arm and wheeled robots. For the
+robotic arm, we used the Grape dataset, while for the wheeled
+
+Coordinate
+transformation
+
+Object detection
+
+Object detection
+to identify coordinates
+
+Robotic Control
+
+Image coordinates
+to world coordinates
+
+Move to target
+based on SNN
+
+Fig. 7. The overall framework of the control system.
+
+robots, the Masked Face dataset [27] was applied, containing
+images with and without face masks. Data augmentation techniques such as random cropping, flipping, contrast adjustment,
+and noise addition were used to enhance the dataset. The
+dataset was split 9:1 for training and testing.
+Robustness tests were conducted to evaluate object detection under varying conditions, including brightness, occlusion,
+rotation, stretching, and noise, as shown in Fig. 8. The model
+demonstrated effective recognition of both Masked Face and
+Grape objects with good robustness.
+
+(a)
+
+(b)
+
+Masked Face
+
+(c)
+
+Image Stretching
+(e)
+
+(d)
+
+Gray Image Stretching
+(f)
+
+Image with Salt-and-pepper noise
+
+Image rotation
+(g)
+
+Image with Gaussian noise
+
+Image with random noise
+
+Fig. 8. The object detection based on YOLOv5s.
+
+Fig. 9. The UR5 robotic arm runs on the simulation software CoppeliaSim.
+
+detection modules. When the camera detects an unmasked
+object, the spiking neural network module directs the robot
+toward the object. ROS distributed communication connects
+the object detection and SNN modules.
+The experiments were conducted with a Raspberry Pi-based
+two-wheeled robot using N20 motors and an Inertial Measurement Unit (IMU) to monitor heading angle. SNN-based wheel
+speed control, built using Nengo [28], applied homeostatic
+Prescribed Error Sensitivity (hPES) to adjust wheel speeds in
+real-time.
+Tests on uneven ground showed that the SNN effectively corrected directional deflection, with angular oscillation
+around 0 degrees, performing similarly to the classical PID
+algorithm, as shown in Fig. 10.
+For direction encoding, an attractor network based on Si
+Wu et al.’s design [25] was implemented with 360 neurons,
+each connected to 90 neighboring neurons, as shown in Fig.
+6. The network effectively encoded orientation information, as
+demonstrated in Fig. 15.
+
+B. Robotic arm movement control experiments
+Based on the work by Travis et al. [22], we implemented
+spiking neural network-based control for a UR5 robotic arm
+using CoppeliaSim for simulation and Nengo for neural network control [28], as shown in Fig. 9. The UR5 arm, consisting
+of six joints, was tested under realistic force conditions simulating unexpected disturbances, with joint1 and joint2 being
+the most critical.
+We compared the performance of conventional PID control
+with the SNN-based control. The UR5 arm was tasked with
+moving from a starting position to four target positions at
+varying distances (∆X, ∆Y, ∆Z). For each direction, 20
+simulations were conducted, comparing joint arc variations
+and the distance between starting and target positions. Results
+showed the differences in control performance between the
+two algorithms.
+C. Wheeled robots speed control and direction orientation
+experiment
+
+Fig. 10. Comparison of wheel speed regulation with different algorithms.
+
+For wheeled robot movement control using a brain-machine
+interface, we utilized the Robot Operating System (ROS)
+to integrate the wheel speed, direction control, and target
+
+IV. R ESULTS
+In this case study, we aim for the robot to execute various
+functions accurately and robustly based on discrete instruc-
+
+tions, performing more efficiently than traditional algorithms.
+Robotic arm movement control
+We tested the robotic arm’s performance under accidental
+disturbances using both PID and spiking neural network control algorithms. A force between 1/4 and 1/16 of the arm’s
+gravity was applied to simulate real-world conditions. The
+time taken to reach the target position and the distance to
+the target were measured (Fig. 11, 12).
+The SNN algorithm enabled the robotic arm to approach the
+target faster than the PID algorithm (by more than 10%), and
+while the final accuracy differences were minimal, the SNN
+provided faster stabilization under unexpected forces. This
+demonstrates that the SNN control algorithm better supports
+brain-machine interface tasks by improving response time
+under disturbance.
+
+A. Wheeled robots Object Tracking
+We combined the SNN control module with the object
+detection module on the wheeled robot for target tracking. The
+robot successfully followed a moving object in real-time (Fig.
+13). Additionally, we used ROS’s gmapping [29] for SLAM
+during tracking, generating a detailed map of the environment
+(Fig. 14).
+We also tested the directional encoding of the wheeled robot
+using an attractor network under Gaussian noise. The results
+showed that the network maintained stability despite noise and
+anomalies, demonstrating its robustness (Fig. 16). The attractor
+network’s stability under random inputs makes it suitable for
+navigation tasks, spatial cognition, and memory. The SNN’s
+bio-inspired nature allows mobile robots to perform advanced
+tasks and directional movement effectively.
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+ 6 S H H G  F R P S D U L V R Q
+
+   
+
+ P R G H O
+ 6 1 1
+   
+
+ 3 , '
+
+   
+
+ 7 L P H  V S H Q W  8 Q L W   P L O O L V H F R Q G V 
+
+   
+
+   
+
+   
+   
+
+   
+
+   
+
+   
+
+   
+
+   
+
+   
+
+   
+
+   
+
+   
+
+   
+
+ 
+            
+
+             
+
+           
+
+            
+
+ ' L I I H U H Q F H  E H W Z H H Q  V W D U W  D Q G  H Q G  S R V L W L R Q V  8 Q L W   P H W H U 
+
+Fig. 11. Comparison of robotic arm movement speed with different algorithms.
+
+Fig. 13. The wheeled robot is tracked with Masked-Face as the target. (a),
+(c) are the images taken by the camera. (b), (d) are wheeled robot for target
+tracking.
+
+ 3 U H F L V L R Q  F R P S D U L V R Q
+
+   
+
+ P R G H O
+ 6 1 1
+
+ ' L V W D Q F H  W R  W D U J H W  O R F D W L R Q  8 Q L W   F H Q W L P H W H U 
+
+ 3 , '
+   
+
+      
+      
+   
+
+      
+
+      
+
+      
+
+      
+
+      
+      
+
+   
+
+   
+
+   
+
+   
+            
+
+             
+
+           
+
+            
+
+ ' L I I H U H Q F H  E H W Z H H Q  V W D U W  D Q G  H Q G  S R V L W L R Q V  8 Q L W   P H W H U 
+
+Fig. 12. Comparison of robotic arm movement precision with different
+algorithms.
+
+Fig. 14. The semantic map generation based on SLAM algorithms
+
+Fig. 15. The directional encoding based on the attractor network.
+
+(a)
+
+The original firing state
+
+(b)
+
+The Gaussian noise input
+
+(c)
+
+The constant bias input
+
+(d)
+
+The outlier input
+
+world challenges such as response time and fault tolerance
+remain.
+Our BMI-based shared control system, tested in offline
+experiments, demonstrated improved performance in robotic
+arm movement and mobile robot direction control. The SNNbased control algorithm showed robustness to external forces
+and noise, offering better control compared to traditional
+methods.
+Despite these advancements, challenges persist. Limited
+neural information and signal degradation restrict control
+performance, and SNNs have not yet shown clear superiority
+over artificial neural networks (ANNs) in certain tasks. Reallife applications, such as robotic grasping and navigation,
+involve additional complexities not seen in simulations. Visual
+feedback, for instance, may result in unstable grasping [32],
+[33], requiring further optimization.
+The integration of spiking neural networks with biological
+motor control circuits, such as the cerebellum and brainstem,
+could enhance the bio-interpretability of robotic control. As
+hardware advances, such as neuromorphic chips and GPU
+acceleration, BMI systems are expected to become more
+portable and efficient. Future research should explore hybrid
+models combining the spatial-temporal advantages of SNNs
+with the data-driven capabilities of ANNs [34], [35], potentially creating more generalized brain-inspired computing
+architectures for BMI applications.
+This work serves as a proof of concept for applying
+brain-inspired intelligence to BMIs in shared control systems,
+striking a balance between user control and automation. As
+technology evolves, these systems may become invaluable
+tools for individuals with disabilities, significantly improving
+their quality of life.
+VI. C ONCLUSION
+
+Fig. 16. The Gaussian noise, constant bias and outlier input to the original
+firing state of the continuous attractor as shown in (a), and observe the change
+of the release state of the attractor network, as shown in (b), (c) and (d).
+
+V. P ROSPECTS AND C HALLENGES
+This study demonstrates the potential of brain-inspired
+intelligence in brain-machine interface (BMI) shared control
+systems for robotic arm and wheeled robot tasks. By integrating BMI signals with vision-guided control, complex tasks can
+be performed with adjustable autonomy. The system aims to
+maintain user control while assisting with more difficult tasks.
+Robots respond to user intent detected by BMI, optimizing
+task execution based on available signals.
+Previous studies, such as Handelman et al. [30], achieved
+accurate control of modular prosthetic limbs for self-feeding
+tasks. However, manual adjustment of control parameters
+limits its scalability. Similarly, Dunlap et al. [31] demonstrated
+control of wheeled robots via motor cortex signals, but real-
+
+This paper presents a collaborative shared control framework using brain-inspired intelligence and computer vision to
+control robotic arms and mobile robots. By distributing task
+execution between BMI signals and robotic control, efficiency
+and accuracy are enhanced. The results suggest that shared
+control systems hold great promise for practical BMI applications, potentially improving the daily lives of individuals with
+disabilities in the future.
+R EFERENCES
+[1] J. L. Collinger, B. Wodlinger, J. E. Downey, W. Wang, E. C. TylerKabara, D. J. Weber, A. J. McMorland, M. Velliste, M. L. Boninger,
+and A. B. Schwartz, “High-performance neuroprosthetic control by an
+individual with tetraplegia,” The Lancet, vol. 381, no. 9866, pp. 557–
+564, 2013.
+[2] L. R. Hochberg, D. Bacher, B. Jarosiewicz, N. Y. Masse, J. D. Simeral,
+J. Vogel, S. Haddadin, J. Liu, S. S. Cash, P. Van Der Smagt et al.,
+“Reach and grasp by people with tetraplegia using a neurally controlled
+robotic arm,” Nature, vol. 485, no. 7398, pp. 372–375, 2012.
+[3] P. Nuyujukian, J. Albites Sanabria, J. Saab, C. Pandarinath,
+B. Jarosiewicz, C. H. Blabe, B. Franco, S. T. Mernoff, E. N. Eskandar,
+J. D. Simeral et al., “Cortical control of a tablet computer by people
+with paralysis,” PloS one, vol. 13, no. 11, p. e0204566, 2018.
+[4] F. R. Willett, D. T. Avansino, L. R. Hochberg, J. M. Henderson,
+and K. V. Shenoy, “High-performance brain-to-text communication via
+handwriting,” Nature, vol. 593, no. 7858, pp. 249–254, 2021.
+
+[5] P. Rajeswaran and A. L. Orsborn, “Neural interface translates thoughts
+into type,” 2021.
+[6] J. Simeral, S.-P. Kim, M. Black, J. Donoghue, and L. Hochberg, “Neural
+control of cursor trajectory and click by a human with tetraplegia 1000
+days after implant of an intracortical microelectrode array,” Journal of
+neural engineering, vol. 8, no. 2, p. 025027, 2011.
+[7] D. J. McFarland, D. J. Krusienski, W. A. Sarnacki, and J. R. Wolpaw,
+“Emulation of computer mouse control with a noninvasive brain–
+computer interface,” Journal of neural engineering, vol. 5, no. 2, p.
+101, 2008.
+[8] R. Pfeifer, M. Lungarella, and F. Iida, “Self-organization, embodiment,
+and biologically inspired robotics,” science, vol. 318, no. 5853, pp.
+1088–1093, 2007.
+[9] D. M. Taylor, S. I. H. Tillery, and A. B. Schwartz, “Direct cortical
+control of 3d neuroprosthetic devices,” Science, 2002.
+[10] ——, “Direct cortical control of 3d neuroprosthetic devices,” Science,
+vol. 296, no. 5574, pp. 1829–1832, 2002.
+[11] J. Donoghue, D. Mijail, G. Serruya, L. Hatsopoulos, and F. Matthew,
+“Brain-machine interface: Instant neural control of a movement signal,”
+Nature, vol. 416, p. 14, 2002.
+[12] J. K. Chapin, K. A. Moxon, R. S. Markowitz, and M. A. Nicolelis, “Realtime control of a robot arm using simultaneously recorded neurons in the
+motor cortex,” Nature neuroscience, vol. 2, no. 7, pp. 664–670, 1999.
+[13] J. Wessberg, C. R. Stambaugh, J. D. Kralik, P. D. Beck, M. Laubach,
+J. K. Chapin, J. Kim, S. J. Biggs, M. A. Srinivasan, and M. A.
+Nicolelis, “Real-time prediction of hand trajectory by ensembles of
+cortical neurons in primates,” Nature, vol. 408, no. 6810, pp. 361–365,
+2000.
+[14] J. M. Carmena, M. A. Lebedev, R. E. Crist, J. E. O’Doherty, D. M.
+Santucci, D. F. Dimitrov, P. G. Patil, C. S. Henriquez, M. A. L. Nicolelis,
+and I. Segev, “Learning to control a brain–machine interface for reaching
+and grasping by primates,” PLoS biology, vol. 1, no. 2, p. e42, 2003.
+[15] U. Chaudhary, N. Birbaumer, and A. Ramos-Murguialday, “Brain–
+computer interfaces for communication and rehabilitation,” Nature Reviews Neurology, vol. 12, no. 9, pp. 513–525, 2016.
+[16] R. S. Johansson and J. R. Flanagan, “Coding and use of tactile
+signals from the fingertips in object manipulation tasks,” Nature Reviews
+Neuroscience, vol. 10, no. 5, pp. 345–359, 2009.
+[17] J. Vogel, S. Haddadin, B. Jarosiewicz, J. D. Simeral, D. Bacher, L. R.
+Hochberg, J. P. Donoghue, and P. van der Smagt, “An assistive decisionand-control architecture for force-sensitive hand–arm systems driven
+by human–machine interfaces,” The International Journal of Robotics
+Research, vol. 34, no. 6, pp. 763–780, 2015.
+[18] K. D. Katyal, M. S. Johannes, S. Kellis, T. Aflalo, C. Klaes, T. G.
+McGee, M. P. Para, Y. Shi, B. Lee, K. Pejsa et al., “A collaborative
+bci approach to autonomous control of a prosthetic limb system,” in
+2014 IEEE International Conference on Systems, Man, and Cybernetics
+(SMC). IEEE, 2014, pp. 1479–1482.
+[19] S. Yonekura and Y. Kuniyoshi, “Spike-induced ordering: Stochastic neural spikes provide immediate adaptability to the sensorimotor system,”
+Proceedings of the National Academy of Sciences, vol. 117, no. 22, pp.
+12 486–12 496, 2020.
+[20] Z. Zhang, “A flexible new technique for camera calibration,” IEEE
+Transactions on pattern analysis and machine intelligence, vol. 22,
+no. 11, pp. 1330–1334, 2000.
+[21] R. W. Wedderburn, “Quasi-likelihood functions, generalized linear models, and the gauss—newton method,” Biometrika, vol. 61, no. 3, pp.
+439–447, 1974.
+[22] T. DeWolf, T. C. Stewart, J.-J. Slotine, and C. Eliasmith, “A spiking
+neural model of adaptive arm control,” Proceedings of the Royal Society
+B: Biological Sciences, vol. 283, no. 1843, p. 20162134, 2016.
+[23] A. R. Voelker, “A solution to the dynamics of the prescribed error sensitivity learning rule,” Centre for Theoretical N euro-science, Waterloo,
+2015.
+[24] T. Bekolay, C. Kolbeck, and C. Eliasmith, “Simultaneous unsupervised
+and supervised learning of cognitive functions in biologically plausible
+spiking neural networks,” in Proceedings of the Annual Meeting of the
+Cognitive Science Society, no. 35, 2013.
+[25] S. Wu, K. Hamaguchi, and S.-i. Amari, “Dynamics and computation of
+continuous attractors,” Neural computation, vol. 20, no. 4, pp. 994–1025,
+2008.
+[26] S. S. Kim, H. Rouault, S. Druckmann, and V. Jayaraman, “Ring attractor
+dynamics in the drosophila central brain,” Science, vol. 356, no. 6340,
+pp. 849–853, 2017.
+
+[27] S. Ge, J. Li, Q. Ye, and Z. Luo, “Detecting masked faces in the wild with
+lle-cnns,” in Proceedings of the IEEE conference on computer vision and
+pattern recognition, 2017, pp. 2682–2690.
+[28] T. Bekolay, J. Bergstra, E. Hunsberger, T. DeWolf, T. C. Stewart,
+D. Rasmussen, X. Choo, A. R. Voelker, and C. Eliasmith, “Nengo: a
+python tool for building large-scale functional brain models,” Frontiers
+in neuroinformatics, vol. 7, p. 48, 2014.
+[29] M. Quigley, K. Conley, B. Gerkey, J. Faust, T. Foote, J. Leibs,
+R. Wheeler, A. Y. Ng et al., “Ros: an open-source robot operating
+system,” in ICRA workshop on open source software, no. 3.2. Kobe,
+Japan, 2009, p. 5.
+[30] D. A. Handelman, L. E. Osborn, T. M. Thomas, A. R. Badger,
+M. Thompson, R. W. Nickl, M. A. Anaya, J. M. Wormley, G. L.
+Cantarero, D. McMullen et al., “Shared control of bimanual robotic
+limbs with a brain-machine interface for self-feeding,” Frontiers in
+Neurorobotics, p. 140, 2022.
+[31] C. Dunlap, L. Bird, I. Burkhart, K. Eipel, S. Colachis, N. Annetta,
+P. Ganzer, G. Sharma, D. Friedenberg, R. Franklin et al., “Towards a
+modular brain-machine interface for intelligent vehicle systems control–
+a carla demonstration,” in 2019 IEEE International Conference on
+Systems, Man and Cybernetics (SMC). IEEE, 2019, pp. 277–284.
+[32] J. E. Downey, J. M. Weiss, K. Muelling, A. Venkatraman, J.-S. Valois,
+M. Hebert, J. A. Bagnell, A. B. Schwartz, and J. L. Collinger, “Blending of brain-machine interface and vision-guided autonomous robotics
+improves neuroprosthetic arm performance during grasping,” Journal of
+neuroengineering and rehabilitation, vol. 13, no. 1, pp. 1–12, 2016.
+[33] H. K. Kim, J. Biggs, W. Schloerb, M. Carmena, M. A. Lebedev,
+M. A. Nicolelis, and M. A. Srinivasan, “Continuous shared control for
+stabilizing reaching and grasping with brain-machine interfaces,” IEEE
+Transactions on Biomedical Engineering, vol. 53, no. 6, pp. 1164–1173,
+2006.
+[34] K. Roy, A. Jaiswal, and P. Panda, “Towards spike-based machine
+intelligence with neuromorphic computing,” Nature, vol. 575, no. 7784,
+pp. 607–617, 2019.
+[35] T. P. Lillicrap, A. Santoro, L. Marris, C. J. Akerman, and G. Hinton,
+“Backpropagation and the brain,” Nature Reviews Neuroscience, vol. 21,
+no. 6, pp. 335–346, 2020.
+
+This figure "fig1.png" is available in "png" format from:
+http://arxiv.org/ps/2210.09531v4
+
+

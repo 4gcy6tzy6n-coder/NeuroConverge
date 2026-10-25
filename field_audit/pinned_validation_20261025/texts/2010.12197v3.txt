@@ -1,0 +1,1591 @@
+Quantum Superposition Inspired Spiking Neural Network
+Yinqian Sun1,4,6 , Yi Zeng1,2,3,4,5,6,7,∗, Tielin Zhang1
+1 Research Center for Brain-Inspired Intelligence, Institute of Automation, Chinese Academy of Sciences,
+
+Beijing 100190, China
+
+arXiv:2010.12197v3 [cs.NE] 17 Nov 2021
+
+2 Center for Excellence in Brain Science and Intelligence Technology, Chinese Academy of Sciences,
+
+Shanghai 200031, China
+3 National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences,
+
+Beijing 100190, China
+4 School of Future Technology, University of Chinese Academy of Sciences, Beijing 100190, China
+5 School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing 100190, China
+6 These authors contributed equally
+7 Lead contact
+
+SUMMARY
+Despite advances in artificial intelligence models, neural networks still cannot achieve
+human performance, partly due to differences in how information is encoded and processed
+compared to human brain. Information in an artificial neural network (ANN) is represented
+using a statistical method and processed as a fitting function, enabling handling of structural
+patterns in image, text, and speech processing. However, substantial changes to the statistical
+characteristics of the data, for example, reversing the background of an image, dramatically
+reduce the performance. Here, we propose a quantum superposition spiking neural network
+(QS-SNN) inspired by quantum mechanisms and phenomena in the brain, which can handle
+reversal of image background color. The QS-SNN incorporates quantum theory with braininspired spiking neural network models from a computational perspective, resulting in more
+robust performance compared with traditional ANN models, especially when processing noisy
+inputs. The results presented here will inform future efforts to develop brain-inspired artificial
+intelligence.
+
+INTRODUCTION
+Many machine learning methods using quantum algorithms have been developed to improve parallel computation. Quantum computers have also been shown to be more powerful
+∗ Yi Zeng
+
+Correspondence: yi.zeng@ia.ac.cn
+
+than classical computers when running certain specialized algorithms, including Shor’s quantum factoring algorithm (Shor, 1999), Grover’s database search algorithm (Grover, 1996),
+and other quantum-inspired computational algorithms (Manju and Nigam, 2014).
+Quantum computation can also be used to find eigenvalues and eigenvectors of large
+matrices. For example, the traditional principal components analysis (PCA) algorithm calculates eigenvalues by decomposition of the covariance matrix; however, the computational
+resource cost increases exponentially with increasing matrix dimensions. For an unknown
+low-rank density matrix, quantum-enhanced PCA can reveal the quantum eigenvectors associated with the large eigenvalues; this approach is exponentially faster than the traditional
+method (Lloyd et al., 2014).
+K-means is a classic machine learning algorithm that classifies unlabeled datasets into k
+distinct clusters. A quantum-inspired genetic algorithm for K-means has been proposed, in
+which a qubit-based representation is employed for exploration and exploitation in discrete
+“0” and “1” hyperspace. This algorithm was shown to obtain the optimal number of clusters
+and the optimal cluster centroids (Xiao et al., 2010). Quantum algorithms have also been
+used to speed up the solving of subroutine problems and matrix inversion problems (Harrow
+et al., 2009); for example, Grover’s algorithm (Grover, 1996) provides quadratic speedup of
+a search of unstructured databases.
+The quantum perceptron and quantum neuron computational models combine quantum
+theory with neural networks (Schuld et al., 2014). Compared with the classical perceptron
+model, the quantum perceptron requires fewer resources and benefits from the advantages of
+parallel quantum computing (Schuld et al., 2015; Torrontegui and Garcı́a-Ripoll, 2019). The
+quantum neuron model (Cao et al., 2017; Mangini et al., 2020) can also be used to realize
+classical neurons with sigmoid or step function activation by encoding inputs in quantum
+superposition, thereby processing the whole dataset at once. Deep quantum neural networks
+(Beer et al., 2020) raise the prospect of deploying deep learning algorithms on quantum
+computers.
+Spiking neural networks (SNN) represent the third generation of neural network models
+(Maass, 1997) and are biologically plausible from neuron, synapse, network, and learning
+principles perspectives. Unlike the perceptron model, neurons in an SNN accept signals from
+pre-synaptic neurons, integrating the post-synaptic potential and firing a spike when the somatic voltage exceeds a threshold. After spiking, the neuron voltage is reset in preparation
+for the next integrate-and-fire process. SNN are powerful tools for representation and processing of spatial-temporal information. Many types of SNN have been proposed for different
+purposes. Examples include visual pathway-inspired classification models (Zenke et al., 2015;
+Zeng et al., 2017), basal ganglia-based decision-making models (Héricé et al., 2016; Cox and
+Witten, 2019; Zhao et al., 2017), and other shallow SNN (Khalil et al., 2017; Shrestha and
+Orchard, 2018). Different SNN may include different types of biologically plausible neurons,
+e.g., the leaky integrate-and-fire (LIF) model (Gerstner and Kistler, 2002), Hodgkin–Huxley
+model, Izhikevich model (Izhikevich, 2003), and spike response model (Gerstner, 2001). In
+addition, many different types of synaptic plasticity principles have been used for learning, including spike-timing-dependent plasticity (Dan and Poo, 2004; Frémaux and Gerstner, 2016),
+Hebbian learning (Song et al., 2000), and reward-based tuning plasticity (Héricé et al., 2016).
+Quantum superposition SNN has theoretic basis in both biology (Vaziri and Plenio, 2010)
+and computational models (Kristensen et al., 2019). From one perspective, spiking neuron
+models, such as the LIF and Izhikevich models, can be reformed by quantum algorithms in
+2
+
+order to accelerate their processing using a quantum computer. On the other hand, quantum
+effects such as entanglement and superposition are regarded as special information-interactive
+methods and can be used to modify the classical SNN framework to generate similar behavior
+to that of particles in the quantum domain. In this work, we follow the latter approach.
+More specifically, we use a quantum superposition mechanism to encode complementary
+information simultaneously and further transfer it to spike trains, which are suitable for SNN
+processing. In our proposed quantum superposition SNN (QS-SNN) model, quantum state
+representation is integrated with spatio-temporal spike trains in SNN. This characteristic
+is conducive to good model performance not only on standard image classification tasks
+but also when handling color-inverted images. QS-SNN encodes the original image and
+the color-inverted image in the format of quantum superposition; the changing background
+context demonstrated by the spiking phase and spiking rate contains the image pixels’ identity
+information.
+We combine quantum superposition information encoding with SNN for three reasons.
+First, the possible influence of quantum effects on biological processes and the related quantum brain hypothesis have been theoretically investigated (Vaziri and Plenio, 2010; Fisher,
+2015; Weingarten et al., 2016). Second, quantum superposition states are represented by
+vectors in complex Hilbert space, in contrast to traditional ANN, which operate in real
+space only; this is more representative of brain spikes, as the spiking rate and spiking phase
+spatio-temporal property also have complex number representation. In essence, SNN are
+more appropriate for quantum-inspired superposition information encoding. Third, current
+quantum machine learning methods, especially those used for quantum image processing,
+focus on encoding a classical image in the quantum state, with the image processing methods
+accelerated by quantum computing (Iyengar et al., 2020). There has been less exploration
+of the possibility of using a quantum superposition state coding mechanism for different pattern information-processing frameworks. More importantly, owing to the use of statistical
+methods and fitting functions, current ANN show a huge performance drop when required to
+recognize a background-inverted image. This inspired us to develop a new information representation method unlike that used in traditional models. The integration of characteristics
+from SNN and quantum theory is intended to achieve a better representation of multi-states
+and potentially enable easier solving of tasks that are challenging for traditional ANN and
+SNN models.
+The subsequent sections describe how complementary superposition information is generated and transferred to spatio-temporal spike trains. A two-compartment SNN is used
+to process the spikes. The proposed model, combining complementary superposition information encoding with the SNN spatio-temporal property, can successfully recognize a
+background color-inverted image, which is hard for traditional ANN models.
+
+Complementary superposition information encoding
+Quantum image processing
+Quantum image processing combines image processing methods with quantum information theory. There are many approaches to internal representation of an image in a quantum computer, including flexible representation of quantum images (FRQI), NEQR, GQIR,
+MCQI, and QBIP (Iyengar et al., 2020; Mastriani, 2020), which transfer the image to appro-
+
+3
+
+priate quantum states for the next step of quantum computing. Our approach is inspired by
+the FRQI method (Le et al., 2011), as shown in Equations (1) and (2):
+2n
+
+2 −1
+1 X
+(sin(θi ) |0i + cos(θi ) |1i) |ii ,
+|I(θ)i = n
+2 i=0
+
+(1)
+
+π
+], i = 1, 2, 3, . . . , 22n − 1,
+(2)
+2
+where |I(θ)i is the quantum image, qubit |ii represents the position of a pixel in the image,
+and θ = (θ0 , θ1 , . . . , θ22n −1 ) encodes the color information of the pixels. FRQI satisfies the
+quantum state constraint in Equation (3):
+v
+u22n −1
+X
+1u
+(cos2 θi + sin2 θi ) = 1.
+(3)
+k |I(θ)i k= n t
+2
+i=0
+θi ∈ [0,
+
+Complementary superposition spikes
+We propose a complementary superposition information encoding method and establish a
+linkage between quantum image formation and spatio-temporal spike trains. The complement
+code is widely used in computer science to turn subtraction into addition. We encode the
+original information and complementary information into a superposition state; one example
+is shown in Equation (4), with the rightmost sign bit removed and taking the complement:
+|I(θi )i = cos(θi ) |[0000001]b i + sin(θi ) |[1111110]b i .
+
+(4)
+
+Equation (4) is an illustration of how complementary superposition information encoding
+works, with no factual significance. In this work, we focus on quantum image superposition
+encoding, as in Equation (5). However, it should be noted that any form of information that
+has a complement format, not just an image, can be encoded as a superposition state. Images
+in complementary quantum superposition states are further transferred to spike trains, as
+depicted in Figure 1. An image in its complementary state has an inverted background.
+2n
+
+2 −1
+1 X
+|I(θ)i = n
+(cos(θi ) |xi i + sin(θi ) |x̄i i) ⊗ |ii ,
+2 i=0
+
+(5)
+
+π
+], i = 1, 2, 3, . . . , 22n − 1.
+(6)
+2
+The complementary quantum superposition encoding is shown in Equations (5) and (6),
+where the |ii represent pixel positions. Unlike FRQI, which uses qubits only for color encoding, here we use complementary qubits for encoding both original image pixels xi and the
+color-inverted image x̄i with x̄i = 1 − xi , supposing the pixel xi domain ranges from 0 to 1.0.
+The parameter θi represents the degree of quantum image |Ii, mixing the original state |xi
+and reverse state |x̄i.
+We designed quantum circuit for the generation of quantum superposition image |I(θi )i
+as shown in the figure 2(A), which is also discussed in (Le et al., 2011; Dendukuri and Luu,
+θi ∈ [0,
+
+4
+
+2018). The quantum state |xi i is processed by Hadamard transform H and controlled N OT
+gate to form the complementary state |βixi i with:
+|βixi i =
+
+|0, xi i + (−1)i |1, x̄i i
+√
+,
+2
+
+Then rotation matrices Ri is used to encode phase information as
+
+
+cos θ2i −sin θ2i
+
+Ri = 
+θi
+θi
+sin 2
+cos 2
+
+(7)
+
+(8)
+
+Finally, the superposition state |I(θi )i is measured and two states are retrieved with
+probability Pi and Qi .
+The complex information in quantum encoding is similar to signal processing in SNN.
+Neuron spikes can encode spatio-temporal information with specific spiking rates and spiking
+times, which can be used to represent quantum information.
+Neuron spikes have the attribute of spatiotemporal dimension, which are identical in shape
+but differ significantly in frequency and phase, seeing Izhikevich neuron model (Izhikevich,
+2003) in Figure S1, and are well-suited to the implementation of the vector form quantum
+image in Equation (5). We use spike trains with firing rate ri and firing phase ϕi to represent
+quantum image state |I(θi )i. As shown in figure 2(A), the spike trains containing information
+of |I(θi )i can be generated using Equation(9) and Equation (10).
+ri =
+
+k |I(θ)i k −sin(ϕi )
+,
+cos(ϕi ) − sin(ϕi )
+
+ϕi = F{arctan(
+
+Pj
+)|j = 1, 2, ..., N.},
+Qj
+
+(9)
+(10)
+
+Notation F{Xi } is set operation, and is specific in different tasks. The superposition state
+encoding |I(θi )i is transferred to spike trains Si (t; ϕi ), which is generated from a Poisson
+spikes Si (t) with spike rate ri and extended phase ϕi shown as Equation (11). Here, T is the
+time interval of neuron processing spikes received from pre-synaptic neurons, and Tsp is the
+spiking time window in this period, as shown in Figure 2(B):
+Si (t; ϕi ) = Si (t − t0 ),
+
+(11)
+
+ϕi
+∗ (T − Tsp ).
+π/2
+
+(12)
+
+t0 =
+
+Two-compartment SNN
+Synapses with time-differential convolution
+Synapses play an important part in the conversion of information from spikes in presynaptic neurons to membrane potential (or current) in post-synaptic neurons. In this work,
+the time-differential kernel (TCK) convolution synapse is used, as shown in Equations (13)
+and (14) and Figure S2. The spikes, Si , from pre-synaptic neurons are convoluted with a
+5
+
+kernel and then integrated with the dendrite membrane potential Vb (t). This process can be
+considered as a stimulus-response convolution with the form of a Dirac function (Urbanczik
+and Senn, 2014):
+
+κ(t) = ζ(t) − ζ(−t)
+,
+(13)
+t
+ζ(t) = Θ(t)(e− τ )
+Z +T
+X
+b
+Vj (t) =
+wi,j k
+κ(τ )Si (τ ) dτ k .
+(14)
+i
+
+−T
+
+Two-compartment neurons
+Both the hidden layer and the output layer contain biologically plausible two-compartment
+neurons, which dynamically update the somatic membrane potential Vi (t) with the dendrite
+membrane potential Vib (t), as shown in Figure S2.
+In the compartment neuron model, Vih (t) is the membrane potential of neuron i in the
+hidden layer, which is updated with Equation (15); gB , gL , and τL are hyperparameters
+that represent synapse conductance, leaky conductance, and the integrated time constant,
+respectively; VjP SP (t) is the synaptic input from neuron j; Vih,b (t) is the dendrite potential
+h
+with adjustable threshold bhi in the hidden layer; and wij
+is the synaptic weight between the
+input and hidden layers:
+
+dVih (t)
+
+= −Vih (t) + ggBL (Vih,b (t) − Vih (t))
+τ
+
+ Lh,b dt
+P h P SP
+Vi (t) = wij
+Vj
+(t) + bhi
+(15)
+j
+
+
+R +T
+ P SP
+Vj
+(t) =k −T κ(τ )Sj (τ ) dτ k .
+The somatic neuron model in the output layer contains 10 neurons corresponding to 10
+classes of the MNIST dataset. As shown in Equation (16), the hidden layer neurons deliver
+signals to the output layer with integrated spike rate ri , which is differentiable; hence, it can
+be tuned with back-propagation. Here, Vio (t) is the membrane potential in the output layer,
+Vio,b (t) is the dendrite potential, and rmax is the hyperparameter for rescaling of fire-rate
+signals:
+
+dVio (t)
+
+= −Vio (t) + ggBL (Vio,b − Vio (t))
+τL dt
+
+
+
+ V o,b (t) = P wo r (t) + bo
+ij j
+i
+i
+(16)
+j
+
+h
+
+r
+=
+r
+σ(V
+)
+
+j
+max
+j
+
+
+σ(x) = 1/(1 − exp(−x)).
+The shallow three-layered architecture is shown in Figure 3. The input layer receives
+quantum spikes with encoding of complementary qubits. The hidden layer of QS-SNN consists of a two-compartment model with time-differential convolution synapses. Neurons in
+the output layer are integrated spike-rate neurons, which receive an integrated fire rate from
+pre-synaptic neurons, as well as the teaching signal VI as information about class labels.
+
+6
+
+Computational experiments
+We examined the performance of the QS-SNN framework on a classification task using background-color-inverted images from the MNIST (LeCun et al., 2010) and FashionMNIST (Xiao et al., 2017) datasets. QS-SNN encodes the original image and its colorinverted mirror as complementary superposition states and transfers them to spiking trains
+as an input signal to the two-compartment SNN. The dendrite prediction and proximal gradient methods used to train this model can be found in STAR Methods.
+For comparison, we also tested several deep learning models on the color-inverted datasets,
+including a fully connected ANN, a 10-layers CNN (Lecun et al., 1998), VGG (Simonyan and
+Zisserman, 2015), ResNet (He et al., 2016) and DeseNet (Huang et al., 2017). All models are
+trained with original image xi and then tested on the background reverse image I(θi ). The
+only difference is that, for QS-SNN, quantum superposition state image |I(θi )i is transferred
+to spike trains which is compatible with spiking neural networks. In other words, our essential
+idea is that the spatiotemporal property of neuron spikes enables the brain to transform
+spatially variant information into time differential information.
+In this work, we formulated the spike trains transformation as the quantum superposition
+shown in Equation (5). And we have also demonstrated the numerical calculation of I(θi )
+which is used for traditional ANN and CNN model testing in STAR Methods.
+In addition, it is worth noting that the superposition state image |I(θi )i is constructed
+from original information |xi i and reverse image |x̄i i. The original image and its complementary reverse information are maintained in the superposition state encoding |I(θi )i at
+the same time. Because SNN is not processing pixel value directly, we transformed |I(θi )i
+to spike trains, which can be regarded as different expression of superposition state encoding
+image in spatiotemporal dimension.
+Standard and color-inverted images
+The standard MNIST dataset contains images of 10 classes of handwritten digits from
+0 to 9; images are 28x28 pixels in size, with 60,000 and 10,000 training and test samples,
+respectively. Fashion-MNIST has the same image size and the same training and testing split
+as MNIST but contains grayscale images of different types of clothes and shoes.
+The original MNIST and Fashion-MNIST images and their color-inverted versions, with
+different degrees of inversion as measured by parameter θ, are depicted in Figure 4(A) and
+(B), respectively. To be specific, the spiking phase estimating operation F{Xi } in Equation
+(10) is set as piecewise selection function as
+(
+P
+arctan( Qjj ), j = i,
+(17)
+ϕi =
+0,
+j 6= i.
+Robustness to reverse pixel noise and Gaussian noise
+Besides the effects of changing the whole background, we were interested in the capability
+of QS-SNN to handle other types of destabilization of images. For this purpose, we added
+reverse spike pixels and Gaussian noise to the MNIST and Fashion-MNIST images, and
+further tested the performance of QS-SNN in comparison with that of ANN and CNN.
+Reverse spike noise is created by randomly flipping image pixels to their reverse color and
+can be described as Reverse(image[i]) = 1 − image[i]. The position i of the pixel to be
+7
+
+flipped is randomly chosen, as shown in Figure 5(A) and (B). The noisy images were encoded
+and processed in the same way as described in Algorithm S1. However, in the color-inverted
+experiment, all pixels of reverse degree θi were the same, resulting in the same change being
+applied to the whole image. By contrast, in the reverse pixel noise experiment, only a
+proportion of randomly chosen image pixels were changed; thus, every image pixel had a
+specific θi parameter. These image pixels are transferred to spike trains with heterogeneous
+phase ϕi . Specially in reverse pixel experiment we took the mean operation for F{·} as the
+estimation phase:
+N
+
+ϕi =
+
+Pj
+1 X
+arctan( )
+N j=1
+Qj
+
+(18)
+
+Additive white Gaussian noise (AWGN) is commonly used to test system robustness. We
+also examined the performance of the proposed QS-SNN on AWGN MNIST and FashionMNIST images, as shown in Figure 6(A) and (B).
+In contrast to color-inverted noise, AWGN results in uncorrelated disturbances on the
+original image. We were interested in the robustness of our proposed method when faced
+with this challenging condition. The procedure used to process AWGN images was the same
+as that used in the reverse pixel noise experiment, except that the whole image phase was
+estimated using half the median operation:
+ϕi = M {arctan(
+
+Pj
+)|j = 1, ..., N }
+Qj
+
+(19)
+
+RESULTS
+Standard and color-inverted datasets experiment
+We constructed a three-layer QS-SNN with 500 hidden layer neurons and 10 output layer
+neurons. The structure of the experimental fully connected ANN was set to be the same
+for comparison. A simple CNN structure with three convolution layers and two pooling
+operations was used to determine the ability of different feature extraction methods to deal
+with inverted background images. We also tested VGG16, ResNet101, and DenseNet121 to
+investigate whether deeper structures could classify color-inverted images correctly. ANN,
+CNN, and QS-SNN were trained for 20 epochs with the Adam optimization method, and the
+learning rate was set to 0.001. VGG16, ResNet101, and DenseNet121 were trained for 400
+epochs using stochastic gradient descent with learning rate 0.1, momentum 0.9, weight decay
+5e-4, and learning rate decay 0.8 every 10 epochs. In the training phase, only the original
+image (θ = 0) was used; the testing phase used different color-inverted images (θ ranging
+from 0 to π2 ). All results were obtained from the final epoch test step.
+The results showed that the traditional fully connected ANN and convolution models
+struggled to handle huge changes in image properties such as background reversal, even when
+the spatial features of the image remained the same. Our proposed method showed much
+better performance than these traditional models (see Figures 4(C) and (D) and Tables S2,
+S3 for details). Significant performance degradation occurred when processing color-inverted
+8
+
+images with ANN and CNN, and even deeper networks such as VGG16, ResNet101, and
+Densenet121 experienced problems with color-inverted image classification. By contrast,
+QS-SNN, although affected by a similar performance drop when images were made blurry (θ
+from 0 to 4π
+16 ), regained its ability when the images’ backgrounds were inverted and the clarity
+8π
+8π
+was improved (θ from 4π
+16 to 16 ). When the image color was fully inverted (θ = 16 ), QSSNN retained the same accuracy as when classifying the original data (θ = 0) and correctly
+recognized color-inverted MNIST and Fashion-MNIST images.
+
+Robustness to noise experiments
+Compared with other state-of-the-art models, the performance of QS-SNN was closer to
+human vision capacity. As more flipped-pixel noise was added to the images (r = 0 to 0.5),
+they became increasingly difficult to recognize, as indicated by the left side of the ‘U’-curve
+for QS-SNN in Figure 5(C), (D). However, as more noise was added to the pixels, the image
+features became clear again. When r = 1.0, with all pixels reversed, there was no conflict
+with the features of the original image when r = 0. QS-SNN can exploit these conditions
+owing to its image superposition encoding method (Equation 5), which is similar to the
+human vision system. As shown in Figure 5(C), (D) and Tables S4, S5, randomly inverting
+image pixels caused substantial performance degradation of ANN and CNN, as well as of
+the deep networks. On the contrary, the red ‘U’-shaped curve for QS-SNN indicated that it
+recovered its accuracy as the image’s features became clear but the background was inverted
+(r = 0.6 to 1.0).
+Gaussian noise influenced all networks significantly, with all methods showing a performance drop as noise (standard deviation; std) increased, as shown in Figure 6(C), (D) and
+Tables S6, S7. QS-SNN behaved more stably on the AWGN image processing task, with
+accuracies of 90.2% and 82.3% on the MNIST and Fashion-MNIST datasets, respectively, for
+std = 0.4; by contrast, the other methods achieved no more than 60% and 50%, respectively.
+Images with std = 0.4 are not very difficult for human vision to distinguish. Thus, by combining a brain-inspired spiking network with a quantum mechanism, we obtain a more robust
+approach to images with noise disturbance, similar to the performance of human vision.
+
+Figure
+DISCUSSION
+This work aimed to integrate quantum theory with a biologically plausible SNN. Quantum
+image encoding and quantum superposition states were used for information representation,
+followed by processing with a spatial-temporal SNN. A time-convolution synapse was built to
+obtain neuron process phase information, and dendrite prediction with a proximal gradient
+method was used to train the QS-SNN. The proposed QS-SNN showed good performance on
+color-inverted image recognition tasks that were very challenging to other models. Compared
+with traditional ANN models, QS-SNN showed better generalization ability.
+
+9
+
+A
+
+B
+
+Figure 1 – Quantum complementary superposition information encoding. (A) The horizontal axis and
+longitudinal axis represent |xi and |x̄i, respectively. The parameter θ in Equation (5) measures the degree
+to which the image background is inverted, from θ = 0 (the original image) to the complementary state
+θ = π2 (totally inverted background). (B) The top pictures show images inverted to different degrees,
+and the spikes to which they are encoded. The bottom axis corresponds to the value of θ. It should be
+noted that the pictures are intuitive demonstration instead of exact display.
+
+It is worth noting that the quantum brain hypothesis is quite controversial. Nevertheless,
+this paper does not aim to provide direct persuasive evidence for the quantum brain hypothesis but to explore novel information processing methods inspired by quantum information
+theory and brain spiking signal transmission.
+
+Limitations of the study
+Our model was inspired by quantum image processing methods, in particular, quantum
+image superposition state presentation. The model and corresponding experiments were run
+on a classical computer and did not use any quantum hardware; thus, our work could not
+benefit from quantum computing. Artificial neurons can be reformed to run on quantum
+computers (Schuld et al., 2014; Cao et al., 2017; Mangini et al., 2020). Efforts to build a
+10
+
+A
+
+B
+
+Figure 2 – Quantum superposition spike trains. (A) The circuit to generate quantum image. Only
+one image pixel state is depicted for perspicuity. (B) A schematic diagram shows the transformation of
+quantum superposition states to spike trains Si (t; ϕi ). With parameter θi increasing, spike trains are
+shifted in time dimension. T is a simulation period in which spikes emerge within the Tsp time window.
+Also, the relation of parameter θi and spiking phase ϕi is intuitive example and not exact correspondence.
+
+quantum spiking neuron are still at a preliminary stage (Kristensen et al., 2019). Simulating
+spiking neuronal networks on a classical computer is hindered by heavy resource consumption
+and slow processing.
+Future work includes modifying both the quantum superposition encoding strategy and
+the SNN architecture to suit quantum computing better. In computational neuroscience
+research, neuronal spikes are typically generated with the Poisson process, which samples
+data from the binomial distribution. Quantum bits, also named qubits, are fundamental
+components in a quantum computer. A qubit can take the value of ”0” or ”1” with a certain
+probability, which is very similar to neuronal spikes. Thus, a set of qubits can encode all
+possible states of a spike train, as well as the quantum superposition images, in the quantum
+computer. Although it requires much effort to reconstruct spiking neural models suited for
+quantum computing, it is significant in neurology and artificial intelligence research to explore
+
+11
+
+Figure 3 – Quantum superposition SNN, three-layer architecture of QS-SNN with TCK synapses and
+two-compartment neurons. Images are transferred to spikes as network inputs. The hidden layer is
+composed of 500 two-compartment neurons with dendrite and soma. The output layer contains 10 twocompartment neurons corresponding to 10 classes. In the training period, only original images are fed to
+the network, whereas in the test period, the trained network is tested with inverted-background images.
+Neurons with maximum spiking rates at the output layer are taken as the network prediction and output.
+
+more quantum-inspired mechanisms to explain brain functions that traditional theories fail
+to.
+
+Method details
+Generating background inverse image
+Different degree of background color inverse images |I(Θ)i using for experiment are generated according to the quantum superposition encoding. Here we describe the numerical
+form value of quantum image used to test model. Suppose the original image is represented
+by X and the reversed image is X̄. Parameter Θ controls the proportion of original image
+
+12
+
+A
+
+B
+
+C
+
+D
+
+Figure 4 – Classification of color-inverted images. (A) MNIST background color-inverted images. Parameter θ takes values from 0 to π2 , denoting the degree of color inversion. (B) Fashion-MNIST backgroundcolor-inverted images. (C) Background color-inverted MNIST classification results. QS-SNN initially
+showed performance degeneration similar to that of the fully connected ANN and CNN, with θ values
+. However, as the background-inversion degree further increased, QS-SNN gradually refrom 0 to 4π
+16
+covered its accuracy, whereas the other networks did not. When the background was totally inverted
+(θ = 8π
+), QS-SNN showed almost the same performance as when classifying original images, whereas
+16
+the second-best network (VGG16) retained only half its original accuracy. (D) Background color-inverted
+Fashion-MNIST results. Similar results as in the MNIST experiment were achieved, with QS-SNN showing
+an even greater advantage (right-hand side).
+
+and reverse image in background color inverse images with
+I(Θ) = Xcos(Θ) + X̄sin(Θ)
+
+(20)
+
+Learning procedure of the QS-SNN algorithm
+Dendrite prediction (Urbanczik and Senn, 2014) and proximal gradient methods are used
+for tuning of QS-SNN. In Equation (21), Ii is the teaching current, which is the integration of
+correct labels in gEi (EE − U1 ) and wrong labels in gIi (EI − U1 ). EE (8 mV) and EI (-8 mV)
+13
+
+A
+
+B
+
+C
+
+D
+
+Figure 5 – Reverse spike noise results. (A) Reverse spike noise MNIST. The possibility of pixel inversion
+is controlled by parameter r. When r = 0, no noise is added, i.e., the image is original data. When
+r = 1.0, all pixels are flipped. (B) Reverse spike noise Fashion-MNIST. (C) Classification of MNIST
+images with reverse noise. QS-SNN performed better compared with the inverted background experiment.
+(D) Classification of Fashion-MNIST images with reverse noise.
+
+are the excitatory and inhibitory standard membrane potentials, respectively. The teaching
+current is injected to the soma of neurons in the output layer, generating added potential VIi
+with membrane resistance rB , as shown in Equation (22):
+ ject
+Ii
+=gEi (EE − U1 ) + gIi (EI − U1 )
+
+
+
+
+1, i = label,
+
+
+ gEi =
+ 0, i 6= label.
+(21)
+0, i = label,
+
+
+g
+=
+
+I
+i
+
+1, i 6= label.
+
+
+
+VIi = rB · Iiject ,
+
+14
+
+A
+
+B
+
+C
+
+D
+
+Figure 6 – Gaussian noise image classification. (A) Additive white Gaussian noise on MNIST. The
+mean of Gaussian random noise was set to zero, and different std values were used. (B) Additive white
+Gaussian noise on Fashion-MNIST. (C) Classification of MNIST images with Gaussian noise. Compared
+with other networks, QS-SNN showed much slower degeneration. (D) Classification of Fashion-MNIST
+images with Gaussian noise. QS-SNN performed even better compared with its results on MNIST.
+
+τL
+
+gB o,b
+dVio (t)
+= −Vio (t) +
+(V − Vio (t)) + VIi − Vio (t).
+dt
+gL i
+
+(22)
+
+Setting the left side of Equation (22) to zero and Vio = VIi , we get the steady state of
+somatic potentials Vio and Vio,b with Vio∗ = gB /(gB + gL )Vio,b . The dendrite prediction rule
+defines the soma-dendrite error as Equation (23):
+N
+
+L=
+
+1X
+k rmax σ(Vio ) − rmax σ(Vio∗ ) k2 .
+2 i=0
+
+(23)
+
+Minimizing this error based on the differential chain rule, we obtain updated synaptic
+
+15
+
+o
+weights wij
+, as shown in Equations (24) and (25):
+
+∂L ∂Vio,b
+∂L
+=
+o
+o
+∂wij
+∂Vio,b ∂wij
+gB
+= rmax
+[σ(Vio∗ ) − σ(Vio )] σ 0 (Vio∗ )rj
+gB + gL
+= δio rj ,
+
+(24)
+
+∂L ∂Vio,b
+∂L
+=
+o
+∂b1o
+∂Vio,b ∂bi
+gB
+= rmax
+[σ(Vio∗ ) − σ(Vio )] σ 0 (Vio∗ )
+gB + gL
+= δio .
+
+(25)
+
+y
+Equation (26) shows the iterative updating of synaptic weights wij
+and bias byi :
+( o
+∂L
+o
+wij ← wij
+− η ∂w
+o
+ij
+
+∂L
+boi ← boi − η ∂b
+o.
+
+(26)
+
+i
+
+For the hidden layer, error signal δi is passed from the previous layer, and neuron synapses
+h
+wij
+are adapted using Equations (27) and (28):
+X ∂L ∂V o,b ∂rh ∂V h ∂V h,b
+∂L
+i
+i
+i
+k
+=
+h
+o,b ∂r h ∂V h
+h,b ∂w h
+∂wij
+∂V
+∂V
+i
+i
+ij
+i
+k
+k
+X
+gB
+o o
+0
+h
+=
+δk wki rmax
+σ (Vi )VjP SP
+gB + gL
+k
+X
+o
+=
+δko δih wki
+VjP SP ,
+
+(27)
+
+k
+
+X ∂L ∂V o,b ∂rh ∂V h ∂V h,b
+∂L
+i
+i
+i
+k
+=
+o,b ∂r h ∂V h
+h,b ∂bh
+∂bhi
+∂V
+∂V
+i
+i
+i
+i
+k
+k
+X
+g
+B
+o
+=
+δko wki
+rmax
+σ 0 (Vih )
+gB + gL
+k
+X
+o
+=
+δko δih wki
+.
+
+(28)
+
+k
+h
+Equation (29) shows the iterative updating of synaptic weights wij
+and bias bhi :
+( h
+∂L
+h
+wij ← wij
+− η ∂w
+h
+ij
+
+∂L
+bhi ← bhi − η ∂b
+h.
+i
+
+The training and test procedure for the QS-SNN model is shown in Algorithm 1.
+
+16
+
+(29)
+
+Algorithm 1 The learning procedure of QS-SNN.
+1. Initialize weights Wj,i with random uniform distribution, membrane potential states Vi , and other
+related hyperparameters as in Table S1.
+2. Start training procedure with only original images in training dataset, θi = 0:
+2.1 Load training samples.
+2.2 Construct quantum superposition state representations of images.
+2.3 Input neuron spikes as Poisson process with spiking rate and phase time according to quantum
+superposition image.
+2.4 Process time-differential convolution to obtain dynamical updating of membrane potential of
+post-synaptic neurons.
+2.5 Update multi-layer membrane potential.
+2.6 Train the QS-SNN with dendrite prediction and proximal gradient.
+2.7 Select neurons in output layer with maximum spiking rate as the output class.
+3. Start test procedure using color-inverse images with different degree of color inversion from the test
+π
+, . . . , 8π
+.
+dataset, θi = 0, 16
+16
+3.1 Load the test samples and transfer to spike trains as in steps 2.2 and 2.3.
+3.2 Test the performance of the trained QS-SNN on color-inverse images.
+3.3 Output the test performance.
+
+Acknowledgments
+This study was supported by the new generation of artificial intelligence major project
+of the Ministry of Science and Technology of the People’s Republic of China (Grant No.
+2020AAA0104305), the Strategic Priority Research Program of the Chinese Academy of
+Sciences (Grant No. XDB32070100) and the Beijing Municipal Commission of Science and
+Technology (Grant No. Z181100001518006).
+
+Author contributions
+Y.S. wrote the code, performed the experiments, analyzed the data, and wrote the
+manuscript. Y.Z. proposed and supervised the project and contributed to writing the
+manuscript. T.Z. participated in helpful discussions and contributed to writing the manuscript.
+
+Declaration of interests
+The authors declare that they have no competing interests.
+
+References
+Beer, K., Bondarenko, D., Farrelly, T., Osborne, T.J., Salzmann, R., Scheiermann, D., Wolf,
+R., 2020. Training deep quantum neural networks. Nat. Commun. 11, 1–6.
+Cao, Y., Guerreschi, G.G., Aspuru-Guzik, A., 2017. Quantum neuron: an elementary building block for machine learning on quantum computers. arXiv:1711.11240 .
+Cox, J., Witten, I.B., 2019. Striatal circuits for reward learning and decision-making. Nat.
+Rev. Neurosci. 20, 482–494.
+17
+
+Dan, Y., Poo, M.M., 2004. Spike timing-dependent plasticity of neural circuits. Neuron 44,
+23–30.
+Dendukuri, A., Luu, K., 2018. Image processing in quantum computers. arXiv preprint
+arXiv:1812.11042 .
+Fisher, M.P., 2015. Quantum cognition: the possibility of processing with nuclear spins in
+the brain. Ann. Phys. 362, 593–602.
+Frémaux, N., Gerstner, W., 2016. Neuromodulated spike-timing-dependent plasticity, and
+theory of three-factor learning rules. Front. Neural Circuits 9, 85.
+Gerstner, W., 2001. A framework for spiking neuron models: the spike response model, in:
+Handbook of Biological Physics. Elsevier. volume 4, pp. 469–516.
+Gerstner, W., Kistler, W.M., 2002. Spiking neuron models: single neurons, populations,
+plasticity. Cambridge University Press.
+Grover, L.K., 1996. A fast quantum mechanical algorithm for database search, in: Proceedings of the Twenty-eighth Annual ACM Symposium on Theory of Computing, ACM. pp.
+212–219.
+Harrow, A.W., Hassidim, A., Lloyd, S., 2009. Quantum algorithm for linear systems of
+equations. Phys. Rev. Lett. 103, 150502.
+He, K., Zhang, X., Ren, S., Sun, J., 2016. Deep residual learning for image recognition.
+Proceedings of the IEEE conference on computer vision and pattern recognition , 770–778.
+Héricé, C., Khalil, R., Moftah, M., Boraud, T., Guthrie, M., Garenne, A., 2016. Decision
+making under uncertainty in a spiking neural network model of the basal ganglia. J. Integr.
+Neurosci. 15, 515–538.
+Huang, G., Liu, Z., Van Der Maaten, L., Weinberger, K.Q., 2017. Densely connected convolutional networks. Proceedings of the IEEE conference on computer vision and pattern
+recognition , 4700–4708.
+Iyengar, S.S., Kumar, L.K., Mastriani, M., 2020. Analysis of five techniques for the internal representation of a digital image inside a quantum processor. arXiv preprint
+arXiv:2008.01081 .
+Izhikevich, E.M., 2003. Simple model of spiking neurons. IEEE Trans. Neural Netw. 14,
+1569–1572.
+Khalil, R., Moftah, M.Z., Moustafa, A.A., 2017. The effects of dynamical synapses on firing
+rate activity: a spiking neural network model. Eur. J. Neurosci. 46, 2445–2470.
+Kristensen, L.B., Degroote, M., Wittek, P., Aspuru-Guzik, A., Zinner, N.T., 2019. An
+artificial spiking quantum neuron. arXiv:1907.06269.
+18
+
+Le, P.Q., Dong, F., Hirota, K., 2011. A flexible representation of quantum images for polynomial preparation, image compression, and processing operations. Quantum Inf. Process.
+10, 63–84.
+Lecun, Y., Bottou, L., Bengio, Y., Haffner, P., 1998. Gradient-based learning applied to
+document recognition. Proceedings of the IEEE 86, 2278–2324. doi:10.1109/5.726791.
+LeCun, Y., Cortes, C., Burges, C., 2010. MNIST handwritten digit database. ATT Labs.
+http://yann.lecun.com/exdb/mnist .
+Lloyd, S., Mohseni, M., Rebentrost, P., 2014. Quantum principal component analysis. Nat.
+Phys. 10, 631.
+Maass, W., 1997. Networks of spiking neurons: the third generation of neural network models.
+Neural Netw. 10, 1659–1671.
+Mangini, S., Tacchino, F., Gerace, D., Macchiavello, C., Bajoni, D., 2020. Quantum computing model of an artificial neuron with continuously valued input data. Mach. Learn.
+Sci. Technol. 1, 045008.
+Manju, A., Nigam, M.J., 2014. Applications of quantum inspired computational intelligence:
+a survey. Artif. Intell. Rev. 42, 79–156.
+Mastriani, M., 2020. Quantum image processing: the truth, the whole truth, and nothing but
+the truth about its problems on internal image representation and outcomes recovering.
+arXiv preprint arXiv:2002.04394 .
+Schuld, M., Sinayskiy, I., Petruccione, F., 2014. The quest for a quantum neural network.
+Quantum Inf. Process. 13, 2567–2586.
+Schuld, M., Sinayskiy, I., Petruccione, F., 2015. Simulating a perceptron on a quantum
+computer. Phys. Lett. A 379, 660–663.
+Shor, P.W., 1999. Polynomial-time algorithms for prime factorization and discrete logarithms
+on a quantum computer. SIAM Rev. 41, 303–332.
+Shrestha, S.B., Orchard, G., 2018. SLAYER: spike layer error reassignment in time, in:
+Advances in Neural Information Processing Systems, pp. 1412–1421.
+Simonyan, K., Zisserman, A., 2015. Very deep convolutional networks for large-scale image
+recognition. CoRR abs/1409.1556.
+Song, S., Miller, K.D., Abbott, L.F., 2000. Competitive Hebbian learning through spiketiming-dependent synaptic plasticity. Nat. Neurosci. 3, 919.
+Torrontegui, E., Garcı́a-Ripoll, J.J., 2019. Unitary quantum perceptron as efficient universal
+approximator. Europhys. Lett. 125, 30004.
+
+19
+
+Urbanczik, R., Senn, W., 2014. Learning by the dendritic prediction of somatic spiking.
+Neuron 81, 521–528.
+Vaziri, A., Plenio, M.B., 2010. Quantum coherence in ion channels: resonances, transport
+and verification. New J. Phys. 12, 085001.
+Weingarten, C.P., Doraiswamy, P.M., Fisher, M.P.A., 2016. A new spin on neural processing:
+Quantum cognition. Front. Human Neurosci. 10, 541.
+Xiao, H., Rasul, K., Vollgraf, R., 2017. Fashion-MNIST: a novel image dataset for benchmarking machine learning algorithms. arXiv:cs.LG/1708.07747.
+Xiao, J., Yan, Y., Zhang, J., Tang, Y., 2010. A quantum-inspired genetic algorithm for
+k-means clustering. Exp. Syst. Appl. 37, 4966–4973.
+Zeng, Y., Zhang, T., Xu, B., 2017. Improving multi-layer spiking neural networks by incorporating brain-inspired rules. Sci. China Inform. Sci. 60, 052201.
+Zenke, F., Agnes, E.J., Gerstner, W., 2015. Diverse synaptic plasticity mechanisms orchestrated to form and retrieve memories in spiking neural networks. Nat. Commun. 6,
+6922–6922.
+Zhao, F., Zhang, T., Zeng, Y., Xu, B., 2017. Towards a brain-inspired developmental neural
+network by adaptive synaptic pruning, in: The 24th International Conference on Neural
+Information Processing, Springer. pp. 182–191.
+Table T1 – Hyperparameters of QS-SNN, Related to STAR Methods
+
+Parameter
+τ
+τL
+gB
+gL
+
+Value
+4.0
+10.0 ms
+0.6 nS
+0.05 nS
+
+20
+
+Parameter
+rmax
+T
+Tsp
+rB
+
+Value
+250 Hz
+50 ms
+20 ms
+1.0 nΩ
+
+Figure S1 – Spiking patterns with different fire rates or phases, Related to Figure 1. (A) Neurons fire at
+the same time but with different numbers of spikes generated per time unit. (B) Neurons fire the same
+number of spikes but the time of spiking is different.
+
+Table T2 – MNIST color-inverted results (accuracy percentages divided by 100), Related to Figure 4
+
+Algorithm
+Structure
+θ=0
+π
+θ = 16
+2π
+θ = 16
+θ = 3π
+16
+θ = 4π
+16
+θ = 5π
+16
+θ = 6π
+16
+θ = 7π
+16
+θ = 8π
+16
+
+ANN
+784-500-10
+0.978
+0.685
+0.393
+0.124
+0.097
+0.062
+0.054
+0.059
+0.062
+
+CNN
+784-c3p1c3p2c3-256-128-10
+0.992
+0.977
+0.942
+0.558
+0.114
+0.031
+0.138
+0.381
+0.469
+
+21
+
+VGG16
+0.996
+0.996
+0.989
+0.649
+0.114
+0.189
+0.458
+0.504
+0.488
+
+ResNet101
+0.996
+0.994
+0.871
+0.194
+0.098
+0.099
+0.103
+0.102
+0.099
+
+DenseNet121
+0.997
+0.995
+0.974
+0.388
+0.114
+0.218
+0.372
+0.362
+0.350
+
+QS-SNN
+784-500-10
+0.971
+0.972
+0.854
+0.416
+0.089
+0.416
+0.923
+0.970
+0.973
+
+A
+
+B
+
+Figure S2 – Two-compartment neuron mode,Related to STAR Methods. (A) Time convolution kernel.
+(A) Neuron with dendrite and soma compartments. Orange curve arrow shows information flowing from
+pre-synaptic input to dendrite potential Vib and then integrated in soma potential Vi .
+
+Table T3 – Fashion-MNIST color-inverted results (accuracy percentages divided by 100), Related to
+Figure 4.
+
+Algorithm
+Structure
+θ=0
+π
+θ = 16
+2π
+θ = 16
+θ = 3π
+16
+θ = 4π
+16
+θ = 5π
+16
+θ = 6π
+16
+θ = 7π
+16
+θ = 8π
+16
+
+ANN
+784-500-10
+0.887
+0.417
+0.194
+0.100
+0.100
+0.100
+0.100
+0.100
+0.098
+
+CNN
+784-c3p1c3p2c3-256-128-10
+0.918
+0.812
+0.693
+0.494
+0.100
+0.131
+0.193
+0.229
+0.244
+
+22
+
+VGG16
+0.941
+0.602
+0.437
+0.308
+0.100
+0.169
+0.177
+0.185
+0.190
+
+ResNet101
+0.926
+0.304
+0.126
+0.101
+0.100
+0.100
+0.102
+0.108
+0.120
+
+DenseNet121
+0.946
+0.718
+0.524
+0.311
+0.100
+0.130
+0.167
+0.203
+0.249
+
+QS-SNN
+784-500-10
+0.847
+0.826
+0.539
+0.224
+0.100
+0.224
+0.656
+0.827
+0.847
+
+Table T4 – MNIST reverse-pixels noise results (accuracy percentages divided by 100), Related to Figure
+5.
+
+Algorithm
+Structure
+r=0
+r = 0.1
+r = 0.2
+r = 0.3
+r = 0.4
+r = 0.5
+r = 0.6
+r = 0.7
+r = 0.8
+r = 0.9
+r = 1.0
+
+ANN
+784-500-10
+0.985
+0.77
+0.462
+0.217
+0.137
+0.092
+0.057
+0.059
+0.049
+0.053
+0.059
+
+CNN
+784-c3p1c3p2c3-256-128-10
+0.991
+0.631
+0.114
+0.097
+0.097
+0.097
+0.097
+0.097
+0.098
+0.174
+0.464
+
+VGG16
+0.996
+0.301
+0.153
+0.116
+0.098
+0.094
+0.099
+0.112
+0.121
+0.138
+0.429
+
+ResNet101
+0.996
+0.320
+0.124
+0.098
+0.098
+0.097
+0.097
+0.097
+0.097
+0.097
+0.096
+
+DenseNet121
+0.997
+0.404
+0.163
+0.106
+0.099
+0.097
+0.098
+0.098
+0.098
+0.104
+0.264
+
+QS-SNN
+784-500-10
+0.971
+0.971
+0.954
+0.775
+0.280
+0.095
+0.281
+0.778
+0.953
+0.972
+0.972
+
+Table T5 – Fashion-MNIST reverse-pixel noise results (accuracy percentages divided by 100), Related to
+Figure 5.
+
+Algorithm
+Structure
+r=0
+r = 0.1
+r = 0.2
+r = 0.3
+r = 0.4
+r = 0.5
+r = 0.6
+r = 0.7
+r = 0.8
+r = 0.9
+r = 1.0
+
+ANN
+784-500-10
+0.884
+0.555
+0.342
+0.201
+0.108
+0.101
+0.100
+0.099
+0.096
+0.095
+0.089
+
+CNN
+784-c3p1c3p2c3-256-128-10
+0.920
+0.471
+0.217
+0.138
+0.107
+0.086
+0.081
+0.086
+0.083
+0.115
+0.268
+
+23
+
+VGG16
+0.94
+0.371
+0.186
+0.132
+0.118
+0.107
+0.105
+0.104
+0.106
+0.108
+0.212
+
+ResNet101
+0.927
+0.366
+0.175
+0.127
+0.110
+0.096
+0.094
+0.099
+0.100
+0.115
+0.136
+
+DenseNet121
+0.945
+0.251
+0.130
+0.099
+0.091
+0.092
+0.097
+0.103
+0.116
+0.149
+0.227
+
+QS-SNN
+784-500-10
+0.848
+0.847
+0.752
+0.441
+0.169
+0.100
+0.169
+0.445
+0.752
+0.839
+0.850
+
+Table T6 – MNIST Gaussian noise results (accuracy percentages divided by 100), Related to Figure 6.
+
+Algorithm
+Structure
+std = 0
+std = 0.1
+std = 0.2
+std = 0.3
+std = 0.4
+std = 0.5
+std = 0.6
+std = 0.7
+std = 0.8
+std = 0.9
+std = 1.0
+
+ANN
+784-500-10
+0.983
+0.976
+0.905
+0.731
+0.589
+0.471
+0.380
+0.313
+0.264
+0.237
+0.207
+
+CNN
+784-c3p1c3p2c3-256-128-10
+0.992
+0.989
+0.956
+0.773
+0.441
+0.176
+0.113
+0.100
+0.098
+0.098
+0.097
+
+VGG16
+0.996
+0.992
+0.702
+0.275
+0.152
+0.113
+0.103
+0.101
+0.099
+0.099
+0.098
+
+ResNet101
+0.995
+0.986
+0.507
+0.156
+0.117
+0.113
+0.109
+0.113
+0.108
+0.108
+0.107
+
+DenseNet121
+0.997
+0.990
+0.635
+0.250
+0.156
+0.142
+0.130
+0.124
+0.116
+0.116
+0.113
+
+QS-SNN
+784-500-10
+0.972
+0.972
+0.972
+0.961
+0.902
+0.763
+0.510
+0.245
+0.128
+0.100
+0.095
+
+Table T7 – Fashion-MNIST Gaussian noise results (accuracy percentages divided by 100), Related to
+Figure 6.
+
+Algorithm
+Structure
+std = 0
+std = 0.1
+std = 0.2
+std = 0.3
+std = 0.4
+std = 0.5
+std = 0.6
+std = 0.7
+std = 0.8
+std = 0.9
+std = 1.0
+
+ANN
+784-500-10
+0.884
+0.841
+0.716
+0.559
+0.429
+0.341
+0.284
+0.245
+0.207
+0.188
+0.172
+
+CNN
+784-c3p1c3p2c3-256-128-10
+0.920
+0.851
+0.633
+0.421
+0.294
+0.214
+0.173
+0.157
+0.147
+0.139
+0.134
+
+24
+
+VGG16
+0.938
+0.719
+0.349
+0.228
+0.177
+0.154
+0.142
+0.131
+0.126
+0.121
+0.121
+
+ResNet101
+0.934
+0.464
+0.251
+0.168
+0.137
+0.126
+0.119
+0.121
+0.116
+0.110
+0.114
+
+DenseNet121
+0.947
+0.621
+0.283
+0.193
+0.155
+0.146
+0.13
+0.124
+0.118
+0.113
+0.111
+
+QS-SNN
+784-500-10
+0.850
+0.851
+0.852
+0.845
+0.823
+0.774
+0.692
+0.604
+0.518
+0.444
+0.388
+
+

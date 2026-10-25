@@ -1,0 +1,1334 @@
+“This work has been submitted to the IEEE for possible publication.
+Copyright may be transferred without notice, after which this version may no longer be accessible.”
+
+EON-1: A Brain-Inspired Processor for Near-Sensor
+Extreme Edge Online Feature Extraction
+Alexandra Dobrita∗,‡ , Amirreza Yousefzadeh† , Simon Thorpe§ , Kanishkan Vadivel∗ , Paul Detterer∗
+Guangzhi Tang¶ , Gert-Jan van Schaik∗ , Mario Konijnenburg∗ , Anteneh Gebregiorgis‡
+Said Hamdioui‡ , Manolis Sifalakis∗
+∗ imec, Netherlands, † University of Twente, Netherlands, ‡ Technical University of Delft, Netherlands,
+¶ Maastricht University, Netherlands, § CNRS, France
+
+Abstract—For Edge AI applications, deploying online learning
+and adaptation on resource-constrained embedded devices can
+deal with fast sensor-generated streams of data in changing environments. However, since maintaining low-latency and powerefficient inference is paramount at the Edge, online learning
+and adaptation on the device should impose minimal additional
+overhead for inference.
+With this goal in mind, we explore energy-efficient learning
+and adaptation on-device for streaming-data Edge AI applications using Spiking Neural Networks (SNNs), which follow the
+principles of brain-inspired computing, such as high-parallelism,
+neuron co-located memory and compute, and event-driven processing. We propose EON-1, a brain-inspired processor for nearsensor extreme edge online feature extraction, that integrates a
+fast online learning and adaptation algorithm. We report results
+of only 1% energy overhead for learning, by far the lowest
+overhead when compared to other SoTA solutions, while attaining
+comparable inference accuracy. Furthermore, we demonstrate
+that EON-1 is up for the challenge of low-latency processing of
+HD and UHD streaming video in real-time, with learning enabled.
+Index Terms—edge AI, online learning, on-device learning,
+brain-inspired, SNN, stochastic STDP, binary STDP, hardwareefficient AI
+
+I. I NTRODUCTION
+With the emergence of Edge AI applications, enabling
+online learning and adaptation on resource-constrained embedded devices is becoming increasingly appealing, as it has
+the potential to tackle a wide range of challenges: first, it can
+deal with on-the-fly adaptation to fast sensor-generated streams
+of data under changing environments [1]. Second, it could
+facilitate learning from limited amounts of training points and
+third, it can alleviate a variety of hindering factors associated
+with offline training in the Cloud [2], such as incurred energy
+consumption of sensor data transfers and extra memory storage
+for the training samples, but also data privacy and security
+concerns. Addressing these challenges, however, would be of
+little benefit if the cost of enabling on-device learning and
+adaptation, in terms of energy overhead for inference, is high.
+For low-latency and low-power inference, the main genres
+of neural models under consideration currently include Quantized and Binary Neural Networks (QNNs/BNNs) [3], [4], as
+well as their neuromorphic recurrent siblings, Spiking Neural
+Networks (SNNs) [5]. For these models, training offline with
+back-propagation [6] (and more recently feedback alignment
+[7]) have been well established for achieving high performance. However, when it comes to online on-device learn-
+
+ing/adaptation, there is no satisfactory solution to date that
+can provide both good performance and resource efficiency.
+On the one hand, “vanilla” back-propagation and several of its
+variations are not scalable and highly resource demanding for
+edge device deployments, due to the need for global signalling,
+high-precision data and end-to-end state tracking that grows
+exponentially with network depth [8], [9]. On the other hand,
+local learning schemes, such as Spike Timing Dependent
+Plasticity (STDP) [10] and BCM [11] among others, although
+resource efficient, are lagging behind in performance, even for
+networks of mediocre depth. In between these two extremes of
+the spectrum, a few other gradient-based methods have been
+proposed [12], [13], but have not gained mainstream traction
+until now because they have not yet achieved a satisfactory
+balance between resource efficiency and performance. As a
+result, the topic remains subject of active research, with a small
+handful of custom processors having emerged, that embed
+some sort of limited online learning or adaptation capability
+[14], [15], [16], [17], [18]. The key differentiators among them
+is typically energy, area efficiency, speed of learning, and the
+supported learning rule.
+In this paper we explore the merits of the process of UltraRapid Visual Categorization (URVC) [19] in the mammalian
+visual cortex, as a paradigm for fast online on-device learning
+and adaptation at the Edge. In URVC, fast analysis and
+classification of images is attributed to efficient encoding and
+transmission of information from the retinal ganglion cells
+to the orientation-selective cells in the visual cortex in the
+shortest time possible (i.e., with the first emitted spike) via the
+optic nerve [20], [21]. Past work has defended the efficiency
+of URVC for few-shots learning (2 to 5 input samples) [22]
+with binary STDP [23] in networks of integrate-and-fire (IF)
+neurons for tasks such as face identification [24] and natural
+scene recognition [25], [26], [27].
+Building upon these past ideas, we introduce EON-1, an
+energy- and latency-efficient custom Edge processor for Spiking and Convolutional Neural Networks, that uses 1-bit synaptic weights and 1-spike per neuron. EON-1 embeds a very fast
+on-device online learning algorithm (amortizable for few-shot
+learning) inspired by URVC and the works discussed above,
+which, when benchmarked in an ASIC node, achieves less
+than 1% energy overhead for on-device learning (relative to
+the inference). To our knowledge, our solution incurs the least
+
+energy overhead for learning on-device, compared to state-ofthe-art solutions, showing a better efficiency by at least a factor
+of 10x. We report that EON-1 consumes 0.29mJ to 5.97mJ
+for converging to accuracies between 87.8% - 92.8% on the
+MNIST classification task, from randomly initialized weights
+for both inference and on-device learning. With an energy
+consumption of 148.4nJ - 663.5nJ per processed sample, only
+1.2nJ/sample is used for learning. We extend our solution to
+a practical use case of feature extraction on UHD frames (8M
+pixels per frame), demonstrating the scalability of the proposed
+hardware architecture towards real-time processing, in parallel
+with learning.
+In the remaining of this paper, Section II presents the main
+learning and inference algorithm used in this work, Section
+III presents the hardware architecture of EON-1, section IV
+presents and discusses the benchmarking results, while Section
+V presents the main conclusions of our work.
+II. A LGORITHM AND REFINEMENTS
+A. Overview of ultra-rapid feature extraction in the visual
+cortex
+In the biological visual system, it has been observed
+that ultra-rapid, high-level feature extraction occurs in the
+orientation-selective first layer of the visual cortex based on the
+first spike emitted by ganglion cells in the retina [28]. In order
+to generate the first spike that carries sufficient information for
+high-level recognition, the ganglion cells in the retina act as
+intensity-to-latency converters [29], such that they emit spikes
+in the order of the strength of the visual stimulation.
+This behavior is leveraged by a hardware-efficient spike
+encoding scheme and can be modelled in a Convolutional
+Neural Network (CNN) with orientation-selective edge filters
+in the first layer [30], followed by a temporal 1-winner-take-all
+(1-WTA) circuit that laterally inhibits the orientation cells [23],
+such that only the dominant edge filters are allowed to propagate information downstream (channel-wise max-pooling).
+
+Fig. 1: The neural network structure for this work. It includes
+a layer of edge-filtering convolution, a lateral inhibition layer,
+and a layer of fully connected neurons equipped with binary
+STDP training.
+has fewer very-wide layers (thousands to millions of neurons)
+instead of many (deep) narrow layers, which favors hardware
+parallelization, low-latency and learning simplicity with a local
+rule. In the extreme case of EON-1, we have used only a single
+IF neurons layer (that plays a role similar to an associative
+memory).
+Following, we explain the inference and learning processes
+in the proposed algorithm. Although we explain inference first,
+it’s important to note that, similarly to the biological brain,
+learning and inference will run concurrently in the proposed
+hardware architecture of EON-1 (Section III). Throughout the
+rest of the paper we use the nomenclature in Table I to describe
+our work.
+TABLE I: Nomenclature used for algorithm description
+
+B. Methods
+The hardware-optimized algorithm underlying the inference
+and learning in EON-1 is partially inspired by [26], [27] and
+[31]. It comprises of two functionally separate parts: a fixed,
+input part consisting of convolutional filters that are pre-trained
+and relevant to the input data modality (i.e., sensor domain),
+and a volatile (latent) part consisting of one or more layers
+of integrate-and-fire (IF) neurons, that are subject to learning
+and adaptation. The main insight here is that, typically, as
+long as the input data modality does not change, the filters
+in the early layers will not or do not need to get modified
+upon retraining or fine-tuning [32], [33]. Instead, what is often
+practised is that, when the application task changes, only the
+latter (near the output) layers of a network need to be modified
+upon training or fine-tuning. A second insight derives from
+the theoretical equivalence [34], [35], [36] between arbitrary
+deep versus wide neural networks (with up to two hidden
+layers). This means that from a hardware efficiency point of
+view, we can opt for an architecture that in the second part
+
+Name
+D
+K S
+
+active weight
+inactive weight
+ineffective spike
+ineffective weight
+
+Description
+Spike and weights vectors are D × D in size
+Convolution filters are K S × K S in size. For
+convolution with a stride of 1 and no zero-padding,
+input images are of size (D + K S − 1)2
+Synaptic weight fully ON (1′ b1)
+Synaptic weight fully OFF (1′ b0)
+Input spikes residing at inactive synaptic weights
+positions
+Active synaptic weight not contributing to pattern
+recognition
+
+1) Low-latency, 1-spike–based inference: The network
+structure is depicted in Fig.1. It starts with processing input
+images of size (D +K S −1)2 with (pre-defined and domainspecific) edge filters of size K S 2 in the first layer, followed
+by a lateral inhibition layer. The latter step ensures that for
+every (X, Y ) location, only one spike is fired from all the
+edge filtering orientation cells (i.e., the winner edge filter is
+selected through channel-wise max-pooling). The result is a
+highly sparse binary spiking output with a special structure
+
+that allows it to be encoded (compressed) in a D × D spike
+vector representation, as shown in Fig. 2.
+Subsequently, the output of the lateral inhibition layer is
+fully connected to a layer of IF neurons, where each neuron’s
+synaptic weights meet the following constraints:
+The synaptic weights are binary, which means they either fully connect (activate) or disconnect (deactivate)
+synapses.
+• All neurons have the exact same amount of active
+synapses (W parameter in Table II).
+• For every neuron, the synaptic connection to only one
+edge filter is active at each (X, Y ) location in the input
+image.
+
+•
+
+These constraints enforce very sparse synaptic weights vectors,
+which can be encoded in the same compressed format as the
+spike vector (see example in Fig. 3 for W = 4), rendering our
+algorithm to be a hardware-friendly option for neuromorphic
+processing systems. Note that weight sparsity is inherent in
+our algorithm due to the constraints we apply (parameter W ),
+rather than a result of the training process. Consequently,
+the network’s connections are sparse right from the start and
+remain sparse, even after learning.
+TABLE II: Learning hyper-parameters for the IF Neurons layer
+Name
+N
+W
+TLearn [0]
+TF ire
+swap rate
+
+K
+
+Description
+Number of IF neurons in learning layer
+Number of active synaptic connections per neuron
+Initial learning threshold
+Firing threshold. Can be fixed, or variable (fraction of
+TLearn , but ∞ at the beginning).
+Fraction of ineffective synapses that are concentrate
+(swapped) on active but ineffective spikes (input lines),
+during learning.
+Maximum number of neurons which are allowed to
+learn (an input spike vector), such that K << N
+
+Fig. 2: The lateral inhibition layer produces binary spikes that
+can be compressed into a spike vector. Each element of the
+resulting vector designates the index of the source edge filter
+that generated the first spike for the respective pixel position.
+
+Finally, when elements in the weight vector of an IF neuron
+downstream from the lateral inhibition layer align in index
+position (pixel position) and value (edge filter index) with
+corresponding elements of a spike vector, the respective IF
+neuron integrates the incoming spikes and performs a threshold
+comparison. Thereafter, the neuron fires if the number of
+matching elements exceeds the firing threshold, TF ire .
+
+Fig. 3: Example of a spike vector and four weight vectors.
+Bold elements in the weight vectors are the one that match
+the spike vector. Assuming TF ire = 2, only neuron 3 fires.
+2) Fast online learning (few-shots): During inference, not
+all of the W active synaptic weights of the IF neurons downstream from the lateral inhibition layer contribute to pattern
+recognition (i.e., to TF ire being reached), hence, we denote
+them by ineffective synaptic weights. Likewise, we denote as
+ineffective the spikes in the input spike vector that do not
+align in position with any active synaptic weights. However,
+to increase selectivity to input patterns, the synaptic weights
+can be trained by swapping ineffective synaptic connections
+to ineffective spike positions.
+The training rule that we use is a variant of STDP, namely
+stochastic binary STDP [37], and is triggered independently
+for each neuron. By contrast to gradient-based learning with a
+global signal (like in back-propagation), here the choice of a
+local rule: (a) is functionally justified by the shallow nature of
+the network architecture (i.e., a global signal is not required
+to traverse a shallow model structure); (b) has the advantage
+that inherently it learns in an unsupervised manner (i.e., it
+does not need to rely on labels); and c) is architecturally
+well suited for efficient hardware implementation given its
+parallelization potential and infrequent application on each
+neuron independently: each IF neuron can learn independently
+of all other, when the learning threshold (TLearn in Table II)
+is exceeded. Subsequently, after each update, this threshold increases gradually, to reduce the neuron plasticity and increase
+its selectivity to a specific pattern. Optionally, if forgetting
+needs to be incorporated in the algorithm for out-dated patterns
+and non-stationary input distributions, the learning threshold
+may be set to slowly decay.
+Another feature of our STDP rule is its binary synaptic
+weights. In conventional STDP, where the real-valued weights
+for synapses without a pre-synaptic firing would gradually
+reduce (Long Term Depression, LTD) and the weights for
+synapses with a pre-synaptic activity would gradually increase
+(Long Term Potentiation, LTP), a neuron can slowly adapt
+to new data patterns without forgetting the already learned
+patterns. By contrast here, with the use of binary weights, it is
+impossible to adapt the weight values gradually. Nevertheless,
+
+by increasing/decreasing the maximum number of neurons K
+that are allowed to update their weights during learning and
+the maximum number of ineffective synapses per neuron that
+can be swapped during an update step (swap rate), we can
+control the learning rate (or equivalently forgetting rate) even
+under such an extremely low weight precision regime.
+
+fixed and independent. In our implementation we choose
+the former option.
+
+Algorithm 1 Binary stochastic STDP for K = 1
+Input data: A D2 -bit spike vector, s, and swapping rate,
+swap rate.
+for each randomly chosen IF neuron do
+▷ Read its synaptic weights vector, w, and its T learn
+and update its membrane potential, V mem
+PD2 −1
+V mem = i=0 s(i) ∧ w(i)
+▷ Evaluate learning condition
+if V mem ≥ T learn then
+▷ Update weights
+swap N = swap rate × (W − V mem)
+for s = 0 to swap N − 1 do
+inef f s = find ((s ∧ (¬w)) = 1)
+inef f w = find ((¬s ∧ w) = 1)
+rand ON idx = randperm (inef f s, 1)
+rand OF F idx = randperm (inef f w, 1)
+w[rand ON idx] = 1′ b1
+w[rand OF F idx] = 1′ b0
+T learn = T learn + swap N
+break
+▷ Exit process once K = 1 neuron has
+learned
+return w, T learn
+Finally, learning progresses according to the steps described
+in Algorithm 1 and exemplified in Fig. 4:
+i. Perform inference and select neurons to learn: For an
+incoming spike vector, update the membrane potential of
+each randomly chosen neuron and evaluate if learning
+condition is true. If true, trigger the learning process,
+otherwise proceed to evaluating the next neuron. In Fig.4
+(top), the membrane potentials of neurons 1-4 will then be
+1, 1, 2 and 0 respectively. Assuming TLearn = 2, in Fig.
+4 (top), neuron 3 will be eligible to update its weights.
+ii. Update (bit-flip) weights: This step starts with evaluating
+how many ineffective weights will be swapped (swap N
+in algorithm 1), followed by finding the vector positions
+at which ineffective spikes reside. Subsequently, weights
+are swapped as follows: a weight is activated at a random ineffective spike position, while another weight is
+deactivated at a random ineffective weight position. Fig. 4
+illustrates this mechanism for neuron 3. As a consequence
+of learning, next time a variant of the same input pattern
+appears, neuron 3 will have higher probability of firing.
+iii. Increase learning threshold TLearn by an amount that
+equals the number of synapses swapped. This mechanism
+is inspired by the homeostasis observed in biological neurons [42] for selectivity towards frequently seen patterns.
+Thereafter, the firing threshold TF ire , may be a function of
+the learning threshold (thus being adaptive) or can also be
+
+Fig. 4: An example of our stochastic binary STDP algorithm.
+Top: neuron 3 is eligible for learning and it has two ineffective
+synapses (blue). Ineffective spikes positions are highlighted in
+orange. Bottom: one ineffective weight is randomly selected
+and swapped with the ineffective spike.
+3) Classifier: For multinomial classification tasks, a low
+overhead readout classifier can be configured by clustering
+together groups of IF neurons (from the trainable layer) for
+each class. The class label then serves as a supervision signal
+to select the respective cluster of neurons that will be allowed
+to learn the stimulus. During inference, the predicted class is
+derived through cluster voting, by selecting the cluster that
+exhibits the highest firing/activation rate in its neurons.
+
+Fig. 5: Base hardware architecture of the EON-1 processor,
+equipped with an inference engine and a learning engine which
+embeds the proposed STDP-based learning rule. This architecture can be flexibly and trivially scaled-up by vectorizing either
+of: the IF units, the edge-filter units, and/or the sequentiallearning processes (depending on design-space requirements)
+III. H ARDWARE ARCHITECTURE
+The hardware architecture of the EON-1 neural processor
+is depicted in Fig. 5. Notice that the inference and learning
+
+of the input pixels but also hardware platforms, this block
+is fully parametrisable, such that a trade-off between area
+and latency can be made, i.e., throughput and latency can be
+customised.
+B. Synaptic Weights Memory and Neuron Parameters Memory
+These blocks store the weight vectors and parameters of the
+IF neurons in the trainable layer. In this work, the learning
+hyper-parameters (Table II) are shared among all neurons and
+thus only the learning and firing thresholds need to be stored.
+The learning and inference engine have shared access to these
+memory blocks.
+C. Inference engine
+This engine is based on a match counter unit (i.e., it sums
+the positional matches in the spike and weight vectors) and a
+firing threshold comparator, which essentially implement the
+operation of an IF neuron. The IF operation executes in one
+clock cycle, while all neurons in the trainable layer are updated
+in a time-multiplexed manner. However, the inference engine
+can be accelerated by enhancing the system with multiple IF
+units that can operate in parallel, as in Fig. 6: for a layer of N
+IF neurons, and provided P IF processing units are available,
+the inference can execute in N/P clock cycles.
+Fig. 6: To increase parallelism during inference with very-wide
+output layers, we can spawn several IF processing elements
+in a P-wide vector pipeline. Each IF processing element can
+update one neuron per clock cycle, such that for N neurons
+in the system, each input image takes N/P clock cycles.
+
+parts are intertwined, highlighting the fact that on-device
+learning is not an add-on but rather an embedded feature
+of the processor. Execution-wise, the two engines perform
+concurrently. Moreover, in this work, both spike encoding and
+classifier run on-chip, in parallel with learning and inference.
+Following, we describe the architectural details of EON-1’s
+digital hardware implementation.
+A. Edge-Filters and Lateral-Inhibition
+This block implements the first two layers of the proposed
+network in Fig. 1, receiving as input image pixels streamed
+row-by-row every clock cycle and producing a spike vector as
+output. Internally, this is achieved through a shift-register that
+buffers K S rows. Once the shift register is fully loaded, all
+edge filters are applied in parallel, resulting in a throughput of
+one output row per clock cycle. To illustrate, for K S = 5,
+and an input image of size (D + 4)2 (i.e., convolution with
+stride 1 and no zero-padding), a spike vector of D2 size will
+be ready in D clock cycles. For 8 edge filters (in this work) we
+need 4 bits for each compressed element in the spike vector, to
+represent the 9 possibilities (zero indicates the no-firing case).
+The spike-encoding is pipelined with the inference engine and
+therefore the overhead of loading the shift register is hidden
+after the first encoded spike vector. Moreover, to accommodate
+various application performance requirements and bandwidths
+
+D. Learning engine
+The bottom half of the hardware architecture shown in
+Fig. 5 contains the building blocks of implementing the ondevice event-driven online learning functionality. Typically,
+learning takes place slower than inference, but this can be
+partly controlled by the maximum number of neurons K
+(Table II) allowed to learn at a time. The learning engine has
+the following components:
+• Learning-threshold Comparator and Learning Event
+Queue: During inference, in addition to comparing an IF
+neuron state (output of the match count block) against the
+firing threshold, it is also compared against the learning
+threshold. If this is exceeded, the address of the corresponding neuron is pushed to the learning event queue.
+The active capacity of this queue limits the maximum
+number of neurons that can undergo learning triggered by
+one input sample (image) and is thus set by the parameter
+K mentioned earlier.
+• Sequential Learning Process (SLP) is a FSM that consumes the learning event queue. At each clock cycle, SLP
+examines one position of a weight vector. If it encounters
+an ineffective synapse, it swaps it with an ineffective
+spike location. The order in which the weight vector
+elements are inspected is randomly generated using an
+LFSR unit. The sequential learning process stops after a
+sufficient number of swaps has been reached (swap N
+in algorithm 1). Since learning is a slower process than
+inference, sequential rather than concurrent processing is
+a more area-efficient solution. The exact time it takes for
+each weight vector to be updated depends on the weight
+vector dimension (D2 ) and the number of swap operations (worst-case number of swaps is W − T learn[0]).
+
+For a worst-case scenario, where a weight vector update
+takes always D2 clock-cycles, the learning process for
+N neurons takes K × D2 . To ensure that the learning
+process never lags behind inference, K × D2 should
+remain smaller than N . Multiple SLPs can be instantiated
+in parallel, if necessary (similar to IF neuron units).
+Note that since only up to K << N neurons will be
+scheduled-in for learning every input spike vector, a question of bias strategy arises, as to which neurons should be
+prioritised. Plausible strategies can be to select the top-K
+least-recently fired neurons (i.e., least recently seen pattern),
+or highest membrane state (most likely pattern). However,
+these are costly solutions that require sorting and incur latency
+cost. Selecting the first-K is by far the fastest and cheapest
+solution, yet erratic (likely, only a small subset of neurons will
+participate in learning) if the neurons are always sequenced in
+the same order. Thus, to ensure that all IF neurons have the
+same fair chance of being scheduled-in for learning, during
+inference a random number generator produces a different
+start address every time for sequencing the IF neurons, thus
+providing an inexpensive arbitration.
+E. Classifier circuit
+This module is based on log2W -bit adders and provides the
+output prediction after inference based on the index of the
+cluster with the highest activity, i.e., it computes the maximum
+firing activation per class. This circuit is pipelined with the IF
+units, and thus provides its result a clock cycle after the last
+updated neuron.
+IV. R ESULTS AND DISCUSSION
+A. Experimental setup
+For measuring EON-1’s performance, we evaluated two
+instantiations of it, one on FPGA, using a Xilinx VU37P
+HBM chip at 100MHz frequency, and one using gate-level
+post-synthesis ASIC simulation1 at 500 MHz frequency, for a
+typical corner of 0.8V and 25◦ C in a GF-22nm node.
+The reported results are based on two tasks: the first task is
+multiclass classification based on MNIST [47] which, despite
+its simplicity, allowed us to benchmark against other stateof-the-art solutions from a hardware-efficiency point of view,
+both for FPGA and ASIC instantiations. For this task, to
+minimize area and power, we downscale the MNIST samples
+to 14 × 14. However, we note that our algorithm is resilient to
+inputs downscaling (i.e., it keeps good performance for smaller
+resolutions, benefiting hardware resources). The second task is
+a binary class face detection based on faces [45] and CIFAR10 [46] datasets, which enabled us to explore the unique
+features of our algorithm: one is online adaptation starting
+from a pre-trained network, while for the second we evaluate
+the suitability of EON-1 for real-time processing of streaming
+high-definition (UHD) data. We present results that validate
+both the algorithm effectiveness for online learning/adaptation
+1 Cadence Genus [43] for synthesis and Cadence JOULES [44] for timebased power analysis
+
+and the hardware efficiency for on-device learning (primary
+goal).
+TABLE III: Comparison of EON-1 with other FPGA solutions
+benchmarked on MNIST
+TCSI’21 TCSII’21 Neuro’17 ICTA’23
+[38]
+[39]
+[40]
+[41]
+Accuracy
+
+EON-1
+this work
+
+85.28%
+
+90.58%
+
+89.1%
+
+95.49%
+
+87.8% – 92.8%
+
+Neur. model
+LIF
+# Neurons
+300
+# Synapses
+176800
+Weight Prec. 16b float
+Encoding
+rate
+
+LIF
+2304
+NR
+2b
+rate
+
+LIF
+1591
+638208
+16b fixed
+rate
+
+LIF
+320
+NR
+8b
+rate
+
+IF
+2000 – 9000
+1.6M – 7.2M
+1b
+rank-1
+
+NR
+yes
+SG 2
+
+yes
+yes
+SB-STDP 1
+
+VC707
+115MHz
+
+VU37P
+100MHz
+
+22779
+15072
+NR
+
+8053
+1637
+24 – 108
+
+NR
+1183
+
+10.9K – 47.2K
+11K – 49.6K
+
+Learning specs
+Online
+On-chip
+Rule
+
+yes
+yes
+STDP
+
+yes
+no
+STDP
+
+FPGA Chip
+Clock Freq.
+
+Virtex-7
+100MHz
+
+ZCU102
+200MHz
+
+yes
+yes
+STDP
+
+Hardware specs
+Virtex-6
+120MHz
+
+Resource utilization
+LUT
+FF
+BRAM
+
+NR
+NR
+NR
+
+2209
+447
+451
+
+Learning
+Inference
+
+61
+285
+
+NR
+46.44
+
+71598
+50905
+204
+
+Throughput (fps)
+0.05
+0.11
+
+1 SB-STDP: Stochastic Binary STDP
+NR: Not Reported
+2 SG: Surrogate gradient, a spike-friendly variant of back-propagation
+
+For consistent algorithm behaviour across all tasks and
+tests, we kept the same learning hyper-parameters throughout,
+which were set for very fast, few-shots learning. All accuracy
+measurements were performed on a testset (different than the
+training set) with deactivated on-device learning. The common
+parameters throughout all the tests and tasks are:
+• swap rate = 1, i.e., all ineffective synaptic weights
+are swapped to ineffective spikes during learning. Thus,
+only one training epoch is sufficient to memorize a
+pattern. Note that, for each neuron, its weight vector
+won’t necessarily match the input spike vector completely
+since there are typically more ineffective spikes than W ,
+and only a random selection of those is matched, thus
+allowing variability in the learned patterns and preventing
+overfitting.
+• T Learn[0] = 6 is the initial learning threshold. We
+chose this value empirically. Since all synaptic weights
+are initially random, this value should be high enough
+to denote a sufficient degree of coincidence between the
+input and a prototypical neuron model, such that learning
+is triggered early-on, but small enough to ensure that the
+more salient features in the input are learned.
+• TF ire = TLearn /2. Recall that TF ire [0] = ∞ to force the
+inference circuit to be silent before any learning has taken
+place. After the first learning event for an IF neuron, its
+TF ire is set to this value, activating it for inference. This
+value has also been experimentally obtained to give an
+
+optimal ratio of time that the inference circuit is active
+compared to the learning circuit (taking into account that
+the latter is slower).
+• K = 1 to allow only one neuron, randomly chosen
+among all the eligible neurons, to adapt its weights
+every time learning is triggered. For few-shots learning,
+it is important to avoid wasting model memory when
+multiple neurons learn and lock in the same pattern, while
+K > 1 allows better generalization (lower selectivity)
+with slower few-shot learning (swap rate < 1).
+• W = 64 active connection are allowed during all experiments.
+B. Algorithm performance and hardware results benchmarking –multiclass classification task
+Fig. 7 and Fig. 8 show the online learning algorithm
+performance for the MNIST dataset. Fig. 7a demonstrates how
+accuracy continuously increases with more training samples,
+but also with a higher initial network capacity (i.e., number
+of IF neurons in the trainable layer; initially, the network
+learning capacity is N , but this number decreases with more
+learned samples). The plot also shows how, once the number
+of presented training inputs approaches the network’s initial
+capacity, accuracy saturates. This behaviour is likewise exhibited in Fig. 7b, which shows that, with more training samples
+being presented, less neurons are eligible to learn (i.e., network
+learning eligibility refers to the number of neurons that pass
+their learning threshold for a presented input sample), and as
+a result, the network’s learning capacity decreases. While this
+outcome is expected in all neural networks, it is worth noting
+that in this work, the learning occurs continuously, on-device.
+Moreover, here, the steep and monotonic curve behaviour is
+due to our choice of learning parameters for fast learning, that
+forces individual neurons to ”lock” to a single input pattern,
+and there is no learning threshold decay to allow them to forget
+or re-learn. Concurrently, as a result of stochastic learning,
+there is no overfitting, and the network can generalize well
+on previously unseen input samples. The latter result also
+indicates that, since we only learn W random connections, our
+network behaves like an associative memory, e.g., it can recall
+patterns that are degraded or only partially resemble learned
+inputs. Finally, Fig. 8a and Fig. 8b show how increasing the
+network capacity improves accuracy, on the one hand, but also
+how it affects inference energy cost, on the other hand.
+In the hardware measurements for this task, we did not
+use parallelization of the IF neuron processing, and therefore
+the latency reported is measured as (Spike V ec Gen Ovh+
+N + 1) × clk period. Thus, for e.g., for a 10 ns clock period
+(FPGA) and 2000 neurons, and taking into account the spike
+encoder overhead, the latency is (14 + 2000 + 1) × 10 =
+20150ns and the throughput is 109 /20150 = 49627 inferences
+(frames2 ) per second.
+For the ASIC instantiation of EON-1, area and energy
+measurements exclude I/O cost and include memory area and
+access cost. Online learning energy consumption is computed
+2 One inference is one input digit frame for these measurements
+
+as the total energy cost for performing one inference, in order
+to find the neuron that reaches its learning threshold, followed
+by the energy cost of the neuron updating its weights. Based
+on these energy costs, we compute the learning overhead as
+(Elearn − Einf )/Einf .
+Tables III and IV compare, based on various metrics, EON1 against other FPGA and ASIC-based solutions in the recent
+literature, on the MNIST benchmark. From the comparison
+with FPGA solutions, EON-1 has the highest throughput.
+We mainly attribute this result to using binary weights and
+avoiding multiplications throughout the entire design, such
+that only bitwise operations and additions are performed, thus
+allowing for more operations to be scheduled within one
+clock cycle. Moreover, except from the work in [39], which
+does not embed learning on-chip, EON-1 also stands out in
+terms of resources utilization, thus highlighting the hardwarefriendliness of our inference and learning approach in this
+work.
+For ASIC comparison, we use the method in [48] to
+normalize the reported area and energy of these solutions to
+our 22nm node. For EON-1, we report results for reaching
+accuracies between 87.8% – 92.8% for a closer comparison
+to other work. What stands out from these comparisons is that
+EON-1, while competitive in performance with the state-ofthe-art:
+(a) it has by more than an order of magnitude lower energy overhead for supporting on-device learning (overhead
+which includes the cost of spike encoding at the input and
+readout at the output);
+(b) for converging to the reported accuracy, it is the most
+energy efficient;
+(c) it achieves one of the highest throughputs;
+(d) it is the only one that supports very fast (worst case
+latency is D2 × clk period) online learning with binary
+and stochastic STDP, both in FPGA and ASIC.
+C. Streaming data processing – binary classification
+One of the main motivations of this exploration has been
+to see if EON-1’s fast learning and inference can sustain
+the processing of continuous streaming data from a highresolution image sensor. In this experiment we aimed to test
+just that. We combined face images from the UTK Face
+Dataset [45] (which we have downscaled to 32 × 32) with
+non-face images from the CIFAR-10 [46] dataset (where we
+keep the initial resolution of 32 × 32) to create high-resolution
+(UHD) collage frames such as the one shown in Fig. 9. The
+task here is to detect and adapt to faces in the UHD image.
+However, this image cannot be processed in one go as a single
+patch residing in memory, but rather a rolling window needs
+to parse the image with a stride and load a patch-at-a-time to
+the EON-1 engine, similar to 2D convolution with a kernel.
+Thus, the challenge here is to see if the speed of processing
+of these images with EON-1 is acceptable for real-time video
+inference and online adaptation.
+Consequently, we defined two types of performance measurement tests: in the first one, we measure accuracy performance on a balanced testset of 10000 samples of faces and
+
+TABLE IV: Comparison of EON-1 with other ASIC solutions benchmarked on MNIST
+TCSI’22 TBCAS’19
+[18]
+[14]
+
+TBCAS’19
+[15]
+
+Accuracy
+# Weight updates to accuracy ≜
+Learning cost for accuracy
+
+93%
+160k
+65.5mJ
+
+87.4%
+60k
+23.73mJ
+
+84.5%
+NR
+1.04mJ
+
+Neuron Model
+# Neuron
+# Synapses
+Weight Precision
+Encoding
+
+LIF
+384
+176800
+9b fixed
+temporal
+
+IF
+400
+230400
+1b
+rate
+
+LIF/Izk.
+256
+64000
+4b
+rate & rank ♢
+
+Online
+On-chip
+Rule
+
+yes
+yes
+STDP var.
+
+yes
+yes
+spike cnt
+
+TCSII’23
+[16]
+
+ISCAS’20
+[12]
+
+EON-1
+this work
+
+93.54 % 92.8% - 95.3%‡ 87.8% – 92.8%
+60k
+60k
+2k – 9k
+NR
+NR
+0.29mJ - 5.97mJ
+LIF
+2048
+2M
+8b
+temporal
+
+NR
+128
+NR
+8b
+TTFS
+
+IF
+2000 – 9000
+1.6M – 7.2M
+1b
+rank-1
+
+yes
+yes
+addSTDP
+
+yes
+yes
+DRTP
+
+yes
+yes
+BS-STDP
+
+28nm
+500MHz
+0.81V
+6.22
+3.83
+
+28nm
+150MHz
+0.6V
+0.26
+0.16
+
+22nm
+500MHz
+0.8V
+0.232 – 0.757
+0.232 – 0.757
+
+NR
+4.99pJ
+NR
+1.28pJ
+
+NR
+NR
+313nJ
+NR
+
+148.4nJ – 663.5nJ
+1.5pJ
+147.2nJ – 662.3nJ
+0.09pJ
+
+NR
+3.82pJ
+NR
+0.98pJ
+
+NR
+NR
+437.2nJ
+NR
+
+148.4nJ – 663.5nJ
+1.5pJ
+147.2nJ – 662.3nJ
+0.09pJ
+
+NR
+NR
+
+NR
+8.5K
+
+236.4K – 54.8K
+248.1K – 55.4K
+
+NR
+
+<0.01
+
+Learning specs
+yes
+yes
+SDSP
+
+Hardware specs
+ASIC Node
+Clock Frequency
+Voltage
+Area (mm2 )
+Norm. area§ (mm2 )
+
+28nm
+333MHz
+0.9V
+1
+0.617
+
+65nm
+384MHz
+1.2V
+0.39
+0.044
+
+28nm
+75MHz
+0.55V
+0.086
+0.053
+Energy
+
+Learning
+per SOP
+Inference
+per SOP
+
+660nJ
+NR
+500nJ
+NR
+
+2630nJ
+1.42pJ
+310nJ
+0.26pJ
+
+105nJ
+NR
+15nJ–404nJ
+12.7pJ
+Norm. Energy†
+
+Learning
+per SOP
+Inference
+per SOP
+
+409.7nJ
+NR
+310.4nJ
+NR
+
+395.62nJ
+0.21pJ
+46.6nJ
+0.03pJ
+
+174nJ
+NR
+24.93nJ–671.58nJ
+21.11pJ
+
+Throughput (fps)
+Learning
+Inference
+
+211.77k
+277.78k
+
+NR
+NR
+
+NR
+NR
+
+Learning energy overhead for inference ∇
+0.32
+
+7.5
+
+7 & 0.25 ♢
+
+2.89
+
+NR: Not Reported
+addSTDP: Additive STDP
+BS-STDP: Stochastic Binary STDP
+DTRP: Direct Random Target Projection - a modified back-propagation version, suitable for online and local learning
+≜ Number of weight updates is inferred from the reported number of neurons allowed to learn each input sample multiplied
+by the number of training samples used to reach accuracy
+[14], [18] report area/energy results post-layout and they do not
+include I/O area/energy cost; [12], [15], [16] report area/energy results post-tapeout.
+‡ Reported accuracy for one epoch is 92.8%, and after 100 epochs it reaches 95.3%.
+§ Area × (22/Node)2
+† Energy × (22/Node) × (0.8/voltage)2
+♢ [15] supports both rate coding and temporal, rank-order coding for input spikes. Reported inference energy and learning
+overhead is for rank and rate coding, respectively. Reported learning energy excludes inference cost.
+∇ Energy overhead computed as (learning energy − inference energy)/inference energy
+
+CIFAR-10 samples, different from the trainset. For the second
+test, we measure the network’s recall per UHD frame, i.e., we
+are interested in how many faces we can identify with EON1 in the entire frame. Note that, in this situation, the field of
+vision (FoV) – which we denote by one patch – often contains
+both faces and non-faces (due to using a sliding window with
+stride 1), introducing a degree of position variance to the tested
+inputs. Following, we describe the two experiments we have
+run for this task.
+
+was saturated by presenting a number of samples equal to
+the network size). We initially trained a network of 400
+neurons, each with 3136 synapses (4 × 28 × 28), using only
+faces. This network reached 95.7% accuracy on the previously
+mentioned balanced testset. Using the pre-trained weights, we
+then evaluated the network’s inference performance on the
+UHD frame. For this case, 720 out of 798 faces (i.e., recall
+is 90.2%) randomly placed in the UHD frame were correctly
+identified.
+
+The first experiment aimed to evaluate the performance of a
+fully pre-trained network (i.e., the network learning capacity
+
+For the second experiment, the goal was to evaluate online
+adaptation on input patches extracted from the UHD frame,
+
+(a)
+
+(b)
+
+Fig. 7: Online learning performance on the MNIST digit classification task. (a) Accuracy as a function of data samples
+presentation for three IF layer sizes. (b) Dynamics of a 30k network learning capacity and eligibility, as a function of presented
+samples
+
+(a)
+
+(b)
+
+Fig. 8: Online learning performance on the MNIST digit classification task.k. (a) Accuracy as a function of the IF layer size
+for 60K samples. (b) Accuracy versus energy while scaling the IF layer from 1K neurons to 30K neurons.
+
+starting from a network that was pre-trained on a number of
+inputs samples that is much smaller than the initial network
+learning capacity. This use case can occur, for instance, when
+not enough training data is available. The adaptation is enabled
+in a self-supervised manner, such that learning is triggered
+whenever the network fires (i.e., it indicates a face), until it
+reaches it’s learning capacity. In Fig. 10 we depict how, in
+a network with an initial capacity of 400 neurons, that we
+pre-trained on 200 samples, the accuracy on the balanced
+testset slowly increases from 92.69% before adaptation to
+94.86% after self-supervised learning of more samples. Before
+
+adaptation, the recall on the UHD frame is 72% (587 faces are
+identified) and after exposure to new data from the UHD frame
+patches, the recall reaches 85% (680 faces are identified).
+The latter result shows a lower recall than for the fully
+pre-trained network of the previous test, however, this is an
+expected result, since the adaptation occurs on patches that
+contain position variance, as a result of the FoV extraction.
+Nevertheless, despite it’s simplicity, this experiment shows that
+it is possible to adapt on-the-fly to new inputs, when few data
+samples are available for training.
+Finally, we report hardware performance metrics for this
+
+real-time UHD video processing indeed possible.
+TABLE V: Face detection task: performance metrics
+for processing UHD frames with EON-1
+Resolution
+
+Latency/frame
+FPS
+Energy/frame
+(100MHz)
+(100MHz)
+(in ASIC)
+2160×3840 1
+84ms
+12
+1.85J
+20 ms
+50
+0.45J
+1080x1920 2
+1280x720 3
+9ms
+111
+0.19J
+1 UHD resolution
+2 Full HD resolution
+3 HD resolution
+
+Fig. 9: One quarter of the collage of many small faces and
+non-faces images, randomly placed in one UHD frame. The
+full collage frame contains 798 faces.
+
+V. C ONCLUSIONS
+In this paper, we introduced EON-1, an energy- and latencyefficient custom edge processor for Spiking and Convolutional
+Neural Networks, that uses 1-bit synaptic weights and 1spike per neuron. EON-1 embeds a very fast on-device online
+learning algorithm (amortizable for few-shot learning) founded
+on binary stochastic STDP, which, benchmarked in an ASIC
+node, achieves less than 1% energy overhead for on-device
+learning (relative to the inference). To our knowledge, our
+solution incurs the least energy overhead for learning ondevice, compared to state-of-the-art solutions, showing a better
+efficiency by at least a factor of 10x. We report that EON1 consumes 0.29mJ to 5.97mJ for converging to accuracies
+between 87.8% - 92.8% on the MNIST classification task,
+from randomly initialized weights for both inference and ondevice learning. With an energy consumption of 148.4nJ 663.5nJ per processed sample, only 1.2nJ/sample is used for
+learning. We extend our solution to a practical use-case for
+real-time processing of UHD videos, consuming 1.85J for each
+UHD frame.
+R EFERENCES
+
+Fig. 10: Online on device adaptation on the face detection
+task: accuracy as a function of online adaptation to more
+data samples in a pre-trained network, on the UHD frame
+processing with a rolling window.
+
+task in Table V. Since we use a stride of 1 pixels, parsing one
+UHD frame involves processing 8 million patches, for which
+the projected energy consumption in the GF22nm ASIC node
+is 1.85J. Although this use-case is not low-power, the goal here
+was to explore the maximum attainable speed in processing
+UHD frames and while having learning active. We therefore
+process the full high-resolution frame, without any downscaling, which is a typical pre-processing step for real-time video
+processing with neural networks. At full UHD resolution, we
+were able to process 12 FPS in FPGA, at 100MHz, by using
+a parallelization factor of P = 400 (see Fig. 6; this limit is
+imposed by the maximum achievable bandwidth on the FPGA
+platform used in this work). This is about half the baseline
+framerate for real-time motion video (25fps) and 1/5 of highquality UHD video (60fps). Thus, either downscaling the UHD
+frame, before processing it using EON-1, or operating the
+circuit at the ASIC clock frequency (500MHz) would make
+
+[1] J. L. Lobo, J. Del Ser, A. Bifet, and N. Kasabov, “Spiking neural
+networks and online learning: An overview and perspectives,” Neural
+Networks, vol. 121, pp. 88–100, 2020
+[2] Y. Chen, Y. Xie, L. Song, F. Chen and T. Tang, ”A Survey of Accelerator
+Architectures for Deep Neural Networks”, in Engineering, vol. 6, no. 3,
+pp. 264-274, 2020
+[3] , T. Liang, J. Glossner, L. Wang, S. Shi and X. Zhang, ”Pruning
+and quantization for deep neural network acceleration: A survey” in
+Neurocomputing, vol. 461, pp. 370-403, 2021.
+[4] H. Qin, R. Gong., X. Liu, X. Bai, J. Song and N. Sebe, ”Binary neural
+networks: A survey”, in Pattern Recognition, vol. 105, pp. 107281, 2020
+[5] G.D. Samanwoy, A. Hojjat. ”Spiking neural networks” in International
+journal of neural systems, vol. 19, no. 04, pp. 295-308, 2009
+[6] R. Rojas and R. Rojas, ”The backpropagation algorithm” in Neural
+networks: a systematic introduction, pp 149-182, 1996
+[7] T. P. Lillicrap et al. “Random synaptic feedback weights support error
+backpropagation for deep learning.” IN Nature communications, vol. 7,
+pp. 13276, 2016
+[8] J. Lin, L. Zhu, W.-M. Chen, W.-C. Wang, C. Gan, and S. Han, “Ondevice training under 256kb memory,” arXiv:2206.15472[cs.CV], 2022
+[9] Y. Yang, G. Li, and R. Marculescu, “Efficient on-device training via
+gradient filtering,”, arXiv:2301.00330v2[cs.CV], 2023
+[10] H.Z. Shouval, S.S.H. Wang, G.M. Wittenberg, ”Spike timing dependent
+plasticity: a consequence of more fundamental learning rules”, in Frontiers in Compututational Neuroscience, Vol, 2010
+[11] E.L. Bienenstock, L.N. Cooper, P.W. Munro, ”Theory for the development of neuron selectivity: orientation specificity and binocular
+interaction in visual cortex”, in Journal of Neuroscience, vol. 2, pp.
+32-48, 1982.
+[12] C. Frenkel, J.-D. Legat, and D. Bol, “A 28-nm convolutional neuromorphic processor enabling online learning with spike-based retinas,” in
+2020 IEEE International Symposium on Circuits and Systems (ISCAS),
+pp. 1–5, 2020
+
+[13] G. Bellec, F. Scherr, A. Subramoney, R. Legenstein, W. Maass, ”A
+solution to the learning dilemma for recurrent networks of spiking
+neurons”, in Nature Communications Vol 11/3625 (2020).
+[14] H. Tang, H. Kim, H. Kim, and J. Park, “Spike counts based low
+complexity snn architecture with binary synapse,” IEEE Transactions
+on Biomedical Circuits and Systems, vol. 13, no. 6, pp. 1664–1677,
+2019
+[15] C. Frenkel, M. Lefebvre, J.-D. Legat, and D. Bol, “A 0.086-mm2 12.7pj/sop 64k-synapse 256- neuron online-learning digital spiking neuromorphic processor in 28-nm cmos,” IEEE Transactions on Biomedical
+Circuits and Systems, vol. 13, no. 1, pp. 145–158, 2019
+[16] Y. Zhong, Z. Wang, X. Cui, J. Cao, and Y. Wang, “An efficient
+neuromorphic implementation of temporal coding-based on-chip stdp
+learning,” IEEE Transactions on Circuits and Systems II: Express Briefs,
+vol. 70, no. 11, pp. 4241–4245, 2023
+[17] C. Frenkel, J.-D. Legat, and D. Bol, “Morphic: A 65-nm 738ksynapse/mm2 quad-core binary- weight digital neuromorphic processor
+with stochastic spike-driven online learning,” IEEE Transactions on
+Biomedical Circuits and Systems, vol. 13, no. 5, pp. 999–1010, 2019.
+[18] C. Sun, H. Sun, J. Xu, J. Han, X. Wang, X. Wang, Q. Chen, Y. Fu, and
+L. Li, “An energy efficient STDP-based SNN architecture with on-chip
+learning,” IEEE Transactions on Circuits and Systems I: Regular Papers,
+vol. 69, no. 12, pp. 5147–5158, 2022
+[19] M. Fabre-Thorpe, “The characteristics and limits of rapid visual categorization,” Frontiers in Psy- chology, vol. 2, 2011
+[20] Tim Gollisch and Markus Meister. “Rapid Neural Coding in the Retina
+with Relative Spike Latencies”. In: Science vol. 319, no.5866, pp.
+1108–1111, 2008
+[21] I. Tomomi and H. Samar, “On and off signaling pathways in the retina
+and the visual system,” Frontiers in Ophthalmology, vol. 2, 2022
+[22] S. Thorpe, A. Yousefzadeh, T. Masquelier, and J. Martin, “Unsupervised
+learning of repeating patterns using a novel stdp based algorithm”,
+Journal of Vision, vol. 17, no. 10, pp. 1079–1079, 2017
+[23] T. Masquelier and S. J. Thorpe, ”Learning to recognize objects using
+waves of spikes and Spike Timing-Dependent Plasticity,” The 2010
+International Joint Conference on Neural Networks (IJCNN), pp. 1-8,
+Barcelona, 2010
+[24] R. Rullen, J. Gautrais, A. Delorme, and S. Thorpe, “Face processing
+using one spike per neuron,” Biosystems, vol. 48, pp. 229–239, 1998
+[25] S. Thorpe, “Ultra-rapid scene categorization with a wave of spikes,” in
+Biologically Motivated Computer Vision. Berlin, Heidelberg: Springer
+Berlin Heidelberg, pp. 1–15, 2002
+[26] T. Masquelier and S. J. Thorpe, “Unsupervised learning of visual
+features through spike timing dependent plasticity,” PLoS computational
+biology, vol. 3, no. 2, p. e31, 2007
+[27] A. Delorme, J. Gautrais, R. van Rullen, and S. Thorpe, “Spikenet: A
+simulator for modeling large networks of integrate and fire neurons,”
+Neurocomputing, vol. 26-27, pp. 989–996, 1999
+[28] S. Thorpe, D. Fize, and C. Marlot, “Speed of processing in the human
+visual system,” nature, vol. 381, no. 6582, pp. 520–522, 1996
+[29] J. Gawne, T. W. Kjaer, and B. J. Richmond, “Latency: another potential
+code for feature binding in striate cortex,” Journal of neurophysiology,
+vol. 76, no. 2, pp. 1356–1360, 1996
+[30] S. J. Thorpe, A. Delorme, and R. VanRullen, “Spike-based strategies for
+rapid processing,” Neural Networks, vol. 14, pp. 715–726, 2001
+[31] S. Thorpe, et al. ”Method, digital electronic circuit and system for
+unsupervised detection of repeating patterns in a series of events.” U.S.
+Patent No. 11,853,862. 26 Dec. 2023
+[32] J. Yosinski, J. Clune, Y. Bengio, and H. Lipson, “How transferable are
+features in deep neural networks?” in proceedings of Advancements of
+Neural Information Processing Systems, pp. 3320–3328, 2014.
+[33] K. He, X. Zhang, S. Ren, J. Sun, ”Deep Residual Learning for Image
+Recognition”, in IEEE Conference on Computer Vision and Pattern
+Recognition (CVPR), 2016
+[34] G. Cybenko. Approximation by superpositions of a sigmoidal function.
+Math. Control Signals Syst., 2(4):303–314, 1989
+[35] K. Hornik, ”Approximation capabilities of multilayer feedforward networks”, Neural Netw., 4(2): 251–257, 1991
+[36] A. Pinkus, ”Approximation theory of the MLP model in neural networks”, Acta Numer., 8:143–195, 1999
+[37] A. Yousefzadeh, E. Stromatias, M. Soto, T. Serrano-Gotarredona, and
+B. Linares-Barranco, “On practical issues for stochastic stdp hardware
+with 1-bit synaptic weights,” Frontiers in Neuroscience, vol. 12, 2018
+
+[38] S. Li, Z. Zhang, R. Mao, J. Xiao, L. Chang, and J. Zhou, “A fast
+and energy-efficient snn processor with adaptive clock/event-driven
+computation scheme and online learning,” IEEE Transactions on Circuits
+and Systems I: Regular Papers, vol. 68, no. 4, pp. 1543–1552, 2021
+[39] . Zheng, Y. Guo, X. Yang, S. Xiao, and Z. Yu, “Balancing the cost
+and performance trade-offs in SNN processors,” IEEE Transactions on
+Circuits and Systems II: Express Briefs, vol. 68, no. 9, pp. 3172–3176,
+2021
+[40] Q. Wang, Y. Li, B. Shao, S. Dey, and P. Li, “Energy efficient parallel neuromorphic architectures with approximate arithmetic on fpga,”
+Neurocomputing, vol. 221, pp. 146–158, 2017.
+[41] K. Huang, W. Liu, Y. Liu, S. Xiao, and Z. Yu, “Towards efficient onchip learning for spiking neural networks accelerator with surrogate
+gradient,” in 2023 IEEE International Conference on Integrated Circuits,
+Technologies and Applications (ICTA), 2023
+[42] Y. Jun, Y. Quan, ”Structural homeostasis in the nervous system: a
+balancing act for wiring plasticity and stability”, in Frontiers in cellular
+neuroscience, vol. 8, pp. 439, 2015.
+[43] Cadence, ”Genus synthesis solutions”, https://www.cadence.com/
+en US/home/tools/digital-design-and-signoff/synthesis/genus-synthesissolution.html [Accessed 2024-01-07]
+[44] Cadence,
+”Joules
+RTL
+Power
+Solution”,
+https://www.cadence.com/en US/
+home/tools/digital-design-andsignoff/power-analysis/joules-rtl-power-solution.html [Accessed 202401-07]
+[45] ”UTKFace
+Large
+scale
+face
+dataset”,
+2017,
+https://susanqq.github.io/UTKFace/ [Accessed: 2024-01-07]
+[46] A. Krizhevsky, “Learning multiple layers of features from tiny images,”
+University of Toronto, 2009
+[47] L. Deng, “The MNIST database of handwritten digit images for machine
+learning research,” IEEE Signal Processing Magazine, vol. 29, no. 6, pp.
+141–142, 2012
+[48] J. M. Rabaey, A. Chandrakasan, and B. Nikolic, Digital integrated
+circuits. Prentice hall Engle- wood Cliffs, 2002, vol. 2
+
+

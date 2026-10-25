@@ -1,0 +1,412 @@
+The Brain-Inspired Decoder for Natural Visual Image Reconstruction
+Wenyi Li, Shengjie Zheng, Yufan Liao, Rongqi Hong, Weiliang Chen, Chenggnag He, Xiaojian Li*
+1
+
+arXiv:2207.08591v1 [cs.CV] 18 Jul 2022
+
+2
+
+University of Chinese Academy of Sciences, Beijing, China
+The Brain Cognition and Brain Disease Institute (BCBDI), Shenzhen Institute of Advanced Technology, Chinese Academy of Sciences;
+3
+Shenzhen-Hong Kong Institute of Brain Science-Shenzhen Fundamental Research Institutions, Shenzhen, China.
+4
+CAS Key Laboratory of Brain Connectome and Manipulation
+5
+Chengdu University of Traditional Chinese Medicine, Chengdu, China
+wy.li, sj zheng, xiaojian li@siat.ac.cn
+Abstract
+Decoding images from brain activity has been a challenge. Owing to the development of deep learning, there
+are available tools to solve this problem. The decoded
+image, which aims to map neural spike trains to lowlevel visual features and high-level semantic information space. Recently, there are a few studies of decoding from spike trains, however, these studies pay less attention to the foundations of neuroscience and there are
+few studies that merged receptive field into visual image
+reconstruction. In this paper, we propose a deep learning neural network architecture with biological properties to reconstruct visual image from spike trains. As
+far as we know, we implemented a method that integrated receptive field property matrix into loss function at the first time. Our model is an end-to-end decoder from neural spike trains to images. We not only
+merged Gabor filter into auto-encoder which used to
+generate images but also proposed a loss function with
+receptive field properties. We evaluated our decoder on
+two datasets which contain macaque primary visual cortex neural spikes and salamander retina ganglion cells
+(RGCs) spikes. Our results show that our method can effectively combine receptive field features to reconstruct
+images, providing a new approach to visual reconstruction based on neural information.
+
+Introduction
+Brain-computer interface technology has made remarkable achievements in recent decades. Decoding useful information from complex brain activity is an active research
+topicRubin et al. (2017)Kay et al. (2008), which is conducive to understanding the human brain encoding and decoding mechanisms. On the other hand, this valid decoder
+would have great scientific and practical utility. There is a
+lot of research on how to read what they see based on brain
+activityMiyawaki et al. (2008)Nishimoto et al. (2011)Gaziv
+et al. (2022).
+In particular the visual system may consist of parallel hierarchical sequences, which are specialized for a particular
+taskGrill-Spector, Malach, and others (2004). Our brain can
+process various information from various types of receptor,
+and then process to generate Electrophysiological signal.
+Copyright © 2022, Preprint to arxiv.
+
+Therefore, neurons and neuronal network which make up of
+by neurons are essential for transferring information. The
+interconnecting neurons process visual stimuli from the
+lateral geniculate nucleus to visual cortex. The visual cortex
+has six layers and it’s the beginning of the recognizing of
+the brainYücel et al. (2003). Perception is processed and
+color and shape of an object are perceived in the several
+cortical areas in the parietooccipital and temporo-occipital
+visual association pathwaysChen et al. (1998). The primary
+visual cortex (V1), which is the beginning of the ventral
+stream and dorsal stream is located on the medial aspect
+of the occipital lobe. The ventral stream and dorsal stream
+are associated with recognition, representation and storage
+of long-term memoryKaas and Baldwin (2019)Almeida,
+Mahon, and Caramazza (2010). As the brain’s primary
+source of information, vision is the focus of study. How
+to build a general visual decoder and is it possible to
+reconstruct observed images from brain activity? To ensure
+that the visual decoder have a wide range of applications,
+it must be possible to decode novel images. From a task
+perspective, visual decoding from spike trains was mainly
+focused on the classification taskIbos and Freedman
+(2017)Sachs et al. (2015) in the early days. but with the
+development of decoding algorithm, research began to
+shift to the field of image reconstruction; From a method
+perspective, many studies have focused on the application
+of functional magnetic resonance imaging (fMRI) in visual
+decodingShen et al. (2019)Huang et al. (2021)Horikawa
+and Kamitani (2017), but this is the appearance of nerve cell
+communication. Recently, some studies have shown that it’s
+possible to reconstruct image from spike trainsHayashi and
+Kawata (2018)Li et al. (2022)Ran et al. (2021). Although
+there are many methods to decode the brain signal, it is still
+difficult to decode the spike signal in the V1 brain region.
+Moreover, current methods lack biological basis. Therefore,
+we proposed to a new method with biological theory not
+only on neural network architecture but also loss function in
+deep neural network(Figure1).
+In this experiment, raster images with relatively simple
+structure were used for reconstruction, and spike trains of
+macaque V1 were used as input data. We used an end-to-end
+neural network to decode the spike trains and the output
+is the reconstructed images. The realization of this task
+
+Figure 1: shows the macaque receptive fields of primary visual cortex. Each blue colored circle is an outline of receptive field.
+The red and green region represent excitatory and inhibitory subregions individually.
+
+Figure 2: Research has demonstrated that filters are often redundantly learned in CNN and the most fundamental filter can be
+replaced by the Gabor filter. In order to compress the model with a reduced number of filter parameters, we used Gabor filters
+as the learned convolution filters.
+provides a reference for image reconstruction with more
+complex structures.
+In order to test our decoder on different spike datasets, We
+tested the decoder on RGCs spike trains, and we found that
+it can obtain good performance in the datasets of RGCs for
+the reconstruction of natural scenes of video frames.
+
+Material and Method
+Implementation We implemented the proposed algorithm
+on 3070ti GPU, the i5 9400F CPU, and 64G RAM. To raise
+computing speed, we read data from the hard disk to memory at first.. Our code is based on the environment torch1.9.1
+and python 3.8. The version of Cuda is 11.4. The code and
+results are available at https://github.com/WYCAS/S2INet
+
+Datasets
+When information on the spike trains is insufficient to reconstruct a high-resolution image, the weighted loss function can reconstruct images discriminately, where the receptive field region has a higher weight.
+Macaque primary cortex datasets We tested our model
+on two natural neural spike trains. The first datasets are
+macaque V1 datasets which consist of multi-electrode
+recordings from V1 in anesthetized macaque monkeys,
+while natural images and gratings were flashed on the
+screen. The data were collected in the Laboratory of Adam
+Kohn at the Albert Einstein College of Medicine and downloaded from the CRCNS website. Data was recorded by the
+”Utah” electrode array. Natural images were presented at
+two sizes, 3-6.7 degrees and windowed to 1 degree, to quantify surround modulation. The receptive field(RF) was measured using small gratings presented at a range of positions.
+
+Figure 3: This illustrates shows Gabor filters with different directions and scales.
+
+Figure 4: shows the network structures of our model. We adopt Max-pooling to downsampling in the encoder and adopt
+transposed convolution in a decoder, which is an efficient strategy to perform upsampling. We assume ReLU as an activation
+function after convolution layers, the dropout is used to avoid over-fitting.
+The RF center of each neuron was defined as the location of
+the peak of a 2D Gaussian fit to the spatial activity map. Experimental procedures and stimuli are fully described in the
+associated paperCoen-Cagli, Kohn, and Schwartz (2015).
+
+of salamanders, we converted the timestamp to spike trains
+on a 10ms scale. We randomly selected some scenes and disrupt the order to wash out the temporal correlation within the
+video.
+
+Salamander retina datasets The second datasets are
+temporal firing patterns in populations of simultaneously
+recorded salamander neurons. Our decoder was used to reconstruct video frames from the spike trains of a population
+of RGCs of salamanders. Visual stimuli were projected onto
+the retina through a telecentric lens. These datasets and descriptions can be found in this paperOnken et al. (2016). The
+video frame data consists of salamander retina spike trains
+which include 1800 video frames, and resize the pixels to
+64*64 pixels. There are 1800 video frames as stimulus and
+the number of 49 RGCs spike trains. The training set contains 1440(1800*0.8) video frames of 64*64 pixels, the test
+set contains 360(1800*0.2) video frames.
+
+Model
+
+Data Process
+In the macaque V1 datasets, we used 7 session data that
+included the results of multiple experiments. We used the
+80% data(1249) as the training set and the remaining 20%
+data as the test set. To ensure that each batch input dimension is equal, we intercept a small part of the data. The data
+of 100 neurons in 105ms were retained every session. The
+reconstructed image is modified to 80*80 pixels grayscale.
+And as to the population of RGCs spike trains in the retinas
+
+In this experiment, the structure of the auto-encoder is
+usedHinton and Salakhutdinov (2006). In addition, considering the directivity of raster images and the training complexity of CNNs, the first convolution layer of our model
+used the Gabor filtersLuan et al. (2018)(Figure2).
+Gabor convolution neural network is a deep neural network using Gabor orientation filters (GoFs), which can produce feature map to enhance directions and scales information(Figure3). In addition, GoFs are wildly used to model
+receptive fields of simple cells of the visual cortex. In this
+way, the model of deep learning can be strengthened while
+learning fewer parameters. Applying the convolutional neural network to the raster image reconstruction task can better
+fit the raster image with directions and scales. We adopted
+the following neural network framework(Figure4).
+
+Loss function
+We designed a new loss function and set receptive field
+properties of the weight matrix, which can be adjusted
+according to the position of the receptive field. Applying
+the weight matrix of the receptive field to the loss function
+
+Figure 5: Left illustrates a Gaussian kernel. Right presents the W matrix which is presented the importance of the different
+regions of an image.
+
+Figure 6: shows the performance of our method to reconstruct the grating images from macaque monkey V1 spike trains.
+can make the different definitions in different parts of the
+reconstructed image and give higher weight to the area of
+attention of the receptive field. Due to the need to measure
+the structural similarity between the original image and
+the reconstructed image, we fuse the Structure Similarity
+Index Measure (SSIM) in the loss function. SSIM can be
+described in detail in this paperWang et al. (2004). It can be
+summarized as follows: The comparison measurements are
+luminance, contrast, and structure. they are described as:
+lluminace (x, y) =
+
+2µx µy + c1
+µ2x + µ2y + c1
+
+(1)
+
+ccontrast (x, y) =
+
+2σ x σy + c2
+σx2 + σy2 + c2
+
+(2)
+
+σxy + c3
+sstructure (x, y) =
+σx σy + c3
+
+(3)
+
+
+
+SSIM = l(x, y)]α c(x, y)]β [s(x, y)]γ
+
+(4)
+
+µx is the mean of x, σx is the standard deviation of x, and
+σxy is the covariance between x and y. Generally. We set α,
+β, and γ to be 1, and c3 =c2 /2.
+The SSIM can be described as:
+(2µx µy + c1 ) (2σ xy + c2 )
+
+
+σx2 + σy2 + c2
+
+(5)
+
+H
+X W
+X
+1
+X1 (i, j) − X2 (i, j))2
+Ih × Iw i=1 j=1
+
+(6)
+
+L = µLSSIM + (1 − µ)W LM SE
+
+(7)
+
+SSIM (x, y) =
+
+M SE =
+
+2
+(µ x + µ2y + c1
+
+W is a matrix with receptive field properties 5. We used a
+Gaussian kernel as the spatial weight matrix.
+
+Figure 7: illustrates the Reconstructed video frames from experimental RGC spike Trains with different methods.
+
+Result
+The performance of our method was evaluated on two
+open source datasets which include macaque primary motor cortex and salamander retina spike trains. We didn’t use
+a simulator, we chose real datasets for training our model.
+We evaluated our method on images of gratings that contain
+4 orientations and a different degree in diameter. Figure6
+shows the reconstruction effects of our method. Due to the
+location of the receptive field, there are different reconstruction effects in the different regions.
+To further test the generalization capability of our method,
+we did experiments on biological experimental RGCs data
+to RGCs responses(Figure7). The first method (method 1)
+is based on an auto-encoder with an MSE loss function
+and the second method(method 2) is based SSIM loss functionZhang et al. (2020).
+Table1 shows the performance of our method compared
+Table 1: shows the performance of our method compared
+with other methods
+Method
+MSE
+PSNR
+VIFP
+SSIM
+Method 1
+1.8611
+9.3023
+0.0554
+0.7281
+Method 2
+0.5455 14.6389 0.2183
+0.8088
+Proposed
+0.5147 14.8911 0.2316
+0.8174
+with the CNN auto-encoder with the mean square error
+(MSE), peak signal to noise ratio (PSNR), visual information fidelity, pixel domain version (VIFP)Han et al. (2013),
+and SSIM loss function. MSE describes the absolute difference of every pixel, the PSNR describes the global quality,
+the PSNRis defined as:
+
+
+L2
+P SN R = 10 · log 10
+(8)
+M SE
+L presents the maximum pixel value(255 for 8-bit images). The VIFP that quantify the information shared between the test and the reference images, and the SSIM that
+
+captures the structure similarity, for evaluating the reconstruction results. Comparing other method our model suggests that Gabor auto-encoder architecture with weighted
+loss function enables more clear reconstruction. The proposed method can do well in presenting the reconstruction details, especially in complex stripe feature of animal
+or scenes. However,its performance is still poor for stimuli
+from complex visual images, This may be due to short stimuli and complex feature of each natural image.
+
+Discussion
+In this study, we propose a new reconstruction framework
+that can reconstruct images based on neural spike trains in
+the visual cortex and retina. We build an end-to-end model
+from spike trains to images that can be used for various
+data sets. The reconstruction module has a simple encoding
+and decoding structure, which extracts information from the
+spike train. We propose a Gabor autoencoder and a new loss
+function that integrates the properties of the receptive field,
+the Gabor filter is used to represent the retinal processing
+mechanism of the spike train. We argue that the effect of image reconstruction from macaque V1 spike trains and salamander retinal spike trains is different between them due to
+the complexity of neural encoding. Depending on the type of
+neural information, the image reconstruction effect is related
+to the proportion of effective neuronal information collected
+by the neural electrodes.
+In future work, we will further improve the model to accommodate complex texture images. The decoder can be
+used to explore the relationship between the number of neurons and the reconstructed image. And, we can also consider
+the problem of visual reconstruction based on continuous visual neural signals, which is due to the logical continuity of
+visual information, which combines the coding characteristics of continuous information as well as discrete information, and we may be able to reconstruct the image better if
+we consider the historical information of vision as well as
+the current stimulus.
+
+Although the decoding model can reconstruct a part of
+the visual information, the model cannot yet theoretically
+establish the decoding mechanism of vision. Based on the
+data-driven approach of deep learning, we also expect that
+in the future, using more reliable data, we will be able to
+effectively decode visual information, and then invert the
+encoding mechanism of vision, and this visual encoding
+mechanism can be directly used in brain-inspired algorithms
+to achieve brain-inspired intelligence with biological interpretability.
+
+References
+Almeida, J.; Mahon, B. Z.; and Caramazza, A. 2010. The
+role of the dorsal visual processing stream in tool identification. Psychological science 21(6):772–778.
+Chen, W.; Kato, T.; Zhu, X.-H.; Ogawa, S.; Tank, D. W.; and
+Ugurbil, K. 1998. Human primary visual cortex and lateral geniculate nucleus activation during visual imagery.
+Neuroreport 9(16):3669–3674.
+Coen-Cagli, R.; Kohn, A.; and Schwartz, O. 2015. Flexible
+gating of contextual influences in natural vision. Nature
+neuroscience 18(11):1648–1655.
+Gaziv, G.; Beliy, R.; Granot, N.; Hoogi, A.; Strappini, F.;
+Golan, T.; and Irani, M. 2022. Self-supervised natural
+image reconstruction and large-scale semantic classification from brain activity. NeuroImage 254:119121.
+Grill-Spector, K.; Malach, R.; et al. 2004. The human visual
+cortex. Annual review of neuroscience 27(1):649–677.
+Han, Y.; Cai, Y.; Cao, Y.; and Xu, X. 2013. A new image
+fusion performance metric based on visual information fidelity. Information fusion 14(2):127–135.
+Hayashi, R., and Kawata, H. 2018. Image reconstruction
+from neural activity recorded from monkey inferior temporal cortex using generative adversarial networks. In
+2018 IEEE International Conference on Systems, Man,
+and Cybernetics (SMC), 105–109. IEEE.
+Hinton, G. E., and Salakhutdinov, R. R. 2006. Reducing
+the dimensionality of data with neural networks. science
+313(5786):504–507.
+
+Kay, K. N.; Naselaris, T.; Prenger, R. J.; and Gallant, J. L.
+2008. Identifying natural images from human brain activity. Nature 452(7185):352–355.
+Li, W.; Joseph Raj, A. N.; Tjahjadi, T.; and Zhuang, Z. 2022.
+Fusion of anns as decoder of retinal spike trains for scene
+reconstruction. Applied Intelligence 1–13.
+Luan, S.; Chen, C.; Zhang, B.; Han, J.; and Liu, J. 2018. Gabor convolutional networks. IEEE Transactions on Image
+Processing 27(9):4357–4366.
+Miyawaki, Y.; Uchida, H.; Yamashita, O.; Sato, M.-a.;
+Morito, Y.; Tanabe, H. C.; Sadato, N.; and Kamitani, Y.
+2008. Visual image reconstruction from human brain activity using a combination of multiscale local image decoders. Neuron 60(5):915–929.
+Nishimoto, S.; Vu, A. T.; Naselaris, T.; Benjamini, Y.; Yu,
+B.; and Gallant, J. L. 2011. Reconstructing visual experiences from brain activity evoked by natural movies.
+Current biology 21(19):1641–1646.
+Onken, A.; Liu, J. K.; Karunasekara, P. C. R.; Delis, I.;
+Gollisch, T.; and Panzeri, S. 2016. Using matrix
+and tensor factorizations for the single-trial analysis of
+population spike trains. PLoS computational biology
+12(11):e1005189.
+Ran, X.; Zhang, J.; Ye, Z.; Wu, H.; Xu, Q.; Zhou, H.; and
+Liu, Q. 2021. Deep auto-encoder with neural response.
+arXiv preprint arXiv:2111.15309.
+Rubin, T. N.; Koyejo, O.; Gorgolewski, K. J.; Jones, M. N.;
+Poldrack, R. A.; and Yarkoni, T. 2017. Decoding
+brain activity using a large-scale probabilistic functionalanatomical atlas of human cognition. PLoS computational
+biology 13(10):e1005649.
+Sachs, N. A.; Ruiz-Torres, R.; Perreault, E. J.; and Miller,
+L. E. 2015. Brain-state classification and a dual-state
+decoder dramatically improve the control of cursor movement through a brain-machine interface. Journal of neural
+engineering 13(1):016009.
+Shen, G.; Horikawa, T.; Majima, K.; and Kamitani, Y. 2019.
+Deep image reconstruction from human brain activity.
+PLoS computational biology 15(1):e1006633.
+
+Horikawa, T., and Kamitani, Y. 2017. Generic decoding of
+seen and imagined objects using hierarchical visual features. Nature communications 8(1):1–15.
+
+Wang, Z.; Bovik, A. C.; Sheikh, H. R.; and Simoncelli, E. P.
+2004. Image quality assessment: from error visibility to
+structural similarity. IEEE transactions on image processing 13(4):600–612.
+
+Huang, W.; Yan, H.; Wang, C.; Yang, X.; Li, J.; Zuo, Z.;
+Zhang, J.; and Chen, H. 2021. Deep natural image reconstruction from human brain activity based on conditional progressively growing generative adversarial networks. Neuroscience bulletin 37(3):369–379.
+
+Yücel, Y. H.; Zhang, Q.; Weinreb, R. N.; Kaufman, P. L.;
+and Gupta, N. 2003. Effects of retinal ganglion cell
+loss on magno-, parvo-, koniocellular pathways in the lateral geniculate nucleus and visual cortex in glaucoma.
+Progress in retinal and eye research 22(4):465–481.
+
+Ibos, G., and Freedman, D. J. 2017. Sequential sensory
+and decision processing in posterior parietal cortex. Elife
+6:e23743.
+
+Zhang, Y.; Jia, S.; Zheng, Y.; Yu, Z.; Tian, Y.; Ma, S.; Huang,
+T.; and Liu, J. K. 2020. Reconstruction of natural visual scenes from neural spikes with deep neural networks.
+Neural Networks 125:19–30.
+
+Kaas, J. H., and Baldwin, M. K. 2019. The evolution of the
+pulvinar complex in primates and its role in the dorsal and
+ventral streams of cortical processing. Vision 4(1):3.
+
+

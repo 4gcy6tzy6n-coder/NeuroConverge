@@ -1,0 +1,790 @@
+A Robust Learning Rule for Soft-Bounded
+Memristive Synapses Competitive with Supervised
+Learning in Standard Spiking Neural Networks
+
+arXiv:2204.05682v1 [cs.ET] 12 Apr 2022
+
+Thomas F. Tiotto∗§ , Jelmer P. Borst† and Niels A. Taatgen‡
+Groningen Cognitive Systems and Materials Center
+University of Groningen
+Groningen, The Netherlands
+Email: ∗ t.f.tiotto@rug.nl, † j.p.borst@rug.nl, ‡ n.a.taatgen@rug.nl
+§ Corresponding author
+
+Abstract—Memristive devices are a class of circuit elements
+that shows great promise as future building block for braininspired computing. One influential view in theoretical neuroscience sees the brain as a function-computing device: given
+input signals, the brain applies a function in order to generate
+new internal states and motor outputs. Therefore, being able to
+approximate functions is a fundamental axiom to build upon for
+future brain research and to derive more efficient computational
+machines. In this work we apply a novel supervised learning algorithm - based on controlling niobium-doped strontium titanate
+memristive synapses - to learning non-trivial multidimensional
+functions. By implementing our method into the spiking neural
+network simulator Nengo, we show that we are able to at
+least match the performance obtained when using ideal, linear
+synapses and - in doing so - that this kind of memristive device
+can be harnessed as computational substrate to move towards
+more efficient, brain-inspired computing.
+Index Terms—Beyond CMOS, Neuromorphics, Memristors,
+Hebbian theory
+
+I. I NTRODUCTION
+Artificial neural networks (ANNs) are universal function
+approximators ([1]), meaning that - given enough resources
+(neurons) - an ANN can potentially approximate any and every
+function to an arbitrary degree of precision. Philosophically,
+everything in Nature can be described as a function, including
+the tasks the brain carries out; for example - alongside all others - those relating to learning, memory, planning, emotions,
+and self-awareness. Theoretical Neuroscience has also mostly
+adopted this view in regards to the brain ([2]), defining and
+studying it as a device which applies functions to its inputs in
+order to generate outcomes in the form of new internal states
+and motor outputs.
+There nowadays exist modelling tools that explicitly represent brain functionality as mathematical functions with the
+most well-known and developed probably being the spiking neural network simulator Nengo ([3]). Nengo represents
+information using the principles of the Neural Engineering
+Framework (NEF) ([4]), which prescribes how to encode
+and decode signals into ensembles of spiking neurons and,
+based on the function being computed, sets out an analytical
+
+method to determine the weights of optimal connection matrices between these neuronal pools. Nengo also implements
+various learning rules, with the MacNeil & Eliasmith general
+error-based learning rule Prescribed Error Sensitivity (PES)
+([5]) is commonly adopted for supervised learning in classic
+neural network approaches. Another advantage of Nengo is
+that is directly compiles to existing digital and mixed-signal
+neuromorphic hardware, including Intel Loihi, SpiNNaker,
+FPGAs, and Braindrop.
+Memristors are a novel class of device that has attracted
+great research interest since its inception ([6]) and realisation
+([7]) due to its capacity to maintain a resistance state in
+absence of external stimuli. The fact that the physical state of
+this device can be directly changed by applying voltage pulses
+to the terminals allows its programming with a fraction of the
+power needed for silicon transistors ([8]). Memristors have
+been applied to model neurons, synapses, non-volatile random
+access memory, and many other more specific applications
+([9]).
+One of the main reasons to consider a brain-inspired neuromorphic approach that uses memristors for computation is
+because the efficiency improvement that can be gained is
+prospected to go beyond anything achievable with traditional
+algorithms running on silicon. Our present-day machines are
+struggling to supply us with a sufficient balance between
+performance and energy consumption ([10]). This imbalance
+is significant when considering the environmental impact that
+our data centres have when confronted with ever more massive
+amounts of big data, but is also crucial when the available
+energy envelope is significantly limited, for example when
+computing at the extreme edge. One reason for this relatively
+poor efficiency can be traced to the fact that contemporary
+computers are based on the Von Neumann architecture, which
+in itself entails inefficiency, given that memory and computation elements are physically separate within the machine
+([11]). Another reason - which follows from the first - is that
+algorithms written for this computational architecture seem
+to be inherently less capable of dealing with the kind of
+uncertainty and massive quantities of data that result from
+
+interactions with the real world ([12, 13]). In fact, one of
+the greatest strengths of ANNs is that they do not need
+to be programmed in the traditional sense, but learn the
+program/function directly from data.
+When looking to advance beyond the Von Neumann architecture and Moore’s law, it comes quite natural to look to
+the brain for inspiration as it is maybe the most remarkable
+computational device we are aware of. Our brain consumes
+only an estimated 20 W of power ([14]), compared to the more
+than 100 MW needed by a single data centre. To put things
+into perspective: the difference in power consumption is the
+same as if a golf ball were scaled to the size of a medium-sized
+moon. Additionally, within this relatively tiny energy envelope
+the brain is able to solve tasks that our best supercomputers
+still can’t approach ([15]). If we want to start to close the
+gap between our computers and the brain, we need both new
+materials and novel computing paradigms: memristors can
+give us the former, while we can start working towards the
+latter by adopting a function-based approach as the brain’s
+and ANNs’.
+We have already published a paper presenting a novel
+supervised learning algorithm controlling the resistance of
+metal/niobium-doped strontium titanate (Ni/Nb-doped SrTiO3 )
+memristive synapses, which we named memristor PES
+(mPES), and - as a proof of concept - showed that we could
+utilise it to learn two very simple functions (y = x and
+y = x2 ) ([16]). In this work we extend our methodology by
+applying mPES to learning non-trivial, non-linear functions of
+varying dimensionality and also compare the results with the
+optimal analytic implementation of the functions, as computed
+by Nengo using the NEF principles. The functions we learn
+in this work are a lot more interesting than the ones in our
+original mPES paper ([16]), as shall be made clear in Section
+II. By implementing our method into Nengo, we show that
+we are able to at least match the performance of PES; we do
+so by reproducing and extending the benchmarks by Bekolay
+([17]).
+Artificial neural networks use perfectly linear synapses
+without considering that this might not be the optimal choice,
+especially in a biologically-plausible continuous learning context. In this context this kind of idealised synapse might,
+as first noted by [18], actually lead to decreased learning
+performance and memory capacity in the network. As shall
+become clear in the main text, our memristors’ resistance
+dynamics follow a non-linear - power-law - behaviour whose
+evolution slows as the resistance bounds are approached and
+this matches the kind of device used by [19]. Thus, our current
+study aims at exploring and confirming the important role
+that non-linear, soft-bounded synaptic dynamics can play in
+learning and does so by using a model of a real memristive
+device in a spiking neural network. One of the main values
+of our study is to show that this kind of memristive device
+can be harnessed as computational substrate to move towards
+more efficient, brain-inspired computing.
+The reader can now see how being able to approximate
+functions sets the grounds for functional brain simulations and
+
+research, which will most certainly be necessary to advance
+beyond our present-day computational capabilities. Integrating
+analogue devices such as memristors into brain-inspired models brings its own set of additional challenges but, given their
+remarkable energy efficiency, this is quite certainly a valuable
+undertaking.
+II. M ETHODS
+In order to compare the performance of our mPES learning
+rule, to that of standard PES, we reproduce and extend a
+methodology from existing literature ([17]).
+The PES learning rule ([5]) is incorporated into Nengo and
+accomplishes online error minimization by solving
+∆ωij = καj ej Eai
+
+(1)
+
+where ωij is the weight of the connection between presynaptic neuron i and post-synaptic neuron j, κ is the learning
+rate, αj and ej are NEF-specific parameters for neuron j, E is
+the global d-dimensional error to minimize, and ai the activity
+of neuron i.
+Memristive devices change their internal state and resistance in response to voltages above a threshold. Here, we
+utilised simulated Ni/Nb-doped strontium titanate (Ni/Nbdoped SrTiO3 ) devices, where resistive switching results from
+changes occurring at the Ni/Nb:STO interface ([20]). To derive
+a model of the device, we subjected it to a series of electrical
+measurements and found that the power-law in Eq. (2) could
+explain the resistance change as a function of the number n
+of +0.1 V pulses applied to the device terminals
+R(n) = R0 + R1 nc
+= 200 + 2.3 × 108 n−0.146
+
+(2)
+
+with R(n) the device’s resistance in Ohm Ω, R0 and R0 +
+R1 the minimum and maximum resistance, n the number of
+voltage pulses supplied, and c a constant resulting from fitting.
+Fig. 1 shows measurements from the real device and highlights
+how each successive +0.1 V voltage pulses brings the device
+to a lower resistance state and how each one has a decreasing
+effect. The devices can thus be characterised as soft-bound
+memristive synapses, in line with those explored in existing
+literature ([19]).
+We do not model a decrease in the resistance due to a lack of
+experimental data, but this does not impact our rule’s capacity
+to learn. It is important to note that the initial resistance of
+each memristor is randomly initialised around a resistance
+of 108 Ω and that each update resulting from a pulse also
+presents a measure of stochasticity in order to better simulate
+the physical uncertainties one has to deal with when using
+these kind of materials. In order to simulate device-to-device
+variation and hardware noise we introduce variation on both
+the initial resistance state of the devices and on the magnitude
+of each update following a voltage pulse. To this end we
+initialise the memristor resistances to a random high value in
+the range [108 Ω ± 15%] to reproduce the case (as measured
+in the real devices) where the resistance is brought to a high
+
+value following the application of multiple RESET voltage
+pulses. Secondly, we independently add 15% Gaussian noise
+to the R0 , R1 , and c parameters in Eq. 2 at the start of each
+simulation run. This has the effect of making every device
+respond differently in response to the voltage pulses. We do
+not draw the parameter values from a new distribution at each
+timestep because of computational constraints. The full details
+on the device, measurements, and modelling can be found in
+the Materials and Methods section of our original mPES paper
+([16]).
+To be able to represent negative network weights - as
+resistance R and its reciprocal conductance G are positive
+physical quantities - we define the weight ωij of each synapse
+in the Nengo model as the scaled difference between the
++
+−
+normalised conductances of two memristors Mij
+and Mij
+as
+"
+ωij = γ
+
++
+G+
+ij − G0,ij
++
+G+
+1,ij − G0,ij
+
+!
+−
+
+−
+G−
+ij − G0,ij
+−
+G−
+1,ij − G0,ij
+
+!#
+(3)
+
+with γ a gain factor (in all simulations in this work fixed
+±
++
+at γ = 103 ), and G±
+ij , G0,ij , and G1,ij the present, minimum,
+±
+and maximum conductance of M , respectively.
+mPES is a novel learning rule that operates on the memristors’ conductances G±
+ij in Eq. (3) and is - essentially - a
+discretised version of PES. Unlike PES, which operates on
+ideal weights, mPES needs to account for the non-idealities
+and discrete changes - which decrease in magnitude with every
+subsequent pulse - that result from applying voltage pulses to
+±
+the memristors, as can be seen in Fig. 1. Each memristor Mij
+receives a voltage pulse to increase its conductance based on
+the sign of the V = ej Eai term, defined analogously as in
+Eq. 1, which is a matrix where every entry corresponds to a
+synapse in the Nengo model. The local error ej E represents
+how much the post-synaptic neuron j contributes to the global
+error E, and ai is the activity of the pre-synaptic neuron. PES
+also calculates this the local error, but mPES skips the weight
+
+Fig. 1. Real memristor data showing the resistance R(n) as a function of
+the first ten +0.1 V pulses n supplied to the device. Adapted from [16].
+
+update if it is below a certain threshold because a small local
+error has little to no effect in a real-valued weight update
+setting but it can trigger a voltage pulse on a memristor and
+bring it to a new discrete resistance state, thus having an outsized effect. If the sign of Vij - corresponding to the synapse
++
+between neurons i and j - is positive then the memristor Mij
++
+is pulsed. Each pulse increases the conductance of Mij and
+this, as can be derived from Eq. 3, strengthens the network
+weight ωij i.e., facilitates the synapse between i and j. A
+−
+symmetric operation is applied to Mij
+when Vij < 0 in order
+to weaken ωij . The overall effect of this procedure is that
+synapses whose neurons had a beneficial participation to the
+error are facilitated, and those whose neurons had a negative
+effect are depressed so as to decrease the probability of them
+playing a role in the future. The full details can be found in
+the Materials and Methods section of our original mPES paper
+([16]).
+In order to test the learning performance of mPES, we
+reproduced the methodology described in “Learning nonlinear
+functions on vectors: examples and predictions” ([17]) which
+was used to benchmark PES. This was done by comparing
+the quality of multi-dimensional functions f where the matrix
+implementing the transformation was learned with PES to the
+case where the matrix entries were computed analytically at
+the start of the simulation by Nengo using the NEF (referred
+to simply as “NEF” from here onwards). In the latter NEF - case, the matrix implementing the function f is not
+learned and is not plastic, meaning that it does not change
+during a simulation run. We extended this methodology by reimplementing it with the latest version of Nengo at the time
+of writing (Nengo 3.0) and compared the outcome of using
+our learning rule mPES to those when running PES and NEF.
+The simple network topology shown in Fig. 2 is defined
+specifically to test the learning rule: it consists of a noisy
+input signal x projecting to a pre-synaptic neuronal ensemble, a post-synaptic ensemble representing y which is
+connected to pre via a plastic connection, a ground truth
+ensemble representing the transformed input f (x), and finally
+an error ensemble which compares the activity in post and
+in ground truth as y −f (x). The input x is an ideal white
+noise signal in multiple independent dimensions, low-pass
+filtered by a 5 Hz cutoff. It is important to note the the function f is computed across the input-to-ground truth
+connection analytically by the NEF; learning only happens
+on the pre-to-post connection. The number of neurons in
+each neuronal ensemble and the simulation run time are all
+altered depending on the specific function being tested, with
+the specific values being reported in Table I. The neurons in
+each ensemble are leaky integrate-and-fire whose parameters
+are unaltered from the Nengo defaults.
+We test learning by running mPES, PES, and NEF ten
+times each for each of the functions f in Table I, which
+are applied to the input-to-ground truth connection. We
+limit ourselves to ten simulation runs because of computational
+constraints and also to faithfully reproduce the methodology in
+([17]). The first function in Table I is interesting as an example
+
+of the simplest non-linear function. The second tests if the
+linear combination of two non-linearities can be learned with a
+one-dimensional error signal, corresponding to a reinforcement
+learning setting. The third function’s inclusion is motivated
+by it being a nearly minimal example of multidimensionalto-multidimensional mapping. Circular convolution ⊗, of the
+kind of the last two functions in Table I, is extremely important
+in many settings, but especially so in Nengo as it is used
+to bind vectors together. One thing to note is that an extra
+specialised neuronal ensemble conv is required between
+input and ground truth in order to compute the circular
+convolution between x’s components.
+The mPES and PES learning rules use the information
+received from error to act on the weights on the plastic
+connection between pre and post, with the goal of making
+the value in post resemble that in ground truth as
+much as possible. This results in the pre-to-post connection
+matrix being progressively tuned to represent the transformation f and thus for the value y in post to approximate
+that in ground truth i.e., y ∼ f (x). When the NEF is
+benchmarked - in order to obtain a control “gold standard”
+to gauge mPES and PES’s performance - the connection
+between pre and post is not plastic but sees its weights precalculated in order to optimally represent the function f . In this
+case, error is omitted from the network as f (x) is already
+optimally being represented on the pre-to-post connection.
+Compared to our original paper ([16]), we added the
+ground truth and conv ensembles. This made the task
+more difficult as in the original model f (x) was calculated
+analytically across the input-to-error connection while
+now f (x) is represented by the spiking in ground truth.
+This extra encoding step leads to a loss of information, making
+the learning task somewhat harder for mPES to solve.
+The learning performance of mPES and PES are compared
+to the NEF baseline by breaking up a simulation run into
+an equal number of 2.5 s learning and testing blocks (for
+example, the first function in Table I sees the networks being
+
+Fig. 2. Nengo network topology used to test the learning rule performance.
+The signals x, y, and f (x) are shown in correspondence to the neuronal
+ensembles representing them. When f = ⊗ there is an extra conv ensemble
+between input and ground truth. When the NEF is being benchmarked
+the error ensemble is omitted.
+
+run for 50 s, giving a sequence of ten kLearningkTestingk
+blocks). After each simulation run, the values represented by
+post and ground truth during each testing block are
+subtracted to give the absolute total error for that block. This
+choice was made because the error ensemble is omitted
+when benchmarking the NEF, but the calculated quantity
+would be analogous to that represented in error during
+runtime in all cases.
+III. R ESULTS AND D ISCUSSION
+The results of our simulations comparing mPES to PES
+and NEF are shown in Fig. 3 and Fig. 4. In these plots the
+solid lines represent the accumulated error at each testing
+block averaged over ten simulation runs and the shaded area
+corresponds to the 95% confidence interval for this average
+value. The red colour identifies the NEF control network,
+blue the control network with PES learning, and green the
+network using our mPES learning rule. The y-axis shows
+the average accumulated error during each testing block of
+the simulation and is in arbitrary units; the x-axis shows the
+total length of the simulation in seconds. Each data point
+is spaced 5 s apart, given that the error is reported after
+a combination of 2.5 s learning and 2.5 s testing blocks
+(kLearningkTestingk . . . kLearningkTestingk).
+One might expect the error in the NEF case to present
+no variation between trials, given that the NEF analytically
+derives a matrix to optimally represent the function computed
+across a connection. In reality, the actual matrix entries in each
+simulation may differ based on the neuron parameters, which
+are randomly initialised each time a Nengo simulation is run.
+The fluctuations in NEF measured error within a simulation
+are due to the random nature of the input data and to the
+transformation matrix better representing some parts of the
+input space than others.
+When learning the five different functions f in Table I,
+mPES was able to modulate the memristive synapses’ resistances which, when translated to network weights, implemented f as well or better than PES. In Fig. 3a, 3b, 3c, where
+the networks are learning variations on multiplication, mPES
+sees the total error decrease slower than PES but the error
+measured on the final testing block is within the confidence
+interval of PES in all three cases. When the task is to learn
+2-D and 3-D circular convolution of the input components, as
+shown in Fig. 4a, 4b, mPES actually learns the function faster
+than PES even though the final error is again comparable. That
+the performance of mPES is in line to that of PES in all cases,
+can also be seen by looking at the average error in the last
+testing block as reported in the rightmost column of Table I. In
+the mPES and PES cases - where the connection weight matrix
+is learned - the error at t = 0 is due to the pre-to-post matrix
+being randomly initialised and thus this data point does not
+reflect the performance of the learning rules. As noted earlier,
+the NEF computes the matrix entries analytically based on
+the specific - random - neuron parameters of that simulation
+run; for this reason, the performance of the NEF network also
+shows some variation between runs. Across the spectrum, as
+
+Multiplying two numbers
+
+(a)
+
+Ours (mPES)
+Control (PES)
+Control (NEF)
+
+1000
+
+Ours (mPES)
+Control (PES)
+Control (NEF)
+
+1400
+1200
+
+Total error
+
+Total error
+
+1200
+
+Combining two products
+
+(b)
+
+800
+600
+400
+
+1000
+800
+600
+400
+
+200
+
+200
+0
+
+10
+
+20
+
+30
+
+40
+
+Seconds
+
+50
+
+0
+
+40
+
+60
+
+Seconds
+
+80
+
+100
+
+Three separate products
+
+(c)
+
+4000
+
+Ours (mPES)
+Control (PES)
+Control (NEF)
+
+3500
+3000
+
+Total error
+
+20
+
+2500
+2000
+1500
+1000
+500
+0
+
+20
+
+40
+
+60
+
+80
+
+Seconds
+
+100
+
+Fig. 3. Average accumulated learning error on each 2.5 s testing block for variations on multiplication. Solid lines represent the accumulated error at each
+testing block averaged over ten simulation runs and the shaded area corresponds to the 95% confidence interval for this average value.
+(a) f (x1 , x2 ) = x1 × x2
+(b) f (x1 , x2 , x3 , x4 ) = x1 × x2 + x3 × x4
+(c) f (x1 , x2 , x3 ) = [x1 × x2 , x1 × x3 , x2 × x3 ]
+
+(a) Two-dimensional circular convolution
+Ours (mPES)
+Control (PES)
+Control (NEF)
+
+2500
+2000
+1500
+1000
+
+Ours (mPES)
+Control (PES)
+Control (NEF)
+
+4000
+3500
+
+Total error
+
+Total error
+
+(b) Three-dimensional circular convolution
+
+3000
+2500
+2000
+1500
+1000
+
+500
+0
+
+25
+
+50
+
+75
+
+100
+
+Seconds
+
+125
+
+150
+
+175
+
+200
+
+0
+
+50
+
+100
+
+150
+
+200
+
+Seconds
+
+250
+
+300
+
+350
+
+400
+
+Fig. 4. Average accumulated learning error on each 2.5 s testing block for variations on circular convolution. Solid lines represent the accumulated error at
+each testing block averaged over ten simulation runs and the shaded area corresponds to the 95% confidence interval for this average value.
+(a) f (x1 , x2 , x3 , x4 ) = [x1 , x2 ] ⊗ [x3 , x4 ]
+(b) f (x1 , x2 , x3 , x4 , x5 , x6 ) = [x1 , x2 , x3 ] ⊗ [x4 , x5 , x6 ]
+
+TABLE I
+F UNCTIONS f UNDER TEST. T HE CENTRAL COLUMNS PRESENT THE DIMENSIONALITY d OF THE SIGNALS REPRESENTED IN THE MAIN NEURONAL
+ENSEMBLES TOGETHER WITH THEIR NUMBER OF NEURONS #. T HE PENULTIMATE REPORTS THE SIMULATED TIME FOR EACH NETWORK RUN . T HE LAST
+COLUMN SHOWS THE ERROR AND 95 % CONFIDENCE INTERVAL MEASURED ON THE FINAL TESTING BLOCK FOR M PES, PES, AND NEF.
+Function f
+
+Pre (d/#)
+
+Error (d/#)
+
+Post (d/#)
+
+Sim. time
+
+Error (mPES/PES/NEF)
+
+f (x1 , x2 ) = x1 × x2
+f (x1 , x2 , x3 , x4 ) = x1 × x2 + x3 × x4
+f (x1 , x2 , x3 ) = [x1 × x2 , x1 × x3 , x2 × x3 ]
+f (x1 , x2 , x3 , x4 ) = [x1 , x2 ] ⊗ [x3 , x4 ]
+f (x1 , x2 , x3 , x4 , x5 , x6 ) = [x1 , x2 , x3 ] ⊗ [x4 , x5 , x6 ]
+
+2-D / 200
+4-D / 400
+3-D / 300
+4-D / 400
+6-D / 600
+
+1-D / 100
+1-D / 100
+3-D / 300
+2-D / 200
+3-D / 300
+
+1-D / 200
+1-D / 400
+3-D / 300
+2-D / 200
+3-D / 300
+
+50 s
+100 s
+100 s
+200 s
+400 s
+
+216 (±31) / 227 (±40) / 141 (±20)
+394 (±32) / 446 (±60) / 261 (±39)
+745 (±83) / 773 (±92) / 483 (±60)
+771 (±70) / 813 (±73) / 710 (±63)
+1364 (±64) / 1317 (±68) / 1258 (±70)
+
+expected, the performance of the NEF analytically-determined
+weight matrix is superior to that of those obtained via online
+learning.
+Thus, our mPES learning rule is able to match the learning
+performance of standard PES, which is remarkable given the
+restriction imposed by having to operate on non-ideal, stochastic items - as are the simulated memristors - instead of realvalued, linear, continuous network weights. It is also notable
+that mPES reaches this level of performance without having
+any information about the magnitude of the updates happening on the underlying memristors; given that the memristive
+devices’ resistance dynamics follow a power-law subsequent
+voltage pulses have a monotonically decreasing effect, but
+mPES is unaware of this. This leads us to speculate that
+mPES could also be applied to systems based on different
+memristive synapses, not just to the Nb-doped SrTiO3 ones
+utilised in this work, whose behaviour is depicted in Fig. 1.
+Additionally the fact that we are still able to at least match
+the performance of PES (and in the cases reported in Fig.
+4 actually do better) supports the finding by [19] that softbounded memristive synapses can enable improved learning
+performance compared to linear synapses of similar resolution.
+In this study we did not directly run ablation experiments to
+understand the effect of failed devices on the network performance; however, in our original paper ([16]) we experimented
+with increasing the variation in the parameters and found that
+the learning performance of mPES degraded gracefully. Given
+that the memristor model follows a power-law (Eq. 2) the
+effect of the exponent c is crucial to the behaviour of the
+simulated devices: higher variation in c leads an increasing
+number of devices becoming “stuck” in either a high of a low
+resistance state, effectively rending them unresponsive.
+IV. C ONCLUSION
+In this work we have modelled each weight in a spiking
+neural network by a pair of simulated memristors and shown
+that a supervised learning rule we call mPES, which operates
+on these devices’ resistances, can match the performance of
+the standard general error-based learning rule PES ([5]). The
+performance of our learning rule has been tested by reproducing and extending a methodology from literature ([17]), where
+a Nengo spiking neural network was used as basis for learning
+the five non-trivial multi-dimensional functions in Table I.
+Using memristors as basis for neural network weights
+(and for other ANN elements), especially when paired with
+
+a biologically-plausible learning algorithm, is one way of
+improving the energy efficiency of present-day computing
+machines. Memristors are analogue devices and, as such,
+inherently stochastic; this characteristic, if properly harnessed,
+could turn out to be important to deal with the randomness
+present in all data resulting from real-world interactions. The
+brain is continually learning from every input it receives
+and soft-bounded memristive synapses of the kind used in
+this work can help alleviate the issues of synapse hyperspecialisation and catastrophic forgetting. Brittleness is one
+of the main downfalls of not just traditional Von Neumannbased algorithms, but of machine learning models as a whole:
+moving towards more robust, cognitive systems is taking
+one step further towards the holy grail of artificial general
+intelligence.
+While Nengo directly compiles to certain digital and mixedsignal neuromorphic hardware, we are not currently able to
+directly implement our model on a crossbar array of SrTiO3
+memristors. Nonetheless, we believe that the main value of this
+work is in showing that this kind of device can be harnessed
+as computational substrate to move towards more efficient,
+brain-inspired computing.
+The brain is probably the most extraordinary computational
+device we know of, but how it carries out its feats of intelligence is still mostly a mystery. One way of understanding
+the brain is to view it as a function-computing machine able for example - to apply a function to the inputs received from
+our retinae and decide that we are looking at a cat. Therefore,
+having a memristor-based neuromorphic system which is able
+to learn to approximate non-trivial functions - as the ones
+tested in this work - could prove to be a valuable tool to start to
+functionally reproduce some of the tasks that the brain seems
+to carry out so easily and that still elude our best computers
+and learning models.
+DATA AVAILABILITY S TATEMENT
+The experimental datasets generated during the current
+study are available from the corresponding authors on request.
+C ODE AVAILABILITY
+A reproducible distribution of the code used and the experimental datasets generated during in this study can be found on
+Code Ocean at https://codeocean.com/capsule/4587296/tree.
+
+R EFERENCES
+[1] K. Hornik, M. Stinchcombe, and H. White, “Multilayer
+feedforward networks are universal approximators,” Neural networks, vol. 2, no. 5, pp. 359–366, 1989.
+[2] A. M. Zador, “The basic unit of computation,” Nature
+neuroscience, vol. 3, no. 11, pp. 1167–1167, 2000.
+[3] T. Bekolay, J. Bergstra, E. Hunsberger, T. DeWolf, T. C.
+Stewart, D. Rasmussen, X. Choo, A. Voelker, and C. Eliasmith, “Nengo: a python tool for building large-scale
+functional brain models,” Frontiers in neuroinformatics,
+vol. 7, p. 48, 2014.
+[4] C. Eliasmith and C. H. Anderson, Neural engineering:
+Computation, representation, and dynamics in neurobiological systems. MIT press, 2003.
+[5] D. MacNeil and C. Eliasmith, “Fine-tuning and the
+stability of recurrent neural networks,” PloS one, vol. 6,
+no. 9, p. e22885, 2011.
+[6] L. Chua, “Memristor-the missing circuit element,” IEEE
+Transactions on circuit theory, vol. 18, no. 5, pp. 507–
+519, 1971.
+[7] D. B. Strukov, G. S. Snider, D. R. Stewart, and R. S.
+Williams, “The missing memristor found,” nature, vol.
+453, no. 7191, pp. 80–83, 2008.
+[8] D. S. Jeong, K. M. Kim, S. Kim, B. J. Choi, and C. S.
+Hwang, “Memristors for energy-efficient new computing
+paradigms,” Advanced Electronic Materials, vol. 2, no. 9,
+p. 1600090, 2016.
+[9] M. Khalid, “Review on various memristor models, characteristics, potential applications, and future works,”
+Transactions on Electrical and Electronic Materials,
+vol. 20, no. 4, pp. 289–298, 2019.
+[10] M. M. Waldrop, “The chips are down for moore’s law,”
+Nature News, vol. 530, no. 7589, p. 144, 2016.
+[11] D. Efnusheva, A. Cholakoska, and A. Tentov, “A survey
+of different approaches for overcoming the processormemory bottleneck,” International Journal of Computer
+Science and Information Technology, vol. 9, no. 2, pp.
+151–163, 2017.
+[12] D. H. Ackley, “Beyond efficiency,” Communications of
+the ACM, vol. 56, no. 10, pp. 38–40, 2013.
+[13] A. Ganguly, R. Muralidhar, and V. Singh, “Towards
+energy efficient non-von neumann architectures for deep
+learning,” in 20th international symposium on quality
+electronic design (ISQED). IEEE, 2019, pp. 335–342.
+[14] D. Attwell and S. B. Laughlin, “An energy budget for
+signaling in the grey matter of the brain,” Journal of
+Cerebral Blood Flow & Metabolism, vol. 21, no. 10, pp.
+1133–1145, 2001.
+[15] H. T. Siegelmann, “Neural and super-turing computing,”
+Minds and Machines, vol. 13, no. 1, pp. 103–114, 2003.
+[16] T. F. Tiotto, A. S. Goossens, J. P. Borst, T. Banerjee, and
+N. A. Taatgen, “Learning to approximate functions using
+nb-doped srtio3 memristors,” Frontiers in neuroscience,
+p. 1456, 2021.
+[17] T. Bekolay, “Learning nonlinear functions on vectors:
+
+examples and predictions,” Technical Report CTN–TR–
+20101217–010, Centre for Theoretical Neuroscience . . . ,
+Tech. Rep., 2010.
+[18] S. Fusi and L. F. Abbott, “Limits on the memory storage
+capacity of bounded synapses,” Nature Neuroscience,
+vol. 10, no. 4, p. 485–493, 2007.
+[19] S. Brivio, D. Conti, M. V. Nair, J. Frascaroli, E. Covi,
+C. Ricciardi, G. Indiveri, and S. Spiga, “Extended memory lifetime in spiking neural networks employing memristive synapses with nonlinear conductance dynamics,”
+Nanotechnology, vol. 30, no. 1, p. 015102, 2018.
+[20] A. Goossens, A. Das, and T. Banerjee, “Electric field
+driven memristive behavior at the schottky interface of
+nb-doped srtio3,” Journal of Applied Physics, vol. 124,
+no. 15, p. 152102, 2018.
+
+

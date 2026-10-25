@@ -1,0 +1,1108 @@
+A brain-inspired paradigm for scalable quantum vision
+
+arXiv:2509.05919v1 [quant-ph] 7 Sep 2025
+
+Chenghua Duan1 , Xiuxing Li1 , Wending Zhao2 , Lin Yao2 , Qing Li1 , Ziyu Li1 , Fukang Li1 ,
+Junhao Ma1 , and Xia Wu1
+1
+
+School of Computer science and Technology, Beijing Institute of Technology, 100081 Beijing, China
+
+2
+
+Huayi Boao (Beijing) Quantum Technology Co., Ltd, 100081 Beijing, China
+
+One of the fundamental tasks in machine
+learning is image classification, which
+serves as a key benchmark for validating
+algorithm performance and practical potential. However, effectively processing
+high-dimensional, detail-rich images, a capability that is inherent in biological vision, remains a persistent challenge. Inspired by the human brain’s efficient “Forest Before Trees” cognition, we propose a
+novel Guiding Paradigm for image recognition, leveraging classical neural networks
+to analyze global low-frequency information and guide targeted quantum circuit
+towards critical high-frequency image regions.
+We present the Brain-Inspired
+Quantum Classifier (BIQC), implementing
+this paradigm via a complementarity architecture where a quantum pathway analyzes the localized intricate details identified by the classical pathway. Numerical simulations on diverse datasets, including high-resolution images, show the
+BIQC’s superior accuracy and scalability
+compared to existing methods. This highlights the promise of brain-inspired, hybrid
+quantum-classical approach for developing
+next-generation visual systems.
+
+1 Introduction
+Decoding visual information is a key challenge
+in machine learning, with profound implications
+across diverse domains ranging from security to
+healthcare [1, 2]. Early algorithms mainly relied on feature extraction and Bayesian-based
+matching methods but struggled with deformations and generalization [3, 4, 5]. The introduction of deep learning, particularly convolutional
+Xia Wu: wuxia@bit.edu.cn
+
+neural networks (CNNs), revolutionized the field
+by enabling the automatic learning of hierarchical feature representations [6]. The breakthrough work by Krizhevsky et al., known as
+AlexNet, showcased the power of deep CNNs,
+leading to substantial performance improvements
+in image classification tasks [7]. Recently, innovations like generative models and data augmentation have endowed image recognition algorithms with stronger generalization capabilities [8, 9]. However, the current deep learning algorithms often struggle with accuracy when dealing with large, high-dimensional, and detail-rich
+images [10, 11, 12]. Moreover, high computational cost is another major challenge in the era
+of big data [13, 14].
+Insights from biological computation, particularly neuroscience, continue to drive significant innovation in artificial intelligence (AI) [15,
+16, 17]. Brain-inspired AI, exemplified by the
+Neocognitron model [18], has already achieved
+significant advancements. This foundational neural network for pattern recognition was explicitly designed by Kunihiko Fukushima based on
+Hubel and Wiesel’s research on hierarchical feature extraction in the visual cortex [19]. Notably, humans tend to perceive the overall structure of a scene (the “forest”) before the local details (the “trees”), known as “Forest before Trees”,
+which was originally observed and experimentally documented by cognitive psychologist David
+Navon [20, 21]. This mechanism reduces cognitive
+load and maintains accuracy without compromising processing efficiency [22]. Inspired by this,
+we propose an innovative Guiding Paradigm: the
+classical network assesses the complete “forest”,
+and the quantum circuit focusing on “trees”.
+Quantum computing offers a novel paradigm
+potentially suited for analyzing such complex, detailed information (the “trees”), leveraging the
+properties of quantum information for poten-
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+1
+
+tially exponential computational speedup [23, 24,
+25]. Parameterized quantum circuits represent
+a leading approach for near-term Quantum Machine Learning (QML) applications [26, 27, 28],
+and combining quantum modules with classical
+networks has shown promise in image processing [29, 30, 31]. However, applying quantum computing directly, especially in the context of big
+data, faces significant challenges including limited qubit counts, fidelity issues, barren plateaus,
+and difficulties mapping large classical datasets to
+quantum states [32, 33, 34]. Quantum-classical
+hybrid computing, integrating quantum components within classical architectures, thus emerges
+as a pragmatic solution to harness quantum capabilities while mitigating these limitations [35, 36].
+
+Current hybrid approaches predominantly follow parallel [37] or serial [30, 31, 38, 39]
+paradigms. While these models have demonstrated performance advantages and promise
+across various tasks, they often exhibit drawbacks. Specifically, parallel architectures can suffer from inefficiencies and information loss during
+data conversion, while serial architectures typically demand extensive quantum resources unsuitable for high-dimensional inputs [37, 40, 41].
+Thus, developing a new hybrid architecture that
+enhances the synergy between quantum and classical components and overcomes these specific issues is crucial.
+
+In this work, we present the Brain-Inspired
+Quantum Classifier (BIQC), a novel architecture
+embodied with the Guiding Paradigm. BIQC employs a dual-channel design that mimics the complementary low spatial frequency (LSF) and high
+spatial frequency (HSF) processing in human vision [42, 43, 44, 45]. The classical pathway efficiently extracts global features and identifies HSF
+regions, while the quantum pathway performs detailed analysis of local patches. Through extensive experiments across diverse, high-resolution
+image datasets, including natural scenes, medical images, and texture datasets, BIQC outperforms current classical and QML methods.
+This brain-inspired Guiding Paradigm offers a
+resource-efficient and scalable path for the wide
+application of QML in real-world tasks.
+
+2 Methods
+2.1 Brain-inspired QML paradigms
+Based on the idea that humans perceive coarse
+structures of a scene before scrutinizing local details [20], we develop a quantum-classical Guiding
+Paradigm aimed at high-dimensional image classification. The traditional quantum-classical hybrid computing paradigms typically employ standard parallel or serial frameworks, as shown in
+Fig. 1(b). Our paradigm assigns specific roles
+to classical and quantum modules, complementing each other. The classical pathway quickly
+processes global LSF signals and identifies highcomplexity regions. These regions are then sent
+to a quantum circuit focusing on finer details,
+which reduces the dimensionality load on the
+quantum circuit.
+For instance, in the 96×96 STL-10 [46] bird vs.
+plane classification task, the Guiding Paradigm
+effectively localizes a 32 × 32 HSF patch encompassing the bird’s rectrices (tail feathers). Detailed analysis of this patch reveals subtle textures, such as the organic texture of feathers compared to the metallic surface of an airplane rudder, which might be overlooked by traditional
+networks focusing solely on global features. This
+targeted approach allows for efficient allocation
+of quantum resources to the most discriminative
+local regions, thereby enhancing classification accuracy.
+By confining quantum operations to HSF-rich
+patches, our paradigm capitalizes on quantum
+representational strengths without incurring the
+excessive resource demands commonly seen in
+high-resolution tasks. This design mitigates qubit
+limitations and minimizes information loss from
+repeated data transformations.
+
+2.2 The implementation of BIQC
+As illustrated in Fig. 1(a), our algorithm inspired
+by human visual system research [42, 43, 44], includes four steps: early visual cortex (EVC), orbitofrontal cortex (OFC), ventral visual stream
+(VVS), and Fusiform gyrus. (i) EVC: Quickly
+processes visual inputs to extract low-frequency
+information. (ii) OFC: Generates initial predictions based on LSF features and identifies potential HSF regions in the original input, which
+mimics the human brain’s attention. (iii) VVS:
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+2
+
+Pool 1
+
+Conv 1
+
+a
+
+Flatten
+EVC
+LSF extraction
+Initial processing
+
+Feedback
+
+Pool 2
+
+Map
+
+Patch Extractor
+
+r Metric
+
+Patch Extractor
+
+EVC
+
+OFC
+LSF processing
+HSF Localization
+
+LSF Path
+Global perception
+Fast
+
+Conv 2
+
+Dense
+Fl
+a
+
+OFC
+
+tte
+
+ne
+d
+
+Attention Locator
+
+Guidance
+Burden alleviation
+
+2D FFT
+
+VVS
+
+Frequency Analysis
+
+VVS
+HSF transmission
+HSF Path
+Local analysis
+Slow
+
+b
+
+Fusiform
+HSF processing
+Final prediction
+
+Fusiform
+
+Flatten
+Fl
+at
+
+Parallel
+
+Quantum Re-uploading
+
+te
+ne
+d
+
+Serial
+
+Quantum
+Filter
+
+Classical
+Network
+
+Cat
+
+Downscaled Input
+
+SobelXY
+
+Classical
+Network
+
+c
+
+Quantum
+Circuit
+
+Cat
+
+Raw Input
+Quantum
+Circuit
+
+Guiding
+
+Raw Input Patch
+Classical
+Network
+
+0
+
+Rot
+
+Rot
+
+1
+
+Rot
+
+Rot
+
+2
+
+Rot
+
+Rot
+
+3
+
+Rot
+
+Rot
+
+Cat
+
+Raw Input
+
+Figure 1: BIQC architecture and Guiding Paradigm for scalable QML. a, Overall architecture of the BIQC model,
+a dual-pathway framework mimicking human visual processing. The classical pathway, simulating the EVC and OFC,
+rapidly extracts LSF features and localizes potential HSF regions using an attention mechanism. Complementarily, the
+quantum pathway, inspired by the VVS and Fusiform gyrus, utilizes a 2D-DFT metric to precisely identify HSF regions
+and employs a data re-uploading quantum circuit for detailed recognition of these critical patches. Outputs from
+both pathways are integrated for final classification. b, Hybrid quantum-classical paradigms for image classification:
+Parallel, Serial, and Guiding. In the Guiding Paradigm, inspired by human cognition, a classical network guides a
+quantum circuit to focus on complex regions of the raw input, contrasting with Parallel (quantum and classical filters
+process raw input simultaneously) and Serial (quantum component processes hidden states from classical network)
+paradigms. c, Circuit diagram of a representative 4-qubit data re-uploading ansatz with CZ gate entanglement,
+illustrating the quantum circuit design within the BIQC’s Fusiform module.
+
+Introduces a metric for selecting HSF regions that
+contain high-frequency feature information of the
+image. (iv) Fusiform: Enhances identified regions
+given by VVS and OFC and uses quantum circuits for pattern recognition.
+Neuroscience research indicates that the human brain utilizes a complex dual-channel system
+for image recognition [43, 42, 44, 45]. Similarly,
+the BIQC algorithm employs a dual-channel approach for efficient image recognition: (i) Classical pathway (LSF channel): Mimicking EVC
+and OFC, this pathway extracts global structural cues from input images like contours and
+
+shapes, and pinpointing regions potentially rich
+in critical HSF details. (ii) Quantum pathway
+(HSF channel): Analogous to the VVS culminating in the fusiform gyrus, this channel employs
+a data re-uploading quantum circuit to analyze
+local patches, processing high-frequency cues like
+edges and textures in the quantum domain [47].
+This design strategically directs computationally
+demanding quantum resources to intricate image
+regions, addressing scalability limitations inherent in conventional hybrid QML approaches.
+The translation of these neuro-inspired principles into the BIQC algorithm’s architecture in-
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+3
+
+volves several key computational stages across its
+classical and quantum pathways, which are detailed below.
+Mimicking the EVC’s role in efficient initial
+processing to capture coarse structure, the classical pathway utilizes a CNN to extract global,
+LSF features. This CNN comprises two convolutional layers and max-pooling operations, rapidly
+processing input images X to generate LSF features ZLSF . Analogous to the OFC’s guidance of
+attention, an attention map AHSF is then derived
+from ZLSF via a 1 × 1 convolutional layer to highlight potential HSF regions PHuman
+for targeted
+HSF
+quantum processing.
+HSF regions are identified through two complementary strategies. One approach selects regions via the attention mechanism, PHuman
+HSF . The
+second, critical for focusing on intricate details,
+draws inspiration from the VVS, which excels at
+identifying and transmitting HSF signals from
+complex visual areas. We implement this by
+employing a 2D-DFT based metric (r-metric)
+to quantify image patch complexity. Specifically, the input image is first divided into nonoverlapping regions Ri,j of size h × h. For each
+region Ri,j , we compute the 2D-DFT coefficients
+Cu,v as:
+Cu,v =
+
+h−1
+X
+X h−1
+
+ux
+
+vy
+
+Ri,j (x, y)e−2πi( h + h ) ,
+
+(1)
+
+x=0 y=0
+
+where x and y index pixel coordinates within
+the region, and u and v are frequency indices.
+We
+q then define a frequency magnitude fu,v =
+
+u 2
++
+h
+
+
+v 2
+and separate the frequency coeffih
+cients into low (SLow ) and high (SHigh ) frequency
+
+sets based on a cutoff frequency fc . The r-metric
+for region Ri,j is finally calculated as the ratio of
+energies in high and low frequencies:
+s
+
+rRi,j =
+
+vP
+u
+
+2
+EHigh u
+(u,v)∈SHigh |Cu,v |
+= tP
+,
+2
+ELow
+(u,v)∈SLow |Cu,v |
+
+(2)
+
+The patch PMetric
+with the maximal r-metric is
+HSF
+then selected for quantum processing.
+The quantum pathway emulates the Fusiform
+gyrus’s role in detailed HSF analysis for recognition. It employs a data re-uploading quantum circuit (Fig. 1(c)) to analyze localized HSF
+patches, aiming to capture the complex, highfrequency patterns crucial for classification. This
+
+data re-uploading circuit, denoted as fQuantum ,
+consists of L stacked NonlinearQuantumBlocks.
+Each block, f (l) , applies a parameterized quan(l)
+tum circuit U (l) (zn , θ (l) ) with data re-uploading,
+followed by Pauli Z measurements to generate a
+quantum feature vector hQuantum . The circuit
+U (l) is structured as:
+(l)
+U (l) (z(l)
+n ,θ ) =
+L
+Y
+
+
+USE (θ (l) ) ·
+
+d
+O
+
+k
+
+k=1
+
+
+(l)
+
+(l)
+
+Rz (zn,j ) · USE (θ out ),
+
+(3)
+
+j=1
+
+where USE (θ) represents a strongly entangling
+(l)
+(l)
+layer, and Rz (zn,j ) encodes classical data zn,j
+through Z-axis rotation gates.
+Features extracted from both classical and
+quantum pathways are concatenated and fed into
+a fully classical connected layer with Sigmoid activation for binary classification, integrating LSF
+global context with detailed HSF local features
+for efficient and scalable image recognition.
+
+3 Results and discussion
+The BIQC is evaluated on four diverse image
+datasets, encompassing varying resolutions and
+complexities. For assessing performance across
+different input dimensionalities, a subset of the
+MNIST [54] dataset consisting of digits "3" and
+"5" is used for binary classification, with experiments conducted at both 8 × 8 and 32 × 32 resolutions. To evaluate performance on more complex, real-world image content, we employ the
+STL-10 [46] dataset, utilizing the "airplane" and
+"bird" categories at its native 96 × 96 resolution.
+The Skin Cancer [55] dataset, a balanced collection of 224 × 224 resolution dermatological images for binary classification of malignant and
+benign skin lesions, serves to test the model’s
+ability to discern subtle morphological and textural details in high-resolution medical images.
+Finally, the DTD [56] is used to evaluate texture classification performance, with images exhibiting "square" and "point" texture patterns
+selected and used at 224 × 224 resolution.
+All datasets follow a uniform preprocessing
+pipeline: they are first converted to grayscale
+to emphasize structural and frequency features,
+then normalized using Min-Max scaling to the
+range [− π2 , + π2 ] to enhance training stability.
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+4
+
+a2
+
+a1
+
+b1
+
+b2
+
+b3
+
+b4
+
+Figure 2: Performance comparison of BIQC against classical and quantum baselines. a, Comparison of Accuracy and AUC for BIQC against classical baselines (MLP [48], CNN [6], SWinT [49], XGBoost [50]) on various
+datasets. BIQC demonstrates consistently superior and stable performance compared to these classical methods. b,
+Accuracy comparison of BIQC with pure quantum network (WeiNet [51]), parallel hybrid quantum-classical algorithm
+(QC-Inception [37]), and serial hybrid quantum-classical methods (QNN [30], RealAmplitudes [31], ExplicitVQC [52],
+DynamicQNN [53]) across datasets and varying numbers of qubits. Notably, BIQC’s performance typically improves
+with increasing qubits, unlike several quantum counterparts, suggesting the Guiding Paradigm more effectively harnesses quantum resources.
+
+Model training and simulations use Python
+3.10, PyTorch 2.5, and PennyLane 0.38 on
+Ubuntu 20.04 LTS. Model parameters are optimized with the AdamW optimizer. Training is
+performed with a learning rate of 1 × 10−3 and a
+weight decay of 5 × 10−4 across all datasets. An
+early stopping strategy is employed, terminating
+training when the loss function plateaus, or after
+a maximum of 10,000 epochs.
+Binary cross-entropy is used as the loss function for all experiments, and performance is evaluated using Accuracy and AUC metrics. The
+HSF patch size is set by default to 4 × 4 pixels for
+input images with a resolution of 32 × 32 pixels
+or lower, and 32 × 32 pixels for higher-resolution
+inputs.
+To assess the robustness of BIQC to noise,
+we introduce noise into the quantum simulator
+by applying Rx (θ) to each qubit, where θ ∼
+U (0, noise).
+
+3.1 Benchmark performance evaluation
+Four datasets collectively challenge the scalability, resolution, and complexity dimensions, thereby providing a robust testbed for
+benchmarking hybrid quantum-classical methods
+(Fig. 2).
+BIQC demonstrates consistently superior performance across all datasets compared to both
+classical networks and established QML algorithms. Notably, BIQC achieves substantial gains
+on the challenging, high-resolution DTD dataset,
+outperforming the top baseline (CNN) by a significant margin of 8.42% in accuracy and 10.08%
+in AUC. This highlights BIQC’s enhanced ability
+to discern subtle textural variations critical for
+complex texture recognition tasks. Furthermore,
+on STL-10, BIQC attains 89.20% accuracy and
+95.08% AUC, surpassing competing approaches
+by leveraging its dual-pathway design for detailed
+high-frequency feature extraction.
+As shown in Fig. 2(b), existing quantum meth-
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+5
+
+Furthermore, BIQC demonstrates superior
+image recognition accuracy, particularly when
+processing high-resolution and detail-sensitive
+datasets. Its quantum channel adeptly extracts
+crucial HSF features, such as edges, textures, and
+fine morphological variations, essential for tasks
+like skin lesion recognition or texture differentiation. This capability arises from the exponential scaling in feature representation possible
+with data re-uploading quantum circuits, unlike
+classical methods where HSF capacity scales linearly [57]. This targeted quantum processing enables high performance, exemplified by 78.76%
+accuracy and 85.53% AUC on the Skin Cancer
+dataset for subtle pattern recognition. Crucially,
+by confining quantum computation to localized
+HSF regions, BIQC improves scalability for large
+images and reduces demands on quantum hardware, offering a effective route towards leveraging
+quantum resources effectively.
+The pronounced gains achieved by BIQC across
+resolution scales underscore the efficacy of the
+Guiding Paradigm for hybrid quantum-classical
+networks. By using classical pathways for global
+features and targeting quantum circuits at complex local regions, BIQC overcomes scalability
+
+   
+
+    
+
+ 4 &  , Q F H S W L R Q
+ 4 &  * X L G L Q J   , P S U R Y H P H Q W 
+ 4 &  , Q F H S W L R Q   1 R W  5 X Q Q L Q J 
+
+    
+
+ $ F F X U D F \    
+
+  
+     
+
+  
+
+     
+
+  
+
+    
+
+  
+  
+  
+   
+
+ 0 1 , 6 7   [   0 1 , 6 7    [    6 7 /   
+    
+
+  
+ $ 8 &    
+
+ods like WeiNet, QC-Inception, and QNN face
+fundamental scalability challenges with highdimensional inputs. For instance, classifying a
+224 × 224 image quantumly requires WeiNet a
+minimum of ⌈log2 (2242 )⌉ = 16 qubits via amplitude encoding, whereas BIQC achieved strong
+performance using only 6 qubits. Similarly, quantum convolutional methods like DynamicQNN
+and QNN, while using small kernels (4 or 9
+qubits), must operate across the 224 × 224 full
+image. This could demand (224/32)2 = 49 times
+the quantum operational load compared to BIQC
+processing only a 32 × 32 patch. This substantial resource efficiency stems directly from
+BIQC’s Guiding Paradigm, which addresses the
+scalability limitations imposed by increasing input dimensions, enabling effective processing of
+both low- and high-resolution images. Furthermore, BIQC exhibits a more stable and generally improving performance trend with increasing
+qubits compared to quantum baselines like ExplicitVQC. This stable and scalable performance
+profile indicates that the Guiding Paradigm represents a more robust and efficient way to leverage
+quantum resources.
+
+ 6 N L Q  & D Q F H U
+
+ ' 7 '
+
+    
+     
+
+  
+
+     
+
+  
+
+     
+
+  
+  
+  
+
+ 0 1 , 6 7   [   0 1 , 6 7    [    6 7 /   
+
+ 6 N L Q  & D Q F H U
+
+ ' 7 '
+
+Figure 3: Universality of the Guiding Paradigm. Accuracy and AUC comparison for QC-Inception and its
+guided version, QC-Guiding. Original QC-Inception,
+which requires quantum convolution operations across
+the entire input image, faces scalability challenges with
+higher-dimension datasets like STL (96 × 96), Skin Cancer (224×224), and DTD (224×224). By leveraging the
+Guiding Paradigm to concentrate quantum convolutions
+on localized patches of the original input, QC-Guiding
+effectively overcomes this input dimension barrier, enabling the processing of high-resolution datasets.
+
+bottlenecks found in previous QML frameworks.
+This combination of low- and high-frequency
+processing enhances classification accuracy while
+keeping quantum resource use manageable, even
+in high-resolution tasks. Collectively, these results demonstrate the potential of brain-inspired,
+dual-channel designs to leverage quantum advantages in computer vision challenges.
+
+3.2 Universality of the guiding paradigm
+The Guiding Paradigm greatly enhances the capabilities of existing QML methods. Original
+QC-Inception faces scalability challenges with
+higher-dimension datasets because it requires
+quantum convolution operations across the entire input image. As shown in Fig. 1(b), QCInception is limited to processing only lowresolution images such as MNIST 8 × 8 due to
+the parallel paradigm constraints. Integrating
+the Guiding Paradigm’s 2D-DFT-based HSF region identification enables its guiding version, i.e.,
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+6
+
+ % , 4 &
+
+ $ E  ( 9 &
+
+ $ E  + 6 )
+
+ $ E  2 ) &
+
+ $ E  4 X D Q W X P
+
+ 0 1 , 6 7   [ 
+
+ 0 1 , 6 7    [  
+
+ 6 7 /   
+
+ 6 N L Q  & D Q F H U
+
+ ' 7 '
+
+ 0 1 , 6 7   [ 
+
+ 0 1 , 6 7    [  
+
+ 6 7 /   
+
+ 6 N L Q  & D Q F H U
+
+ ' 7 '
+
+ $ F F X U D F \    
+
+   
+  
+  
+  
+  
+  
+   
+ $ 8 &    
+
+  
+  
+  
+  
+  
+
+Figure 4: Ablation study of BIQC components. Performance impact of ablating key modules of the BIQC.
+Ablations include: (Ab-EVC) remove the EVC module, (Ab-OFC) disable OFC attention-based HSF localization, (Ab-HSF) remove the HSF pathway entirely,
+and (Ab-Quantum) replace the quantum circuit in the
+Fusiform with a classical MLP.
+
+“QC-Guiding” to overcome input dimension limitations. QC-Guiding effectively processes highresolution inputs up to 224 × 224, demonstrating the paradigm’s ability to target essential local
+patches in large-scale inputs (Fig. 3). This universality indicate the Guiding Paradigm’s potential to usher in a new era of hybrid QML, characterized by broadly scalable and efficient methods
+capable of addressing complex, high-dimensional
+data challenges.
+
+3.3 Analysis of component contributions
+To investigate the contributions of each modules in BIQC and validate their correspondence
+to the high- and low-frequency mechanisms, we
+conducted ablation experiments. Fig. 4 summarizes the results, quantifying the performance impact of removing key BIQC components across
+diverse datasets. The results demonstrate that
+the EVC guarantees fundamental accuracy, the
+quantum component excels with high-resolution
+details, while the HSF pathway and OFC localization are vital for complex medical and texture
+images.
+Removing the EVC module, which eliminates
+low-frequency feature extraction, significantly reduces accuracy on MNIST 8 × 8. This underscores the foundational role of global shape and
+
+contour recognition, similar to the EVC’s role
+in quick visual processing. Eliminating the HSF
+pathway, leaving only the LSF pathway, also lowers accuracy, confirming the benefit of integrating both coarse and fine-grained features, analogous to the complementary LSF-HSF channels
+in human vision. Disabling OFC attention-based
+HSF localization reduces performance on highresolution datasets, emphasizing the need to accurately target HSF regions to utilize quantum
+benefits. Finally, replacing the data re-uploading
+quantum circuit in the Fusiform module with a
+classical MLP results in a performance decline on
+DTD, indicating that quantum processing is crucial for capturing intricate high-frequency texture
+features, emulating the Fusiform’s detailed HSF
+analysis.
+In summary, these ablation studies validate the
+functional necessity of each component. Their
+synergistic integration is crucial for effective
+image recognition across diverse and complex
+datasets, which mimicked the human visual system’s architecture. LSF processing through the
+EVC ensures control over the global image structure, while targeted identification of HSF regions
+and leveraging data re-uploading enable BIQC to
+analyze high-frequency local features with greater
+precision.
+
+3.4 Visualization of operational mechanisms
+To gain insight into BIQC’s operational mechanisms and feature learning, we employ a multifaceted visualization approach. This includes visualizing the Guiding Paradigm’s region selection
+process, analyzing high-frequency feature expressiveness through Fourier spectra, and assessing
+the learned feature representations using t-SNE
+embeddings.
+Fig. 5(a) visualizes the complex regions identified by the Guiding Paradigm from raw input images. As observed, the blue, human-like attention
+regions tend to focus on critical patches within
+the STL dataset that are discriminative between
+bird and plane. In contrast, the yellow regions,
+derived from the complexity metric, are more inclined to pinpoint the most locally complex areas within the image. For instance, in the last
+STL-Bird subplot, the VVS identifies a region encompassing avian digits and arboreal bark. However, relying solely on complexity-based region
+localization is insufficient, as exemplified in the
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+7
+
+a
+
+STL-Bird
+
+STL-Plane
+
+DTD-Dotted
+
+DTD-Chequered
+
+b
+
+c
+
+Figure 5: Visualizing the Guiding Paradigm and Feature Representations of BIQC. a, Illustration of the
+Guiding Paradigm’s region selection. On the STL dataset, the blue box (simulating human attention via OFC) tends
+to focus on regions discriminative between classes, such as a bird’s head or an airplane’s wing or landing gear. The
+yellow box (driven by the 2D-DFT complexity metric via VVS) consistently targets areas with the most intricate
+local details; while often crucial for classification, it can occasionally focus on irrelevant complex background details
+(e.g., the tower in the upper left subplot of STL-Plane). On the DTD dataset, both strategies typically localize
+edges of dots or squares beneficial for distinguishing textures. These two strategies complement each other, guiding
+the quantum ansatz towards the most critical image regions. b, Fourier spectrum visualization on the Skin Cancer
+dataset. Quantum methods like BIQC and RealAmplitudes exhibit broader Fourier spectra compared to classical
+baselines. The introduction of noise influences BIQC’s spectrum distribution. c, t-SNE [58] visualization of feature
+space on the Skin Cancer dataset. BIQC demonstrates better class separability and smoother boundaries between
+clusters compared to baselines.
+
+first STL-Plane subplot, where the metric erroneously targets distant buildings in the image
+background, which are irrelevant to the classification task. These two approaches for local region
+localization, while significantly reducing quantum
+computing resource requirements, complementarily guide the quantum circuit towards the most
+classification relevant regions of the image, which
+is at the heart of BIQC’s efficiency and effectiveness.
+To examine high-frequency expressiveness, we
+
+perform Fourier analysis on hidden layer activations, computing Fourier coefficients at a normalized frequency ω = 1.0, corresponding to the
+Nyquist frequency. Fig. 5(b) visualizes the kernel
+density estimation of these coefficients. Observations reveal that hybrid methods exhibit moderately dispersed Fourier spectra, suggesting a
+capability in representing a range of HSF. Notably, BIQC, especially with noise, shows a spectrum distribution that is dispersed yet more concentrated than RealAmplitudes, potentially in-
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+8
+
+dicating a balanced representation of relevant
+high-frequency information. This aligns with the
+Guiding Paradigm’s emphasis on effective HSF
+capture.
+We employ t-SNE to visualize the learned
+feature spaces of BIQC, RealAmplitudes, and
+CNN on the Skin Cancer dataset (Fig. 5(c)). tSNE projections show that while CNN displays
+class intermixing, both hybrid quantum-classical
+models (BIQC, RealAmplitudes) exhibit betterdefined clusters. Crucially, BIQC demonstrates
+more refined class separation and less cluster intermingling compared to RealAmplitudes. This
+improved feature space organization supports the
+effectiveness of the Guiding Paradigm in enabling
+BIQC to capture subtle, diagnostically relevant
+features in complex medical images.
+
+4 Summary and outlook
+This study demonstrates the efficacy of a novel
+brain-inspired approach for hybrid QML in highdimensional image classification. Our proposed
+algorithm, BIQC, consistently outperforms both
+classical baselines and existing QML methods
+across a diverse range of datasets, including challenging high-resolution and texture-rich examples like Skin Cancer and DTD. As evidenced
+by quantitative results and visualizations (Fig. 2,
+Fig. 5), BIQC effectively overcomes the scalability limitations inherent in prior parallel or serial quantum-classical frameworks [37, 30, 31,
+38, 39, 40, 41] by strategically allocating computational resources. This enhanced performance
+stems from two core innovations.
+(i) The Guiding Paradigm represents a conceptual shift, moving away from processing entire inputs with quantum circuits towards a
+targeted application of quantum computation.
+By first employing classical methods to analyze global low-frequency information and subsequently identify complex, potentially discriminative high-frequency regions, the paradigm directs quantum resources only where they are most
+needed. This localized quantum processing drastically reduces the input dimensionality handled
+by the quantum circuit, thereby mitigating qubit
+and quantum operation requirements, crucial for
+near-term hardware [32, 34]. The visualization
+results (Fig. 5(a)) confirm that the paradigm effectively identifies relevant image patches, using
+
+complementary attention and complexity metrics. Furthermore, the paradigm’s universality
+is highlighted by its ability to enhance existing
+QML methods like QC-Inception, enabling them
+to process high-resolution inputs previously intractable (Fig. 3).
+(ii) Central to BIQC’s success is the Complementarity Architecture, drawing inspiration from
+the human visual system’s dual HSF and LSF
+processing streams [42, 43, 44, 45]. This architecture assigns distinct roles: a classical pathway efficiently processes global LSF information
+(contours, shapes), while a quantum pathway focuses on analyzing localized HSF patches (textures, edges, fine details) using data re-uploading
+circuits. This division harnesses the strengths of
+both modalities, combining classical efficiency for
+large-scale structure and the potential representational power of quantum circuits for complex,
+high-frequency patterns, potentially offering scaling advantages in feature representation relative
+to circuit size [57]. Ablation studies (Fig. 4) rigorously validate this synergy, demonstrating that
+removing either the LSF or HSF path significantly degrades performance, confirming the necessity of integrating both coarse and fine-grained
+feature analysis.
+Future work includes validating BIQC on
+NISQ hardware while refining its components,
+with a focus on optimizing the identification
+of critical complex regions. Furthermore, the
+paradigm’s demonstrated universality points towards broader applications in scalable hybrid
+models for complex, high-dimensional data across
+various scientific and industrial domains.
+
+5 Acknowledgement
+We thank Peixin Shen for his valuable discussions and suggestions for modification to this
+manuscript. This work was supported by the
+National Science Fund for Distinguished Young
+Scholars of China (Grant No. 62325601).
+
+References
+[1] Shany Grossman, Guy Gaziv, Erin M
+Yeagle, Michal Harel, Pierre Mégevand,
+David M Groppe, Simon Khuvis, Jose L Herrero, Michal Irani, Ashesh D Mehta, et al.
+“Convergent evolution of face spaces across
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+9
+
+human face-selective neuronal groups and
+deep convolutional networks”. Nature communications 10, 4934 (2019).
+[2] Dinggang Shen, Guorong Wu, and Heung-Il
+Suk. “Deep learning in medical image analysis”. Annual review of biomedical engineering
+19, 221–248 (2017).
+[3] Yuanqing Lin, Fengjun Lv, Shenghuo Zhu,
+Ming Yang, Timothee Cour, Kai Yu, Liangliang Cao, and Thomas Huang. “Large-scale
+image classification: Fast feature extraction
+and svm training”. In CVPR 2011. Pages
+1689–1696. IEEE (2011).
+[4] Oren Boiman, Eli Shechtman, and Michal
+Irani. “In defense of nearest-neighbor based
+image classification”. In 2008 IEEE conference on computer vision and pattern recognition. Pages 1–8. IEEE (2008).
+[5] Natsumaro Kutsuna, Takumi Higaki, Sachihiro Matsunaga, Tomoshi Otsuki, Masayuki
+Yamaguchi, Hirofumi Fujii, and Seiichiro
+Hasezawa.
+“Active learning framework
+with iterative clustering for bioimage classification”.
+Nature communications 3,
+1032 (2012).
+[6] Yann LeCun, Larry Jackel, Leon Bottou,
+A Brunot, Corinna Cortes, John Denker,
+Harris Drucker, Isabelle Guyon, Urs Muller,
+Eduard Sackinger, et al. “Comparison of
+learning algorithms for handwritten digit
+recognition”. In International conference on
+artificial neural networks. Volume 60, pages
+53–60. Perth, Australia (1995).
+[7] Alex Krizhevsky, Ilya Sutskever, and Geoffrey E Hinton. “Imagenet classification with
+deep convolutional neural networks”. Advances in neural information processing systems25 (2012).
+[8] Richard J Chen, Tong Ding, Ming Y Lu,
+Drew FK Williamson, Guillaume Jaume,
+Andrew H Song, Bowen Chen, Andrew
+Zhang, Daniel Shao, Muhammad Shaban,
+et al. “Towards a general-purpose foundation
+model for computational pathology”. Nature
+Medicine 30, 850–862 (2024).
+[9] Agnieszka Mikołajczyk and Michał Grochowski. “Data augmentation for improving
+deep learning in image classification problem”. In 2018 international interdisciplinary
+
+PhD workshop (IIPhDW). Pages 117–122.
+IEEE (2018).
+[10] Licheng Jiao and Jin Zhao. “A survey on
+the new generation of deep learning in image processing”. Ieee Access 7, 172231–
+172263 (2019).
+[11] Mingle Xu, Sook Yoon, Alvaro Fuentes, and
+Dong Sun Park. “A comprehensive survey of image augmentation techniques for
+deep learning”. Pattern Recognition 137,
+109347 (2023).
+[12] Deepak Gupta, Gowreesh Mago, Arnav Chavan, Dilip Prasad, and Rajat Mani Thomas.
+“Pushing the limits of gradient descent for
+efficient learning on large images”. Transactions on Machine Learning Research (2024).
+[13] Siddharth Samsi, Dan Zhao, Joseph McDonald, Baolin Li, Adam Michaleas, Michael
+Jones, William Bergeron, Jeremy Kepner,
+Devesh Tiwari, and Vijay Gadepally. “From
+words to watts: Benchmarking the energy
+costs of large language model inference”.
+In 2023 IEEE High Performance Extreme
+Computing Conference (HPEC). Pages 1–
+9. IEEE (2023).
+[14] Yaowei Zheng, Richong Zhang, Junhao
+Zhang, Yanhan Ye, Zheyan Luo, Zhangchi
+Feng, and Yongqiang Ma. “Llamafactory:
+Unified efficient fine-tuning of 100+ language models” (2024).
+[15] Demis Hassabis, Dharshan Kumaran,
+Christopher Summerfield, and Matthew
+Botvinick. “Neuroscience-inspired artificial
+intelligence”. Neuron 95, 245–258 (2017).
+[16] Shimon Ullman. “Using neuroscience to develop artificial intelligence”. Science 363,
+692–693 (2019).
+[17] Daeyeol Lee, Hyojung Seo, and Min Whan
+Jung. “Neural basis of reinforcement learning and decision making”. Annual review of
+neuroscience 35, 287–308 (2012).
+[18] Kunihiko Fukushima. “Neocognitron: A selforganizing neural network model for a mechanism of pattern recognition unaffected by
+shift in position”. Biological cybernetics 36,
+193–202 (1980).
+[19] David H Hubel, Torsten N Wiesel, et al.
+“Receptive fields of single neurones in the
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+10
+
+cat’s striate cortex”. J physiol 148, 574–
+591 (1959).
+[20] David Navon. “Forest before trees: The
+precedence of global features in visual perception”.
+Cognitive psychology 9, 353–
+383 (1977).
+[21] C Alejandro Parraga, Tom Troscianko, and
+David J Tolhurst. “The human visual system
+is optimised for processing the spatial information in natural visual images”. Current
+Biology 10, 35–38 (2000).
+[22] Gereon R Fink, Peter W Halligan, John C
+Marshall, Chris D Frith, RSJ Frackowiak,
+and Raymond J Dolan. “Where in the brain
+does visual attention select the forest and the
+trees?”. Nature 382, 626–628 (1996).
+[23] Michael A Nielsen and Isaac L Chuang.
+“Quantum computation and quantum information”. Cambridge university press.
+(2010).
+[24] Eleanor G Rieffel and Wolfgang H Polak.
+“Quantum computing: A gentle introduction”. MIT press. (2011).
+[25] Mark Horowitz and Emily Grumbling.
+“Quantum computing:
+progress and
+prospects”.
+National Academies Press.
+(2019).
+[26] Maria Schuld, Ilya Sinayskiy, and Francesco
+Petruccione. “An introduction to quantum
+machine learning”. Contemporary Physics
+56, 172–185 (2015).
+[27] He-Liang Huang, Xi-Lin Wang, Peter P Rohde, Yi-Han Luo, You-Wei Zhao, Chang Liu,
+Li Li, Nai-Le Liu, Chao-Yang Lu, and JianWei Pan. “Demonstration of topological data
+analysis on a quantum processor”. Optica 5,
+193–198 (2018).
+
+[30] Maxwell Henderson, Samriddhi Shakya,
+Shashindra Pradhan, and Tristan Cook.
+“Quanvolutional neural networks: powering
+image recognition with quantum circuits”.
+Quantum Machine Intelligence 2, 2 (2020).
+[31] Alessandro Sebastianelli, Daniela Alessandra Zaidenberg, Dario Spiller, Bertrand
+Le Saux, and Silvia Liberata Ullo. “On
+circuit-based hybrid quantum neural networks for remote sensing imagery classification”. IEEE Journal of Selected Topics
+in Applied Earth Observations and Remote
+Sensing 15, 565–580 (2021).
+[32] Jarrod R McClean, Sergio Boixo, Vadim N
+Smelyanskiy, Ryan Babbush, and Hartmut
+Neven. “Barren plateaus in quantum neural
+network training landscapes”. Nature communications 9, 4812 (2018).
+[33] Ashley Montanaro. “Quantum algorithms:
+an overview”. npj Quantum Information 2,
+1–8 (2016).
+[34] Marco Cerezo, Guillaume Verdon, HsinYuan Huang, Lukasz Cincio, and Patrick J
+Coles. “Challenges and opportunities in
+quantum machine learning”. Nature computational science 2, 567–576 (2022).
+[35] Manish Adhikari et al. “Hybrid computing
+models integrating classical and quantum
+systems for enhanced computational power:
+A comprehensive analysis”. Journal of Advanced Computing Systems 2, 1–9 (2022).
+[36] Suguru Endo, Zhenyu Cai, Simon C Benjamin, and Xiao Yuan. “Hybrid quantumclassical algorithms and quantum error mitigation”. Journal of the Physical Society of
+Japan 90, 032001 (2021).
+[37] Christian Orange. “Qc-cnn: Quantum convolutional neural networks” (2023).
+
+[28] Iris Cong, Soonwon Choi, and Mikhail D
+Lukin.
+“Quantum convolutional neural
+networks”.
+Nature Physics 15, 1273–
+1278 (2019).
+
+[38] Tak Hur, Leeseok Kim, and Daniel K Park.
+“Quantum convolutional neural network for
+classical data classification”. Quantum Machine Intelligence 4, 3 (2022).
+
+[29] Piotr Gawron and Stanisław Lewiński.
+“Multi-spectral image classification with
+quantum neural network”. In IGARSS 20202020 IEEE International Geoscience and Remote Sensing Symposium. Pages 3513–3516.
+IEEE (2020).
+
+[39] Junhua Liu, Kwan Hui Lim, Kristin L
+Wood, Wei Huang, Chu Guo, and HeLiang Huang. “Hybrid quantum-classical
+convolutional neural networks”.
+Science
+China Physics, Mechanics & Astronomy 64,
+290311 (2021).
+
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+11
+
+[40] Joseph Bowles, Shahnawaz Ahmed, and
+Maria Schuld. “Better than classical? the
+subtle art of benchmarking quantum machine learning models” (2024).
+[41] Peiyong Wang, Casey R. Myers, Lloyd C. L.
+Hollenberg, and Udaya Parampalli. “Quantum Hamiltonian embedding of images for
+data reuploading classifiers”. Quantum Machine Intelligence 7, 1–18 (2025).
+[42] Moshe Bar, Karim S Kassam, Avniel Singh
+Ghuman, Jasmine Boshyan, Annette M
+Schmid, Anders M Dale, Matti S Hämäläinen, Ksenija Marinkovic, Daniel L Schacter,
+Bruce R Rosen, et al. “Top-down facilitation of visual recognition”. Proceedings of
+the national academy of sciences 103, 449–
+454 (2006).
+[43] Moshe Bar.
+“Visual objects in context”. Nature Reviews Neuroscience 5, 617–
+629 (2004).
+[44] Vincent De Gardelle and Sid Kouider. “How
+spatial frequencies and visual awareness interact during face processing”. Psychological
+Science 21, 58–66 (2010).
+[45] Kirsten Petras, Sanne Ten Oever, Christianne Jacobs, and Valerie Goffaux. “Coarseto-fine information integration in human vision”. NeuroImage 186, 103–112 (2019).
+[46] Adam Coates, Andrew Ng, and Honglak Lee.
+“An analysis of single-layer networks in unsupervised feature learning”. In Proceedings
+of the fourteenth international conference on
+artificial intelligence and statistics. Pages
+215–223. JMLR Workshop and Conference
+Proceedings (2011).
+[47] Adrián Pérez-Salinas, Alba Cervera-Lierta,
+Elies Gil-Fuster, and José I Latorre. “Data
+re-uploading for a universal quantum classifier”. Quantum 4, 226 (2020).
+
+[50] Tianqi Chen and Carlos Guestrin. “Xgboost: A scalable tree boosting system”. In
+Proceedings of the 22nd acm sigkdd international conference on knowledge discovery
+and data mining. Pages 785–794. (2016).
+[51] ShiJie Wei, YanHu Chen, ZengRong Zhou,
+and GuiLu Long. “A quantum convolutional
+neural network on nisq devices”. AAPPS
+Bulletin 32, 1–11 (2022).
+[52] Sofiene Jerbi, Lukas J Fiderer, Hendrik
+Poulsen Nautrup, Jonas M Kübler, Hans J
+Briegel, and Vedran Dunjko. “Quantum machine learning beyond kernel methods”. Nature Communications 14, 1–8 (2023).
+[53] Tuan Hai Vu, Lawrence H Le, and The Bao
+Pham. “Exploring the features of quanvolutional neural networks for improved image classification”. Quantum Machine Intelligence 6, 29 (2024).
+[54] Yann LeCun, Léon Bottou, Yoshua Bengio,
+and Patrick Haffner. “Gradient-based learning applied to document recognition”. Proceedings of the IEEE 86, 2278–2324 (1998).
+[55] Claudio Fanconi. “Skin cancer: Malignant
+vs. benign” (2019).
+[56] Mircea Cimpoi, Subhransu Maji, Iasonas
+Kokkinos, Sammy Mohamed, and Andrea
+Vedaldi. “Describing textures in the wild”. In
+Proceedings of the IEEE conference on computer vision and pattern recognition. Pages
+3606–3613. (2014).
+[57] Jiaming Zhao, Wenbo Qiao, Peng Zhang,
+and Hui Gao. “Quantum Implicit Neural
+Representations”. In Proceedings of the 41st
+International Conference on Machine Learning. (2024).
+[58] Laurens Van der Maaten and Geoffrey Hinton. “Visualizing data using t-sne.”. Journal
+of machine learning research9 (2008).
+
+[48] Geoffrey E Hinton. “Connectionist learning
+procedures”. In Machine learning. Pages
+555–610. Elsevier (1990).
+[49] Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, and
+Baining Guo. “Swin transformer: Hierarchical vision transformer using shifted windows”. In Proceedings of the IEEE/CVF international conference on computer vision.
+Pages 10012–10022. (2021).
+Accepted in Quantum 2017-05-09, click title to verify. Published under CC-BY 4.0.
+
+12
+
+

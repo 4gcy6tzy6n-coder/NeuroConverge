@@ -1,0 +1,1487 @@
+1
+
+RBA-FE: A Robust Brain-Inspired Audio Feature
+Extractor for Depression Diagnosis
+
+arXiv:2506.07118v1 [cs.SD] 8 Jun 2025
+
+Yu-Xuan Wu, Ziyan Huang, Bin Hu*, Zhi-Hong Guan
+
+Abstract—This article proposes a robust brain-inspired audio
+feature extractor (RBA-FE) model for depression diagnosis, using
+an improved hierarchical network architecture. Most deep learning models achieve state-of-the-art performance for image-based
+diagnostic tasks, ignoring the counterpart audio features. In
+order to tailor the noise challenge, RBA-FE leverages six acoustic
+features extracted from the raw audio, capturing both spatial
+characteristics and temporal dependencies. This hybrid attribute
+helps alleviate the precision limitation in audio feature extraction within other learning models like deep residual shrinkage
+networks. To deal with the noise issues, our model incorporates
+an improved spiking neuron model, called adaptive rate smooth
+leaky integrate-and-fire (ARSLIF). The ARSLIF model emulates
+the mechanism of “retuning of cellular signal selectivity” in the
+brain attention systems, which enhances the model robustness
+against environmental noises in audio data. Experimental results
+demonstrate that RBA-FE achieves state-of-the-art accuracy on
+the MODMA dataset, respectively with 0.8750, 0.8974, 0.8750
+and 0.8750 in precision, accuracy, recall and F1 score. Extensive
+experiments on the AVEC2014 and DAIC-WOZ datasets both
+show enhancements in noise robustness. It is further indicated by
+comparison that the ARSLIF neuron model suggest the abnormal
+firing pattern within the feature extraction on depressive audio
+data, offering brain-inspired interpretability.
+Index Terms—Audio diagnosis, robustness, adaptive neuron
+model, attention, depression
+
+I. I NTRODUCTION
+
+D
+
+EPRESSION, defined by prolonged periods of low
+mood, is a global health crisis that significantly impairs
+the quality of life [1]. According to the World Health Organization, depression affects 3.8% of the global population and
+is a leading cause of disability, resulting in a substantial death
+burden. The COVID-19 pandemic era has accentuated the
+demand for homestyle mental health self-assessment, necessitating not just cost-effective but also rapid diagnostic methods
+[2]. Traditional diagnostic approaches, such as psychological
+surveys or scale questionnaires, require an average of 15-30
+minutes [3], [4]. More importantly, these approaches require
+interpretation and analysis by healthcare professionals, thereby
+delaying the diagnosis. This protracted process often deters
+individuals from engaging in self-assessment. Yet, modern
+This work was supported in part by the National Natural Science Foundation of China under the Excellent Young Scientists Fund 62322311 and
+by the Guangdong Artificial Intelligence and Digital Economy Laboratory
+(Guangzhou) under Fund PZL2023ZZ0001. (*Corresponding author: Bin Hu)
+Y.-X. Wu, Z. Huang, B. Hu are with the School of Future Technology, South
+China University of Technology, and also with the Pazhou Lab, Guangzhou
+510006, China. Y.-X. Wu and Z. Huang contributed equally to this work.
+(E-mail: huu@scut.edu.cn).
+Z.-H. Guan is with the School of Artificial Intelligence and Automation,
+Huazhong University of Science and Technology, Wuhan 430074, China. (Email: zhguan@mail.hust.edu.cn).
+
+deep learning methods could be more objective and less timeconsuming when used for depression diagnosis. Patients may
+have to record just a few seconds of audio, sufficient for
+training a deep learning model. Current deep learning methods
+predominantly use various datasets like vision [5], audio [6],
+[7], [8], Electroencephalogram (EEG) [9], or multi-modal data
+[10], [11]. Among the physiological modal data, audio-based
+diagnosis is more feasible for homestyle self-assessments
+since the speech data acquisition is much easier than other
+modalities, e.g., professional X-rays and magnetic resonance
+imaging (MRI) scans or specialized EEG equipments.
+In the literature, deep learning models have achieved considerable performance when used for audio-diagnosis of depression with exquisitely prepared datasets. For instance, WavDepressionNet predicts levels of depression by analyzing raw
+voice signals, utilizing both representational and evaluative
+blocks [6]. Through temporal-spatial self-calibration, it attains
+an RMSE of 8.20 and MAE of 6.14 on the AVEC 2014
+database. Similarly, SpeechFormer++ classifies depression
+through paralinguistic features, employing unit encoders to
+emulate inter-speech information and fusing blocks to generate
+features at various granularities, achieving a WA of 77.1% on
+the DAIC-WOZ dataset [7]. Other models like bidirectional
+long short-term memory (LSTM) and time distributed convolution neural network (CNN) focus on capturing temporal
+dependencies, with CNN capturing prosodic features and BiLSTM focusing on temporal relationships, achieving F1 scores
+of 0.9870 and 0.9074 for healthy and depressed individuals on
+the DAIC-WOZ dataset respectively [11]. However, most of
+these learning models have to be trained on curated datasets,
+placing limitation on their applicability and robustness. This
+limitation could be severe particularly in homestyle setups,
+since recording equipments like cellphones or computers are
+often non-professional and subject to environmental noises.
+For homestyle audio diagnosis, environmental noises significantly degrade the quality of audio capture. According to
+the United Nations Environment Programme’s 2022 Frontiers
+Report, noise levels in most global cities exceed acceptable
+limits, with lower-floor residents frequently suffering from
+vehicular and human-induced noise [12]. Audio capturing
+devices like microphones might also bring electrical noises.
+It has been recognized that the environmental noise and
+reverberation can degrade the performance of depression diagnosis models [13]. Models such as deep residual shrinkage
+networks (DRSN) can bee employed for dealing with noises in
+time-series anomaly detection [14]. However, these methods
+cannot be directly applied to handle noisy audio samples. For
+example, key features like jitter [15], might be thresholded
+
+2
+
+Fig. 1. Diagram of the RBA-FE model. Initial inputs are the preprocessed six key features obtained from raw audio signals. These features go through
+T-CNN, multi-head self-attention modules and Bi-LSTM networks, and then adaptive rate smooth LIF neurons. Self-attention assigns feature weights based
+on importance, while adaptive rate smooth LIF neurons adjust firing rates according to inputs. Bi-LSTM with adaptive rate smooth LIF neurons improves the
+network robustness. This adaptive process emphasizes crucial features, revealing patterns for accurate emotion recognition.
+
+by DRSN, leading to the loss of crucial information. These
+observations motivate to design intelligent models with high
+noise robustness, specifically for handling the task of audiobased depression diagnosis. Pioneering work and recent advance suggest brain-inspired neuronal computations, such as
+spiking neural networks (SNNs) [16], [17] and hybrid neural
+networks [18], [19], which outperform other machine learning
+models against noises. Most of such networks employ leakyintegrated-fired (LIF) models that mimic the neural impulse
+transmission mechanism in the brain. Choosing appropriate
+thresholds and membrane potential leaks, LIF models can filter
+out noise to a certain degree [20]. LIF neurons emit discrete
+action potentials, also called spikes or nerve impulses, for description and transmission, where temporal information can be
+stored in membrane potentials. Those easily overlooked audio
+features may accumulate, making the model to release and
+transmit information in an appropriate event-driven manner.
+LIF-based SNN models demonstrate desirable performance
+for dealing with environmental noises in audio recognition,
+preserving partial temporal features of the audio. However,
+one limitation of the standard LIF model is its rigid resetting
+threshold, failing to adapt to the heterogeneous nature of
+individual signal points in the time domain [21]. In order
+to improve the noise robustness and solve the vanishing
+gradient issue, we take inspiration from an attention perceptual
+mechanism of the brain—retuning of cellular signal selectivity
+[16], [22]. That is, neurons display a higher firing rate in
+response to preferred stimuli, while non-preferred stimuli,
+even if potent, elicit no corresponding reaction from the cell.
+Following this inspiration, we present an adaptive spiking
+mechanism to modify the standard LIF model, named adaptive
+rate smooth leaky integrate-and-fire (ARSLIF). In ARSLIF,
+the neuronal threshold is not constant but adjusts along its
+target firing rates, facilitating adaptive sensitivity modulation
+to diverse input signals. In addition, the model incorporates a
+smoothing operation to reduce gradient noise, improving the
+training stability of the model.
+
+In this article, a robust brain-inspired audio feature extractor
+(RBA-FE) is proposed for depression diagnosis, by leveraging
+ARSLIF neurons, multi-head attention and long short-term
+memory. The RBA-FE model extracts six acoustic features
+from raw audio data, which are captured by a local feature
+extractor for spatial attributes, and then processed by a temporal feature extractor for time dependencies (Fig. 1). For
+understanding emotional states [47], the six acoustic features
+are Mel Frequency Cepstral Coefficents (MFCC), Pitch, Jitter,
+CQL Cepstrum. MFCCs are crucial for capturing important
+spectral characteristics, and their first and second derivatives
+provide insight into the dynamics in speech [48]. Pitch is
+another crucial feature, with a reduction in variance and
+difficulties in pitch recognition being closely associated with
+the severity of depression, especially in females [49]. Jitter
+is used to quantify irregularities in vocal frequency, linked
+to more severe forms of depression [50]. CQL improves the
+analysis of harmonic structures, offering better insights into
+the emotional effects on speech [51]. Noisy data is further
+filtered out using the ARSLIF model through a classifier.
+At the initial phase, the six acoustical features are manually
+extracted to reveal various attributes of the audio. Then, RBAFE utilizes a time distributed convolution neural network to
+concurrently capture key features from each frame of audio
+while reducing redundancy through dimensionality reduction.
+At the second phase, a global feature extractor composed of
+multi-head attention and bidirectional LSTM refines critical
+emotional information and further reduces dimensionality.
+More importantly, this phase is enhanced by the combination of weight allocations in multi-head attention by the aid
+of the ARSLIF neurons. Each ARSLIF neuron accumulates
+membrane potentials till threshold and emits spikes; if no
+subsequent signals are received, its membrane potential leaks,
+further filtering key information for each time frame. In
+conjunction with the attention, ARSLIF neurons can further
+strengthen the weight focus. At the final phase, RBA-FE
+adopts a softmax layer for classification outputs or a fully
+
+3
+
+connected layer as a regressor for output. Overall, RBAFE processes the audio depression features by a hierarchical
+feature extractor. Our main contributions are summarized as
+follows:
+1) To deal with the audio-based depression diagnosis tasks,
+this article proposes an intelligent method, termed as the
+robust brain-inspired audio feature extractor (RBA-FE)
+model. Different from the visual or physiological modal
+data, audio-based diagnosis is more feasible for homestyle self-assessments. This trait allows our diagnosis
+model to be portable.
+2) RBA-FE combines T-CNN, multi-head attention and BiLSTM networks, where an adaptive rate smooth leaky
+integrate-and-fire (ARSLIF) neuron model is presented
+to tailor the noise challenge in audio. ARSLIF mimics
+the attention perceptual mechanism of the brain [16],
+[22], which, together with attention and LSTM, can
+enhance the noise-filtering capability on audio datasets
+corrupted by noises.
+3) By leveraging six acoustic features, RBA-FE can capture
+both spatial characteristic and temporal dependency,
+which conventional models like DRSN can not. Applied
+to the AVEC2014, MODMA, and DAIC-WOZ datasets,
+RBA-FE outperforms related models in terms of classification accuracy and robustness.
+The rest of this article is organized as follows. Section II
+reviews related work on depression audio features and deep
+learning models. Section III elaborates on the proposed RBAFE model and its components. Real data experiments and
+results are provided in Section IV, including parameter setups
+and comparative studies. V concludes the article.
+II. R ELATED W ORK
+A. Studies on Depression Audio Features
+Research into diagnosing depression using audio features
+has gained significant attention over the past few years.
+Previous studies have established that the neurophysiological
+changes associated with depression disrupt the coordination of
+vocal articulation in affected individuals, thereby altering the
+quality of their speech. These alterations are encoded in the
+acoustic properties of their speech signals, such as the source,
+spectrum, prosody, and formant peaks [15]. These observations
+have led researchers to explore alternative approaches based on
+audio processing techniques, applicable for practical purposes
+like automatic depression screening and remote monitoring.
+Subsequently, various studies have sought clues that reflect
+mood disorders affecting a subject’s audio [23]. Acoustic
+features of audio signals such as pitch, formants, harmonicto-noise ratio, shimmer, jitter, speech rate, energy, and glottal
+features have been employed for the analysis [24]–[26], of
+audio in depression sufferers. For example, [24] discovered
+that rhythm, pitch, and both the intensity and quality of
+voice can be indicators of an individual’s emotional and
+psychological states. Moreover, it is noted that voices of
+individuals with depression often exhibit low energy, lack of
+emotional intensity, and a paucity of rhythmic variations [27].
+In this article, to enhance the feature quality, we first manually
+
+extracted six features. Then the six features are combined
+with other automatically extracted features, generating the
+total model input. This integrated features can improve the
+interpretability and accuracy of the RBA-FE model.
+B. Deep Learning Models for Audio Depression Diagnosis
+With the advent of deep learning, a great deal of neural
+network architectures have been developed for audio data
+analysis. He et al. used CNNs for feature extraction from
+voice data, with the goal of identifying individuals with or
+without depression [28]. In recent years, automated methods
+for diagnosing depression have also gained traction. These
+methods offer the advantage of providing rapid, low-cost
+screening for a large patient pool, thus enabling early diagnosis
+and treatment of depression. They typically focus on how to
+better extract multi-scale and multi-dimensional voice features
+associated with depression. For example, Zhao et al. designed
+one-dimensional and two-dimensional CNN-LSTM networks
+to learn local and global features for emotion recognition in
+voice, considering that most models only capture low-level
+features for emotion classification [29]. Niu et al. developed
+a WavDepressionNet model that more efficiently extracts
+emotion-related information by directly modeling raw voice
+signals [6]. Rejaibi et al. proposed an EmoAudioNet model
+that uses one-dimensional convolution (Conv1D) and twodimensional convolution (Conv2D) to extract depression clues
+from both time-frequency and spatial perspectives [30].
+To capture intra- and inter-component hierarchies in speech,
+Mao et al. designed a unit encoder that can integrate both
+coarse-grained and fine-grained details. They also constructed
+a hierarchical backbone, SpeechFormer++, for paralinguistic
+processing. These models all employ different methods to
+extract as many useful features as possible from voice data related to depression. These models have been trained and tested
+based on various publicly available depression voice datasets
+such as AVEC2014 [39]. However, these datasets typically
+do not simulate voice data from depression sufferers in noisy
+environments. Additionally, if artificial intelligence diagnosis
+models are to be used in an everyday, on-the-go context for
+self-diagnosis, higher noise robustness requirements will be
+essential. This further motivates our study of robust learning
+methods.
+III. RBA-FE: THE ROBUST B RAIN - INSPIRED AUDIO
+F EATURE E XTRACTOR MODEL
+This section provides a detailed explanation of the RBA-FE
+model, in which the hierarchical network architecture is inspired by the auditory processing pathway in the human brain
+(Fig. 2). Researches on the auditory pathway demonstrates
+that sound processing in the brain progresses through multiple
+hierarchical stages, from basic acoustic feature extraction in
+early auditory regions, such as the cochlear nuclei and superior
+olivary complex to complex temporal processing in the cortex
+[57], [60]. It is further shown that these stages correlate with
+specific layers of deep neural networks (DNNs) for audio
+processing, supporting the use of a hierarchical architecture
+
+4
+
+Fig. 2. The hierarchical network architecture for feature extraction in the RBA-FE model, with inspiration from the information processing in auditory pathway
+of human brains. The number N is determined by dividing the total length of the sequence by 1.5 ms. The brain auditory pathway is adapted from [58].
+
+Fig. 3. Illustration of data flow and tensor sizes in RBA-FE.
+
+for robust feature extraction [58], [59]. By this brain inspiration, RBA-FE utilzies T-CNN for early feature processing,
+multi-head attention for selective focus on relevant parts of
+the audio spectrogram, Bi-LSTM for integrating information
+across frames, and a softmax layer for classification or a fully
+connected layer for regression (Fig. 3).
+A. Foundational components of the RBA-FE model
+For audio-based depression diagnosis, RBA-FE integrates
+temporal convolutional neural networks (T-CNN), multi-head
+attention, and bidirectional long short-term memory networks
+(Bi-LSTM), leveraging the unique strengths of each element
+to tackle complex diagnostic challenges.
+1) Temporal Convolutional Neural Network: The RBA-FE
+starts with a T-CNN. To deal with temporal data analysis [31],
+T-CNN excels in local feature extraction, and its cascade of
+convolutional and pooling layers progressively unveils signal intricacies, capturing rhythm, intensity, and pitch within
+
+speech signals. As shown in Fig. 3, the audio data is first
+pre-processed by manual feature extraction at a sampling
+frequency of 1024Hz, utilizing a window size of 1024 without
+overlap. Segmentation of the audio is performed into intervals
+of 1.5ms, while the segment shorter than 1.5ms is repeated to
+approximate the interval length, discarding any excess. Then,
+the segmented data undergoes convolution with 7 × 7 filters.
+This is followed by batch normalization, ReLU activation, and
+average pooling. The data then undergoes further processing
+with residual blocks of 3 × 3 filters for enhanced feature
+extraction. The output of the T-CNN, concatenated along the
+temporal dimension, serves as the input for the subsequent
+attention layer.
+Employing two-dimensional convolutional layers and dilated convolutions, a T-CNN layer increases its receptive field
+to capture broader temporal relationships within the depression speech feature map, identifying subtle vocal modulations
+and global audio events. This layered structure resembles
+the processing stages of the early auditory pathway, where
+each successive layer captures increasingly complex auditory
+features, progressing from simple spectral patterns to more
+sophisticated temporal structures in a manner akin to the
+transformation from cochlear nuclei to higher auditory cortex
+regions. T-CNN makes the foundation for subsequent network
+layers, much like the early auditory processing stages provide
+foundational acoustic representations for higher-order processing in the brain [57], [58].
+2) Multi-Head Attention: RBA-FE utilizes multi-head attention to compute similarities across all points in the sequence, endowing the model with global dependencies across
+distant temporal points. Unlike other studies that place attention after LSTM and before fully connected layers, we
+place the attention after TCNN and before the Bi-LSTM. The
+
+5
+
+adopted attention mechanism intends to amplify sparse features within the speech feature map, enabling the subsequent
+Bi-LSTM to converge rapidly toward key depressive speech
+characteristics.
+More formally, the attention mechanism employs eight
+parallel attention “heads”, learning different representational
+subspaces of the input data, which aligns with the selective
+processing seen in midbrain structures, such as the inferior
+colliculus, where relevant auditory information is filtered and
+enhanced. This setup allows the attention mechanism to focus
+on audio features critical to the diagnosis, such as emotional
+fluctuations and nuanced speech patterns, while discarding
+irrelevant background information. By capturing diverse aspects of speech signals, including intonation, rhythm, and
+semantic nuances, the attention layer mimics the auditory
+system’s capacity to selectively process specific auditory cues.
+A dropout layer with a 75% probability is included to prevent
+overfitting, enhancing the model’s interpretive capabilities.The
+attention mechanism in RBA-FE enhances the feature map by
+focusing on key auditory cues. This selective focus refines the
+extracted features, making them more interpretable and robust
+for subsequent processing by the Bi-LSTM.
+3) Bidirectional Long Short-Term Memory Network: To
+capture both immediate and extended temporal dependencies in speech, the RBA-FE model incorporates a Bi-LSTM
+layer following the attention mechanism [33]. Unlike standard
+LSTMs, which retain information only from past audio data,
+Bi-LSTMs capture both past and future context by employing
+two independent LSTM layers (forward and backward) [44],
+[45]. This placement after the attention layer allows Bi-LSTM
+to filter out noisy long-distance correlations introduced by
+the attention mechanism, focusing the network on short-range
+temporal dependencies that are more relevant to identifying
+depression-related features in speech.
+The forward LSTM processes data from past to future,
+while the backward LSTM processes data from future to
+past. When used for time-related audio signal segmentation,
+Bi-LSTM enables comprehensive understanding of temporal
+sequences by capturing both past and future information
+with complex(related or different) emotional or behavioral
+patterns through the two LSTM units. It is expected that the
+combination of T-CNN, Attention and Bi-LSTM offers more
+preciseness in complex spatio-temporal feature extraction with
+emotional audio conditions. More importantly, LSTM in our
+model is improved with one single layer of adaptive ratesmoothing Leaky Integrate-and-Fire (ARSLIF) neurons to
+assist in the task of noise filtering, emulating the nerve impulse
+responses. The outputs of the two LSTM layers are combined
+by summation, followed by a dropout layer with a 50% probability to mitigate overfitting. This bidirectional processing
+mechanism mirrors higher-order auditory processing in the
+brain, where signals are integrated across multiple time frames
+to provide a dynamic and nuanced understanding of speech
+patterns [16].
+B. Adaptive Rate Smooth Leaky Integrate-and-Fire Model
+An improved spiking neuron model is presented to deal with
+the environmental noise and reverberation in voice recordings.
+
+It is termed as adaptive rate smooth leaky integrate-and-fire
+model (ARSLIF), beyond the standard leaky integrate-and-fire
+(LIF) model. ARSLIF has the capacity of noise filtering akin
+to the brain, meanwhile ARSLIF also renders the flexibility
+to preserve salient temporal features in audio data, as will be
+demonstrated in the experiment section.
+1) LIF: The leaky integrate-and-fire (LIF) neuron model
+is a simplistic, effective neuronal model, capturing the electrophysiological characteristics of neurons in the brain [16],
+[17]. The model draws inspiration from the biological neurons’
+ability to integrate incoming signals and activate upon exceeding a certain threshold. In biological systems, the membrane
+potential Vm (t) gradually accumulates in response to the input
+signal I(t), triggering an action potential or “spike” upon
+reaching a certain threshold, meanwhile the neuronal potential
+will be reset to a predefined state.
+The standard LIF model is given by [16], [17]:
+dVm (t)
+= −Vm (t) + RI(t)
+(1)
+dt
+where τ > 0 is the time constant, R > 0 is the membrane
+resistance constant, I(t) is the input current, and Vrest is the
+resting potential. If Vm crosses a potential threshold, then the
+neuron fires a ‘spike’; meanwhile the membrane potential is
+reset to a predefined potential Vreset . Let Vth0 be the potential
+threshold, which usually takes a constant value in the standard
+LIF model [16], [17]. Let Si (t) be the firing state at time t.
+It follows that
+(
+1, if Vm ≥ Vth0
+Si (t) =
+(2)
+0, otherwise
+τ
+
+Vm = Vreset , if Vm ≥ Vth0
+By simulating the spiking mechanism described by eqs. (1)
+and (2), the standard LIF model is capable of noise filtering
+and feature extraction when used for machine learning [21].
+2) ARSLIF: The design of the ARSLIF model draws inspiration from the brain. Neurons in the brain utilize action
+potential (spike) for communication and have a temporallycorrelated internal state known as the membrane potential
+
+Fig. 4. Illustration of the calculation of ARSLIF based on equations (3)-(8),
+explaining how the adaptive threshold work.
+
+6
+
+[16]. While the standard LIF model is a simplified neural
+model that mimics the electro-signaling mechanisms of brain
+neurons by setting a fixed threshold and membrane leakiness,
+it may not fully capture the heterogeneity of signals. An
+adaptive mechanism is introduced to allow the model to adapt
+more flexibly to different signal patterns, see Fig. 4 for an
+illustration.
+The updating process of the ARSLIF neuron model in
+training is presented as follow.
+1) Initialization and weight construction: Through the
+constructor, the ARSLIF model sets multiple key parameters:
+• ‘f =target rate’: The desired average firing rate for
+neurons.
+• ‘fadapt =target rate adapt’: The adaptive target firing rate.
+• ‘factive =target rate active’: The target firing rate
+used when input potential is above the threshold.
+• ‘frest =target rate rest’: The target firing rate used
+when input potential is below the threshold.
+• ‘τadapt =tau adapt’: The time constant, controlling
+the speed of threshold adjustment.
+During the construction phase, the model initializes two
+critical state variables:
+• Vmem : Membrane potential.
+• Vth : Activation threshold, representing the adaptive
+potential threshold for spike activation.
+2) Computation of membrane potential and spikes: The
+spiking mechanism of ARSLIF is similar to the LIF
+model:
+• Membrane potential update: A discretization of
+differential equation (1) is used to simulate the
+membrane potential’s leakiness and accumulation of
+inputs.
+dt
+· (Vmem − R · inputs) (3)
+Vmem new = Vmem −
+τmem
+where Vmem new is the updated new potential.
+• Spike generation: A spike is generated when the
+membrane potential reaches the threshold, and the
+membrane potential is reset. Differing from (2), the
+potential threshold Vth is not a constant. One has
+(
+1, if Vmem new ≥ Vth
+Si (t) =
+0, otherwise
+Using the constant threshold Vth , the average firing
+rate of all neurons can be defined by
+n
+1X
+r(t) =
+Si (t)
+(4)
+n i=1
+3) Adaptive threshold adjustment: The activation threshold Vth is adaptively adjusted by calculating the error
+with the target firing rate related to r(t).
+• Rate error: The error calculation takes into account
+a combination of the desired firing rate and the
+adaptive target firing rate, satisfying
+re = α · rei + β · rea
+
+(5)
+
+where re = rate error, rei = rate error initial,
+rea = rate error adaptive, and α and β can be
+chosen to meet different requirements.
+• Adaptive law: The activation threshold is updated
+by
+dt
+· re
+(6)
+Vth new = Vth +
+τadapt
+where Vth new is the updated new threshold.
+In the equation (5), rei and rea are defined respectively as
+rei = r(t) − f,
+
+rea = r(t) − fadapt (t)
+
+(7)
+
+factive , if | R · inputs |≥ Vth
+frest , otherwise
+
+(8)
+
+where
+(
+fadapt (t) =
+
+dt
+The term τadapt
+re represents the firing rate error with respect to
+the desired firing rate and the adaptive firing rate, at time scale
+τadapt . In this case, the equation (6) suggests that every spike
+would cause an adaptation of the threshold Vth . Altogether, the
+equations (5)-(8) constitute the adaptive threshold of spiking
+neurons via the ARSLIF model, differing from the constant Vth0
+within the standard LIF (2). The above adaptive adjustment
+mechanism is proposed to enhance the model adaptability,
+since it enables our whole model to adjust the activity level
+of neurons in response to varying input conditions.
+
+C. A theoretical analysis of ARSLIF
+1) Influence of parameters α and β: β tunes the error
+between fadapt (t) and r(t) and α adjusts the error between f
+and r(t).
+Eq. (8) suggests that, if the input signal inputs reaches the
+activation threshold Vth , indicating that all neurons may be
+biased towards activation, then the adaptive target firing rate is
+set to factive (usually 0.99); otherwise, it is set to frest (usually
+0.01). This mechanism adjusts the threshold in response to
+continuous high-rate firing signals, making it easier for the
+model to reach the activation threshold and thus forming a
+positive feedback loop that drives the firing rate towards factive .
+Conversely, if the rate is below the threshold, it drives towards
+frest . β then governs the threshold increase process. However,
+too fast or extreme adaption can potentially disrupt the steadystate of the system. To address this issue, we have introduced
+the target firing rate f and use α to control the error between
+it and r(t), in order to limit the final firing rate to oscillate
+around the target rate f .
+Combining Eqs. (5)-(8), one has
+re (t) = α · (r(t) − f ) + β · (r(t) − fadapt (t))
+From equation (6), it follows
+1
+dVth (t)
+=
+(α · (r(t) − f ) + β · (r(t) − fadapt (t)))
+dt
+τadapt
+(9)
+If Vth (t) converges to a steady state, the firing rate reaches
+zero. Letting
+0 = α · (r(t) − f ) + β · (r(t) − fadapt (t))
+
+(10)
+
+7
+
+gives the equilibrium firing rate
+r(t) =
+
+D. Embedding ARSLIF in the model
+
+α
+β
+f+
+fadapt (t)
+α+β
+α+β
+
+(11)
+
+α
+Here, α+β
+is termed as a target rate error ratio, representing
+the weight of target firing rate f on stability of the ARSLIF
+model.
+This equilibrium firing rate is a weighted average of the
+fixed target rate f and the adaptive rate fadapt (t). Notice that,
+with a large α and a small β, f has a higher weight while
+fadapt has a lower weight. Since the fixed target firing rate f
+is constant with respect to the inputs, a higher weight would
+make r(t) more stable and less sensitive to input fluctuations.
+By equation (8), the adaptive firing rate fadapt depends on
+whether the input exceeds the threshold, then a lower weight
+for it slows r(t) to external changes. In this context, there is
+a possible balance between stability and adaptability.
+• With a large α and small β, the neuron’s firing is more
+stable but adapts more slowly.
+• With a large β and small α, the neuron adapts quickly
+but becomes more sensitive to fluctuations, degrading
+stability.
+2) Advantage of ARSLIF over LIF under noise: Let the
+input signal I(t) be a combination of the actual signal Isignal (t)
+and an external noise term η(t). Without loss of generality,
+η(t) is a Gaussian white noise satisfying
+
+⟨η(t)⟩ = 0,
+
+⟨η(t)η(t′ )⟩ = σ 2 δ(t − t′ )
+
+where σ 2 is the noise variance.
+For the standard LIF model, the noise-induced spiking
+power with noise strength of duration T can be approximated
+as:
+Z T
+η 2 (t)dt
+
+Pnoise =
+0
+
+Since η(t) is Gaussian white noise, its power is proportional
+to σ 2 , leading to the approximation:
+Pnoise ≈ σ 2 T
+This formula indicates that noise directly increases the firing
+rate because of the fixed threshold, reducing the signal to noise
+ratio (SNR).
+For the ARSLIF model, the adaptive threshold Vth (t) increases with a raising noise by (9), with the goal of filtering
+noise-induced spikes. So the power of noise-induced spiking
+in ARSLIF is reduced because the threshold increases with
+noise:
+2
+Z T
+1
+ARSLIF
+△Vth (t) dt
+(12)
+Pnoise
+=
+η(t) −
+τadapt
+0
+Since △Vth (t) increases with noise, this term reduces the
+overall power of noise-induced spiking, yielding an improved
+SNR. More specifically, one has
+SN RARSLIF =
+
+Psignal
+Psignal
+>
+= SN RLIF
+ARSLIF
+Pnoise
+Pnoise
+
+(13)
+
+Therefore, using the adaptive threshold mechanism, SNR in
+ARSLIF is improved compared to the standard LIF.
+
+The ARSLIF neuron model is used to replace the conventional sigmoid gate activation function in Bi-LSTM, and the
+embedding purpose is to cope with the gate overfitting caused
+by sensitivity to input data noise, as well the noise amplification due to recursion [34], [35]. The ARSLIF neuron model
+is a biologically plausible mathematical model, reflecting the
+dynamic behavior of real neurons. By replacing the sigmoid
+gate activation function in LSTM with ARSLIF, the model
+can elicit superior neuron-like responses to external signals,
+particularly in noisy conditions.
+The integration of Bi-LSTM and ARSLIF can be described
+by the following mathematical equations:
+ft = ARSLIF(Wf · [ht−1 , xt ] + bf )
+it = ARSLIF(Wi · [ht−1 , xt ] + bi )
+C̃t = tanh(WC · [ht−1 , xt ] + bC )
+
+(14)
+
+Ct = ft × Ct−1 + it × C̃t
+ht = tanh(Ct ) × ARSLIF(Wo · [ht−1 , xt ] + bo )
+where ARSLIF(·) is used as the activation function.
+Fig. 5 shows the heatmap visualization of noise robustness
+with the ARSLIF model. Figs. 5a and 5d depict the signals
+received by the model. The noisy input figure illustrates that
+the signal has been perturbed by Gaussian noise. Figs. 5b
+and 5e demonstrate that the ARSLIF model generates sparse
+pulse sequences, wherein the majority of time points yield
+zero output, with only a few time points emitting pulses.
+This characteristic is discernible from the color distribution in
+the heatmaps: most regions are colored in yellow (indicating
+absence of pulses), while only a few regions are in purple
+(indicating presence of pulses). Importantly, even in the presence of noise, the distribution pattern of pulses remains nearly
+unchanged, demonstrating robustness to noise interference.
+Figs. 5c and 5f implies that the Sigmoid function generates
+continuous values rather than sparse pulses. In the absence
+of noise, its output values span a wide range. However, in
+the presence of noise, there is a change in the distribution of
+output values, evident from the color variations in heatmaps.
+This implies that the output of the Sigmoid function is more
+susceptible to the influence of input noise.
+The comparison between sigmoid and ARSLIF unveils a
+notable inspiration: even features with smaller values enable to
+initiate spikes, while a considerable proportion of features undergo deactivation. This phenomenon underlines the ARSLIF’s
+robust regularization and effective noise filtering prowess. This
+also demonstrates that the enhanced model is particularly
+well-suited for addressing complex noise issues in audiobased depression diagnosis. By leveraging membrane potential
+leak mechanisms for effective noise filtration, accumulating
+membrane potential over time to capture temporal features,
+and enabling adaptive threshold adjustments, the model retains
+crucial information while eliminating redundancies and noise.
+The ARSLIF model introduces a flexible and powerful new
+approach to neural information processing. It emulates key
+characteristics of biological neurons and enhances adaptability to complex and heterogeneous signals. Specifically, in
+
+8
+
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+(f)
+
+Fig. 5. Comparative Analysis of ARSLIF and Sigmoid Responses to Clean and Noisy Signals. (a) is the unperturbed input signal, (b) represents ARSLIF
+response to clean signal, (c) represents Sigmoid response to clean signal, (d) is noisy input signal, (e) is ARSLIF response to noisy signal, (f) is Sigmoid
+response to noisy signal.
+
+challenging tasks such as audio-based depression diagnosis,
+the model showcases significant potential and serves as one
+complement to the existing deep learning methods.
+
+IV. E XPERIMENTS AND R ESULTS
+To evaluate the model performance, experiments are conducted on the AVEC2014 dataset [35] and on the MODMA
+dataset [36]. The following subsections describe datasets,
+experimental setups and results, respectively.
+A. Datasets
+The AVEC 2014 depression database includes two tasks,
+namely ”Northwind” and ”FreeForm.” In the ”Northwind”
+task, participants were instructed to read a fable entitled
+”Die Sonne und der Wind” (English: ”Northwind and Sun”).
+In the ”FreeForm” task, participants were asked to answer
+several questions such as, ”What is your favorite dish?” or
+to recount and describe a sad childhood memory in German.
+Across both tasks (”Northwind” and ”FreeForm”), a total of
+300 audio files were recorded, varying in duration from 6
+seconds to 4 minutes. In other words, each task consists of 150
+samples, which are then divided into training, development,
+and test sets, including 41, 43, and 42 speakers respectively.
+We merged the training, development, and test sets for both
+tasks, resulting in 100 audio samples in each set. In our
+experiments, we refer to this merged dataset as AVEC 2014,
+including training, validation and testing sets.
+
+Considering potential biases of the original dataset, we
+resort to the mean Beck Depression Inventory (BDI) scores.
+In our examination of the timing for video recordings, there
+comes a notable observation: BDI scores of the same individual could undergo substantial fluctuations over brief durations.
+These fluctuations could even escalate from “mild” to “severe”
+within a matter of days. To mitigate this, we compute the mean
+BDI score across multiple videos for each participant within
+both the training and test sets.
+We utilize the root mean square error (RMSE) and the
+mean square errorq(MAE) as model performance metrics.
+PK
+1
+2
+That is, RMSE = K
+k=1 (yk − ŷk ) , where K represents
+the number of samples, yk is the actual BDI-II score for
+the k th sample, and ŷk is the predicted
+PK BDI-II score for
+1
+the k th sample. Define MAE = K
+k=1 |yk − ŷk |, where
+K represents the number of samples, yk is the actual BDIII score for the k th sample, and ŷk is the predicted BDIII score for the k th sample. The metrics yk and ŷk denote
+the true and predicted BDI-II scores for the k th sample,
+respectively. Smaller values for these metrics indicate a closer
+approximation to the actual scores, making them suitable for
+evaluating the performance of various algorithms.
+B. Basic Parameters Setups
+The experiment starts with extracting audio from raw videos
+at a 22,050 Hz sample rate, employing the VideoFileClip
+library. To remove non-informative sections, a clipping threshold of -30dB is applied. The audio is then split into 32frame windows and processed accordingly. Feature extraction,
+
+9
+
+TABLE I
+O PTIMAL T RAINING PARAMETERS
+Training parameters
+
+Setting
+
+ARSLIF Target Firing Rate (f )
+ARSLIF Initial Activation Threshold (Vth )
+ARSLIF active target rate (factive )
+ARSLIF rest target rate (frest )
+ARSLIF threhold adaptation time constant (τadapt )
+Learning Rate
+Batch Size
+
+0.6
+0.8
+0.99
+0.01
+1000
+0.0005
+96
+
+facilitated by the librosa library, yields MFCCs, first-order
+and second-order MFCC deltas [25], [38], CQT [41], pitches
+[24], and jitter [26] from each audio window. These features
+are normalized and combined to create multi-channel audio
+spectrograms.
+To mitigate potential fluctuations in BDI scores, we employ
+an averaging approach. This reduces label inaccuracies by
+computing averages for each subject in both training and test
+sets. We organize data based on subject IDs and apply random
+cropping to ensure consistent audio lengths. Table I gives
+the training parameters, which are manually tuned by data
+characteristics and are determined through repeated tests. We
+use a V100 32GB platform and Keras version 2.9.0. Initial
+parameters in ARSLIF include a target firing rate of 0.6,
+an initial activation threshold of 0.8, with an adaptive target
+firing rate of 0.99 or 0.01. All the parameters are fixed during
+initialization and remain the same for all neurons at the single
+ARSLIF layer. The Adam optimizer with a learning rate of
+0.0005 is used, while other parameters follow Keras defaults.
+We employ RMSE as the loss function and accelerate training
+with 16-bit mixed-precision. A batch size of 96 is chosen
+for efficiency. During testing, predictions are averaged per
+ID to generate the final BDI prediction. Model performance
+is evaluated through RMSE and MAE metrics, comparing
+predicted and actual scores.
+
+C. Choosing Adaptive Threshold in Training
+Recalling the equation (11), at steady state, Vth (t) converges
+to a point where the rate of change is zero, the adjustment
+of the threshold Vth tends to make the firing rate r(t) apαf +βfadapt (t)
+proach
+. Fig. 6 visualizes the threshold Vth trend
+α+β
+α
+under different target rate error ratios ( α+β
+) as tested on the
+AVEC2014 dataset. Through experiments, we also proved that
+the larger the proportion of α, the more inclined the threshold
+stability, and the larger the β, the more inclined the threshold
+rise, which is the same as the discussion conclusions in
+Subsection III.C.1). In the training process, as relevant features
+are filtered by the threshold, more significant parameters
+(weights) are retained. The gradual threshold increase reflects
+the process of feature selection and noise reduction. Here, we
+chose a 60% target rate error ratio: α = 0.6 and β = 0.4,
+which experimentally proves to effectively balance volatility
+and stability for AVEC2014.
+
+α
+Fig. 6. Changes of threshold under different target frequency error ratios β+α
+as tested on the AVEC2014 dataset. 0% target rate error ratio: The threshold
+continues to rise; 100% target rate error ratio: The threshold oscillates; target
+rate error ratio ranging from 10% to 90%: The threshold oscillates slowly as
+it rises, with oscillation increasing as the error ratio increases.
+
+D. Comparison to The State-of-the-art Methods
+We conduct a comprehensive comparison of our model with
+other five methods on AVEC2014 dataset. Table II provides the
+detailed comparative results. The culmination of these results
+unequivocally illustrates performance achieved by RBE-FA in
+AVEC2014.
+TABLE II
+C OMPARISON OF RMSE AND MAE ACROSS DIFFERENT METHODS .
+Methods
+
+RMSE
+
+MAE
+
+Valstar et al. [36]
+Jain et al. [39]
+Jan et al. [40]
+He et al. [28]
+Niu et al. [42]
+RBA-FE (our)
+
+12.56
+11.51
+10.28
+9.99
+9.66
+8.8310
+
+10.03
+9.74
+8.07
+8.19
+8.02
+8.8310
+
+RBE-FA has slightly weaker performance comparing with
+[40] [28] [42] in MAE. Studies [40] and [28] showed better
+accuracy, especially in predicting lower scores on the Beck
+Depression Inventory (BDI). This improved accuracy might
+be attributed to the regression algorithms employed in these
+studies, which are seemingly more effective at estimating
+lower BDI scores. However, these studies also have higher
+Root Mean Square Error (RMSE) values, meaning they make
+bigger mistakes when predicting higher BDI scores. Conversely, RBE-FA has a lower RMSE, suggesting it’s more
+accurate for higher BDI scores but might not be as precise for
+lower scores. In diagnosing depression, accurately identifying
+individuals with high BDI scores is particularly important to
+ensure that high-risk patients are not incorrectly diagnosed as
+low-risk.
+Additionally, the model in [42] uses significantly more
+features than RBE-FA, which could explain its higher accuracy
+but is less practical for home diagnosis due to its complexity.
+It is notable that the RBA-FE model employs a global max
+pooling step after a Temporal Convolutional Neural Network
+(TCNN), converting time-series data into a one-dimensional
+sequence. This process simplifies data but may lose critical
+
+10
+
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+(f)
+
+Fig. 7. A comprehensive perspective for comparing the performance of four different activation functions against ARSLIF (in red) via RMSE and MAE.
+In (a), (b), and (c), the model performance is assessed respectively across noise levels in terms of Root Mean Square Error (RMSE), the ARSLIF model
+consistently outperforms LIF, Sigmoid, Soft Threshold, and Target Freq LIF models, particularly at the extremes of the noise spectrum. Subfigures (d), (e),
+and (f) evaluate Mean Absolute Error (MAE), indicating the superior robustness of ARSLIF.
+
+intra-frame information that is vital for accurately predicting
+lower BDI scores, thus possibly contributing to a reduced
+MAE. One of our future work will focus on enhancing
+the model’s ability to capture and utilize vital intra-frame
+information that is crucial for accurate prediction tasks.
+E. Performance Evaluation of ARSLIF
+To validate the performance of ARSLIF, we incorporated
+four alternative gate activation functions—namely sigmoid,
+soft thresholding, standard LIF, and LIF with a desired firing
+rate f —into the RBA-FE model. Subsequently, we conducted
+a comparative analysis of their performance against ARSLIF.
+Besides, in order to assess the robustness of the model under
+real-world noise interference, this study incorporates three
+types of synthetic noise that are widely used : pink noise,
+blue noise, purple noise to emulate environmental noise into
+the dataset for performance testing. Specifically, pink noise is
+employed to simulate low-rate environmental noises generated
+by traffic and electrical appliances; blue and purple noises are
+
+utilized to mimic high-rate noises, such as those generated
+by human voices. The model’s performance has been tested
+under varying levels of noise, ranging from -20dB to +20dB
+in relative volume.
+Fig. 7 presents a performance comparison of five gate
+activation functions in response to different noise levels,
+specifically blue, pink, and purple noise. Each graph provides
+insight into the model robustness and sensitivity by employing
+Root Mean Square Error (RMSE) and Mean Absolute Error
+(MAE) as the performance metrics.
+1) Compare ARSLIF with sigmoid: we used the Sigmoid
+activation function as our baseline model and found that its
+effectiveness in detecting depression through speech decreased
+in noisy environments. It struggled with purple noise, showing
+increased error across all levels. For pink noise, its performance was stable until +10dB, where errors rose significantly.
+With blue noise, it matched other models until +10dB, then
+errors spiked, indicating a weakness to certain noise types at
+higher levels.
+
+11
+
+2) Compare ARSLIF with soft thresholding: The soft
+thresholding is a commonly implemented noise attenuation
+technique within Deep Neural Networks (DNNs). In high noise
+levels, Soft threshold shows increased errors, especially under
++20dB pink and 20dB purple noise. ARSLIF, despite some increased errors at +10dB in blue and pink noise, overall showed
+better stability and effectiveness in noisy environments.
+3) Compare ARSLIF with standard LIF: The LIF model
+reduced the impact of noise on diagnosing depression with
+a moderate performance with a gradual increase in RMSE
+as noise levels rise. But it struggled with adaptability due to
+its fixed threshold, leading to higher errors at increased noise
+levels. In contrast, ARSLIF shows a better robustness across
+different noise levels, maintaining lower error rates.
+4) Compare ARSLIF with ‘LIF with target firing rate’:
+Here, we consider the target firing rate without considering
+the adaptive target firing rate, and equation (7) is changed
+into
+re (t) = r(t) − f
+where r(t) represents the average rate at which all neurons
+fire at time t, f is the target firing rate of neurons.
+The LIF model with a target firing rate, while an improvement over the standard LIF, still did not match the
+adaptability of ARSLIF, especially under challenging purple
+noise conditions. ARSLIF demonstrated superior performance
+at +20dB noise level, maintaining lower error rates.
+It is evident that in the presence of purple noise, the ARSLIF model exhibits superior and stable performance across
+noise levels, closely followed by soft thresholding. Although
+ARSLIF’s performance at lower noise levels is not the best,
+with error rates peaking at the +10dB level for both blue and
+pink noise, considering the variability of noise levels in realworld environments, ARSLIF is deemed the most effective
+overall. In summary, ARSLIF could be considered the most
+reliable model overall among the five activation functions and
+have great robustness in both human and environment noise
+conditions.
+5) Compare ARSLIF with Other Adaptive Leaky Integrateand-fire Models: In order to further validate the advantage
+of ARSLIF, comparative work is done between ARSLIF
+and other adaptive leaky integrate-and-fire (LIF) models. Included are the Adaptive Exponential LIF (AdEx), Spike Response Model (SRM), and Multi-Timescale Adaptive Threshold Model. Table III demonstrates that ARSLIF achieves the
+highest F1 score and demonstrates the capacity to handling
+noisy audio data, among other adaptive LIF models.
+TABLE III
+C OMPARISON OF F1 S CORES BETWEEN ARSLIF AND OTHER
+ADAPTIVE LIF MODELS
+Model
+
+F1 Score
+
+Adaptive Exponential (AdEx) LIF Model
+Spike Response Model (SRM)
+Multi-Timescale Adaptive Threshold Model
+ARSLIF (Our)
+
+64.28%
+62.04%
+62.04%
+68.08%
+
+F. Ablation Experiment
+An ablation experiment is performed on the AVEC2014
+dataset, in order to validate the synergistic effect of multihead attention and Bi-LSTM in the RBA-FE model. First, we
+remove the multi-head attention mechanism. It is shown that
+MAE has increased to 9.1419, and RMSE reaches 9.1998.
+Then, we eliminate the Bi-LSTM component, contributing to
+an MAE of 11.2401 and an RMSE of 11.2431. As illustrated
+in Table IV, the full RBA-FE model has an MAE of 8.8310
+and an RMSE of 8.831, outperforming the two reduced counterparts. The focus of such an ablation experiment is to assess
+the contribution of each component to the proposed RBA-FE
+model when used for extracting audio features with depression.
+Table IV suggests that the removal of either component
+adversely impacted the feature extraction capabilities of the
+hierarchical feature extractor, underscoring that each network
+structure within the hierarchical classifier plays a crucial role
+in the effective extraction of speech features for depression
+diagnosis. Through these ablation experiments, it has been
+substantiated that both the attention and Bi-LSTM mechanisms
+contribute to the overall robustness and performance of the
+RBA-FE model, and Bi-LSTM can be seen as the core
+component of RBA-FE model.
+TABLE IV
+A BLATION E XPERIMENT ON AVEC2014 DATASET
+Model Variant
+
+MAE
+
+RMSE
+
+Full Model (RBA-FE)
+Without Multi-Head Attention
+Without Bi-LSTM
+
+8.8310
+9.1419
+11.2401
+
+8.8310
+9.1998
+11.2431
+
+G. Generalization Experiment
+To demonstrate the generalization of the RBA-FE model, a
+similar experiment is conducted on another depression audio
+dataset: MODMA [37]. Additionally, we compare the RBA-FE
+model with other state-of-the-art models on the DAIC-WOZ
+dataset [52] to justify the improvements.
+1) Experiment on MODMA dataset: The MODMA audio
+dataset originates from the Second Hospital of Lanzhou University in China and is a carefully curated experimental dataset
+that encompasses both depression diagnosis and healthy controls. The dataset consists of 52 participants, with 23 diagnosed
+with depression and 29 as healthy controls. Each participant
+was meticulously selected based on explicit inclusion and
+exclusion criteria and was recruited under rigorous ethical
+guidelines. The depression group included 23 outpatients (16
+males and 7 females, ages 16-56), diagnosed by clinical
+psychiatrists and evaluated using diagnostic tools such as
+DSM-IV and PHQ-9. The healthy control group consisted of
+29 healthy participants (20 males and 9 females, ages 18-55).
+Exclusion criteria encompassed psychiatric disorders, brain
+organ injuries, severe physical illnesses, and severe suicidal
+tendencies.
+The experiment has three core components, lasting approximately 25 minutes. It included 18 interview questions targeting
+positive, neutral, and negative emotions; reading two sets of
+
+12
+
+TABLE V
+P ERFORMANCE COMPARISON OF DIFFERENT METHODS ON MODMA
+DATASET
+
+Fig. 8. ROC curves of comparative models on the testing MODMA dataset
+
+common Chinese words and a short story; and describing
+three facial expression images and one emotional theme image.
+The entire experiment was conducted in Mandarin Chinese,
+adopting a randomized sequence to offset any sequence effects.
+The recording equipment comprises a Neumann TLM102
+microphone and an RME FIREFACE UCX audio interface,
+with a sampling rate of 44.1 kHz and a bit depth of 24 bits.
+The experimental setup is a soundproof room free of electromagnetic interference. On the data recording and technical
+validation front, all records were saved in uncompressed WAV
+format, and the recording quality was quantitatively assessed
+via the signal-to-noise ratio (SNR), ranging from 20 to 30.
+Since MODMA is a binary-labeled dataset, no additional
+label manipulations have to be considered. We allocate 80%
+of all audio IDs in this dataset for training, while the remaining
+20% are for testing. Stratified sampling was employed for
+data division to ensure equal label distribution between the
+training and test sets. Given the binary nature of the labels,
+data segments were divided into lengths of 128. For the
+model training, the following parameter settings are employed:
+the target firing rate for ARSLIF was set to 0.6, the initial
+activation threshold was set at 0.6. The optimizer of choice
+was Adam with a learning rate of 0.001, while all other
+parameters were kept at their default settings. The loss function
+utilized was categorical cross-entropy. During the training
+phase, we configured the batch size to be 96 and leveraged
+16-bit floating-point mixed precision to accelerate the training
+process. In the testing phase, inferences were made on all
+audio segments, and the final prediction for each audio clip
+was determined using a hard voting scheme.
+Table V shows the classification performance of the proposed RBA-FE model, with comparison to related methods. It
+is demonstrates that our model achieves an accuracy of 89.74%
+on the testing set, outperforming other models specialized in
+depression audio recognition on MODMA. This validates the
+efficacy of our model and parameter configurations.
+Fig. 8 further depicts the corresponding ROC (Receiver
+Operating Characteristic) curves. The blue line represents the
+performance of a random classifier. For a binary classification
+problem, it has a 50% chance of predicting a sample as the
+
+Methods
+
+Precision
+
+Accuracy
+
+Recall
+
+F1 Score
+
+DenseNet [43]
+EFNerV1 [44]
+Effnetv2m [45]
+Efnetv2s [45]
+SENet [27]
+RBA-FE (Our)
+
+0.8318
+0.8168
+0.8268
+0.8192
+0.8110
+0.8750
+
+0.8446
+0.7944
+0.6999
+0.6974
+0.7698
+0.8974
+
+0.8652
+0.8177
+0.8014
+0.7930
+0.7129
+0.8750
+
+0.8308
+0.7924
+0.7912
+0.7222
+0.7846
+0.8750
+
+positive class and a 50% chance of predicting it as the negative
+class. Consequently, this line forms a 45-degree diagonal
+from the origin (0,0) to the point (1,1). The orange curve
+represents the ROC curve of our model. This curve illustrates
+the relationship between the True Positive Rate (TPR) and
+the False Positive Rate (FPR) at various threshold levels. The
+closer the curve is to the upper left corner, the better the
+performance of the model. The area under curve (AUC) is
+a quantifiable metric used to gauge the overall performance
+of the model. AUC values range between 0 and 1; a perfect
+classifier would have an AUC of 1, whereas a random classifier
+would have an AUC of 0.5. Our model has an AUC of 0.89,
+indicating a high level of classification performance.
+2) Experiment on the DAIC-WOZ dataset: The DAICWOZ audio dataset originates from the Distress Analysis Interview Corpus, which is widely used for depression detection
+and other mental health-related studies. This dataset includes
+audio and text from clinical interviews conducted with participants, aiming to distinguish between individuals diagnosed
+with depression and healthy controls. The DAIC-WOZ dataset
+consists of interviews that were part of a Wizard-of-Oz experiment, where a human interviewer (wizard) controlled the
+virtual agent that interacted with the participant. The dataset
+contains both audio and transcript data, with participants’
+depression severity being assessed using diagnostic tools such
+as PHQ-9.
+In this study, no additional label manipulations were applied
+to the dataset. We use the official split of training and test
+sets based on the provided IDs. The training set includes
+participants with both depression and non-depression labels,
+while the test set is used to evaluate the generalization of the
+model.
+For model training, the target firing rate for ARSLIF was
+set to 0.6, and the initial activation threshold was also set at
+0.6. The Adam optimizer with a learning rate of 0.001 was
+used, and categorical cross-entropy served as the loss function.
+The batch size was set to 96 to enable efficient processing
+during training, which was further accelerated by leveraging
+16-bit floating-point mixed precision without compromising
+accuracy. During the testing phase, inferences were made on
+all audio segments in the test set, and a hard voting scheme
+was employed to determine the final prediction for each audio
+clip. These predictions were then compared with the ground
+truth to calculate the model performance on the DAIC-WOZ
+dataset.
+Table VI presents the classification performance of the
+
+13
+
+TABLE VI
+P ERFORMANCE COMPARISON OF DIFFERENT METHODS ON DAIC-WOZ
+DATASET
+
+Methods
+
+F1 Score
+
+DEPA [53]
+SIDD [54]
+DepAudioNet [55]
+FRAUG [56]
+RBA-FE (Our)
+
+0.6400
+0.6010
+0.3800
+0.4790
+0.6808
+
+proposed RBA-FE model compared to other related methods.
+To ensure a fair and direct comparison, we focused solely on
+the audio-only versions of the models, where feature extraction
+is done at the frame level, and no pretrained models were
+used. Our RBA-FE model achieved an F1 score of 68.08% on
+the DAIC-WOZ test set, outperforming other baseline models
+specialized in depression audio recognition. This highlights
+the effectiveness of our model and the selected parameter
+configurations in managing depression audio datasets.
+V. C ONCLUSION
+In this article, a brain-inspired robust model has been
+developed for depression audio diagnosis. This RBA-FE model
+intergrades a temporal convolutional neural network, multihead attention, and bidirectional long short-term memory
+networks, and leverages the unique strengths of each element
+to tackle complex diagnostic challenges. This article further
+presents an ARSLIF neuron model, which mimics the “cell
+selectivity” in the brain attention systems, which can deal with
+the gate overfitting and noise sensitivity in LSTM by using
+an adaptive threshold. Experiments on three public datasets:
+AVEC2014, MODMA, DAIC-WOZ, have substantiated the
+effectiveness and generalization of the RBA-FE model.
+The comparative analyses further support that the ARSLIF
+neurons excel in capturing subtle features in noisy environments. It is demonstrated that stricter thresholds and target
+frequencies, as well as higher activation frequencies, yield
+better robustness. This observations fills a research gap in
+the interdisciplinary domain intersecting machine learningbased depression audio diagnosis and neuroscience, and for the
+first time we introduce the“cell selectivity” into LIF neurons.
+This provides an efficacious solution for audio diagnosis of
+depression and opens new avenues for future research in this
+field. Future work will focus on investigating the operational
+mechanisms of the ARSLIF neuron, including its specific
+filtering roles and adaptive processes within the network. This
+may involve visualizing and analyzing the internal neuronal
+activity within the network to better understand the model
+outputs, e.g., in abnormality detection or landmark localization
+tasks [11], [46]. Overall, this study not only advances the
+technology for audio diagnosis of depression but also provides
+robust support for interdisciplinary research in this area.
+R EFERENCES
+[1] World Health Organization, “Depression,” n.d. [Online]. Available: https:
+//www.who.int/zh/health-topics/depression.
+
+[2] National Institutes of Health, “Depression,” n.d. [Online]. Available: https:
+//www.nimh.nih.gov/sites/default/files/documents/health/publications.
+[3] L. R. Derogatis and K. L. Savitz, “The SCL-90-R, Brief Symptom
+Inventory, and Matching Clinical Rating Scales,” in M. E. Maruish (Ed.),
+The use of psychological testing for treatment planning and outcomes
+assessment, Lawrence Erlbaum Associates Publishers, 1999, pp. 679-724.
+[4] W. W. Zung, C. B. Richards, and M. J. Short, “Self-rating depression
+scale in an outpatient clinic: further validation of the SDS,” Archives of
+General Psychiatry, vol. 13, no. 6, pp. 508-515, 1965.
+[5] S. Alghowinem, T. Gedeon, R. Goecke, J. F. Cohn, and G. Parker,
+“Interpretation of Depression Detection Models via Feature Selection
+Methods,” in IEEE Trans. Affect. Comput., vol. 14, no. 1, pp. 133-152,
+1 2023.
+[6] M. Niu, J. Tao, Y. Li, Y. Qin, and Y. Li, “WavDepressionNet: Automatic
+Depression Level Prediction Via Raw Speech Signals,” in IEEE Trans.
+Affect. Comput., Early Access.
+[7] W. Chen, X. Xing, X. Xu, J. Pang, and L. Du, “SpeechFormer++: A
+Hierarchical Efficient Framework for Paralinguistic Speech Processing,”
+in IEEE/ACM Trans. Audio, Speech, Lang. Process., vol. 31, pp. 775-788,
+2023.
+[8] N. Cummins, V. Sethu, J. Epps, J. R. Williamson, T. F. Quatieri,
+and J. Krajewski, “Generalized Two-Stage Rank Regression Framework
+for Depression Score Prediction from Speech,” in IEEE Trans. Affect.
+Comput., vol. 11, no. 2, pp. 272-283, 2020.
+[9] A. Qayyum, I. Razzak, M. Tanveer, M. Mazher, and B. Alhaqbani,
+“High-Density Electroencephalography and Speech Signal Based Deep
+Framework for Clinical Depression Diagnosis,” in IEEE/ACM Trans.
+Comput. Biol. Bioinf., vol. 20, no. 4, pp. 2587-2597, 2023.
+[10] M. Niu, J. Tao, B. Liu, J. Huang, and Z. Lian, “Multimodal Spatiotemporal Representation for Automatic Depression Level Detection,” in IEEE
+Trans. Affect. Comput., vol. 14, no. 1, pp. 294-307, 2023.
+[11] K. Mao, W. Zhang, D. B. Wang, et al., “Prediction of Depression
+Severity Based on the Prosodic and Semantic Features with Bidirectional
+LSTM and Time Distributed CNN,” in IEEE Trans. Affect. Comput.,
+Early Access.
+[12] UNEP, “Frontier report,” 2022. [Online]. Available: https://www.unep.
+org/zh-hans/events/publication%20launch/2022qianyanbaogaofabu.
+[13] V. Mitra, A. Tsiartas, and E. Shriberg, “Noise and reverberation effects
+on depression detection from speech,” in 2016 IEEE Int. Conf. Acoust.,
+Speech Signal Process. (ICASSP), 2016, pp. 5795-5799.
+[14] M. Zhao, S. Zhong, and X. Fu, “Deep residual shrinkage networks for
+fault diagnosis,” in IEEE Trans. Ind. Informatics, vol. 16, no. 7, pp. 46814690, 2020.
+[15] S. A. Almaghrabi, S. R. Clark, and M. Baumert, “Bioacoustic features
+of depression: A review,” in Biomedical Signal Processing and Control,
+vol. 85, 2023, p. 105020.
+[16] E. R. Kandel, J. H. Schwartz, T. M. Jessell, S. A. Siegelbaum, A. J.
+Hudspeth, and S. Mack, “Principles of Neural Science,” Fifth Edition,
+McGraw Hill, 2014.
+[17] A. Chakraborty, S. Panda, and S. Chakrabarti, “Action Potential Parameters and Spiking Behavior of Cortical Neurons: A Statistical Analysis for
+Designing Spiking Neural Networks,” in IEEE Trans. Cogn. Dev. Syst.,
+vol. 15, no. 2, pp. 808-818, 2023.
+[18] J. Pei, L. Deng, S. Song, et al. “Towards artificial general intelligence
+with hybrid Tianjic chip architecture,” in Nature, vol. 572, pp. 106-111,
+2019.
+[19] B. Hu, Z.-H. Guan, G. Chen, and F. L. Lewis. “Multistability of
+delayed hybrid impulsive neural networks with application to associative
+memories,” in IEEE Trans. Neura. Net. Learn. Syst., vol. 30, no. 5, pp.
+1537-1555, 2019.
+[20] Sharmin, S., Panda, P., Sarwar, S. S., Lee, C., Ponghiran, W., and
+Roy, K., “A comprehensive analysis on adversarial robustness of spiking
+neural networks,” in 2019 IEEE International Joint Conference on Neural
+Networks (IJCNN), pp. 1-8.
+[21] G. Bellec, D. Salaj, A. Subramoney, R. Legenstein, and W. Maass, “Long
+short-term memory and learning-to-learn in networks of spiking neurons,”
+in NeurIPS 2018.
+[22] J. H. Reynolds, T. Pasternak, and R. Desimone, “Attention increases
+sensitivity of V4 neurons,” Neuron, vol. 26, no. 3, pp. 703-714, 2000.
+[23] N. Cummins, S. Scherer, J. Krajewski, S. Schnieder, J. Epps, and T.
+F. Quatieri, “A review of depression and suicide risk assessment using
+speech analysis,” Speech Communication, vol. 71, pp. 10-49, 2015.
+[24] H. Ellgring and K. R. Scherer, “Vocal indicators of mood change in
+depression,” Journal of Nonverbal Behavior, vol. 20, pp. 83-110, 1996.
+[25] T. Taguchi et al., “Major depressive disorder discrimination using vocal
+acoustic features,” Journal of Affective Disorders, vol. 225, pp. 214-220,
+2018.
+
+14
+
+[26] A. Ozdas, R. G. Shiavi, S. E. Silverman, M. K. Silverman, and D. M.
+Wilkes, “Investigation of vocal jitter and glottal flow spectrum as possible
+cues for depression and near-term suicidal risk,” in IEEE Trans. Biomed.
+Eng., vol. 51, no. 9, pp. 1530-1540, 2004.
+[27] J. Hu, L. Shen, and G. Sun. “Squeeze-and-excitation networks”. in:
+Proceedings of the IEEE conference on computer vision and pattern
+recognition. 2018, pp. 7132-7141.
+[28] L. He and C. Cao, “Automated depression analysis using convolutional
+neural networks from speech,” In: J. Biomed. Inform., vol. 83, pp. 103111, 2018.
+[29] J. Zhao, X. Mao, and L. Chen, “Speech emotion recognition using deep
+1D & 2D CNN LSTM networks,” Biomed. Signal Process. Control, vol.
+47, pp. 312-323, 2019.
+[30] A. Othmani et al., “Towards robust deep neural networks for affect
+and depression recognition from speech,” in Pattern Recognition. ICPR
+International Workshops and Challenges: Virtual Event, January 10-15,
+2021.
+[31] V. Mitra, A. Tsiartas, and E. Shriberg, “Noise and reverberation effects
+on depression detection from speech,” in 2016 IEEE Int. Conf. Acoust.,
+Speech Signal Process. (ICASSP), 2016, pp. 5795-5799.
+[32] A. Vaswani et al., “Attention is all you need,” in Proceedings of the
+31st International Conference on Neural Information Processing Systems.
+Curran Associates Inc., 2017, pp. 6000-6010.
+[33] Z. Huang, W. Xu, and K. Yu, “Bidirectional LSTM-CRF models for
+sequence tagging,” in arXiv preprint arXiv:1508.01991, 2015 [cs.CL],
+[Online]. Available: https://doi.org/10.48550/arXiv.1508.01991.
+[34] W. Zaremba, I. Sutskever, and O. Vinyals, “Recurrent neural network
+regularization,” in arXiv preprint arXiv:1409.2329, 2014 [cs.NE], [Online]. Available: https://doi.org/10.48550/arXiv.1409.2329.
+[35] Y. Gal and Z. Ghahramani, “A theoretically grounded application of
+dropout in recurrent neural networks,” in Advances in Neural Information
+Processing Systems (NIPS).vol. 29, pp. 30-38, 2016,.
+[36] M. Valstar et al., “AVEC 2014: 3D Dimensional Affect and Depression
+Recognition Challenge,” in Proceedings of the 4th International Workshop
+on Audio/Visual Emotion Challenge (AVEC ’14), 2014, pp. 3-10.
+[37] H. Cai, Z. Yuan, Y. Gao, et al., “A multi-modal open dataset for mentaldisorder analysis,” in Scientific Data, vol. 9, no. 1, pp. 178, 2022.
+[38] J. C. Mundt, A. P. Vogel, D. E. Feltner, and W. R. Lenderking, “Vocal
+acoustic biomarkers of depression severity and treatment response,”
+Biological Psychiatry, vol. 72, no. 7, pp. 580-587, 2012.
+[39] V. Jain, J. L. Crowley, A. K. Dey, and A. Lux, “Depression Estimation
+Using Audiovisual Features and Fisher Vector Encoding,” in Proceedings
+of the 4th International Workshop on Audio/Visual Emotion Challenge
+(AVEC ’14), Association for Computing Machinery, New York, NY, USA,
+2014, pp. 87-91.
+[40] A. Jan, H. Meng, Y. F. B. A. Gaus, and F. Zhang, “Artificial Intelligent
+System for Automatic Depression Level Analysis Through Visual and
+Vocal Expressions,” in IEEE Trans. Cogn. Dev. Syst., vol. 10, no. 3, pp.
+668-680, 2018.
+[41] T. F. Quatieri and N. Malyska, “Vocal-source biomarkers for depression:
+A link to psychomotor activity,” in Interspeech, vol. 2012, no. 2, 2012,
+pp. 1059-1062.
+[42] M. Niu, J. Tao, B. Liu, and C. Fan, “Automatic Depression Level
+Detection via ℓp -Norm Pooling,” in Interspeech, 2019.
+[43] G. Huang, Z. Liu, L. Van Der Maaten, and K. Q. Weinberger, “Densely
+connected convolutional networks,” in Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2017, pp. 4700-4708.
+[44] M. Tan and Q. Le, “Efficientnet: Rethinking model scaling for convolutional neural networks,” in International Conference on Machine
+Learning, PMLR, 2019, pp. 6105-6114.
+[45] M. Tan and Q. Le, “EfficientNetV2: Smaller models and faster training,”
+in International Conference on Machine Learning, PMLR, 2021, pp.
+10096-10106.
+[46] L. A. Schobs, A. J. Swift, H. Lu, “Uncertainty Estimation for HeatmapBased Landmark Localization,” IEEE Trans. Med. Imag. vol. 42, no. 4,
+pp. 1021-1034, 2023.
+[47] Low, Lu-Shih Alex, et al. “Detection of clinical depression in adolescents’ speech during family interactions.” IEEE Transactions on Biomedical Engineering, vol. 58, no. 3, pp. 574-586, 2010.
+[48] Cummins, Nicholas, et al. “A review of depression and suicide risk
+assessment using speech analysis.” Speech Communication, vol. 71, pp.
+10-49, 2015.
+[49] Quatieri, Thomas F., and Nicole Malyska. “Vocal-source biomarkers for
+depression: A link to psychomotor activity.” Interspeech 2012, Portland,
+Oregon, 2012, pp. 1059-1062.
+
+[50] Ozdas, A., et al. “Investigation of vocal jitter and glottal flow spectrum
+as possible cues for depression and near-term suicidal risk.” IEEE
+Transactions on Biomedical Engineering, vol. 51, no. 9, pp. 1530-1540,
+2004.
+[51] Almaghrabi, Rawan, et al. “Exploring harmonic structure in the analysis
+of emotional speech.” IEEE International Conference on Acoustics,
+Speech and Signal Processing (ICASSP), 2016, pp. 5195-5199.
+[52] Michel Valstar, Jonathan Gratch et al., ”Avec 2016: Depression mood
+and emotion recognition workshop and challenge”, Proceedings of the
+6th international workshop on audio/visual emotion challenge, pp. 3-10,
+2016.
+[53] Zhang, Pingyue, et al. “Depa: Self-supervised audio embedding for
+depression detection.” Proceedings of the 29th ACM international conference on multimedia. 2021.
+[54] Lishi Zuo, Man-Wai Mak, Avoiding dominance of speaker features in
+speech-based depression detection, Pattern Recognition Letters, Volume
+173, 2023, pp. 50-56.
+[55] Xingchen Ma, Hongyu Yang, Qiang Chen, Di Huang, Yunhong Wang,
+Depaudionet: An efficient deep model for audio based depression classification, in: Proc. the 6th International Workshop on Audio/Visual Emotion
+Challenge, 2016, pp. 35–42.
+[56] Vijay Ravi, Jinhan Wang, Jonathan Flint, Abeer Alwan, Fraug: A Frame
+Rate Based Data Augmentation Method for Depression Detection from
+Speech Signals, in: Proc. IEEE International Conference on Acoustics,
+Speech and Signal Processing (ICASSP), 2022, pp. 6267–6271.
+[57] J. H. Kaas and T. A. Hackett, “Subdivisions of auditory cortex and
+processing streams in primates,” Proc. Natl. Acad. Sci., vol. 97, no. 22,
+pp. 11793-11799, 2000.
+[58] Y. Li, G. K. Anumanchipalli, A. Mohamed, P. Chen, L. H. Carney, J. Lu,
+J. Wu, and E. F. Chang, “Dissecting neural computations in the human
+auditory pathway using deep neural networks for speech,” Nat. Neurosci.,
+vol. 26, pp. 1484–1494, 2023.
+[59] A. J. E. Kell and J. H. McDermott, “Deep neural network models of
+sensory systems: windows onto the role of task constraints,” Curr. Opin.
+Neurobiol., vol. 55, pp. 121-132, 2019.
+[60] J. P. Rauschecker and B. Tian, “Processing Streams in Auditory Cortex,”
+Neural Correlates of Auditory Cognition, Springer Handbook of Auditory
+Research, vol. 45, pp. 7–43, 2012.
+
+

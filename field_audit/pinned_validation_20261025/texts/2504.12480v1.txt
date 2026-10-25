@@ -1,0 +1,2798 @@
+Boosting Reservoir Computing with Brain-inspired Adaptive Dynamics
+Keshav Srinivasan
+Biophysics Program, University of Maryland, College Park, MD 20740, USA and
+Section on Critical Brain Dynamics, National Institute of Mental Health, Bethesda, MD 20892, USA
+
+Dietmar Plenz
+Section on Critical Brain Dynamics, National Institute of Mental Health, Bethesda, MD 20892, USA
+
+Michelle Girvan
+
+arXiv:2504.12480v1 [cs.NE] 16 Apr 2025
+
+Biophysics Program, University of Maryland, College Park, MD 20740, USA
+Department of Physics, University of Maryland, College Park, MD 20740, USA and
+Santa Fe Institute, Santa Fe, NM 87501, USA
+Reservoir computers (RCs) provide a computationally efficient alternative to deep learning while
+also offering a framework for incorporating brain-inspired computational principles. By using an
+internal neural network with random, fixed connections—the ‘reservoir’—and training only the output weights, RCs simplify the training process but remain sensitive to the choice of hyperparameters
+that govern activation functions and network architecture. Moreover, typical RC implementations
+overlook a critical aspect of neuronal dynamics: the balance between excitatory and inhibitory (E-I)
+signals, which is essential for robust brain function. We show that RCs characteristically perform
+best in balanced or slightly over-inhibited regimes, outperforming excitation-dominated ones. To
+reduce the need for precise hyperparameter tuning, we introduce a self-adapting mechanism that
+locally adjusts E/I balance to achieve target neuronal firing rates, improving performance by up
+to 130% in tasks like memory capacity and time series prediction compared with globally tuned
+RCs. Incorporating brain-inspired heterogeneity in target neuronal firing rates further reduces the
+need for fine-tuning hyperparameters and enables RCs to excel across linear and non-linear tasks.
+These results support a shift from static optimization to dynamic adaptation in reservoir design,
+demonstrating how brain-inspired mechanisms can improve RC performance and robustness while
+deepening our understanding of neural computation.
+Keywords: E-I balance, Reservoir Computing, Heterogeneity, Brain-inspired plasticity
+
+I.
+
+INTRODUCTION
+
+Reservoir computers [1, 2] (RCs) offer a computationally efficient framework for implementing recurrent neural networks (RNNs), broadly reflecting key principles of
+the brain’s neocortex. RNNs process data through recurrent connections that generate complex activity patterns, making them well-suited for dynamic computations. RCs harness this feature using a three-layer architecture, where a fixed-weight, randomly connected RNN,
+the reservoir, transforms low dimensional input into highdimensional internal representations. A trainable output layer then maps these representations to task-specific
+outputs. A key strength of RCs lie in their training efficiency; by keeping the reservoir fixed and training only
+the output layer, RCs achieves faster training and lower
+computational demand [3–5] compared with other machine learning approaches, such as convolutional neural networks (CNNs), long-short term memory networks
+(LSTMs), and transformers [6]. These alternatives typically rely on feed-forward architectures requiring extensive multiple-layer training via back-propagation [7]and
+substantial data and computational resources.
+The random yet fixed initialization of the reservoir
+poses a challenge for optimizing RC performance. This
+initialization determines the internal dynamics of the
+reservoir, which directly influence performance, but there
+
+is little guidance on how to systematically construct effective reservoirs. Theoretical studies [8, 9] suggest that
+optimal performance may occur near the edge of chaos,
+indicating that maintaining a delicate dynamical balance
+within the reservoir is beneficial for effective design. This
+need for a delicate dynamical balance in RCs parallel
+the role of excitatory (E) and inhibitory (I) balance in
+RNNs of the brain’s neocortex, which is crucial for optimal brain function [10]. Disruptions in this balance are
+linked to altered states of consciousness, such as anesthesia [11], coma, and depression [12], which correspond to
+over-inhibited states, while conditions like epilepsy arise
+from excessive excitation [13].In neuronal network models, deviations from optimal E-I balance impair key aspects of information processing, including dynamic range
+and information capacity [14].
+Traditional RCs capture some of this dynamical balance by including random positive as well as negative
+connections between neurons in the reservoir. However,
+the effects of changing the relative balance of excitation and inhibition remains underexplored. Further, in
+the neocortex, neurons and their connections have distinct excitatory and inhibitory roles, following Dale’s Law
+[15, 16], where each neuron maintains only excitatory or
+inhibitory outgoing links. To bridge this gap, we introduce a brain-inspired RC architecture with distinct excitatory and inhibitory roles for neurons and their con-
+
+2
+nections. Our design maintains a 4:1 ratio in the number of excitatory to inhibitory neurons and begins with
+a base structure that achieves an overall global E/I balance through a 1:4 ratio in the strengths of excitatory
+and inhibitory links, consistent with their approximate
+relative proportions in the brain [17]. By explicitly incorporating tunable E/I balance through adjustments to
+inhibitory link strengths, we enable RCs to achieve better
+performance across tasks while adhering to fundamental
+principles of neural organization.
+Specifically, we explore E-I balance by incorporating
+a local plasticity rule that adapts inhibitory weights to
+achieve target firing rates, inspired by activity homeostasis in neurobiology [18–22]. Unlike traditional RCs,
+which have fixed global balance from random network
+construction, this autonomous adaptation allows adjustable local and global E-I balance, improving performance across diverse tasks. Typical RC hyperparameter tuning is computationally expensive [23], whereas our
+biologically inspired approach enables autonomous selfadaptations that efficiently tune internal dynamics for
+broad applicability. While previous unsupervised learning approaches have investigated plasticity mechanisms
+in recurrent networks [24–27], and RCs [26, 28–30] specifically, none have directly focused on tuning E-I balance.
+By introducing heterogeneous target rates, our model reduces the need for fine-tuning RC performance across
+linear tasks, such as memory recall, and nonlinear timeseries prediction tasks. Additionally, we demonstrate
+that, relying on iterative tuning, networks can be designed to achieve desired levels of local balance through
+a one-step adjustment of randomly initialized inhibitory
+links, further improving efficiency and scalability crucial
+for large RCs.
+Our work builds on prior research[3, 31–34]exploring
+the shared properties between biological neural networks
+and reservoir computers, particularly regarding the role
+of inhibition in these networks [35, 36]. By demonstrating how local tuning of E-I balance enhances RC performance, our results bridge neuroscience and artificial
+intelligence, leveraging biological insights to improve machine learning.
+
+II.
+A.
+
+METHODS
+
+Excitatory-Inhibitory (E-I) Reservoir
+Computing
+
+A reservoir computer is a type of recurrent neural
+network (RNN) structured into three layers: the input
+layer, the reservoir, and the output layer (See Fig. 1A).
+Neuron-like units in the reservoir are connected by fixed,
+random links (including feedback loops). Training occurs exclusively in the output layer, leaving the connection strengths in both the input layer and the reservoir
+unchanged in the learning process.
+Traditional RCs use random link weights but lack dis-
+
+tinct excitatory and inhibitory nodes or neurons, limiting
+systematic analysis of E-I balance in analogy to brain dynamics. Our framework introduces a tunable E-I reservoir that utilizes sigmoidal activation functions (see below) to ensure non-negative neuronal states, removing
+ambiguity in the roles of excitation and inhibition. This
+guarantees that positive link weights are always excitatory, while negative link weights are always inhibitory. A
+similar effect could be achieved by shifting the commonly
+used ‘tanh’ activation (e.g., by adding 1) to restrict reservoir neurons to non-negative values. Each neuron’s state
+at any given time is determined by two primary terms:
+Membrane potential (V ): This internal variable describes the state of a neuron based on all its influencing
+factors.
+Firing variable (r): This external variable represents
+the observable firing rate state of a neuron, dependent
+on the membrane potential and the neuron’s activation
+threshold. Values close to 0 represent no firing, and values close to 1 represent saturated firing. The following
+equations govern the dynamics of these two variables:
+Vi (t + ∆t) = λi Vi (t) +
+
+N
+X
+
+
+I
+in
+AE
+ij − Aij rj (t) + Wi u (t)
+
+j=1
+
+ri (t) = Sig (Vi (t) − θi (t))
+
+(1)
+
+Here, λi is the leakage constant of neuron i, representing how much of its previous state is retained at each
+time step, and the reservoir time step ∆t is set to match
+the sampling time of the input u (t) . In our study, λi
+is set to 0, meaning individual neurons have no memory
+of their previous state, and the system’s memory, which
+emerges from recurrent interactions, is encoded in the
+full reservoir state. The weighted connectivity matrix,
+A = AE − AI , defines how neurons in the network are
+connected. The network structure adheres to Dale’s law,
+where excitatory neurons have only excitatory outgoing
+links, and inhibitory neurons have only inhibitory outgoing links. A fraction of the neurons are designated as
+excitatory, with their outgoing synapses making up the
+excitatory submatrix AE , and the remaining neurons are
+labeled inhibitory, with their outgoing synapses making
+up the inhibitory submatrix AI (both non-negative; see
+Appendix for details on the construction of the adjacency
+matrix).
+The global relative E-I balance is controlled by a global
+balance parameter, β, which represents the relative total strength of the excitatory and inhibitory interactions.
+This parameter is defined as:
+
+β=
+
+*
+
+βi =
+
+X
+j
+
+I
+AE
+ij − Aij
+
++
+
+(2)
+
+where βi is the local balance of neuron i. In our studies, if β = 0, the network is balanced, but β can range
+
+3
+Description
+Number of neurons
+Excitatory fraction
+Inhibitory fraction
+Average network degree
+
+Symbol
+Value
+N
+500
+fE
+0.8
+fI
+0.2
+kE = kI 
+50
+
+1
+1
+Mean exc. synaptic strength
+µE
+= 40
+k·fE
+Exc. synaptic spread
+σE
+0.2µE
+Mean inh. synaptic strength
+µI
+− ffEI µE *
+Balance parameter
+β
+0*
+Inh. synaptic spread
+σI = σE
+0.2µE
+Scaling factor
+α
+1
+Threshold
+θ
+0*
+Sigmoid steepness
+c
+10
+Input fraction
+fin
+0.3
+Input link spread
+σin
+Fig. 5*
+Leakage constant
+λi
+0
+Regularization parameter
+η
+10−7
+Table I. (* indicates tunable parameters). The total neuron
+count, N , is split into excitatory and inhibitory populations
+based on the excitatory fraction, fE (fI = 1 − fE ). The connectivity matrix has an average network degree, kE = kI =
+50. Excitatory synapse strengths follow a Gaussian distribution with mean µE and standard deviation σE . Inhibitory
+synapse strengths have a mean, µI , which can be varied to
+achieve the desired balance parameter, β (see Eq. 10) and a
+variance σI = σE . In balanced (β = 0) networks, µI is set to
+compensate for different fractions of excitatory and inhibitory
+neurons. A scaling factor, α, scales all elements of the connectivity matrix.
+
+from very negative (inhibition dominated) to very positive (excitation dominated). We vary this E-I balance
+by varying the strength of inhibitory links only, keeping
+other parameters fixed. The firing rate of each neuron,
+ri , is determined by the threshold, θi , and the activation
+function of each neuron (Fig. 1A inset). In our setup,
+the activation function is a sigmoid function, given by
+Sig (x) = 1/ (1 + e−cx ) , This model approximates a spiking network as c → ∞ and linear activation as c → 0.
+The input is fed into the reservoir via the input layer,
+which links the input signal to a fraction, fin , of the
+reservoir neurons. The non-zero values in the input matrix, Win are drawn from a uniformly distributed random variable within the interval [-σin /2, σin /2], where
+σin is the input link spread. The output layer, Wout ,
+functions as a readout, with weights connecting to each
+neuron in the reservoir. These weights are trained using ridge regression with a regularization parameter, η.
+Unless stated otherwise, the default values for the parameters used in this study are provided in Table I.
+B.
+
+Neuron differential entropy
+
+In order to quantify reservoir dynamics, we calculate
+the neuron-level entropy, previously linked to RC performance [37, 38]. Instead of system-wide entropy, we compute individual neuron entropy using a non-parametric
+
+differential entropy estimator [39], avoiding binning issues (see Appendix C for details). Although neuronal entropy is associated with performance, high entropy does
+not guarantee good performance, as high-entropy states
+may still be entirely uncorrelated with the input.
+C.
+
+Tasks for testing
+
+We assess the performance of our reservoir computer
+via a set of well-known tasks, designed to test different
+computational challenges. We consider the following 4
+tasks:
+Memory Capacity task: A widely used memory benchmark task, used by Jaeger (2002), involves feeding the
+reservoir a random signal, u (t) with values uniformly
+sampled from the interval [0,1]. The goal of this task
+is to train the reservoir to recall a value it encountered
+d steps earlier. For each delay, d, the accuracy of the recall is measured using a coefficient of determination, R2 ,
+given by:
+2
+
+R2 =
+
+cov (u (t − d) , yd (t))
+var (u (t)) · var (yd (t))
+
+(3)
+
+Here u (t) represents the input and yd denotes the reservoir output for a given delay, d. A memory capacity
+curve (Fig. 1B, i) shows the plot of R2 as a function of
+delay. The overall memory capacity is determined by calculating the total area under this curve, approximated by
+summing the values of R2 . As a practical constraint, this
+summation is capped at d = 70.
+NARMA-10 Task: Another commonly used benchmark for evaluating a system’s computational performance is the Nonlinear Autoregressive Moving Average
+(NARMA) test [1, 40], which is a discrete temporal task
+with a 10th-order lag. The formulation for a NARMA-10
+time series is:
+y (t) = py (t − ∆t) + qy (t − ∆t)
+
+10
+X
+i=1
+
+y (t − i∆t)
+
++ g · u (t − 10∆t) u (t − ∆t) + D
+
+(4)
+
+where the parameters are defined as p = 0.3, q = 0.05,
+g = 1.5, D = 0.1. The stochastic input u (t) is sampled from a uniform distribution over the range [0, 0.5]
+with timestep ∆t = 1. This test is designed to challenge the system’s ability to handle nonlinearities as well
+as its capacity to retain memory across substantial time
+lags. Performance was evaluated by calculating the root
+mean squared error (RMSE) between the value given by
+Equation 5 and the trained reservoir output.
+Mackey-Glass Time-series Prediction: Chaotic timeseries prediction is an area where RCs have been shown to
+be particularly advantageous [41, 42]. By drawing from a
+repository of possible dynamics, once trained, RCs faithfully model the underlying behavior of chaotic systems,
+predicting system behavior for extended periods before
+
+4
+deviations occur due to the accumulation of small errors,
+a characteristic of chaotic dynamics. In this context, the
+Mackey-Glass system [43] is a widely used chaotic model
+frequently employed to evaluate RC performance. It is
+described by the following one-dimensional delay differential equation:
+x (t − τ )
+dx
+=ξ
+− γx
+dt
+1 + xn (t − τ )
+
+(5)
+
+The specific parameter values used to generate chaotic
+behavior are ξ = 0.2, γ = 0.1, τ = 17, and n = 10.
+The time series was computed using the fourth-order
+Runge-Kutta method with integration timestep equal to
+the sampling timestep ∆t = 0.1s. Performance is quantified as the valid prediction time (VPT, defined as the first
+time point at which the normalized root mean squared error (NRMSE) between the predicted state and true state
+(using Eqn. 6) exceeds a threshold (with a default value
+of 0.4).
+Partially Observed Lorenz Time-Series Prediction: A
+common test for chaotic time series prediction in RCs
+is the Lorenz system, a set of three differential equations modeling atmospheric convection [44], known for
+its chaos under certain parameters. The equations defining the Lorenz system are
+ẋ = a (y − x)
+ẏ = −xz + bx − y
+ż = xy − cz
+
+(6)
+
+Where x, y, and z represent the internal state variables,
+each evolving according to the given set of differential
+equations. The parameter values a = 10, b = 28, and
+c = 8/3 are known to generate chaotic dynamics. The
+time series were computed using the fourth-order RungeKutta method with an integration timestep of δt = 0.01s
+and a sampling timestep of ∆t = 0.02s. For our study,
+we focus on one of the system variables, x, and keep the
+other 2 hidden from the RC. This approach models scenarios where only partial measurement of system state
+is available, relevant for real-world applications. To facilitate comparability, Mackey-Glass and Lorenz system
+values are normalized between 0 and 1.
+
+In this context, AIij ≥ 0 denotes strength of the inhibitory
+link from j to neuron i, δ is the learning rate which in
+our case is set to 10−3 , ri represents the state variable
+of neuron i, and ρi is the target firing rate of neuron
+i. We examine two scenarios: (1) a homogeneous target
+firing rate for all neurons and (2) a heterogeneous distribution of target rates. A target rate of ρT = 0.5 represents locally balanced excitation and inhibition, while
+values above or below indicate over-excitation or inhibition. This parameter is central to our adaptation process. We begin by exploring the homogeneous case in
+which all neurons have the same target firing rate and
+then consider heterogeneity in the neuronal target firing
+rates, which is designed to reflect neuronal heterogeneity
+in the brain and also has the added benefit of eliminating
+the necessity for fine-tuning the target firing rate using
+the beta distribution (Fig. 3; see Appendix B).
+E.
+
+Designing reservoirs with controlled levels local
+E-I balance
+
+While our inhibitory adaptation rule relies only on local information to adjust synapses—an approach inspired
+by biological systems—full knowledge of the system and
+its synaptic weights allows direct design of a reservoir
+with controlled local E-I balance by adjusting inhibitory
+synapses to achieve the target firing-rate distribution.
+Our designed network starts as before with a randomly
+configured network, but instead of small, iterative adjustments, we compute a one-step rescaling to achieve
+the target firing rate, ρi . Each neuron receives a multiplicative factor (Ωi ) applied to its inhibitory synapses,
+significantly accelerating the adaptation process to a desired local balance. This factor is calculated as:
+Sig−1 (ρi ) + θi − Wiin ⟨u⟩ −
+P I
+Ωi =
+Aij ρj
+
+AE
+ij ρj
+
+(8)
+
+where Sig-1 function is an inverse sigmoid function, ⟨u⟩ is
+the mean input and ρj is the target firing rate of neuron
+j (see Supplementary Material for details).
+III.
+
+D.
+
+P
+
+RESULTS
+
+Inhibitory adaptation mechanism
+
+We introduce an inhibitory adaptation mechanism that
+drives neurons toward a desired level of local balance
+(Fig. 2A). Neurons exceeding their target firing rate
+strengthen inhibitory synapses, while those below reduce
+inhibition. This computationally low-cost self-tuning
+process adjusts only internal reservoir weights, shaping intrinsic dynamics prior to more costly task-specific
+training of the output layer. The adaptation of inhibitory
+connections is governed by the following equation:
+AIij (t + 1) = AIij (t) + δ (ri (t) − ρi )
+
+(7)
+
+A. Robust performance in balanced and slightly
+inhibited regimes, bounded by silent, saturated and
+synchronized regimes; brittleness with
+over-excitation
+
+We designed a tunable excitatory-inhibitory (E-I)
+reservoir with 400 excitatory and 100 inhibitory randomly connected neurons (10% connectivity; average
+network degree = 50). In this randomly connected,
+sparse network, neuronal firing rates ri ∈ [0, 1] are determined by a sigmoidal activation function that transforms integrated inputs—representing the ‘membrane
+
+5
+A)
+
+B)
+
+Reservoir Computer (RC)
+Input
+Layer
+
+Output
+Layer
+
+E-I Reservoir
+
+Target Output Signal
+
+i)
+
+Input Signal
+
+*
+Input
+Signal
+
+RC
+
+**
+
+Feedback
+Signal
+
+Output
+Signal
+
+ii)
+
+i)
+Excitatory
+Neuron
+
+Excitatory Link
+Inhibitory Link
+
+Global balance, β = ⟨ Exc. - Inh.⟩
+
+C)
+
+0
+
+0.4
+0.2
+
+0
+
+Total
+MC
+
+0
+
+Signal
+0
+
+Delay, d
+
+Mean Neuronal Entropy
+
+-1
+
+0.5
+
+d
+tur
+ate
+
+-1.5
+
+0.4
+0.2
+
+-1
+
+0
+
+1
+
+Global balance, β
+
+2
+
+0
+
+5
+
+-1
+
+-6
+
+0
+
+-8
+
+-0.5
+
+-10
+
+-1
+
+-12
+
+-1.5
+-2
+
+-3
+
+-14
+-2
+
+-1
+
+0
+
+1
+
+Global balance, β
+
+2
+
+-3
+
+-2
+
+-1
+
+Over-Inh.
+
+-4
+
+0.5
+
+Sync.
+Thr. θ = 0
+
+0
+
+0
+1
+2
+Balanced
+Over-Exc.
+
+1
+
+0.8
+0.6
+
+-1
+
+-2
+Over-Inh.
+
+1
+
+0
+-0.5 Sync.
+
+-2
+
+-3
+
+Over-Exc.
+
+Silent
+
+10
+Thr. θ = 0
+
+-14
+2
+
+Saturated
+
+20
+
+Sync.
+
+-12
+
+0
+1
+Balanced
+
+Memory Capacity
+
+15
+
+-10
+
+Threshold, θ
+
+-2
+
+Time, t
+
+25
+
+Saturated
+
+-6
+
+30
+
+Time, t
+
+1
+
+-3
+
+1
+
+-8
+
+0
+
+Over-Inh.
+
+-2
+
+1
+
+-4
+
+Saturated
+
+Sa
+
+Threshold, θ
+
+0
+Neuron Input
+
+Sync. Thr. θ = 0
+
+-3
+
+1
+R2
+
+-1
+
+FR
+
+0.6
+
+D)
+
+Neuron 2
+
+Valid Prediction Time (VPT)
+
+0
+1
+2
+Balanced
+Over-Exc.
+25
+
+1
+
+Threshold, θ
+
+1
+
+0.8
+
+0
+
+Neuron 1
+
+RC output
+
+True time series
+
+0.5
+
+Mean Firing Rate
+1
+
+ii)
+Memory Capacity Curve
+
+1
+
+Neuron Output
+
+Inhibitory
+Neuron
+
+Signal delayed
+by ‘d’ steps
+OR
+Signal 1 step
+in the future
+
+0.5
+
+20
+
+0
+
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-2
+
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+2
+
+0
+
+Global balance, β
+
+Figure 1. Balanced to slightly inhibited reservoirs exhibit robust, high performance devoid of synchronized
+or saturation dynamics. (A) Three-layered schematic of the E-I RC architecture. Excitatory (solid gray) and inhibitory
+(striped ) reservoir neurons with sigmoid input-output function form excitatory (solid ) and inhibitory (dashed ) connections,
+respectively. (B) RC evaluation across tasks : i) Memory task - RC runs in open-loop (∗) mode, receiving input u(t) and
+predicting it d steps later. Accuracy is measured by R2 , with memory capacity as the area under the R2 vs. delay curve. ii)
+Other tasks - RC runs in open-loop (NARMA-10) or closed-loop (Mackey-Glass, Lorenz) mode (∗∗), predicting one step ahead.
+Accuracy is measured by RMSE or Valid Prediction Time (VPT). (C) RC dynamics and performance in the memory test for
+θ = 0. Left: Mean firing rate, Middle: Neuronal entropy and Right: Memory capacity. Synchronized (inset, green shaded ) and
+saturated (red shaded ) regimes are highlighted. (D) RC dynamics and performance in the memory test with variable thresholds
+reveals dynamical landscape with three extreme regimes: silent (∼0), saturated (∼1), and globally synchronized (C¯ij > 0.9,
+neither silent nor saturated). Neuronal entropy maps these regions, showing reduced entropy in all three. Memory capacity is
+highest in balanced/slightly inhibited states and declines in the over-excited regime.
+
+potential’ above a bias, or threshold, θ—ensuring nonnegative reservoir states, r (t). The network structure
+follows Dale’s law with distinct excitatory and inhibitory
+roles for neurons (Fig. 1A). The fixed input layer, Win ,
+projects the input signal, u (t), onto 30% of randomly selected excitatory and inhibitory reservoir neurons, and
+the trained output layer, Wout , maps neuronal firing
+
+rates of all neurons to the output signal, y (t). Reservoir dynamics were quantified using the mean firing rate
+across all neurons and time, ⟨r⟩t and the neuronal state
+entropy, H (r), a known correlate of RC performance
+[37, 38].
+RC performance was evaluated for the four aforementioned tasks (Fig. 1B): a memory capacity task [1, 45],
+
+6
+tion of inhibitory neuron (Supp. Fig. 1). This robust
+performance pattern holds across all four tasks, not just
+memory capacity (Supp. Fig. 2). We also note that restricting outgoing inhibitory connections to one category
+of neurons (Dale’s law) does not improve or impair RC
+performance; we see that shuffling the connections yields
+similar results (Supp. Fig. 3)
+Across both positive and negative thresholds, the reservoir dynamics vary significantly with global balance (Fig.
+1D). For networks with β > 1, the mean inhibitory
+synaptic strength, µI , becomes negative (Eq. 9), meaning that the neurons that were initially labeled inhibitory
+will have excitatory effects. In these over-excited networks, the reservoir exhibits an abrupt transition from
+silence to saturation, making it highly sensitive to threshold changes. In contrast, networks with stronger inhibition exhibit extended regions of intermediate firing rates,
+supporting high entropy and performance. This broad
+high-performance band for β < 0 spans the transition between synchronized and saturating regimes. The center
+of this band shifts toward increased inhibition to counterbalance lower thresholds. However, even a modest
+increase in the threshold above zero rapidly eliminates
+this high-performance regime, pushing the reservoir into
+a silent state (⟨r⟩t < 0.05) regardless of inhibition levels.
+
+which measures how long the reservoir can retain information about past inputs, the Nonlinear Autoregressive
+Moving Average (NARMA-10) task, which requires both
+memory and nonlinearity due to its 10th order lag, and
+the Mackey-Glass and Lorenz system, two chaotic time
+series prediction tasks, a known strength of RCs [41, 42].
+We first discuss RC performance at threshold θ = 0 as
+the global balance parameter, β, is changed by varying
+the mean inhibitory synapse strength, µI (Eq. 10) but
+keeping the inhibitory neuron fraction fixed at fI = 0.2
+and mean excitatory synapse strength, µE = 0.025. This
+shift in the global balance parameter, β, defines distinct
+dynamical regimes: over-excited reservoirs (β > 0.5) saturate rapidly (⟨r⟩t > 0.95; Fig. 1C, red ), while overinhibited reservoirs (β < −2) exhibit low entropy, globally synchronized oscillations (with high mean pairwise
+correlations: Cij > 0.9; neither silent or saturated dynamics: 0.05 < ⟨r⟩t < 0.95; Fig. 1C inset, green). High
+RC performance and entropy occur only between these
+extremes, with maximal outcome robustly placed in the
+slightly inhibited to balanced regime (−2 < β ≤ 0). Similar trends are observed when global balance is varied
+through alternative means—for example, by increasing
+the inhibitory neuron fraction to fI = 0.5 or by keeping synaptic strengths fixed and adjusting the propor-
+
+Inhibitory Adaptation Mechanism
+
+E-I Reservoir
+
+A
+
+A
+
+B
+
+0.5
+
+-0.6
+
+0
+
+0
+
+t
+
+1500
+
+-0.5
+-1
+
+Firing Rate
+
+Inhibitory Neuron
+
+ADAPTIVE Inhibitory Links
+
+Target Rate
+
+0
+
+300 600 900 1200 1500
+
+Adaptation steps, t
+
+50
+40
+30
+20
+10
+0
+
+0
+
+B
+
+Excitatory Links
+
+300 600 900 1200 1500
+
+Adaptation steps, t
+
+1
+0.5
+0
+
+C) Heterogenous target rates: ρT = 0.5, Std(ρT) = 0.115
+Global balance, β
+
+0.6
+
+Local
+0
+Balance
+
+Memory capacity
+
+Global balance, β
+
+1
+
+B
+
+Excitatory Neuron
+
+Homogenous target rates: ρT = 0.5, Std(ρT) = 0
+
+B)
+
+Δt
+
+A
+
+1
+
+0.6
+
+Local
+0
+Balance
+
+0.5
+
+-0.6
+
+0
+
+0
+
+t
+
+1500
+
+-0.5
+-1
+
+0
+
+Memory capacity
+
+A)
+
+300 600 900 1200 1500
+
+Adaptation steps, t
+
+50
+40
+30
+20
+10
+0
+
+0
+
+300 600 900 1200 1500
+
+Adaptation steps, t
+
+Figure 2. The inhibitory adaptation mechanism enhances both global and local balance, improving memory
+performance across homogeneous and heterogeneous target firing rates. (A) Schematic of adaptation mechanism:
+inhibitory connections strengthen for neurons with firing rates (fill color ) above their target rate (border color ) and weaken
+for those below, restoring local balance. (B) Evolution of global balance and memory capacity across adaptation steps for
+five initial conditions (ranging from over-inhibited: dark blue, to over-excited: dark red ) with homogeneous target firing rates.
+All networks converge to a balanced state with improved memory. Even the initially globally balanced reservoir (green curve)
+has improved memory capacity without a visible shift in global balance, as correcting large local imbalances (inset) enhances
+performance. (C) Similar analysis with heterogeneous target firing rates (drawn from a beta distribution). The network
+converges to global balance and improved performance while preserving slight variations in local balance (inset).
+
+7
+
+0
+
+0
+
+B)
+
+0.2 0.4 0.6 0.8
+
+Target rate, ρT
+
+30
+0
+
+0.2 0.4 0.6 0.8
+
+Target rate, ρT
+
+0
+
+60
+30
+0
+
+Best performing non-adaptive
+(β, θ - globally tuned)
+
+4
+0
+
+12
+
+VPT
+
+20
+
+8
+
+0
+
+1
+
+0.2 0.4 0.6 0.8
+
+Target rate, ρT
+
+0
+
+Homogenous adaptive
+(ρT - tuned)
+
+4
+2
+0
+
+1
+
+0
+
+0.2 0.4 0.6 0.8
+
+Target rate, ρT
+
+1
+
+6
+
+8
+4
+
+Lorenz
+
+6
+
+VPT
+
+RMSE -1
+
+60
+
+0
+
+1
+
+Mackey-Glass
+
+12
+
+90
+40
+
+MC
+
+Silent
+Sync.
+Saturated
+
+RMSE -1
+
+MC
+
+40
+20
+
+NARMA-10
+
+90
+
+VPT
+
+Memory Capacity
+
+VPT
+
+A)
+
+4
+2
+0
+
+Heterogenous adaptive
+(not tuned)
+
+Figure 3. Adaptive reservoirs achieve optimal performance at different target firing rates for different tasks,
+significantly outperforming non-adaptive, globally tuned reservoirs. (A) Optimal performance (purple line: mean
+across 100 runs, shaded area: standard error of the mean) varies with homogenous target firing rate (ρT ). Linear tasks, such as
+memory capacity, peak near the linear midpoint of the sigmoid (dashed line), while others such as NARMA-10, Mackey-Glass
+and Lorenz benefit from slight deviations above or below 0.5, leveraging nonlinear effects. (B) Performance of non-adaptive
+vs. adaptive reservoirs. Gray bars: best non-adaptive, globally tuned RC. Colored bars: adaptive reservoirs with tuned
+homogeneous (purple) or fixed heterogeneous (pink ) target rates. Adaptive reservoirs significantly improve performance, with
+heterogeneous rates offering robust, task-general performance without requiring firing rate tuning.
+
+B.
+
+E-I reservoirs with inhibitory adaptation have
+significantly elevated performance
+
+Our (β, θ)-parameter analysis shows reservoirs perform
+best at intermediate global firing rates (Fig. 1C, D; left).
+Intermediate firing rates enable neurons to maximize
+their dynamic range by processing a broad range of inputs [14, 46] avoiding periods of silence or saturation.
+We tested whether per-neuron firing rate tuning further enhances RC performance. We implemented a selfadaptation mechanism in which inhibitory connection
+strengths to a neuron are corrected proportional to the
+deviation of the neuron’s firing rate from its set target
+(Fig. 2A, Methods). Fig. 2B shows that with the intermediate target firing rate set to exactly 0.5, i. e. homogenously for all neurons, reservoirs initialized with a
+wide variety of global E/I conditions quickly converge to
+global balance (β = 0) and rapidly improve in performance. Such performance improvement is even seen for
+randomly initialized reservoirs that are globally balanced
+(Fig. 2B, green), because they too contain local imbalances, which are reduced by the adaptation rule (Fig. 2B
+inset, n = 5 neurons).
+We relaxed the requirement for exact intermediate firing rates using the Beta–distribution which is bounded
+between 0 (no firing) and 1 (maximal firing) and a symmetrical center at 0.5 to study heterogeneous firing rates
+(see Methods). This approach allowed convergence to
+global balance and increased memory capacity across dif-
+
+ferent reservoir initializations, similar to tuning towards
+homogenous rates. Importantly, variability in the local
+balance of individual neurons is maintained (Fig. 2C inset, n=5 neurons), mirroring cortical firing rate variability. This heterogeneity optimizes RC performance across
+tasks, as detailed next.
+
+C. Adaptive reservoirs optimize tasks by exploiting
+different aspects of the sigmoid activation function
+
+Our self-adapting inhibitory learning boosts RC performance across all tasks (Fig. 3), though the optimal
+target rate varies by task. With homogeneous target firing rates, memory capacity peaks at 0.5 (dashed line),
+aligning with the linear region of the neuronal sigmoid
+input/output function (cf. Fig. 1A). For other tasks,
+performance is optimized at slightly higher or lower values, leveraging nonlinear aspects of the sigmoid. Silent
+(∼0), saturated (∼1) and synchronized (Cij > 0.9, neither silent nor saturated), states impair performance.
+In Fig. 3B, we compare the best non-adaptive reservoir (gray; optimized via β and θ) with two adaptive
+reservoirs (purple) with homogeneous (solid ) and heterogenous (striped ) target rates, respectively. Adaptive
+reservoirs improve performance by nearly 100% over nonadaptive, globally tuned reservoirs. Although heterogenous rates slightly reduce performance, they enhance robustness by eliminating task-specific tuning of the target
+firing rate.
+
+8
+
+Local balance, βi
+
+A)
+
+Neuron entropy, H
+
+B)
+
+Output Weight, |Wout |
+
+C)
+
+neuron firing rates. Randomly initialized E-I reservoirs,
+even when globally balanced, contain some neurons that
+remain locally imbalanced (Fig. 4A, gray) with nearly
+saturated (∼1) or silent (∼0) firing rates, making them
+less responsive to inputs. These neurons show low entropy (Fig. 4B, gray) and minimal contribution to predictive performance, as indicated by their low output
+weights (Fig. 4C, gray).
+By applying the local inhibitory adaptation rule with
+uniform target rates, we can precisely tune the firing rates
+and, consequently, the local balances (Fig. 4A, purple).
+This approach eliminates low-entropy neurons (Fig. 4B,
+purple), leading to the elevated performance observed in
+Fig. 3A. Even with heterogeneous target rates (Fig. 4A,
+pink ), a diverse range of internal states is maintained
+that avoids extreme firing rates, resulting in significant
+performance improvements across various tasks (cf. Fig.
+3B) without the need for fine-tuning rates. We refer to
+Supp. Fig. 4 for the corresponding analysis with respect
+to a non-linear task, such as the Lorenz time-series prediction tasks.
+
+1
+0.5
+0
+-0.5
+-1
+-2
+-4
+-6
+Non-adaptive
+Homogenous adaptive
+Heterogenous adaptive
+
+-8
+-10
+12
+
+E. The adaptive mechanism maximizes
+performance improvement at each task’s optimal
+input link scaling, as dictated by the
+memory-nonlinearity tradeoff
+
+8
+
+4
+
+0
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+Firing rate
+Figure 4. Adaptive mechanisms enhance RC performance by removing locally imbalanced, low-entropy
+neurons. (A) Scatter plots show that in a globally balanced,
+non-adaptive RC (gray) many neurons exhibit extreme firing
+rates and local imbalances. An adaptive RC with a homogeneous target rate of 0.4 (purple), on the other hand, shifts
+neurons to the desired rate reducing local imbalances. Heterogeneous targets (pink ) avoid extreme imbalances while maintaining diverse firing rates. (B) Imbalanced neurons with
+extreme firing rates (saturated or silent) have low entropy.
+Adaptation mechanism eliminates these low-entropy neurons
+for both homogeneous and heterogeneous target rates. (C)
+Neurons with extreme firing rates and low entropy contribute
+minimally to predictive performance, as reflected in their low
+output weights. By avoiding these extreme rates, our inhibitory adaptation mechanism effectively utilizes these neurons, improving predictive performance (see also Fig. 3).
+
+D.
+
+Adaptive E-I reservoirs enhance performance
+by eliminating low entropy neurons
+
+The performance enhancement in RCs achieved
+through adaptation operates at the level of individual
+
+First documented by Dambre et al. (2012) [47] and further explored in later studies [48–50], memory-intensive
+tasks favor more linear reservoir dynamics, whereas tasks
+like chaotic time-series prediction also benefit from intrinsic nonlinearities. Specifically, in near-linear regimes,
+the reservoir maps inputs directly into distinct reservoir
+states, maximizing memory capacity [49]. This is typically achieved using a small range of input weights, i.e.,
+low input link scaling. In contrast, nonlinear tasks exploit the nonlinear regions of the sigmoid activation function by utilizing a much larger range of input weights, i.e.,
+higher input link scaling.
+Our inhibitory adaptation mechanism modifies only internal reservoir weights, allowing us to assess whether
+a similar trade-off between memory and nonlinearity
+emerges when adjusting input link scaling for our 4 tasks.
+In Fig. 5, tasks are arranged from the most memoryintensive (left) to the most nonlinear demands (right).
+The memory capacity task performs best at low input
+link scaling (Fig. 5A, ▲), whereas the highly nonlinear
+Lorenz time-series prediction requires an input link scaling nearly 100 times higher (Fig. 5D, ▲). Adaptive reservoirs with homogenous (purple) or heterogenous (pink )
+firing rate targets consistently outperform globally tuned
+reservoirs (gray), with the largest performance gains occurring near each task’s optimal input link scaling. The
+tuned input link scaling, σin , for each task, along with
+other optimized parameters (β, θ for the non-adaptive
+and ρT for the homogenous adaptive method), are provided in the Supp. Table 1.
+
+9
+B)
+
+Memory Capacity
+
+0
+0.01
+
+0.1
+
+1
+
+10
+
+100
+
+VPT
+
+RMSE -1
+
+20
+
+60
+30
+0
+0.01
+
+Input link scaling, σin
+
+0.1
+
+1
+
+10
+
+4
+
+Input link scaling, σin
+
+0.1
+
+1
+
+10
+
+Lorenz
+
+6
+
+8
+
+0
+0.01
+
+100
+
+D)
+
+Mackey-Glass
+
+12
+
+90
+
+40
+
+MC
+
+C)
+
+NARMA-10
+
+VPT
+
+A)
+
+100
+
+4
+2
+0
+0.01
+
+Input link scaling, σin
+
+0.1
+
+1
+
+10
+
+100
+
+Input link scaling, σin
+More Nonlinear
+
+Memory Intensive
+
+Figure 5. The adaptive mechanism improves RC performance across input link scaling, with the most significant
+gains occurring near each task’s optimal scaling, determined by the memory-nonlinearity tradeoff. Each plot
+represents a specific task, arranged from memory-dominant (left) to nonlinearity-dominant (right). Colored lines show the
+mean across 100 runs, with the shaded area indicating the standard error of the mean. Performance of the best non-adaptive,
+globally tuned system (gray) is compared to the adaptive system with homogeneous (purple) and heterogeneous (pink ) target
+rates as a function of input link scaling, σin . As task nonlinearity increases, the optimal input link scaling for the non-adaptive
+system (▲) shifts to higher values, while adaptation consistently improves performance, particularly near each task’s optimal
+input link scaling.
+
+F.
+
+Designing RCs for specific local balance achieves
+similar improvements as adaptive mechanisms
+
+Our adaptation rule in RCs was designed with two
+main objectives: first, to steer the reservoir toward a
+specific state of local balance, ensuring the desired distribution of firing rates; and second, to implement a local
+feedback mechanism that adjusts synapses based on the
+reservoir’s current state to optimize future behavior. The
+second objective is inspired by biological systems, which
+rely on local information for synaptic adjustments.
+On the other hand, if the full system and its synaptic weights are known, a reservoir can be explicitly designed with varying degrees of local E/I balance by simultaneously adjusting all inhibitory synapses to achieve
+
+Performance
+Improvement (%)
+
+A)
+
+Memory Capacity
+
+B)
+
+NARMA-10
+
+a specified target firing rate distribution (see Methods
+for details). This design, instead of repeatedly applying a local adaptation mechanism, can be directly implemented with either homogeneous (purple) or heterogeneous (pink ) firing rate targets. As shown in Fig. ??,
+the performance of these designed reservoirs (striped )
+closely aligns with those obtained using the inhibitory
+adaptation mechanism (solid ), significantly outperforming the best-performing globally tuned RC, with performance improvements ranging from 15 to 130%. Such
+designed reservoirs thus offer a straightforward, one-step
+solution to obtain desired levels of local balance, providing a rapid, scaling advantage for improving globally
+tuned, randomly initialized reservoirs.
+
+C)
+
+Mackey-Glass
+
+D)
+
+120
+
+60
+
+180
+
+60
+
+80
+
+40
+
+120
+
+40
+
+40
+
+20
+
+60
+
+20
+
+0
+
+0
+
+0
+
+0
+
+Adaptive homogenous
+
+Adaptive heterogenous
+
+Designed homogenous
+
+Lorenz
+
+Designed heterogenous
+
+Figure 6. One-step designed random reservoirs with homogeneous or heterogeneous target rates achieve performance gains similar to using local balance through adaptative convergence. Designed reservoirs (striped ) show
+performance improvements comparable to those achieved by the local inhibitory adaptation mechanism (solid ), whether using
+homogeneous (purple) or heterogeneous (pink ) firing rate targets. Both approaches yield up to a 130% improvement in performance compared to a non-adaptive, globally tuned reservoir. (A) Memory Capacity: MC increase. (B) NARMA-10: RMSE
+decrease. (C, D) Mackey-Glass and Lorenz time series: VPT increase.
+
+10
+IV.
+
+DISCUSSION
+
+In this study, we investigate how tuning the excitatoryinhibitory balance in neural reservoirs can lead to significant performance improvements. We go beyond the
+generic global balance seen in typical RC implementations by probing the role of local balance in a braininspired excitatory inhibitory (E/I) reservoir. Specifically, we introduce a novel inhibitory adaptation mechanism that rapidly steers the network to appropriate levels of both local and global E/I balance to reach a high
+performing dynamical regime. This self-tuning, coupled
+with variability in target firing rates observed in biological neural networks, eliminates the need for extensive external fine-tuning and boosts performance across diverse
+tasks such as memory capacity and nonlinear time series
+prediction. Furthermore, we demonstrate that networks
+can be explicitly designed to reach desired levels of local balance through a single-step adjustment of randomly
+initialized inhibitory links, providing a more efficient and
+scalable alternative to iterative tuning.
+
+The role of excitation-inhibition balance in reservoir
+computing
+
+Excitatory-inhibitory (E-I) balance is a fundamental
+principle in neural systems, yet its role in reservoir computing has received relatively little attention [51, 52].
+Traditional reservoir computing approaches often use a
+hyperbolic tangent (tanh) activation function, which obscures the effects of E-I dynamics. Because neurons can
+output both positive and negative values, and synaptic
+weights can also be either sign, the distinction between
+excitation and inhibition becomes ambiguous. As a result, a form of global balance typically emerges simply
+from the random initialization of synaptic weights, rather
+than through any structural feature of the reservoir.
+In our study, we explicitly separated excitatory and
+inhibitory dynamics by employing a sigmoid neuronlike activation function and defining distinct populations of excitatory and inhibitory neurons. This separation allowed us to systematically explore how different E-I regimes shape reservoir dynamics and computational performance. We found that reservoirs operating
+in balanced to slightly inhibition-dominated regimes exhibit enhanced performance across tasks. Inhibitory neurons play a crucial role in preventing runaway excitation,
+ensuring that the network remains within a dynamical
+regime that supports efficient information processing.
+This asymmetrical preference toward inhibition is consistent with prior findings by deGraaf et al. [52],
+who showed that inhibition-dominated networks maintain balanced neuronal input and exhibit diverse firing
+rate variability, whereas excitation-dominated networks
+suffer from saturated firing rates. The latter reduces the
+effective dimensionality of network activity, leading to
+
+overly simplified output patterns. In line with these findings, our results suggest that while reservoirs can tolerate
+excess inhibition, increased excitation degrades performance—highlighting a fundamental asymmetry in how
+neural networks process information.
+The mechanisms governing E-I balance in biological brains are complex, ranging from anatomical
+constraints—such as fixed excitatory-to-inhibitory ratios—to dynamic synaptic adjustments that actively
+maintain equilibrium. One such anatomical constraint
+is Dale’s Law, which states that a given neuron releases
+either excitatory or inhibitory neurotransmitters, but not
+both [15, 16]. While this principle is crucial in biological systems, our results suggest it is not essential for effective reservoir computation. Even when we shuffled
+synaptic weights, breaking the strict segregation of E
+and I neurons, we observed similar computational performance (see Supp. Fig. 3). This principle likely
+evolved as a consequence of biological constraints during neural development, where excitatory and inhibitory
+neurons develop distinct morphologies and neurotransmitter systems. However, further study is warranted to
+better understand the role of distinct excitatory and inhibitory populations in shaping network dynamics and
+computational properties. Notably, we find that strong
+RC performance in balanced and slightly over-inhibited
+regimes remains consistent whether E–I balance is tuned
+by adjusting the strength of inhibitory connections or by
+varying the proportion of inhibitory neurons (see Supp.
+Fig. 1), suggesting flexibility in how balance can be implemented in artificial systems.
+To reach an appropriate level of local balance in
+our reservoir computing models, we introduced an inhibitory adaptation rule that dynamically tunes inhibitory synapses at the neuronal level. While this rule
+draws inspiration from biological principles of firing rate
+homeostasis, it is not intended as a direct model of neural E-I regulation. Instead, it serves as a computationally
+efficient mechanism for improving reservoir function by
+leveraging biologically motivated constraints.
+
+Adaptive mechanisms make reservoirs more scalable
+by alleviating hyperparameter optimization
+
+Because typical RCs rely on generic randomly constructed neural reservoirs, incorporating bio-inspired
+principles offers a promising path for improving both performance and robustness. Prior research has explored
+various modifications to network topology of the reservoir, such as small-world connectivity and structured recurrent architectures, to enhance computational capacity
+[45, 53–55]. However, most RC optimization strategies
+remain focused on task-specific performance and achieve
+it through extensive hyperparameter tuning. This process, often the most computationally demanding step in
+RC implementations, requires multiple training cycles
+to evaluate different configurations. The computational
+
+11
+cost of each training step scales cubically with network
+size—O(N³) in typical implementations, where N is the
+number of neurons, making exhaustive optimization infeasible for large-scale systems. Even simple grid searches
+become prohibitively expensive when optimizing just a
+few hyperparameters, and while more sophisticated techniques like Bayesian optimization [56, 57] or genetic algorithms [58] can improve efficiency, they still require
+numerous costly training iterations.
+To overcome this limitation in RCs, we propose shifting
+from performance-based optimization to dynamics-based
+adaptation. Rather than searching the high-dimensional
+parameter space for optimal configurations, our local
+adaptation rule enables reservoirs to self-organize into
+dynamical regimes that naturally support high performance. This approach significantly reduces the need for
+global hyperparameter tuning, making larger reservoir
+implementations computationally feasible. Additionally,
+we introduce a complementary non-local design rule that
+provides an efficient, one-step alternative, particularly
+useful for large-scale implementations where local adaptations, though far less costly than typical hyperparameter optimization, may still introduce undesired computational overhead.
+Many prior adaptation mechanisms [28–30, 59] have
+demonstrated performance improvements in RCs, and
+our local E-I balance-based rule is one such approach.
+However, the important takeaway is not the specific
+implementation of this rule but the broader paradigm
+shift—from statically optimized reservoirs to dynamically
+adaptive systems. This perspective highlights a promising direction for addressing scalability challenges and improving the efficiency and robustness of RC implementations.
+
+Firing rate heterogeneity allows reservoirs to adapt
+to task-specific demands
+
+While adaptation reduces the need for manual tuning of multiple reservoir parameters, it introduces a new
+consideration: determining the optimal target firing rate.
+This target is inherently task-dependent due to a fundamental trade-off between linear and nonlinear processing
+needs. Neurons operating largely linear, i.e., in the middle, of their activation range (∼0.5 firing rate), maintain
+maximal sensitivity to input history, enhancing memory.
+Conversely, neurons operating inclusively towards nonlinear aspects of the input-output function, exhibit more
+nonlinear responses, improving the network’s ability to
+perform complex transformations.
+Our results confirm this trade-off: memory-intensive
+tasks, such as memory capacity, perform best when neurons maintain intermediate firing rates and corresponding local balance between excitation and inhibition. In
+contrast, highly nonlinear tasks, like chaotic time-series
+prediction, benefit from deviations that enhance nonlinearity. This task dependence creates a challenge when
+
+designing adaptable RCs without reintroducing taskspecific tuning of reservoir weights.
+To address this, we incorporate another biologically
+inspired principle: neuronal firing rate heterogeneity. In
+biological systems, distinct populations of neurons maintain different baseline firing rates, allowing them to fulfill diverse computational roles. Prior research has shown
+that combining linear and nonlinear nodes enhances multitask performance [48]. Importantly, we find that balanced reservoirs with heterogeneous firing rate targets
+also naturally balance memory and nonlinearity, yielding
+broad performance gains while eliminating task-specific
+tuning of firing rates. In these reservoirs, some neurons
+optimize memory retention, while others enhance nonlinear processing, reflecting the division of labor observed in
+biological neural circuits. This heterogeneity provides a
+flexible and robust computational architecture, enabling
+reservoirs to generalize more effectively across diverse
+tasks.
+By combining E/I balance with firing rate heterogeneity, our study highlights how biologically inspired mechanisms can enhance artificial neural computation. Our
+results demonstrate that appropriately balancing excitation and inhibition at the local level improves computational efficiency, while incorporating heterogeneity makes
+reservoirs more flexible across tasks. Moreover, by reducing reliance on hyperparameter optimization, our approach significantly enhances scalability, making it wellsuited for larger and more complex learning systems. As
+AI models continue to grow in size and computational demand, biologically inspired adaptation mechanisms may
+offer a crucial step toward more efficient, self-organizing,
+and scalable neural architectures.
+
+V.
+
+ACKNOWLEDGEMENTS
+
+This research was supported by the Division of the Intramural Research Program (DIRP) of the National Institute of Mental Health (NIMH), USA, ZIAMH002797,
+ZIAMH002971, and the BRAIN initiative Grant U19
+NS107464-01 to D. P. M.G.’s contributions were supported by ONR Grant N000142212656. This research utilized the supercomputing resources of the National Institutes of Health (NIH, USA; Biowulf, http://hpc.nih.
+gov) and the University of Maryland (UMD College Park,
+USA, https://hpcc.umd.edu/hpcc/zaratan.html).
+
+VI.
+
+AUTHOR CONTRIBUTIONS
+
+K.S., D.P., and M.G. conceived the study; K.S. did
+the simulations and analysis; M.G. and D.P. acquired
+funding and supervised the study; K.S., D.P., and M.G.
+wrote the manuscript.
+
+12
+VII.
+
+the Beta-distribution is a natural fit. For the parameters
+of the distribution (Beta(a, b)), we set a = b to ensure
+a symmetric distribution with a mean of 0.5. We chose
+the parameter value of 9 to achieve a range that avoids
+excessively high or low values. Consequently, for all analyses involving a heterogeneous distribution of firing rate
+targets, we utilize the Beta(9, 9)−distribution. However,
+we expect other distributions that meet the criteria mentioned to yield comparable results.
+
+ETHICS DECLARATIONS
+
+The authors declare no competing interests.
+VIII.
+A.
+
+APPENDIX
+
+Constructing the adjacency matrix,
+
+In the Methods section, we outline the construction of
+a recurrent circuit with a tunable excitatory-inhibitory
+(E-I) balance. The network’s adjacency matrix, A, is divided into two submatrices: AE for excitatory links and
+AI for inhibitory links. Neurons are classified as excitatory or inhibitory, with each neuron’s outgoing links exclusively matching its type, adhering to Dale’s Law. The
+network’s average degree is higher than in typical RC setups, for two key reasons: (i) to reflect the brain’s high
+degree of neuronal connectivity, and (ii) to avoid neurons
+with only one or two inhibitory connections, which can
+lead to frustrated arrangements during inhibitory adaptation. The non-zero entries in the excitatory submatrix
+are drawn from a normal distribution with a mean µE
+given by 1/(d ∗ fE ), where d is the average degree and
+fE is the fraction of excitatory neurons. This is done so
+that the average incoming excitatory current to a neuron is 1. The standard deviation of this distribution is
+σE = 0.2µE , or 20%. The non-zero entries in the inhibitory submatrix are drawn from a different normal
+distribution with a mean µI , which is varied to control
+the relative E-I balance in the system. The mean µI is
+defined by the following expression:
+µI =
+
+fE · µE − β/k
+1 − fE
+
+(9)
+
+Here, β is the global balance parameter, with β = 0
+indicating global balance. The standard deviation of the
+inhibitory link distribution, σI , is the same as that of the
+excitatory link distribution, σE .
+B.
+
+Heterogeneous distribution of firing rate targets
+
+In the Methods and Results sections, we refer to the
+heterogeneous distribution of firing rate targets. This
+section provides detailed information on the subject. Figure 3A illustrates that neurons with extreme firing rates
+(∼ 0 or ∼ 1) exhibit low entropy and contribute less
+to decision-making processes. These neurons are effectively ”wasted.” In designing a heterogeneous distribution, we aimed to satisfy two criteria: i) limit the range
+of neuronal firing rates to avoid extreme values, and ii)
+maintain a reasonable fraction of neurons near 0.5 while
+preserving a spread of firing rates to exploit their nonlinearity.
+The Beta-distribution proved suitable for this purpose.
+Since our firing rate values are confined between 0 and 1,
+
+C.
+
+Non-parametric estimator for differential
+entropy
+
+This estimator, first introduced by Kozachenko and
+Leonenko [60], is given by the following equation:
+T
+
+H (ri ) = ψ (T ) − ψ (1) + log (2) +
+
+1X
+log ϵi (t) (10)
+T t=1
+
+Here, H (ri ) is the entropy estimate of the state of the
+ith neuron. ψ is the digamma function, T is the total
+number of steps used to estimate the entropy, which in
+our case was 104 , and ϵi (t) is the nearest neighbor distance of ri (t). Unlike Shannon entropy, commonly used
+for discrete values, differential entropy can be negative.
+
+13
+
+[1] H. Jaeger, The “echo state” approach to analysing and
+training recurrent neural networks-with an erratum note,
+Bonn, Germany: German National Research Center for
+Information Technology GMD Technical Report 148, 13
+(2001), publisher: Bonn.
+[2] W. Maass, T. Natschläger, and H. Markram, Real-Time
+Computing Without Stable States: A New Framework
+for Neural Computation Based on Perturbations, Neural
+Computation 14, 2531 (2002).
+[3] M. C. Soriano, D. Brunner, M. Escalona-Morán, C. R.
+Mirasso, and I. Fischer, Minimal approach to neuroinspired information processing, Frontiers in Computational Neuroscience 9, 10.3389/fncom.2015.00068 (2015).
+[4] Y. Sakemi, S. Nobukawa, T. Matsuki, T. Morie, and
+K. Aihara, Learning reservoir dynamics with temporal
+self-modulation, Communications Physics 7, 29 (2024).
+[5] H. Cisneros, T. Mikolov, and J. Sivic, Benchmarking
+Learning Efficiency in Deep Reservoir Computing, in
+Proceedings of The 1st Conference on Lifelong Learning
+Agents (PMLR, 2022) pp. 532–547, iSSN: 2640-3498.
+[6] X. Wei, B. Wang, M. Chen, J. Yuan, H. Lan, J. Shi,
+X. Tang, B. Jin, G. Chen, and D. Yang, ViR:the Vision
+Reservoir (2021), version Number: 2.
+[7] T. P. Lillicrap, A. Santoro, L. Marris, C. J. Akerman,
+and G. Hinton, Backpropagation and the brain, Nature
+Reviews Neuroscience 21, 335 (2020), publisher: Nature
+Publishing Group.
+[8] T. L. Carroll and L. M. Pecora, Network structure effects in reservoir computers, Chaos: An Interdisciplinary
+Journal of Nonlinear Science 29, 083130 (2019).
+[9] T. L. Carroll, Do reservoir computers work best at the
+edge of chaos?, Chaos: An Interdisciplinary Journal of
+Nonlinear Science 30, 121109 (2020).
+[10] N.
+Dehghani,
+A.
+Peyrache,
+B.
+Telenczuk,
+M. Le Van Quyen, E. Halgren, S. S. Cash, N. G.
+Hatsopoulos, and A. Destexhe, Dynamic Balance of
+Excitation and Inhibition in Human and Monkey
+Neocortex, Scientific Reports 6, 23176 (2016).
+[11] M. B. Maclver, A. A. Mikulec, S. M. Amagasu, and F. A.
+Monroe, Volatile anesthetics depress glutamate transmission via presynaptic actions, Anesthesiology 85, 823
+(1996).
+[12] C. Hamani, H. Mayberg, S. Stone, A. Laxton, S. Haber,
+and A. M. Lozano, The Subcallosal Cingulate Gyrus in
+the Context of Major Depression, Biological Psychiatry
+69, 301 (2011).
+[13] O. Yizhar, L. E. Fenno, M. Prigge, F. Schneider, T. J.
+Davidson, D. J. O’Shea, V. S. Sohal, I. Goshen, J. Finkelstein, J. T. Paz, K. Stehfest, R. Fudim, C. Ramakrishnan,
+J. R. Huguenard, P. Hegemann, and K. Deisseroth, Neocortical excitation/inhibition balance in information processing and social dysfunction, Nature 477, 171 (2011).
+[14] W. L. Shew, H. Yang, T. Petermann, R. Roy, and
+D. Plenz, Neuronal Avalanches Imply Maximum Dynamic Range in Cortical Networks at Criticality, The
+Journal of Neuroscience 29, 15595 (2009).
+[15] E. R. Kandel and W. A. Spencer, Cellular neurophysiological approaches in the study of learning., Physiological
+Reviews 48, 65 (1968).
+[16] P. Strata and R. Harvey, Dale’s principle, Brain Research
+Bulletin 50, 349 (1999).
+
+[17] P. Somogyi, G. Tamás, R. Lujan, and E. H. Buhl, Salient
+features of synaptic organisation in the cerebral cortex1,
+Brain Research Reviews 26, 113 (1998).
+[18] A. A. Prinz, D. Bucher, and E. Marder, Similar network
+activity from disparate circuit parameters, Nature Neuroscience 7, 1345 (2004).
+[19] G. G. Turrigiano and S. B. Nelson, Homeostatic plasticity in the developing nervous system, Nature Reviews
+Neuroscience 5, 97 (2004).
+[20] G. G. Turrigiano, The Self-Tuning Neuron: Synaptic
+Scaling of Excitatory Synapses, Cell 135, 422 (2008).
+[21] K. Pozo and Y. Goda, Unraveling Mechanisms of Homeostatic Synaptic Plasticity, Neuron 66, 337 (2010).
+[22] G. W. Davis, HOMEOSTATIC CONTROL OF NEURAL ACTIVITY: From Phenomenology to Molecular
+Design, Annual Review of Neuroscience 29, 307 (2006).
+[23] H. Joy, M. Mattheakis, and P. Protopapas, RcTorch: a
+PyTorch Reservoir Computing Package with Automated
+Hyper-Parameter Optimization (2022), version Number:
+1.
+[24] B. Del Papa, V. Priesemann, and J. Triesch, Criticality meets learning: Criticality signatures in a selforganizing recurrent neural network, PLOS ONE 12,
+e0178683 (2017).
+[25] A. Lazar, SORN: a Self-organizing Recurrent Neural
+Network, Frontiers in Computational Neuroscience 3,
+10.3389/neuro.10.023.2009 (2009).
+[26] J. Triesch, Synergies Between Intrinsic and Synaptic
+Plasticity Mechanisms, Neural Computation 19, 885
+(2007).
+[27] F. Zenke, G. Hennequin, H. Sprekeler, T. P. Vogels, and
+W. Gerstner, Plasticity and stability in recurrent neural
+networks, BMC Neuroscience 12, P120 (2011).
+[28] S. Babinec and J. Pospichal, Improving the prediction accuracy of echo state neural networks by Anti-Oja’s learning, in Proceedings of the 17th international conference on
+Artificial neural networks, ICANN’07 (Springer-Verlag,
+Berlin, Heidelberg, 2007) pp. 19–28.
+[29] G. B. Morales, C. R. Mirasso, and M. C. Soriano, Unveiling the role of plasticity rules in reservoir computing,
+Neurocomputing 461, 705 (2021).
+[30] M.-H. Yusoff, J. Chrol-Cannon, and Y. Jin, Modeling
+neural plasticity in echo state networks for classification and regression, Information Sciences 364-365, 184
+(2016).
+[31] T. Yamazaki and S. Tanaka, A spiking network model
+for passage-of-time representation in the cerebellum, European Journal of Neuroscience 26, 2279 (2007).
+[32] F. J. Schmitt, V. Rostami, and M. P. Nawrot, Efficient
+parameter calibration and real-time simulation of largescale spiking neural networks with GeNN and NEST,
+Frontiers in Neuroinformatics 17, 941696 (2023).
+[33] T. Sumi, H. Yamamoto, Y. Katori, K. Ito, S. Moriya,
+T. Konno, S. Sato, and A. Hirano-Iwata, Biological neurons act as generalization filters in reservoir computing,
+Proceedings of the National Academy of Sciences 120,
+e2217008120 (2023).
+[34] M. Cucchi, C. Gruener, L. Petrauskas, P. Steiner,
+H. Tseng, A. Fischer, B. Penkovsky, C. Matthus,
+P. Birkholz, H. Kleemann, and K. Leo, Reservoir computing with biocompatible organic electrochemical net-
+
+14
+works for brain-inspired biosignal classification, Science
+Advances 7, eabh0693 (2021), publisher: American Association for the Advancement of Science.
+[35] P. Enel, E. Procyk, R. Quilodran, and P. F. Dominey,
+Reservoir Computing Properties of Neural Dynamics in
+Prefrontal Cortex, PLOS Computational Biology 12,
+e1004967 (2016), publisher: Public Library of Science.
+[36] H. Ju, M. R. Dranias, G. Banumurthy, and A. M. VanDongen, Spatiotemporal Memory Is an Intrinsic Property
+of Networks of Dissociated Cortical Neurons, The Journal of Neuroscience 35, 4040 (2015).
+[37] L. A. Hurley, J. G. Restrepo, and S. E. Shaheen, Tuning
+the activation function to optimize the forecast horizon
+of a reservoir computer (2023), version Number: 1.
+[38] M. C. Ozturk, D. Xu, and J. C. Prı́ncipe, Analysis and
+Design of Echo State Networks, Neural Computation 19,
+111 (2007).
+[39] T. B. Berrett, R. J. Samworth, and M. Yuan, Efficient
+multivariate entropy estimation via $k$-nearest neighbour distances, The Annals of Statistics 47, 10.1214/18AOS1688 (2019).
+[40] Z. Wang, X. Yao, Z. Huang, and L. Liu, Deep Echo State
+Network With Multiple Adaptive Reservoirs for Time Series Prediction, IEEE Transactions on Cognitive and Developmental Systems 13, 693 (2021).
+[41] J. Pathak, B. Hunt, M. Girvan, Z. Lu, and E. Ott, ModelFree Prediction of Large Spatiotemporally Chaotic Systems from Data: A Reservoir Computing Approach,
+Physical Review Letters 120, 024102 (2018).
+[42] H. Jaeger and H. Haas, Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication, Science 304, 78 (2004), publisher: American
+Association for the Advancement of Science.
+[43] M. C. Mackey and L. Glass, Oscillation and Chaos in
+Physiological Control Systems, Science 197, 287 (1977).
+[44] E. N. Lorenz, Deterministic Nonperiodic Flow, Journal
+of Atmospheric Sciences 20, 130 (1963), place: Boston
+MA, USA Publisher: American Meteorological Society.
+[45] N. Rodriguez, E. Izquierdo, and Y.-Y. Ahn, Optimal
+modularity and memory capacity of neural reservoirs,
+Network Neuroscience 3, 551 (2019).
+[46] T. L. Ribeiro and M. Copelli, Deterministic excitable
+media under Poisson drive: Power law responses, spiral waves, and dynamic range, Physical Review E 77,
+051911 (2008), publisher: American Physical Society.
+[47] J. Dambre, D. Verstraeten, B. Schrauwen, and S. Massar,
+Information Processing Capacity of Dynamical Systems,
+Scientific Reports 2, 514 (2012).
+
+[48] M. Inubushi and K. Yoshimura, Reservoir Computing Beyond Memory-Nonlinearity Trade-off, Scientific Reports
+7, 10199 (2017), publisher: Nature Publishing Group.
+[49] D. Verstraeten, J. Dambre, X. Dutoit, and B. Schrauwen,
+Memory versus non-linearity in reservoirs, in The 2010
+International Joint Conference on Neural Networks
+(IJCNN) (IEEE, Barcelona, Spain, 2010) pp. 1–8.
+[50] J. Xia, J. Chu, S. Leng, and H. Ma, Reservoir computing
+decoupling memory–nonlinearity trade-off, Chaos: An
+Interdisciplinary Journal of Nonlinear Science 33, 113120
+(2023).
+[51] T. Kanamaru, T. K. Hensch, and K. Aihara, Maximal
+Memory Capacity Near the Edge of Chaos in Balanced
+Cortical E-I Networks, Neural Computation 35, 1430
+(2023).
+[52] M. L. De Graaf, L. Mochizuki, H. Wagner, and
+C. Le Mouel, Increased spinal excitation causes decreased
+locomotor complexity (2022).
+[53] J. Pathak, A. Wikner, R. Fussell, S. Chandra, B. R.
+Hunt, M. Girvan, and E. Ott, Hybrid forecasting of
+chaotic processes: Using machine learning in conjunction with a knowledge-based model, Chaos: An Interdisciplinary Journal of Nonlinear Science 28, 041101 (2018).
+[54] K. Srinivasan, N. Coble, J. Hamlin, T. Antonsen, E. Ott,
+and M. Girvan, Parallel Machine Learning for Forecasting the Dynamics of Complex Networks, Physical Review
+Letters 128, 164101 (2022).
+[55] C. Gallicchio, A. Micheli, and L. Pedrelli, Deep reservoir
+computing: A critical experimental analysis, Neurocomputing Advances in artificial neural networks, machine
+learning and computational intelligence, 268, 87 (2017).
+[56] J. Yperman and T. Becker, Bayesian optimization of
+hyper-parameters in reservoir computing (2016), version
+Number: 3.
+[57] P. Antonik, N. Marsal, D. Brunner, and D. Rontani,
+Bayesian Optimisation of Large-scale Photonic Reservoir
+Computers, Cognitive Computation 15, 1452 (2023).
+[58] A. A. Ferreira, T. B. Ludermir, and R. R. B. de Aquino,
+An approach to reservoir computing design and training,
+Expert Systems with Applications 40, 4172 (2013).
+[59] B. Schrauwen, M. Wardermann, D. Verstraeten, J. J.
+Steil, and D. Stroobandt, Improving reservoirs using intrinsic plasticity, Neurocomputing Progress in Modeling,
+Theory, and Application of Computational Intelligenc,
+71, 1159 (2008).
+[60] L. F. Kozachenko and N. N. Leonenko, Sample estimate
+of the entropy of a random vector, Problems of Information Transmission 23, 95 (1987).
+
+Supplementary Material
+Boosting Reservoir Computing with Brain-inspired Adaptive Dynamics
+Keshav Srinivasan,1, 2 Dietmar Plenz,2 and Michelle Girvan1, 3, 4
+1
+
+2
+
+Biophysics Program, University of Maryland, College Park, MD 20740, USA
+Section on Critical Brain Dynamics, National Institute of Mental Health, Bethesda, MD 20892, USA
+3
+Department of Physics, University of Maryland, College Park, MD 20740, USA
+4
+Santa Fe Institute, Santa Fe, NM 87501, USA
+
+arXiv:2504.12480v1 [cs.NE] 16 Apr 2025
+
+SUPPLEMENTARY NOTE: CALCULATION FOR ’DESIGNED’ RESERVOIRS
+
+Consider the 2 reservoir equations (refer to Equations 1 and 2 from the main text):
+Vi (t + 1) = λi Vi (t) +
+
+N
+X
+
+
+I
+in
+AE
+ij − Aij · rj (t) + Wi u(t)
+
+j=1
+
+ri (t) = Sig (Vi (t) − θi (t))
+
+(1)
+
+(2)
+th
+
+As mentioned in the main text, here Vi (t) is the membrane potential of the i neuron, λ is the leakage term (which
+in this case is set to 0), A is the connectivity matrix of the reservoir network, W in is the input matrix and u(t) is the
+input data. The second equation defines the reservoir variable, r(t), which represents the firing rate of the neurons in
+the network and can take values between 0 and 1. Sig is a sigmoid function and is given the following equation:
+Sig(y) =
+
+1
+1 + e−10y
+
+(3)
+
+Consider a steady-state solution with a firing rate set-point of ρ. We can now rewrite the steady-state version of
+Equation (1) as:
+Vei =
+
+N
+X
+j=1
+
+eij ρj + W in ⟨u⟩
+A
+i
+
+(4)
+
+Inverting equation 2 for the steady state solution, we also obtain:
+Vei = Logit(ρi ) + θi
+
+(5)
+
+Here Logit is the inverse Sigmoid function. Combining equations 4 and 5 we then get:
+N
+X
+j=1
+
+eij ρj = Logit(ρi ) + θi − W in ⟨u⟩
+A
+i
+
+(6)
+
+Let us consider a design mechanism that only alters the inhibitory links by multiplying them by a neuron-wise
+multiplicative factor, Ωi .
+Before the adjustment, we have the following equation (Split into excitatory and inhibitory sub-parts):
+N
+X
+
+Aij ρj =
+
+j=1
+
+X
+
+Aij ρj +
+
+E
+
+X
+
+Aij ρj
+
+(7)
+
+I
+
+And after the adjustment, we get the following equation:
+N
+X
+j=1
+
+eij ρj =
+A
+
+X
+E
+
+Aij ρj + Ωi
+
+X
+
+Aij ρj
+
+(8)
+
+I
+
+Combining Eqns 6 and 8 we then finally get an expression for the multiplicative factor, Ωi :
+P
+Logit(ρi ) + θi − Wiin ⟨u⟩ − E Aij ρj
+P
+Ωi =
+I Aij ρj
+
+(9)
+
+2
+SUPPLEMENTARY FIGURES
+
+0
+
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-3
+
+-2
+
+-1
+
+0
+
+0.5
+
+20
+
+0
+
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-2
+
+-1
+
+0
+
+Threshold, θ
+
+1
+
+25
+
+-3
+
+20
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-3
+
+-2
+
+0
+
+1
+
+0
+
+μI = μE, fI variable
+1
+
+25
+
+0.5
+
+20
+
+0
+
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-2
+
+0
+
+1
+
+-1
+
+Global balance, β
+
+D)
+
+fI = 0.5, μI variable
+
+-2
+
+0.5
+
+-2
+
+Global balance, β
+
+C)
+
+25
+
+0
+
+0
+
+1
+
+1
+
+Memory Capacity
+
+20
+
+μI = 4μE, fI variable
+
+-3
+
+-2
+
+Global balance, β
+
+-1
+
+0
+
+1
+
+Memory Capacity
+
+0.5
+
+Threshold, θ
+
+25
+
+Memory Capacity
+
+1
+
+-2
+
+Threshold, θ
+
+B)
+
+fI = 0.2, μI variable
+
+Memory Capacity
+
+Threshold, θ
+
+A)
+
+0
+
+Global balance, β
+
+Supplementary Figure 1. Reservoir performance remains robust across different forms of E-I balance modulation.
+Memory capacity is shown as a function of threshold (θ) and global balance (β). We vary global balance in two ways: by
+changing the mean strength of inhibitory links (A, C) and by changing the fraction of inhibitory neurons (B, D). In (A) and
+(C), the proportion of inhibitory neurons is fixed (20% and 50%, respectively), In (B) and (D), the E/I synaptic strength
+ratio is fixed (1:4 and 1:1, respectively). Across all conditions, high performance is consistently observed in balanced to slightly
+inhibited regimes, demonstrating the robustness of reservoir dynamics to the method of E-I tuning.
+
+0.04
+
+-1
+
+0.03
+
+-1.5
+
+0.02
+-3
+
+-2
+
+-1
+
+0
+
+Global balance, β
+
+1
+
+0
+
+4
+
+-0.5
+
+3
+
+-1
+
+2
+
+-1.5
+
+1
+
+-2
+
+-3
+
+-2
+
+-1
+
+0
+
+Global balance, β
+
+1
+
+0
+
+Lorenz
+
+0.5
+
+3
+
+0
+2
+
+-0.5
+-1
+
+1
+
+-1.5
+-2
+
+VPT
+
+-0.5
+
+C)
+
+5
+
+Threshold, θ
+
+0.06
+
+Mackey-Glass
+
+0.5
+
+VPT
+
+0
+
+-2
+
+B)
+
+0.1
+0.08
+
+Threshold, θ
+
+NARMA-10
+
+0.5
+
+RMSE
+
+Threshold, θ
+
+A)
+
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+0
+
+Global balance, β
+
+Supplementary Figure 2. Performance as a function of the balance parameter β and threshold θ for three timeseries prediction tasks: NARMA-10, Mackey-Glass, and Lorenz. This figure expands on Fig. 1C in the main text,
+offering a detailed analysis of performance trends across these tasks. Performance remains high and stable in balanced or
+slightly over-inhibited states but declines sharply in the over-excited regime, where it becomes more fragile across all three
+tasks.
+
+3
+
+Obeying Dale’s Law
+25
+20
+
+0
+
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-2
+
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+Global balance, β
+
+2
+
+0
+
+Threshold, θ
+
+0.5
+
+Shuffled synapses
+25
+
+1
+
+Memory Capacity
+
+1
+
+Threshold, θ
+
+B)
+0.5
+
+20
+
+0
+
+15
+
+-0.5
+
+10
+
+-1
+
+5
+
+-1.5
+-2
+
+-3
+
+-2
+
+-1
+
+0
+
+1
+
+2
+
+Memory Capacity
+
+A)
+
+0
+
+Global balance, β
+
+Supplementary Figure 3. Reservoir dynamics and performance remains consistent despite synapse shuffling,
+indicating no strong dependence on Dale’s Law. (A) A globally tuned excitatory-inhibitory (E-I) reservoir where
+neurons and synapses strictly follow Dale’s Law (as shown in Fig. 1D). (B) A modified reservoir where synapses are randomly
+shuffled, disrupting Dale’s Law while preserving overall connectivity statistics. Despite this alteration, performance remains
+unchanged across different values of the global balance parameter (β) and threshold (θ), demonstrating that adherence to Dale’s
+Law is not a necessary condition for RC performance
+
+4
+
+A)
+
+B)
+
+Non-adapting RC
+
+Local balance, βi
+
+60
+
+Neuron entropy, H
+
+Heterogenous Adaptive RC
+90
+
+210
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+0.5
+
+0.5
+
+0.5
+
+0
+
+0
+
+0
+
+-0.5
+
+-0.5
+
+-0.5
+
+-1
+
+-1
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1 0
+
+90
+
+-1
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+0
+
+240
+
+-2
+
+-2
+
+-2
+
+-4
+
+-4
+
+-4
+
+-6
+
+-6
+
+-6
+
+-8
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1 0
+
+0
+
+120
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1 0
+
+180
+
+1
+
+1
+
+1
+
+0.8
+
+0.8
+
+0.8
+
+0.6
+
+0.6
+
+0.6
+
+0.4
+
+0.4
+
+0.4
+
+0.2
+
+0.2
+
+0.2
+
+0
+0.2
+
+0.4
+
+0.6
+
+Firing rate
+
+0.8
+
+1 0
+
+150
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+0
+
+150
+
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+0
+
+150
+
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+0
+
+240
+
+0
+
+0
+0
+
+0
+
+-8
+
+-8
+0
+
+Output weight, |Wout |
+
+C)
+
+Homogenous Adaptive RC
+
+0
+
+0.2
+
+0.4
+
+0.6
+
+Firing rate
+
+0.8
+
+1 0
+
+150
+
+Firing rate
+
+Supplementary Figure 4. Scatter plots depicting the relationship between local balance, neuronal entropy, and
+output weights as functions of average firing rate for input and non-input neurons during a Lorenz timeseries prediction task. (A) In the scatter plots of a globally balanced, non-adapting reservoir computer (RC) (β = 0), we
+observe (top) that input neurons (orange) are driven more strongly, resulting in higher firing rates compared to non-input
+neurons (blue). (middle) The neurons with extreme firing rates show reduced entropy, which (bottom) leads to their diminished
+contribution to prediction accuracy. (B) When an adaptive RC with a homogeneous firing rate target of 0.4 is employed,
+(top) the adaptation mechanism tunes the network to achieve the desired firing rate. Here, input neurons exhibit substantial
+local imbalance to compensate for the strong input signals. (middle) This adaptation process successfully eliminates lowentropy neurons, (bottom) ensuring that all neurons contribute adequately to predictions. (C) As in the previous case, with
+heterogeneous targets, (top) input neurons require significant local imbalance to adjust for the strong input. By mitigating
+extreme firing rates, (middle) we also eliminate low-entropy neurons, (bottom) resulting in a trend in output weights that
+parallels the findings with homogeneous targets.
+
+5
+SUPPLEMENTARY TABLE
+
+Adaptive
+
+Non-adaptive
+Task
+
+Homogenous
+
+Hetero.
+
+σin
+
+β
+
+θ
+
+σin
+
+ρT
+
+σin
+
+Memory Capacity
+
+0.016
+
+-1.0
+
+0.0
+
+0.016
+
+0.5
+
+0.010
+
+NARMA-10
+
+0.100
+
+-1.0
+
+0.0
+
+0.063
+
+0.3
+
+0.100
+
+Mackey Glass
+
+0.631
+
+-1.2
+
+0.0
+
+0.631
+
+0.3
+
+1.000
+
+Lorenz
+
+2.512
+
+-1.0
+
+-1.0
+
+3.981
+
+0.6
+
+3.981
+
+Supplementary Table I. Task-dependent parameters used in the RC setup
+
+

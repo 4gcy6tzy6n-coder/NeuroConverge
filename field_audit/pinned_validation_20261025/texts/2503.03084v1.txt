@@ -1,0 +1,691 @@
+Hopfield Networks Meet Big Data: A Brain-Inspired Deep
+Learning Framework for Semantic Data Linking
+Ashwin Viswanathan K
+
+Johnson P Thomas
+
+Abhimanyu Mukerji
+
+Oklahoma State University
+USA
+ashwin.kannan@okstate.edu
+
+Oklahoma State University
+USA
+jpt@cs.okstate.edu
+
+Stanford University
+USA
+amukerji@stanford.edu
+
+arXiv:2503.03084v1 [cs.LG] 5 Mar 2025
+
+ABSTRACT
+The exponential growth of data in recent years has resulted in vast,
+heterogeneous datasets generated from multiple sources. Big data
+applications increasingly rely on these datasets to extract knowledge for predictive analytics and decision-making. However, the
+quality and semantic integrity of data remain critical challenges.
+In this paper, we propose a brain-inspired distributed cognitive
+framework that integrates deep learning with Hopfield networks
+to identify and link semantically related attributes across multiple
+datasets. Our approach models the dual-hemisphere functionality
+of the human brain, where the right hemisphere processes and
+assimilates new information while the left hemisphere retrieves
+learned representations to establish meaningful associations. The
+cognitive architecture operates on a MapReduce framework and
+links datasets stored in the Hadoop Distributed File System (HDFS).
+By incorporating deep Hopfield networks as an associative memory
+mechanism, our framework strengthens the recall of frequently
+co-occurring attributes and dynamically adjusts relationships based
+on evolving data usage patterns. Experimental results demonstrate
+that attributes with strong associative imprints in Hopfield memory
+are reinforced over time, while those with diminishing relevance
+gradually weaken—a phenomenon analogous to human memory
+recall and forgetting. This self-optimizing mechanism ensures that
+linked datasets remain contextually meaningful, improving data disambiguation and overall integration accuracy. Our findings indicate
+that combining deep Hopfield networks with a distributed cognitive
+processing paradigm provides a scalable and biologically inspired
+approach to managing complex data relationships in large-scale
+environments.
+
+CCS CONCEPTS
+• Computing methodologies → Bio-inspired approaches.
+
+KEYWORDS
+Neural Networks, Cognition, RNN, Hopfield Networks, ANN, Deep
+Learning, Deep Neural Networks, Machine Learning, pattern recognition
+
+1
+
+INTRODUCTION
+
+In the past decade, there has been a vast change in the landscape
+related to data handling methodologies and practices. Various advances in Machine Learning (ML) and Artificial Intelligence (AI)
+algorithms have lead to a more intuitive understanding of data.
+Neural Networks modeled after the human brain has seen a rapid
+development with various models like Artificial Neural Nets (ANN).
+Recurrent Neural Nets (RNN) being developed and packaged to
+solve real world problems. These are found to be very attractive in
+
+applications like Image classification, Pattern recognition, Object
+Identification etc.Ṫhus semantic understanding of data gives us
+a better ability to perceive and discern various attributes or representations of data which helps us to effectively integrate with
+applications. The rise of Big Data has led to the development of distributed big data storage and processing frameworks like Hadoop
+[2]. Several studies highlight the importance of data preprocessing
+and the role of similarity identification in improving data quality
+and integration. In this paper we present a novel way of identifying
+associations in datasets by modeling a brain inspired architecture to
+understand and learn the changing behavioral pattern in using data,
+thus providing similarity relationship between datasets. Interest in
+developing a cognitive system has sparked renewed research interests giving rise to what is today popularly know as Deep Learning
+[26]. Human brain modeling started as the precursor to modern
+deep learning systems. Genesis to such models started with the
+step of developing computation techniques simulating the human
+brain. Scientific paradigms like Brain Inspired Cognitive Architecture (BICA) are endeavors started to that effect. Another aspect of
+cognitive systems is concerned with interpreting biological process
+like thinking and logical reasoning. This leads to the duality of
+brain hemispheres [8]. Thinking and learning happens in the right
+hemisphere, and the left hemisphere processes learned information. This presented us with motivation and scientific evidence
+to realize a cognitive model capable of functioning similar to the
+human mind, we embarked on developing our framework which is
+inspired by the aforementioned principles of cognitive computing.
+We leverage our model to use the MapReduce framework which
+further enhances the computational ability. We evaluate our model
+with experiments that brings out the biological responses of the
+human mind. Recent research work in BICA [4–6] consider using
+Hopfield type of processors to model the hemispherical structure
+of the brain. Adopting a similar approach, we showcase a novel
+way of using Hopfield networks to learn and understand similarity
+relations across datasets. We essentially treat usage information
+as a pattern that can be learnt by our model. This provided an
+interesting approach at understanding and deriving data usage information which are then read by Hopfield nets. Hopfield nets [14]
+are a form of RNN, the recurrence property stems from the fact that,
+the neurons or nodes are bi-directional. They also possess content
+addressable memory which is biologically similar to the human
+brain in forming associations. Historically Hopfield nets belong
+to the earliest class of Deep Learning systems [26]. The associative
+memory of Hopfield nets is suitable in most applications. Pattern
+and image recognition are some of the most common applications
+which use Hopfield networks. In this paper, we present an interesting approach to use Hopfield nets to clean data by modeling it as a
+
+Conference’17, July 2017, Washington, DC, USA
+
+pattern recognition task. We use MapReduce thus augmenting its
+capacity to process voluminous data. In our research, we adapt a
+data usage tracking approach and integrate it with our proposed
+cognitive brain model to learn from associations and identify similar datasets.
+The contributions of our work is two-fold
+• We provide theoretical research and a basis for realizing a
+biological model following the tenets of cognitive science
+and workings of biological neurons. We propose a framework
+which uses the Hopfield network with MapReduce on top
+as computational units to learn and gather information or
+knowledge.
+• To validate our framework, we apply our brain inspired
+model to learn and identify semantic links amongst datasets.
+This is a first step in the process of data cleaning for big data.
+We present experimental evaluations to prove the validity and
+correctness of our model. In section 2, we present related work in
+cognitive architecture and cleaning of data in big data applications.
+Section 3 describes how data cleaning is achieved using our model
+and Section 4 describes the overview of our brain architecture, and
+implementation details follows in subsequent sections. Evaluation
+of our model is shown in Section 4.4 and validation is shown in
+Section 5. Conclusion and future scope is shown in Section 6.
+
+2
+
+RELATED WORK
+
+Our architecture draws upon research conducted in BICA which
+focuses on creating a computational model equivalent to a human
+mind. Within BICA, a principle called the Dynamic Theory of Information (DTI) was proposed by [5] which gives a formal description
+of computationally modeling the components of human mind (i.e)
+memory, thought and emotions. The concept of Dynamic Formal
+Neuron(DFN) proposed by [4] talks in detail of building a neuron
+processor using Hopfield [14] and Grossberg [10, 11] processors. The
+concept of brain hemispherical duality was explored in [6]. This
+provided a premise to model a framework analogous to the human
+brain. Further studies by [16] indicate the means to realize cognitive
+structures. Based on the above research and aligning closely with
+the works of [5] and [4], we chose the Hopfield Network to model
+our architecture inspired by biological neural networks. There has
+been a renewed interest in research about creating structures similar to the neurons found in the brain. ANN’s [12, 27] emerged
+as the foremost computing systems whose functioning resembled
+the human mind. Principles of self-organization [15] which uncovers semantic relationship in sentences are some of the features
+present in ANN. Based on the above research works, our model can
+be applied to identify associations or similarity in datasets. This
+problem falls into the category of pattern recognition. Identifying
+similarity/associations among datasets helps in efficient cleansing.
+Similarity and associations between datasets have been extensively
+leveraged for identifying sensitive data items and data cleaning.
+Existing research explores the integration of data usage patterns
+and contextual information to enhance the identification of semantic associations between data items. One such approach employs
+linear weighted equations for context-based similarity assessment
+and utilizes Markov’s clustering algorithm [25] for semantic grouping. However, a major limitation of this methodology lies in the
+
+Ashwin Viswanathan K, Johnson P Thomas, and Abhimanyu Mukerji
+
+estimation of optimal equation weights and the identification of
+appropriate constants for Markov’s clustering, which can significantly impact clustering accuracy and computational efficiency
+[25]. As the work presents sufficient scope for pattern recognition,
+we rewire a section of the architecture that is, identifying semantically related datasets found in the above work to suit the brain
+inspired framework proposed in this paper. We also evaluate the
+behavior of our neural nets by making use of usage patterns similar
+to those found in the real world and present the statistical approach
+for defining accuracy in identifying similarity.
+
+3
+
+DATA CLEANING
+
+In this paper, we focus on using our framework to identify similar
+data-items across datasets, which is then applied to clean data. Data
+usage information is used to identify semantic similarities [19]. Semantic similarity gives a measure of the usefulness of the data-item
+as they are captured from previous usage history information. In
+this paper we use an item based method [21] to identify similar
+datasets. Usefulness of data is indicated by how frequent it is accessed [19]. Hence, we consider similarity as a suitable measure
+to ascertain data usefulness. In our research, we capture the usage
+characteristics as a vector class of patterns, consisting of (−1, +1)
+values, where +1 indicates relatedness and −1 as not related. This
+is then used to train our brain model which has an unsupervised
+learning procedure. On repeated training, our model learns the patterns which correspond to the most frequently used dataset. This
+enables to identify similarity of datasets when the model is asked to
+predict similarly related data-items when given a data usage class
+of patterns.
+
+4
+
+BIOLOGICAL NEURON FRAMEWORK FOR
+SEMANTIC IDENTIFICATION
+4.1 Overview of Brain Based Architecture
+The foundation of our model is based on the emergent scientific paradigm BICA. It aims to design, study and implement human-level
+cognitive architectures [16]. Recent works on BICA [4, 5] proposed
+a Natural-Constructive Approach (NCA) to model a cognitive system.
+The premise for developing our model is based on the above works
+and [8] and the hemispherical functions of the brain and concept
+of thinking process postulated in DTI [6]. Our framework, similar
+to NCA consists of two sub-models namely the right and left hemispheric layers. Information gathering and learning occurs in the
+right hemisphere and processing the learned information occurs on
+the left. Our proposed model aligns with the biological aspects of
+the human brain, in that, we follow the learning and recalling ability
+of the human brain when presented with external stimuli. Cerebral
+cortex and sub-cortical structures of the brain are responsible for
+cognitive, emotional and memorization processes [23]. Figure 1
+depicts the functions of different lobes of the brain. Table 1 presents
+lobes of the brain and its computational interpretation. In this paper,
+we model the functionality of temporal lobe found in right side of
+the brain from figure 1 by learning and retrieving representations of
+data usage patterns. We describe the building blocks of our model
+using Hopfield Nets which belong to the class of RNN. Then we
+discuss the learning rules and associations formed when exposed
+to information. Finally we talk about generated experiments and
+
+Hopfield Networks Meet Big Data: A Brain-Inspired Deep Learning Framework for Semantic Data Linking
+
+Conference’17, July 2017, Washington, DC, USA
+
+Algorithm 1: Parallelizing Right Hemisphere (Mapper)
+Input: Data usage information pattern matrix (𝑘 × 𝑘)
+Output: Induvidual chunks of trained memory matrices
+𝑤𝑖,𝑗
+𝑎 ← 𝑅𝑒𝑎𝑑 𝑚𝑎𝑡𝑟𝑖𝑥 𝑜 𝑓 𝑝𝑎𝑡𝑡𝑒𝑟𝑛𝑠 𝑓 𝑟𝑜𝑚 𝑓 𝑖𝑙𝑒
+𝑛𝑜𝑟𝑚𝑎 = 𝐸𝑢𝑐𝑁𝑜𝑟𝑚(𝑎) ;
+// normalize
+𝑏𝑖𝑛𝑎 = 𝑇 𝐸 (𝑛𝑜𝑟𝑚𝑎 ) ;
+// update to +1 or −1
+𝑊𝑖 𝑗 = 𝐻𝑜𝑝 𝑓 𝑖𝑒𝑙𝑑𝐿𝑒𝑎𝑟𝑛(𝑏𝑖𝑛𝑎 ) ;
+// Train patterns
+for each 𝑤𝑖,𝑗 term in 𝑊𝑖,𝑗 do
+𝐸𝑀𝐼𝑇𝑖𝑛𝑡𝑒𝑟𝑚𝑒𝑑𝑖𝑎𝑡𝑒 (𝑤, 𝑐𝑜𝑢𝑛𝑡)
+end
+
+figure 2), the layer of Hopfield nets presides on the right side which
+complements the biological brain structure. An instance of our
+system is represented by a class of vectors (𝑎 1, 𝑎 2, 𝑎 3, ..., 𝑎𝑘 ) where
+each of 𝑎 1 to 𝑎𝑘 is either +1 or −1 after passing through Threshold
+Figure 1: Human Brain Representation1
+Estimator. The weight matrix 𝑊𝑖,𝑗 which stores the memorized pattern is analogous to the Hippocampus of brain. This region contains
+Table 1: Brain Lobes and Computer Structures
+the Mapper process which parallelizes the learning process. The
+frequency of data usage patterns is generated for a set of 𝑘 datasets
+Brain Structure Function Interpretation
+which is then normalized using standard euclidean norm 2 given
+by the below equation 1. This bounds the values between 0 and 1.
+Occipital Lobe Vision
+Any multimedia data.
+The
+algorithm for this layer is given above.
+Parietal Lobe
+Motor
+Trajectory data points.
+v
+u
+t𝑛
+Temporal Lobe Auditory Text perception and reproduction.
+∑︁ 𝑛
+∑︁
+2
+Frontal Lobe
+Speech
+Information propagation and relaying.
+∥𝐴∥𝑒 =
+𝑎𝑖,𝑗
+(1)
+𝑖=1 𝑗=1
+
+results. Deep Belief Network library called Neupy [1] is used to
+implement our model.
+
+4.2
+
+Brain Inspired Architecture for Identifying
+Associations
+
+Our proposed architecture (see figure 2) draws on the aforementioned concepts of cognitive modeling. Neural physiology [22] and
+[3] tells us that information is processed and learnt [9] in a parallel
+manner by the right hemisphere. In our model, as in the brain, learning of new information occurs in parallel on the right side of the
+brain. This is achieved by using Hopfield nets in tandem with the
+computational power of MapReduce and HDFS to process enormous
+volume of data. MapReduce and HDFS is a storage and parallel
+processing model for big data [7, 17]. Our model is analogous to the
+Right Temporal Lobe shown in figure 2. The noise/information is
+perceived by layer of Hopfield networks and the interconnections
+serves as a conduit for transferring learned information. Internal
+memory of the Hopfield neurons is similar to the hippocampus of
+human brain. It is involved in the storage of long-term memory,
+which includes all past knowledge and experiences. Data vectors
+with values of either −1 or +1 are learned and stored by the Hopfield
+nets. Sequential Information processing is done on the left side of
+the brain.
+4.2.1 Right Hemisphere (RH):. Learning and perception of knowledge occurs in the right side of the brain. In our model (as shown in
+1 National Institute on Drug Abuse (1997) Mind Over Matter: The Brain’s Response to
+
+Drugs, Teacher’s Guide
+
+4.2.2 Threshold Estimator (TE):. Once the frequency of usage
+has been captured and normalized using equation 1, the normalized
+usage matrix are received by the Threshold Estimator. For any 𝑘𝑛
+datasets, suppose there is high frequency of usage between 𝑘𝑖 and
+𝑘 𝑗 , then these states must be active (i.e) a value of +1 is assigned
+in the symmetric memory matrix 𝑊𝑖,𝑗 of the Hopfield nets. In this
+paper we refer to the actual learned pattern as class of vectors
+which already have defined binary states of +1 or −1 based on the
+recurrent data usage rules. These class of vectors are then used as a
+basis by the threshold estimator to converge to the correct pattern.
+The point of convergence varies for each user of datasets due to
+change in frequency of usage.
+4.2.3 Modeling the Hopfield neurons in RH. : Hopfield nets
+[14][28] provides distributed memory and intuitively mimics the
+workings of human brain. They undergo an unsupervised learning
+procedure and possess binary states that is, +1 or −1. They are
+represented as a pair of 𝑖 and 𝑗 neurons. Neuron interconnections is
+described by the connectivity weight matrix 𝑊𝑖,𝑗 . They are densely
+interconnected and the weight matrix is symmetric with the diagonals having a value of 0. Hopfield nets belong to the class of
+McCulloch and Pitts neurons [18]. For every 𝑘 class of patterns
+we require 𝑘 Hopfield neurons. There are two modes for updating
+the internal states of 𝑊𝑖,𝑗 that is, Synchronous and Asynchronous.
+Refer to section A.1.1 for more details on the update modes. Our
+paper follows the asynchronous mode due to its similarity with
+biological memory.
+2 http://slideplayer.com/slide/5057707/
+
+Conference’17, July 2017, Washington, DC, USA
+
+Ashwin Viswanathan K, Johnson P Thomas, and Abhimanyu Mukerji
+
+Figure 2: Brain Model Overview. An input class pattern (vectors) is first fed to the layer of Hopfield
+neurons which forms the temporal lobe region in the right hemisphere (RH). Normalized vectors are
+stored in weight matrix (Hippocampus). Noisy patterns sent to Wernicke region in left hemisphere (LH)
+processes and predicts the output (Broca’s region). The LH receives learned information from RH.
+
+Algorithm 2: Left Hemisphere Prediction (Reducer)
+Input: Input patterns stored in distributed Hadoop cache
+Output: Output pattern containing similar data associations
+for each 𝑤𝑖 in 𝑤 do
+𝑊𝑖,𝑗 + = 𝑤𝑖
+end
+for each test pattern 𝑝𝑡 from cache do
+𝑝𝑟𝑒𝑑𝑖𝑐𝑡𝑝𝑎𝑡𝑡𝑒𝑟𝑛 ← 𝑅𝐻𝐻𝑜𝑝 𝑓 𝑖𝑒𝑙𝑑𝑅𝑒𝑐𝑎𝑙𝑙 (𝑊𝑖,𝑗 , 𝑝𝑡 )
+end
+
+4.2.4 Left Hemisphere (LH):. Reception of information and processing the learned knowledge is carried in the left side of the brain.
+In this region, information is processed in a sequential manner [3].
+This layer uses the Reducer process of the MapReduce framework
+to combine the individual chunks of memory information from the
+RH. Algorithm for this layer is presented below.
+Once the network is trained with data vectors on the RH, we
+can question the model to identify data similarity across given 𝑛
+datasets. This process of recalling is conceptually equivalent to
+the Wernicke Area present on the left side of the brain which is
+responsible for speech comprehension. The output region of the
+network is similar to the Brocka’s Area (as shown in figure 2) which
+is responsible for speech production.
+From the functions of both the layers, we see a inherent equivalence between biological neurons and artificial Hopfield nets implemented in our model.
+
+4.3
+
+Palimpsest Memory
+
+Connection weights among neurons store the networks memory.
+Hopfield nets [14] recollect previously stored patterns when presented with noisy input. In our model, we implement palimpsest
+or forgetful rules for learning where the network being exposed to
+patterns gradually loses its ability to recall earlier or less repetitive
+patterns. Below we discuss the learning rules applied in our model.
+4.3.1 Hebbs and Oja’s Learning rule: One of the foremost theories of learning was proposed by Donald Hebb in [13]. Hebbian
+theory belongs to unsupervised learning. When nodes fire simultaneously, their connection strength increases. From [13] and [28],
+𝑊𝑖,𝑗 is given by
+𝑘
+1 ∑︁ 𝑝 𝑝
+𝑊𝑖,𝑗 =
+𝑥 𝑥
+(2)
+𝑛 𝑝=1 𝑖 𝑗
+Erkki Oja introduced a new rule modifying hebb’s rule known as
+Oja’s rule [20]. It stabilizes hebb’s rule by introducing a normalization factor. Refer to sections A.1.2 for further details.
+
+4.4
+
+Experiments
+
+4.4.1 Dataset: We conduct our experiments by capturing data
+usage information for a given 𝑘 datasets. In previous research, a
+data usage tracking component was employed to capture usage
+behavior. In our work, we refine this approach by simulating and
+generating 𝑘 datasets and 𝑝 combinations of usage patterns to
+enhance association learning and dataset similarity identification.
+
+Hopfield Networks Meet Big Data: A Brain-Inspired Deep Learning Framework for Semantic Data Linking
+
+Since our model runs on top of MapReduce, the values of 𝑘 and 𝑝
+can be sufficiently huge leveraging the capacity of HDFS. The usage
+pattern is generated with different values of 𝑘 and 𝑝 to evaluate the
+cognitive learning of our framework.
+4.4.2 Evaluation: For any 𝑘 datasets, a relation between 𝑘𝑖 and
+𝑘 𝑗 is said to exist when they are frequently used and their usage
+count is large enough to cross the threshold limit set by TE. Thus a
+value of 1 between 𝑘𝑖 and 𝑘 𝑗 is said to indicate an association. Since
+the weight matrix 𝑊𝑖,𝑗 is bi-directional 𝑘𝑖,𝑗 = 𝑘 𝑗,𝑖 . Evaluations were
+conducted by storing 𝑘 × 𝑘 matrix of patterns in the Hopfield network where 𝑘 represents the datasets. Each usage pattern is treated
+as a row of vectors 𝑎𝑖,𝑘 that is, each user’s data usage information
+is captured as a single row in the 𝑘 × 𝑘 matrix. A single row can
+be represented as 𝑎𝑖,𝑘 = [𝑎 1,1, 𝑎 1,2, ...., 𝑎 1,𝑘 ]. Thus for any 𝑘 × 𝑘
+dimensions, the matrix of usage information is represented by
+𝑎 1,1 𝑎 1,2 · · · 𝑎 1,𝑘 
+
+
+𝑎 2,1 𝑎 2,2 · · · 𝑎 2,𝑘 
+
+
+
+
+𝐴𝑘,𝑘 = 𝑎 3,1 𝑎 3,2 · · · 𝑎 3,𝑘 
+ .
+
+.
+.
+.
+..
+..
+.. 
+ ..
+
+
+𝑎
+
+ 𝑘,1 𝑎𝑘,2 · · · 𝑎𝑘,𝑘 
+Let the patterns generated be represented as 𝑝 = (𝑝 1, 𝑝 2, 𝑝 3, ..., 𝑝𝑛 ).
+Each of 𝑝𝑖 may contain varying number of relationship links, for
+example 𝑘 1𝑘 2𝑘 5 in 𝑘𝑛 datasets indicates an association link between
+𝑘 1 ↔ 𝑘 2 , 𝑘 1 ↔ 𝑘 5 and 𝑘 2 ↔ 𝑘 5 such that their corresponding entries would have a value of 1. In the previous example, the number
+of relationship links was 3, in general there could be 𝑛 related links
+amongst datasets. We performed the experiments by training the
+right hemisphere with 𝑝𝑖 patterns initially where 𝑖 could be any
+value. To illustrate the concept of learning associations and exhibiting forgetfulness and recall, let us consider the initial value of 𝑖 to
+be 1. RH includes the Mapper which processes in parallel and splits
+the workloads into intermediate records. Internally for each pattern a corresponding weight matrix 𝑊𝑖,𝑗 is produced by the mapper.
+Now the memory of Hopfield networks contain pattern 𝑝𝑖 which
+is stored in the network. Let 𝛼 0 denote the instance at which 𝑝𝑖=1
+is trained. Test patterns can then be fed to the LH for predicting
+similarity of datasets. For a test pattern 𝑝𝑡𝑖=1 , the LH which includes
+the Reducer process, combines the individual weight matrices and
+then generates the closest matching pattern. The resulting pattern
+𝑟𝑖=1 is then used to calculate the number of bits of relationship links
+lost 𝛽 and new associations added 𝛾. We first retrieve the indices
+from both the test 𝑝𝑡𝑖=1 and result pattern 𝑟𝑖 . Let 𝜁 denote the index
+positions having associations. Then 𝜁 can be written as:
+𝜁𝑖,𝑗 = (𝑖, 𝑗) if 𝑋𝑖,𝑗 = 1
+(3)
+where 𝑋𝑖,𝑗 ∈ (𝑝𝑡𝑖 𝑗 , 𝑟𝑖 𝑗 , 𝑝𝑖 𝑗 ).
+From equation 3 we get a tuple of (𝑖, 𝑗) values for each of (𝑝𝑡𝑖 𝑗 , 𝑟𝑖 𝑗 , 𝑝𝑖 𝑗 ).
+We can map the index positions to retrieve the dataset labels. This
+gives the № dataset relations in each class of patterns.
+Let 𝑃𝑇 denote the set of data associations found from equation 3
+when 𝑋𝑖,𝑗 = 𝑝𝑡𝑖 𝑗 and 𝑅 be the set of associations from equation 3
+when 𝑋𝑖,𝑗 = 𝑟𝑖 𝑗 in the result pattern. We calculate 𝛽 as:
+
+Conference’17, July 2017, Washington, DC, USA
+
+𝛽 = 𝑃𝑇 ∩ c(𝑅)
+
+(4)
+
+In equation 4, c(𝑅) denotes the 𝑐𝑜𝑚𝑝𝑙𝑚𝑒𝑛𝑡 of result pattern 𝑅
+Similarly let 𝑃 contain the set of original associations present in
+Hopfield network, then 𝛾 is calculated as:
+
+𝛾 = 𝑅 ∩ c(𝑃)
+
+(5)
+
+In equation 5, c(𝑃) denotes the 𝑐𝑜𝑚𝑝𝑙𝑚𝑒𝑛𝑡 of original pattern 𝑃. At
+instance 𝛼 0 , from equation’s 4 and 5, we also calculate the cosine
+similarity between 𝑝𝑡𝑖 and 𝑝𝑖 , and between 𝑟𝑖 and 𝑝𝑖 . This gives us a
+similarity score between the patterns found in Hopfield’s memory to
+that of the test and result patterns. Higher scores indicate similarity
+to patterns stored in Hopfield network.
+
+5
+
+RESULTS
+
+When 𝑖 = 1, the value of 𝛽 and 𝛾 is 0 which indicates 100% recovery
+accuracy as no patterns are lost and no new associations are added.
+The result pattern 𝑟𝑖 has bits turned on (+1) for association links,
+which the model deduces as having similarity. This happens due
+to strengthening of the networks memory by storing similar usage
+information repeatedly. At instance 𝛼 1 , increasing the value of 𝑖 to
+𝑖 +1, we store more patterns (𝑝𝑖+1 ) which are not similar to the initial
+trained pattern 𝑝𝑖=1 in the Hopfield network. By having the same
+test pattern 𝑝𝑡𝑖=1 to predict, we observe that the values of both 𝛽 and
+𝛾 increase gradually thus diminishing the recovery accuracy. Higher
+value in 𝛽 indicates the forgetfulness experienced by the model. It
+also highlights the change in usage information behavior. The high
+value in 𝛾 denotes forming new associations which are closer to the
+patterns being currently stored in Hopfield’s memory from instance
+𝛼 1 onwards. It also means, that associations found in the test pattern
+has weaker relationships and is less likely to be frequently. This is
+a measure of the framework’s self-learning capacity. This behavior
+directly relates to the biological functioning of the human memory
+and adapting based on dynamic changes in usage information. The
+results and calculated metrics from these evaluations shows that
+our proposed model is able to identify similar datasets based on
+usage data.
+
+6
+
+CONCLUSIONS
+
+In this paper, we have introduced a cognitive and distributed framework for identifying similarity associations among datasets. Our
+model leverages MapReduce to process vast volumes of data efficiently, enabling scalable and parallel computations. Inspired by
+the dual processing mechanisms of the cerebral hemispheres in
+the human brain, our architecture incorporates neural associative
+memory for effective information retrieval and pattern recognition. The right hemisphere of our framework integrates modern
+Hopfield networks, a class of energy-based models renowned for
+their associative memory capabilities, to retrieve and encode similarity relations. The resurgence of Hopfield networks in deep learning—particularly their continuous-state generalization and capacity
+for high-dimensional memory storage—provides a biologically plausible mechanism for handling large-scale data associations. This
+
+Conference’17, July 2017, Washington, DC, USA
+
+design mirrors the right temporal lobe of the human brain, where
+memory recall and associative cognition predominantly occur. To
+enable efficient parallel computation of information usage, we incorporate the Mapper process, facilitating distributed similarity
+detection. The left hemisphere serves as the predictive reasoning
+unit, analogous to the Wernicke and Broca regions, which process
+and synthesize linguistic and conceptual knowledge. Here, the Reducer module integrates fragmented associative patterns from the
+right hemisphere and generates structured predictions regarding
+data similarity. This design aligns with deep learning methodologies where hierarchical feature integration plays a pivotal role in
+contextual understanding. Our evaluation metrics, including measures for identifying lost associations (𝛽) and predicting potential
+semantic relations (𝛾), demonstrate the efficacy of our model in cognitive data processing tasks. Beyond traditional applications in data
+cleaning, our framework is well-suited for contextual similarity
+discovery in large-scale datasets, an increasingly critical challenge
+in fields such as automated knowledge graph construction, information retrieval, and unsupervised learning for semantic inference.
+Future research will focus on extending our framework to leverage
+continuous Hopfield networks and transformer-based architectures
+for enhanced long-range dependencies and dynamic adaptation in
+real-time data environments.
+
+A
+
+APPENDIX
+
+In this appendix, we look at Hopfield Network’s equations and
+learning rules.
+
+A.1
+
+Hopfield Networks
+
+The following holds true regarding the weight matrix:
+• 𝑊𝑖,𝑖 = 0 ∀𝑖
+• 𝑊𝑖,𝑗 = 𝑊 𝑗,𝑖 ∀𝑖, 𝑗
+A.1.1 Update Modes. From [28] the update rule of Hopfield process
+for state 𝑠𝑖 is given by:
+
+Í
+1
+if 𝑤𝑖 + 𝑛𝑗=1 𝑤𝑖 𝑗 𝑠 𝑗 (𝑡) ≥ 𝜃
+𝑠𝑖 :=
+(6)
+−1 otherwise.
+Here 𝜃 is derived from TE described in section 4.2.2. In synchronous
+mode, each of the 𝑘 neurons simultaneously evaluates and updates
+its state. In asynchronous mode, neurons are chosen at random and
+updated one at a time .
+A.1.2 Learning Rules. Hebbian principle rests on the fact that when
+an axon of neuron 𝑖 repeatedly takes part in firing another neuron 𝑗,
+then the strength of connection between 𝑖 and 𝑗 increases. This rule
+is both local and incremental. it is implemented in the following
+manner, when learning 𝑘 binary patterns:
+Δ𝑤𝑖,𝑗 = 𝛼𝑥 𝑗 ∗ 𝑦𝑖
+(7)
+𝑝
+where 𝜖𝑖 represents bit 𝑖 from vector pattern 𝑝. Capacity of this rule
+is 0.14𝑘 where 𝑘 is number of distinct patterns. Gradual decay of
+memory is experienced over a period of time. Continued exposure
+to similar patterns results in a stronger memory retention while
+recalling.
+The main idea of Oja’s rule was to normalize each neuron to a value
+
+Ashwin Viswanathan K, Johnson P Thomas, and Abhimanyu Mukerji
+
+of 1 [24]. From [24], we present the equation for 𝑊𝑖,𝑗
+|𝑊𝑖 | = 1
+To achieve this, we add a 𝑉 factor such that:
+𝑚
+∑︁
+𝑉 =
+𝑊𝑖,𝑗 ∗ 𝑥 𝑘𝑗
+
+(8)
+
+(9)
+
+𝑘=1
+
+The weight matrix is updated by:
+𝑘+1
+𝑘
+𝑘
+𝑊𝑖,𝑗
+= 𝑊𝑖,𝑗
++ 𝑢 ∗ 𝑉 ∗ (𝑥 𝑘+1
+− 𝑉 ∗ 𝑊𝑖,𝑗
+)
+𝑗
+
+(10)
+
+REFERENCES
+[1] albertbup. 2017. A Python implementation of Deep Belief Networks built upon
+NumPy and TensorFlow with scikit-learn compatibility. https://github.com/
+albertbup/deep-belief-network
+[2] Apache Software Foundation. 2010. Hadoop. https://hadoop.apache.org
+[3] VL Bianki. 1984. Parallel and sequential information processing in animals as a
+function of different hemispheres. Neuroscience and behavioral physiology 14, 6
+(1984), 497–501.
+[4] OD Chernavskaya and DS Chernavskii. 2016. Natural-constructive approach to
+modeling the cognitive process. Biophysics 61, 1 (2016), 155–169.
+[5] OD Chernavskaya, DS Chernavskii, VP Karp, AP Nikitin, and DS Shchepetov.
+2013. An architecture of thinking system within the Dynamical Theory of
+Information. Biologically Inspired Cognitive Architectures 6 (2013), 147–158.
+[6] Olga Chernavskaya, Dmitry Chernavskii, and Yaroslav Rozhylo. 2017. On the
+Modelling an Artificial Cognitive System Based on the Human-Brain Architecture.
+In Advances in Neuroergonomics and Cognitive Engineering. Springer, 107–121.
+[7] Jaliya Ekanayake, Shrideep Pallickara, and Geoffrey Fox. 2008. Mapreduce for
+data intensive scientific analyses. In eScience, 2008. eScience’08. IEEE Fourth International Conference on. IEEE, 277–284.
+[8] Elkhonon Goldberg. 2006. The wisdom paradox: How your mind can grow stronger
+as your brain grows older. Penguin.
+[9] Elkhonon Goldberg. 2009. The new executive brain: Frontal lobes in a complex
+world. Oxford University Press.
+[10] Stephen Grossberg. 1982. Studies of Mind and Brain: Neural Principles of Learning, Perception, Development. Cognition, and Motor Control (Reidel, Boston, 1982)
+(1982).
+[11] Stephen Grossberg. 1987. The adaptive brain I: Cognition, learning, reinforcement,
+and rhythm. Vol. 42. Elsevier.
+[12] Neha Gupta. 2013. Artificial neural network. Network and Complex Systems 3, 1
+(2013), 24–28.
+[13] Donald Olding Hebb. 2005. The organization of behavior: A neuropsychological
+theory. Psychology Press.
+[14] John J Hopfield. 1982. Neural networks and physical systems with emergent
+collective computational abilities. Proceedings of the national academy of sciences
+79, 8 (1982), 2554–2558.
+[15] Teuvo Kohonen. 1990. The self-organizing map. Proc. IEEE 78, 9 (1990), 1464–
+1480.
+[16] John E Laird. 2008. Extending the Soar cognitive architecture. Frontiers in
+Artificial Intelligence and Applications 171 (2008), 224.
+[17] Kyong-Ha Lee, Yoon-Joon Lee, Hyunsik Choi, Yon Dohn Chung, and Bongki
+Moon. 2012. Parallel data processing with MapReduce: a survey. AcM sIGMoD
+Record 40, 4 (2012), 11–20.
+[18] Warren S McCulloch and Walter Pitts. 1990. A logical calculus of the ideas
+immanent in nervous activity. Bulletin of mathematical biology 52, 1 (1990),
+99–115.
+[19] Katja Niemann, Hans-Christian Schmitz, Maren Scheffel, and Martin Wolpers.
+2011. Usage contexts for object similarity: exploratory investigations. In Proceedings of the 1st International Conference on Learning Analytics and Knowledge.
+ACM, 81–85.
+[20] Erkki Oja. 1982. Simplified neuron model as a principal component analyzer.
+Journal of mathematical biology 15, 3 (1982), 267–273.
+[21] Badrul Sarwar, George Karypis, Joseph Konstan, and John Riedl. 2001. Item-based
+collaborative filtering recommendation algorithms. In Proceedings of the 10th
+international conference on World Wide Web. ACM, 285–295.
+[22] Robert L Solso, Otto H MacLin, and M Kimberly MacLin. 2013. Cognitive Psychology: Pearson New International Edition. Pearson Higher Ed.
+[23] John Stirling and Rebecca Elliott. 2010. Introducing neuropsychology. Psychology
+Press.
+[24] Tomasz Szandała. 2015. Comparison of Different Learning Algorithms for Pattern
+Recognition with Hopfield’s Neural Network. Procedia Computer Science 71 (2015),
+68–75.
+[25] Stijn Marinus Van Dongen. 2001. Graph clustering by flow simulation. Ph. D.
+Dissertation.
+
+Hopfield Networks Meet Big Data: A Brain-Inspired Deep Learning Framework for Semantic Data Linking
+
+[26] Haohan Wang, Bhiksha Raj, and Eric P Xing. 2017. On the Origin of Deep
+Learning. arXiv preprint arXiv:1702.07800 (2017).
+[27] Sun-Chong Wang. 2003. Artificial neural network. In Interdisciplinary computing
+in java programming. Springer, 81–100.
+
+Conference’17, July 2017, Washington, DC, USA
+
+[28] Wikipedia. 2017. Hopfield network — Wikipedia, The Free Encyclopedia. http://en.
+wikipedia.org/w/index.php?title=Hopfield%20network&oldid=786906437. [Online; accessed 24-August-2017].
+
+

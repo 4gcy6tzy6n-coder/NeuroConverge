@@ -1,0 +1,1392 @@
+Stochastic Synapses Enable Efficient Brain-Inspired Learning
+Machines
+
+arXiv:1511.04484v2 [cs.NE] 15 Dec 2016
+
+Emre Neftci1 , Bruno Pedroni2 , Siddharth Joshi3 , Maruan Al-Shedivat4 , and Gert
+Cauwenberghs2
+1
+
+Department of Cognitive Sciences, UC Irvine
+Department of Bioengineering, UC San Diego
+3
+Electrical and Computer Engineering Department, UC San Diego
+4
+Machine Learning Department, Carnegie Mellon University
+2
+
+Abstract
+Recent studies have shown that synaptic unreliability is a robust and sufficient mechanism
+for inducing the stochasticity observed in cortex. Here, we introduce Synaptic Sampling Machines, a class of neural network models that uses synaptic stochasticity as a means to Monte
+Carlo sampling and unsupervised learning. Similar to the original formulation of Boltzmann
+machines, these models can be viewed as a stochastic counterpart of Hopfield networks, but
+where stochasticity is induced by a random mask over the connections. Synaptic stochasticity
+plays the dual role of an efficient mechanism for sampling, and a regularizer during learning
+akin to DropConnect. A local synaptic plasticity rule implementing an event-driven form of
+contrastive divergence enables the learning of generative models in an on-line fashion. Synaptic sampling machines perform equally well using discrete-timed artificial units (as in Hopfield
+networks) or continuous-timed leaky integrate & fire neurons. The learned representations are
+remarkably sparse and robust to reductions in bit precision and synapse pruning: removal of
+more than 75% of the weakest connections followed by cursory re-learning causes a negligible
+performance loss on benchmark classification tasks. The spiking neuron-based synaptic sampling machines outperform existing spike-based unsupervised learners, while potentially offering
+substantial advantages in terms of power and complexity, and are thus promising models for
+on-line learning in brain-inspired hardware.
+
+1
+
+Introduction
+
+The brain’s cognitive power emerges from a collective form of computation extending over very large
+ensembles of sluggish, imprecise, and unreliable components. This realization spurred scientists
+and engineers to explore the remarkable mechanisms underlying biological cognitive computing by
+reverse engineering the brain in “neuromorphic” silicon, providing a means to validate hypotheses on
+neural structure and function through “analysis by synthesis”. Successful realizations of large-scale
+neuromorphic hardware [Indiveri et al., 2011; Park et al., 2014; Giulioni et al., 2015; Merolla et al.,
+2014; Schemmel et al., 2010; Benjamin et al., 2014] are confronted with challenges in configuring
+and deploying them for solving practical tasks, as well as identifying the domains of applications
+where such devices could excel. The central challenge is to devise a neural computational substrate
+that can efficiently perform the necessary inference and learning operations in a scalable manner
+using limited memory resources and limited computational primitives, while relying on temporally
+and spatially local information.
+1
+
+Recently, one promising approach to configure neuromorphic systems for practical tasks is to take
+inspiration from machine learning, namely artificial and deep neural networks. Despite the fact that
+neural networks were first inspired by biological neurons, the mapping of modern machine learning
+techniques onto neuromorphic architectures requires overcoming several conceptual barriers. This is
+because machine learning algorithms and artificial neural networks are designed to operate efficiently
+on digital processors, often using batch, discrete-time, iterative updates (lacking temporal locality),
+shared parameters and states (lacking spatial locality), and minimal interprocess communication
+that optimize the capabilities of GPUs or multicore processors.
+Here, we report a class of stochastic neural networks that overcomes this conceptual barrier
+while offering substantial improvements in terms of performance, power and complexity over existing
+methods for unsupervised learning in spiking neural networks. Similarly to how Boltzmann machines
+were first proposed [Hinton and Sejnowski, 1986], these neural networks can be viewed as a stochastic
+counterpart of Hopfield networks [Hopfield, 1982], but where stochasticity is caused by multiplicative
+noise at the connections (synapses).
+As in neural sampling [Berkes et al., 2011; Fiser et al., 2010], neural states (such as instantaneous
+firing rates or individual spikes) in our model are interpreted as Monte Carlo samples of a probability
+distribution. The source of the stochasticity in neural samplers is often unspecified, or is assumed to
+be caused by independent, background Poisson activities [Petrovici et al., 2013; Neftci et al., 2014].
+Background Poisson activity can be generated self-consistently in balanced excitatory-inhibitory
+networks [van Vreeswijk and Sompolinsky, 1996], or by using finite-size effects and neural mismatch
+[Amit and Brunel, 1997]. Although a large enough neural sampling network could generate its own
+stochasticity in this fashion, the variability in the spike trains decreases strongly as the firing rate
+increases [Fusi and Mattia, 1999; Moreno-Bote, 2014; Brunel, 2000], unless there is an external source
+of noise or some parameters are fine-tuned. Furthermore, when a neural sampling network generates
+its own noise, correlations in the background activity can play an adverse role in its performance
+[Probst et al., 2015]. Correlations can be mitigated by adding feed-forward connectivity between a
+balanced network (or other dedicated source of Poisson spike trains) and the neural sampler, but
+such solutions entail increased resources in neurons, connectivity and ultimately energy. Therefore,
+the above techniques for generating stochasticity are not ideal for neural sampling.
+On the other hand, synaptic unreliability can induce the necessary stochasticity without requiring a dedicated source of Poisson spike trains. The unreliable transmission of synaptic vesicles in
+biological neurons is a well studied phenomenon [Katz, 1966; Branco and Staras, 2009], and many
+studies suggested it as a major source of stochasticity in the brain [Faisal et al., 2008; Abbott and
+Regehr, 2004; Yarom and Hounsgaard, 2011; Moreno-Bote, 2014]. In the cortex, synaptic failures
+were argued to reduce energy consumption while maintaining the computational information transmitted by the post-synaptic neuron [Levy and Baxter, 2002]. More recent work suggested synaptic
+sampling as a mechanism for representing uncertainty in the brain [Aitchison and Latham, 2015],
+and its role in synaptic plasticity and rewiring [Kappel et al., 2015].
+We show that uncertainty at the synapse is sufficient in inducing the variability necessary for
+probabilistic inference in brain-like circuits. Strikingly, we find that the simplest model of synaptic unreliability, called blank-out synapses, can vastly improve the performance of spiking neural
+networks in practical machine learning tasks over existing solutions, while being extremely easy to
+implement in hardware [Goldberg et al., 2001], and often naturally occurring in emerging memory
+technologies [Saïghi et al., 2015; Al-Shedivat et al., 2015a; Yu et al., 2013]. In blank-out synapses,
+for each pre-synaptic spike-event, a synapse evokes a response at the post-synaptic neuron with
+a probability smaller than one. In the theory of stochastic processes, the operation of removing
+events from a point process with a probability p is termed p-thinning. Thinning a point process
+has the interesting property of making the process more Poisson-like. Along these lines, a recent
+2
+
+Figure 1: The Synaptic Sampling Machine (S2M). (a) At every occurrence of a pre-synaptic event,
+a pre-synaptic event is propagated to the post-synaptic neuron with probability p. (b) Synaptic
+stochasticity can be viewed as a continuous DropConnect method [Wan et al., 2013] where weights
+are masked by a binary matrix Θ(t), where ∗ denotes element-wise multiplication. (c) S2M Network
+architecture, consisting of a visible and a hidden layer.
+study showed that spiking neural networks endowed with stochastic synapses robustly generate
+Poisson-like variability over a wide range of firing rates [Moreno-Bote, 2014], a property observed
+in the cortex. The iterative process of adding spikes through neuronal integration and removing
+them through probabilistic synapses causes the spike statistics to be Poisson-like over a large range
+of firing rates. A neuron subject to other types of noise, such as white noise injected to the soma,
+spike jitter and random synaptic delays tends to fire more regularly for increasing firing firing rates.
+Given the strong inspiration from Boltzmann machines, and that probabilistic synapses are the
+main source of stochasticity for the sampling process, we name such networks Synaptic Sampling
+Machines (S2Ms) (Fig. 1). Synaptic noise in the S2M is not only an efficient mechanism for implementing stochasticity in spiking neural networks but also plays the role of a regularizer during
+learning, akin to DropConnect [Wan et al., 2013]. This technique was used to train artificial neural
+networks used multiplicative noise on one layer of a feed-forward network for regularization and
+decorrelation.
+Compared to the neural sampler used in [Neftci et al., 2014], the S2M comes at the cost of a
+quantitative link between the parameters of the probability distribution and those of the spiking
+neural network. In a machine learning task, this does not pose a problem since the parameters
+of the spiking neural network can be trained with a learning rule such as event-driven Contrastive
+Divergence (eCD). ECD is an on-line training algorithm for a subset of stochastic spiking neural
+networks [Neftci et al., 2014]: The stochastic neural network produces samples from a probability distribution, and Spike Timimg Dependent Plasticity (STDP) carries out the weight updates
+according to the Contrastive Divergence rule [Hinton, 2002] in an online, asynchronous fashion.
+S2Ms trained with eCD significantly outperform the Restricted Boltzmann Machine (RBM),
+reaching error rates in an MNIST hand-written digit recognition task of 4.4%, while using a fraction of the number of synaptic operations during learning and inference compared to our previous
+implementation [Neftci et al., 2014]. Furthermore, the system has two appealing properties: 1) The
+activity in the hidden layer is very sparse, with less than 10% of hidden neurons being active at any
+3
+
+time; 2) The S2M is remarkably robust to the pruning and the down-sampling of the weights: Upon
+pruning the top 80% of the connections (sorted by weight values) and re-training (32k samples), we
+observed that the error rate remained below 5%. Overall, the S2M outperforms existing models for
+unsupervised learning in spiking neural networks while potentially using a fraction of the resources,
+making it an excellent candidate for implementation in hardware.
+The article is structured as follows: In the Methods section, we first describe the S2M within
+a discrete-time framework to gain insight into the functionality of the sampling process. We then
+describe the continuous-time, spiking version of the S2M. In the Results section, we demonstrate
+the ability of S2Ms to learn generative models of the MNIST dataset, and illustrate some of its
+remarkable features.
+
+2
+
+Materials and Methods
+
+2.1
+
+The Synaptic Sampling Machine (S2M) as a Hopfield Network with Multiplicative Noise
+
+We first define the S2M as a modification of the original Boltzmann Machine. Boltzmann machines
+are Hopfield networks with thermal noise added to the neurons in order to avoid overfitting and
+falling into spurious local minima [Hinton and Sejnowski, 1986]. As in Boltzmann Machines, the
+S2M introduces a stochastic component to Hopfield networks. But rather than units themselves
+being noisy, in the S2M the connections are noisy.
+In the Hopfield network, neurons are threshold units:
+(
+ron if ui [t] ≥ 0
+zi [t] = Θ(ui [t]) =
+∀i,
+(1)
+roff if ui [t] < 0
+and connected recurrently through symmetric weights wij = wji , where ron > roff are two numbers
+indicating the values of the on and off states, respectively.
+For simplicity, we chose blank-out synapses as the model of multiplicative noise. With blank-out
+synapses, the synaptic input to Hopfield unit i is:
+ui [t + 1] =
+
+N
+X
+p
+ξij
+[t]zj [t]wij + bi ,
+
+(2)
+
+j=1
+p
+where ξij
+[t] ∈ {0, 1} is a Bernoulli process with probability p and bi is the bias. This corresponds to
+p
+a weighted sum of Bernoulli variables. Since the ξij
+[t] are independent, for large NPand p not close
+to 0 or 1, we can approximate this sum with a Gaussian with mean µi [t] = bi + j pwij zj [t] and
+P
+variance σi2 [t] = p(1 − p) j (wij zj [t])21 . So,
+
+ui [t + 1] = µi [t] + σi [t]ηi [t],
+
+(3)
+
+where η ∼ N (0, 1). In other terms ui [t + 1] ∼ N (µi [t], σi2 [t]). Since P (zi [t + 1] = 1|z[t]) =
+P (ui [t + 1] ≥ 0|z[t]), the probability that unit i is active given the network state is equal to one
+minus the cumulative distribution function of ui :
+
+
+
+1
+µi [t]
+√
+P (ui [t + 1] ≥ 0|z[t]) =
+1 + erf
+,
+2
+σi [t] 2
+1
+
+The Gaussian approximation of a sum of Bernouilli variables is deemed valid when N p, N (1 − p) > 5, where N
+is here the number of draws.
+
+4
+
+where “erf” stands for the error function. Plugging back to Eq. (1) gives:
+P (zi [t + 1] = 1|z[t]) = P (ui [t + 1] ≥ 0|z[t])
+
+
+ P
+bi
+1
+j wij zj [t] + p
+ ,
+= 1 + erf β qP
+2
+2
+2
+j wij zj [t]
+r
+p
+.
+β=
+2(1 − p)
+
+(4)
+
+This activation function is the S2M-equivalent of the activation function as defined for neurons
+of the Boltzmann machines (i.e. the logistic function). However, four properties distinguish the
+S2M from the Boltzmann machine: 1) The activation function is a (shifted) error function rather
+than the logistic function, 2) the synaptic contributions to each neuron i are normalized such that
+Euclidian norm of the vector (wi1 z1 , . . . , wiN zN )> is 1. Interestingly, this means that according to
+Eq. (4), a rescaling of the weights has the same effect of scaling the bias. If the biases are zero,
+the rescaling has no effect; 3) β, which depends on the probability of the synaptic blank-out noise
+and the network state, plays the role of thermal noise in the Boltzmann machine; and 4) In general,
+despite that the connectivity matrix is symmetric, the interactions in the S2M are asymmetric
+because the effective slope of the activation function depends on the normalizing factor of each
+neuron.
+In the general case, the last property described above suggest that the S2M cannot be expressed
+as an energy-based model (as in the case for Boltzmann machines), and therefore we cannot easily
+derive the joint distribution P (z[t]). Some insight can be gained in the particular case where
+ron = −roff . In this case, the denominator in Eq. (4) simplifies such that:
+P (zi [t + 1] = 1|z[t]) = P (ui [t + 1] ≥ 0|z[t])
+
+ P
+
+bi
+w
+z
+[t]
++
+1
+j ij j
+p 
+qP
+=
+1 + erf β
+.
+2
+2
+ron
+j wij
+
+(5)
+(6)
+
+2
+In other words: the standard deviation
+Pthe 2inputs σi does not depend on the neural states. With
+P 2 of
+the additional constraint that i wij = j wij , the connectivity matrix becomes symmetric. In this
+case, the resulting system is almost a Boltzmann machine, with the only exception that the neural
+activation function is an error function instead of the logistic function. Generally speaking, the error
+function is reasonably close to the logistic function after a rescaling of the argument. Therefore the
+parameters of a Boltzmann machine can be approximately mapped on the S2M with ron = −roff . To
+test the quality of this approximation, we compute the Kullback-Leibler (KL) divergence between
+an exact restricted Boltzmann distribution (Pexact ) and the distribution sampled by a S2M with
+ron = 1, roff = −1 Fig. 2. This computation is repeated in the case of the distribution obtained
+with Gibbs sampling in the RBM. In order to avoid zero probabilities, we added 1 to the number
+of occurrences of each state. As expected, the KL-divergence between the S2M and the exact
+distribution reaches a plateau due to the non-logistic activation function. However, the results show
+that in networks of this size the distribution sampled by the S2M has the same KL-divergence as
+the RBM obtained after 105 iterations of Gibbs sampling, which is more than the typical number
+of iterations used for many tasks [Hinton et al., 2006]. We premise that the S2Ms with all or none
+activation values (ron 6= roff = 0) behave in a manner that is sufficiently similar, so that learning in
+the S2M with Contrastive Divergence (CD) is approximately valid. In the Results section, we test
+this premise on the MNIST hand-written digit machine learning task.
+
+5
+
+Figure 2: KL-divergence between a restricted Boltzmann distribution (Pexact , 5 hidden units, 5 visible units) and the distribution sampled by a S2M with ron = 1, roff = −1 and matched parameters.
+As a reference, the KL-divergence using an RBM is shown (blue curve). The saturation of the green
+curve is caused by the inexact activation function of the S2M unit (error function instead of the
+logistic function).
+Learning Rule for RBM and S2Ms
+The training of RBMs proceeds in two phases. During the first “data” phase, the states of the
+visible units are clamped to a given vector of the training set, then the states of the hidden units are
+sampled. In a second “reconstruction” phase, the network is allowed to run freely. Using the statistics
+collected during sampling, the weights are updated in a way that they maximize the likelihood of
+the data. Collecting equilibrium statistics over the data distribution in the reconstruction phase is
+often computationally prohibitive. The CD algorithm has been proposed to mitigate this [Hinton,
+2002; Hinton and Salakhutdinov, 2006]: the reconstruction of the visible units’ activity is achieved
+by sampling them conditioned on the values of the hidden units. This procedure can be repeated k
+times (the rule is then called CDk ), but relatively good convergence is obtained for the equilibrium
+distribution even for one iteration. The CD learning rule is summarized as follows:
+∆wij = (hvi hj idata − hvi hj irecon ),
+
+(7)
+
+where vi and hj are the activities in the visible and hidden layers, respectively. The notations h·idata
+and h·irecon refer to expectations computed during the “data” phases and the “reconstruction” sample
+phases, respectively. The learning of the biases follows a similar rule. The learning rule for the S2M
+was identical to that of the RBM.
+
+2.2
+
+Spiking Synaptic Sampling Machines
+
+Neuron and Synapse Model
+Except for the noise model, the neuron and synapse models used in this work are identical to those
+described in [Neftci et al., 2014] and are summarized here for convenience. The neuron’s membrane
+potential below firing threshold θ is governed by the following differential equation:
+C
+
+d
+ui = −gL ui + Ii (t),
+dt
+
+ui (t) ∈ (−∞, θ),
+
+(8)
+
+where C is a membrane capacitance, ui is the membrane potential of neuron i, gL is a leak
+conductance, Ii (t) is the time-varying input current and θ is the neuron’s firing threshold. When
+the membrane potential reaches θ, an action potential is elicited. After a spike is generated, the
+membrane potential is clamped to the reset potential urst for a refractory period τr .
+6
+
+In the spiking S2M, the currents Ii (t) depend on the layer the neuron is situated in (visible v or
+hidden h). For a neuron i in the visible layer v
+Ii (t) =Iid (t) + Iiv (t),
+N
+
+h
+X
+d
+p
+τsyn Iiv (t) = − Iiv +
+ξh,ji
+(t)qji hj (t) + bvi ,
+dt
+
+(9)
+
+j=1
+
+where Iid (t) is a current representing the data (i.e. the external input), I v (t) is the feedback from the
+p
+hidden layer activity and the bias. The q’s are the respective synaptic weights, ξv,ij
+is a Bernoulli
+process (i.e. “coin flips”) with probability p implementing the stochasticity at the synapse, and bvi
+are constant currents representing the biases of the visible neurons. Spike trains are represented by
+a sum of Dirac delta pulses centered on the respective spike times:
+X
+X
+δ(t − tk )
+(10)
+δ(t − tk ), vi (t) =
+hj (t) =
+k∈Spvi
+
+k∈Sph
+j
+
+where Sphj , Spvj are the sets the spike times of the hidden neuron hj and visible neurons vi , respectively, and δ(t) = 1 if t = 0 and 0 otherwise.
+For a neuron j in the hidden layer h,
+Ij (t) =Ijh (t),
+N
+
+τsyn
+
+v
+X
+d h
+p
+Ij (t) = − Ijh +
+ξv,ij
+(t)qij vi (t) + bhj ,
+dt
+
+(11)
+
+i=1
+
+where I h (t) is the feedback from the visible layer, and v(t) are Poisson spike trains of the visible
+neurons defined in Eq. (10) and bhj are the biases of the hidden neurons. The dynamics of I h
+and I v correspond to a first-order linear filter, so each incoming spike results in Post–Synaptic
+Potentials (PSPs) that rise and decay exponentially (i.e. alpha-PSP) [Gerstner and Kistler, 2002].
+Event-Driven CD Synaptic Plasticity Rule
+Event-driven Contrastive Divergence is an online variation of CD amenable for implementation
+in neuromorphic and brain-inspired hardware: by interpreting spikes as samples of a probability
+distribution, a possible neural mechanism for implementing CD is to use STDP synapses to carry
+out CD-like updates.
+The weight update in eCD is a modulated, pair-based STDP rule with learning rate q :
+d
+qij = q g(t) STDPij (vi (t), hj (t))
+dt
+
+(12)
+
+where g(t) ∈ R is a zero-mean global gating signal controlling the data vs. reconstruction phase,
+qij is the weight of the synapse and vi (t) and hj (t) refer to the spike trains of neurons vi and hj ,
+defined as in Eq. (10). The same rule is applied to learn biases bv and bh :
+d
+bv
+dt i
+d
+bh
+dt i
+
+1
+= b g(t) STDPi (vi (t), vi (t)),
+2
+1
+= b g(t) STDPi (hi (t), hi (t)),
+2
+7
+
+(13)
+(14)
+
+where b is the learning rate of the biases. The weight update is governed by a symmetric STDP
+rule with temporal window K(t) = K(−t), ∀t:
+STDPij (vi (t), hj (t)) =vi (t)Ahj (t) + hj (t)Avi (t),
+Z t
+Ahj (t) =A
+dsK(t − s)hj (s),
+−∞
+
+(15)
+
+Z t
+Avi (t) =A
+
+dsK(s − t)vi (s),
+−∞
+
+with A > 0 defining the magnitude of the weight updates.
+Although any symmetric learning window can be used, for simplicity, we used a nearest neighbor
+update rule where:
+(
+1 if |t − s| < τST DP
+K(t − s) =
+0 otherwise
+In our implementation, updates are additive and weights can change polarity. A global modulatory
+signal that is synchronized with the data clamping phase modulates the learning to implement CD:
+
+if mod(t, 2T ) ∈ (τbr , T )
+
+1
+g(t) = −1 if mod(t, 2T ) ∈ (T + τbr , 2T ) ,
+(16)
+
+
+0
+otherwise.
+The signal g(t) switches the behavior of the synapse from Long-Term Potentiation (LTP) to LongTerm Depression (LTD) (i.e. Hebbian to Anti-Hebbian). The temporal average of g(t) vanishes to
+balance LTP and LTD. The modulation factor is zero during some time τbr , so that the network
+samples closer to its stationary distribution when the weights updates are carried out. The time
+constant τbr corresponds to a “burn-in” time of MCMC sampling and depends on the overall network
+dynamics. [Neftci et al., 2014] showed that, when pre-synaptic neurons and post-synaptic neurons
+fire according to Poisson statistics, eCD is equivalent to CD. The effective learning window is:
+ = 2A
+
+T − τbr
+.
+2T
+
+We note that the learning rate between the S2M and the spiking spiking S2M cannot be compared
+directly because there is no direct relationship between the synaptic weights q and w.
+In the spiking S2M, weight updates are carried out even if a spike is dropped at the synapse. This
+speeds up learning without adversely affecting the entire learning process because spikes dropped
+at the synapses are valid samples in the sense of the sampling process. During the data phase, the
+visible units were driven with constant currents equal to the logit of the pixel intensity (bounded
+to the range [10−5 , .98] in order to avoid infinitely large currents), plus a white noise process of low
+amplitude σ to simulate sensor noise.
+Synaptic Blank-out Noise
+Perhaps the simplest model of synaptic noise is the blank-out noise: for each spike-event, the
+synapse has a probability p of evoking a PSP, and a probability (1 − p) of evoking no response.
+This is equivalent to modifying the input spike train to each synapse such that spikes are dropped
+(blanked-out) with probability p. In particular, for a Poisson spike train of rate ν, the blank-out
+with probability p gives a Poisson spike train with rate pν [Goldberg et al., 2001; Parzen, 1999]. For
+8
+
+a periodic (regular) spike train, stochastic synapses add stochasticity to the system. The coefficient
+√
+of variation of the Inter–Spike Interval (ISI) becomes 1 − p. The periodic spike train thus tends
+to a Poisson spike train when p → 0, with the caveat that events occur at integer multiples of
+the original ISI. Intuitively, the neural network cycles through deterministic neural integration and
+stochastic synapses. [Moreno-Bote, 2014] found that the recurring process of adding spikes through
+neuronal integration and removing them through stochastic synapses causes the spike statistics to
+remain Poisson-like (constant Fano Factor) over a large dynamical range. Synaptic stochasticity
+is thus a biologically plausible source of stochasticity in spiking neural networks, and can be very
+simply implemented in software and hardware [Goldberg et al., 2001].
+Spiking Neural Networks with Poisson Input and Blank-out Synapses
+This section describes the neural activation function of leaky Integrate & Fire (I&F) neurons. The
+collective dynamics of spiking neural circuits driven by Poisson spike trains is often studied in the
+diffusion approximation [Wang, 1999; Brunel and Hakim, 1999; Brunel, 2000; Fusi and Mattia, 1999;
+Renart et al., 2003; Deco et al., 2008; Tuckwell, 2005]. In this approximation, the firing rates of
+individual neurons are replaced by a common time-dependent population activity variable with the
+same mean and two-point correlation function as the original variables, corresponding here to a
+Gaussian process. The approximation is true when the following assumptions are verified: 1) the
+charge delivered by each spike to the post-synaptic neuron is small compared to the charge necessary
+to generate an action potential, 2) there is a large number of afferent inputs to each neuron, 3) the
+spike times are uncorrelated. In the diffusion approximation, only the first two moments of the
+synaptic current are retained. The currents to the neuron, I(t), can then be decomposed as:
+I(t) = µ + ση(t),
+(17)
+P
+P
+where µ = hI(t)i = p j qj νj + b and σ 2 = p j qj2 νj , νj is the firing rate of pre-synaptic neuron
+j, and η(t) is the white noise process. Note that a Poisson spike train of mean rate ν with spikes
+removed with probability p is a Poisson spike train with parameter pν. As a result, blank-out
+synapses have the effect of scaling the mean and the variance by p.
+In this case, the neuron’s membrane potential dynamics is an Ornstein-Uhlenbeck process [Gardiner, 2012]. For simplicity of presentation, the reset voltage was set to zero (urst = 0). We consider
+the case where the synaptic time constant dominates the membrane time constant. In other words,
+the membrane potential closely follows the dynamics of the synaptic currents and the effect of the
+firing threshold and the reset in the distribution of the membrane potential can be neglected. This
+problem was studied in great detail with first order approximations in τm /τsyn [Petrovici et al.,
+2013]. For comparison with the S2M, we focus here on the case τm = 0. In this case, the stationary
+distribution is a Gaussian distribution:
+u ∼ N(
+
+µ
+σ2
+, 2
+).
+gL 2gL τsyn
+
+1
+. Following similar steps as in the
+Neurons such that p(u > 0|ν) fire at their maximum rate of τref
+S2M, the firing rate of a neuron i becomes:
+
+
+
+1 1
+µi √
+νi =
+1 + erf
+τsyn
+,
+τref 2
+σi
+
+ P
+
+(18)
+bi
+q
+ν
++
+ij
+j
+1 1
+√
+√
+j
+p
+=
+1 + erf  p qP
+τsyn  .
+τref 2
+q2 ν
+j ij j
+
+9
+
+Figure 3: The network architecture consists of a visible and a hidden layer. The visible layer
+is partitioned into 784 sensory (data) neurons (vd ) and 10 class label neurons (vc ). During data
+presentation, the activities in the visible layer are clamped to the data, consisting of a digit and its
+label (one-hot coded). In all models, the weight matrix between the visible layer and the hidden
+layer is symmetric.
+Eq. (18) clarifies how the noise amplitude σ affects the neural activation ν, and thus allows a
+quantitative comparison with the S2M. Similarly to Eq. (4), the input is effectively normalized
+by the variability in the inputs (where on/off values are replaced by firing rates). These strong
+similarities suggest that the S2M and the spiking neural network are very similar. Using computer
+simulations of the MNIST learning task, in the Results section we show that the two networks
+indeed perform similarly.
+
+2.3
+
+Training Protocol and Network Structure for MNIST
+
+RBM and the S2M The network consisted of 1294 neuron, partitioned into 794 visible neurons
+and 500 hidden neurons (Fig. 3). In the results, we used ron = 1 and rof f = 0 for the S2M
+neurons for a closer comparison with spiking neurons and the spiking S2M. The visible neurons
+were partitioned into 784 sensory (data) neurons, denoted vd and 10 class label neurons, denoted
+vc . The S2M is similar to the RBM in all manners, except that the units are threshold functions,
+and each weight is multiplied by independently drawn binomials (p = .5) at every step of the Gibbs
+sampling.
+In both cases the training set was randomly partitioned into batches of equal size Nbatch . One
+epoch is defined as the presentation of the full MNIST dataset (60000 digits). We used CD-1 to
+train the RBM and the S2M.
+Classification is performed by choosing the most likely label given the input, under the learned
+model. To estimate the discrimination performance, we sampled the distribution of class units
+P (class|digit) using multiple Gibbs Sampling chains (50 parallel chains, 2 steps). We take the
+classification result to be the label associated to the most active class unit averaged across all
+chains.
+For testing the discrimination performance of an energy-based model such as the RBM, it is
+common to compute the free-energy F (vc ) of the class units [Haykin, 1999], defined as:
+X
+exp(−F (vc )) =
+exp(−E(vd , vc , h)),
+(19)
+vd ,h
+
+and selecting vc such that the free-energy is minimized. The free-energy computes the probabilities
+of a given neuron to be active, using the joint distribution of the RBM. Classification using free
+10
+
+energy is inapplicable to S2Ms because it cannot be expressed in terms of an energy-based model
+(See Methods). Therefore, throughout the article, free energy-based classification was used only for
+the RBM.
+The learning rate in the RBM and the S2M was linearly reduced during the training, reaching
+0 at the end of the learning. Both RBM and S2M were implemented on a GPU using the Theano
+package [Bergstra et al., 2010].
+Spiking S2M The spiking S2M network structure is identical to above. Similarly to [Neftci et al.,
+2014], for a given digit, each neuron in layer v was injected with currents transformed according
+to a logit function Iid ∝ log 1−ssii τr , where si is the value of pixel i. To avoid saturation of the
+neurons using the logit function, the pixel values of the digits were bounded to the range [10−5 , .98]
+Training followed the eCD rule described in Eq. (12). The learning rate was decayed linearly
+during the training, reaching 0 at the end of the learning. Similarly to the S2M, the discrimination
+performance is evaluated by sampling the activities of the class units for every digit in the test
+dataset. In the spiking S2M, this is equivalent to identifying the neuron that has the highest firing
+rate. The spiking neural network was implemented in the spike-based neural simulator Auryn,
+optimized for recurrent spiking neural networks with synaptic plasticity [Zenke and Gerstner, 2014].
+Connections in the S2M are symmetric, but due to the constraints in the parallel simulator, the
+connections were implemented using two separate synapses (one in each direction), and periodically
+symmetrized to maintain symmetry (every 1000 s of simulated time). A complete list of parameters
+used in our simulator is provided in the appendix Tab. 2.
+
+3
+
+Results
+
+We demonstrate two different implementations of synaptic sampling machines, one spiking and one
+non-spiking. The non-spiking S2M is a variant of the original RBM, used to provide insight into
+the role of stochastic synapses in neural networks, and to justify spiking S2Ms. The spiking S2M
+consisted of a network of deterministic I&F spiking neurons, connected through stochastic (blankout) synapses (Fig. 1). In the Methods section, we show that S2Ms with activation values (−1, +1)
+are similar to Boltzmann machines, except that the activation function of the neuron is an error
+function instead of the logistic function, and where the input is invariant to rescaling. We assumed that the S2M with activation levels (0,1) and the spiking S2M are sufficiently similar to
+the Boltzmann distribution, such that CD and eCD as originally described in [Neftci et al., 2014]
+are approximately valid. We test this assumption through computer simulations of the S2Ms in
+an MNIST hand-written digit learning task. Independently, Müller explored the idea of unreliable
+connections in Hopfield units, reaching similar conclusion on the role of the blank-out probabilities
+in the Boltzmann temperature, as well as such networks being good approximations of restricted
+Boltzmann machines [Müller, 2015].
+
+3.1
+
+Unsupervised Learning of MNIST Handwritten Digits in Synaptic Sampling Machines
+
+Similarly to RBMs, S2Ms can be trained as generative models. Generative models have the advantage that they can act simultaneously as classifiers, content-addressable memories, and carry out
+probabilistic inference. We demonstrate these features in a MNIST hand-written digit task [LeCun
+et al., 1998], using networks consisting of two layers, one visible and one hidden (Fig. 3).
+
+11
+
+Figure 4: The S2M outperforms its RBM counterpart at the MNIST task. The RBM, the S2M and
+the continuous-time spiking S2M were trained to learn a generative model of MNIST handwritten
+digits. The S2M model is identical to the RBM except that it consists of threshold units with
+stochastic blank-out synapses with probability 50%. The recognition performance is assessed on
+the testing dataset which was not used during training (10000 digits). Error rate in the RBM starts
+increasing after reaching peak performance, mainly due to decreased ergodicity of the Markov chains
+and overfitting. Learning in the S2M is slower than in the RBM, as reported with other models
+using DropConnect [Wan et al., 2013] but it is effective in preventing overfitting. At the end of
+the training, the recognition performance of the spiking S2Ms (S3M) averaged over 8 runs with
+different seeds reached 4.6% error rate. Due to the computational load of running the spike-based
+simulations on the digital computer, the spiking S2M was halted earlier than the RBM and the S2M.
+In spite of the smaller number of digit presentations, the spiking S2M outperformed the RBM and
+the S2M. This is partly because weight updates in the spiking S2M are undertaken during each
+digit presentation, rather than after each minibatch. The curves are plotted up to the point where
+the best performance is reached.
+Learning results are summarized in Tab. 1. The spiking S2M appears to slightly outperform the
+S2M, although a direct comparison between the two is not possible because the sampling mechanism
+and the batch sizes are different. We find that spiking S2Ms attain classification error rates that
+slightly outperform the machine learning algorithm (error rates: spiking S2M 4.4% vs. RBM 5%),
+even after much fewer repetitions of the dataset (Fig. 4). To date, this is the best performing spikebased unsupervised learner on MNIST. The spiking network implementing the spiking S2M is many
+times smaller than the best performing spike-based unsupervised learner to date (1294 neurons
+800k synapses vs. 7184 neurons, 5M synapses) [Diehl and Cook, 2015]. For comparisons with other
+recent techniques for unsupervised learning in spiking neural networks, we refer the reader to [Diehl
+and Cook, 2015], which provides a recent survey of the MNIST learning task with spiking neural
+networks.
+We tested the speed of digit classification under the trained S2M. We computed the prediction
+after sampling for a fixed time window that we varied from 0ms to 300ms (Fig. 5). Results show
+that the trained network required approximately 250ms to reach the lowest error rate of 4.2%, and
+that only 13% of the predictions were incorrect after 50ms.
+Similarly to RBMs, the S2M learns a generative model of the MNIST dataset. This generative
+model allows to generate digits and reconstruct them when a part of the digit has been occluded.
+We demonstrate this feature in a pattern completion experiment where the right half of each digit
+was presented to the network, and the visible neurons associated to the left half of the digit were
+sampled (Fig. 6). In most cases, the S2M correctly completed the left half of the digit. Fig. 6 also
+illustrates the dynamics of the completion, which appears to reach a stationary state after about
+
+12
+
+Model, nH = 500, 60k digits training set
+spiking S2M + Event-driven CD (this work)
+spiking S2M + Event-driven CD + 74% connection pruning + relearning (this work)
+spiking S2M + Event-driven CD + 4 bit synaptic weights (this work)
+spiking S2M + Event-driven CD + 2 bit synaptic weights (this work)
+S2M + Standard CD (this work)
+Gibbs Sampling + Standard CD
+Neural Sampling + Event-driven CD [Neftci et al., 2014]
+Neural Sampling + Event-driven CD [Neftci et al., 2014] (5 bits post-learning rounding)
+
+MNIST Error
+4.4%
+5.0%
+5.2%
+7.8%
+4.5%
+4.7%
+8.1%
+10.6%
+
+Table 1
+
+Figure 5: Accuracy evaluation in the spiking S2M. To test recognition, for each digit in the test
+dataset (10000 digits), class neurons in the S2Ms are sampled for up to 300 ms. The classification is
+read out by identifying the group of class label neurons that had the highest activity and averaging
+over all digits of the test set. The error rate after 50 ms of sampling was above 13% and after 250 ms
+the error rates typically reached their minimum for this trained network (4.2%, horizontal bar).
+
+13
+
+Figure 6: Pattern completion in the spiking S2M. (a) The right half of a digit and its label is
+presented to the visible layer of the S2M. The ensuing activity in the visible layer is partitioned
+in 100 ms bins and the average activity during each bin is presented in the color plots to the right.
+The network completes the left half of the digit. (b) Raster plot of the pattern completion for the
+first row of panel (a).
+200ms. Overall, these results show that the S2M can achieve similar tasks as in RBMs, at a similar
+or better recognition performance while requiring fewer dataset iterations during learning.
+
+3.2
+
+Representations Learned with Synaptic Sampling Machines are Sparse
+
+In deep belief networks, discriminative performance can improve when using binary features that
+are only rarely active [Nair and Hinton, 2009]. Furthermore, in hardware sparser representations
+result in lower communication overhead, and therefore lower power consumption.
+To quantify the degree of sparsity in the RBM and the S2M, we computed the average fraction of
+active neurons. For a similar parametrization, the average activity ratio of S2Ms is much lower than
+that of RBMs (Fig. 7). RBMs can be trained to be sparse by added sparsity constraints during
+learning [Lee et al., 2008], but how such constraints can map to spiking neurons and synaptic
+plasticity rules is not straightforward. In this regard, it is remarkable that S2Ms are sparse without
+including any sparsity constraint in the model. The difference in S2M and the S3M curves is likely
+to be caused by different parameters in the spiking and the non-spiking S2M, as these cannot be
+exactly matched.
+One can gain an intuition on the cause for sparsity in the S2M by examining the network
+states during learning: In the absence of additive noise, the input-output profile of leaky I&F
+neurons near the rheobase (minimal current required to cause the neuron to spike) is rectifiedlinear. Consequently, without positive inputs and positive bias values, the spiking neuron cannot
+fire, and thus the pre-synaptic weights cannot potentiate. By selecting bias values at or below zero,
+this feature causes neurons in the network to be progressively recruited, thereby promoting sparsity.
+This is to be contrasted in the case of neurons with additive noise (such as white noise with constant
+amplitude), which can fire even if the inputs are well below rheobase. In the S2M, the progressive
+recruitment can be observed in Fig. 8: early in the training, hidden neurons are completely silent
+14
+
+Figure 7: For a similar parametrization, S2Ms learn sparser representations than RBMs. The curves
+plot the average number of active units during learning in the hidden layer, computed over 50 digits
+for the S2M and the RBM, and 1000 digits for the spiking S2M. In the case of the spiking S2M
+(S3M), the average activity ratio is the average firing rate of the neurons in the network divided by
+the maximum firing rate t−1
+ref . The colored dot indicates the point where the peak of the recognition
+accuracy was reached. Nearly three times fewer units were active in the S2M than in the RBM at
+the designated points, and even fewer in the case of the spiking S2M.
+during the reconstruction phase. Because there is no external stimulus during the reconstruction
+phase, only neurons that were active during the data phase are active during the reconstruction
+phase. After the presentation of 60 digits, the activity appears to “grow” from the data phase. Note
+that similar arguments can be made in the case of S2Ms implemented with threshold neurons.
+
+3.3
+
+Robustness of spiking S2Ms to Synapse Pruning and Weight Down-sampling
+
+Sparse networks that require using very few bits for storage can have a lower memory cost, along
+with a smaller communication and energy footprint. To test the storage requirements for the
+spiking S2M and its robustness to pruning connections, we removed all synapses whose weights
+were below a given threshold. We varied the threshold such that the ratio of remaining connections
+spanned the range [0%, 100%].
+The resulting recognition performance, plotted against the ratio of connections retained, is
+shown in Fig. 9a (black curve). We then re-trained the spiking S2M over 32 epochs and tested
+against 10, 000 images from the MNIST test dataset. The re-learning substantially recovered the
+performance loss caused by the weight pruning as shown in Fig. 9a (red curve). This result suggests
+that only a relatively small number of connections play a critical role in the underlying model for
+the recognition task.
+Learning Low Precision Weight Synapses
+Dedicated memory for storing the synaptic connectivity table and the synaptic weights often occupies the largest area in neuromorphic devices [Moradi and Indiveri, 2013; Merolla et al., 2014].
+Therefore, the ability to reduce the synaptic precision required for the operation of an algorithm
+can be very beneficial in hardware. We quantify the effects of lowered precision in inference by
+downsampling the synaptic weights, while performing computation at full precision. In the context
+of a hardware implementation, this results in lower memory costs since fewer bits can be used to
+store the same network. To test the performance of the spiking S2M with lowered resolution, we
+truncated the weights to a single decimal point. The resulting weights were restricted to less than
+128 unique values (7 bits). In Fig. 9b, we truncated the weights of the previously pruned network
+15
+
+Figure 8: (a-c) Spike rasters during eCD learning. The data phase is 0−50 ms and the reconstruction
+phase is 50 − 100 ms, repeated every 100 ms for a different digit of the training set. Due to the
+deterministic neural dynamics, a neuron receiving no input can never fire if its bias is below the
+rheobase (i.e. the minimum amount of current necessary to make a neuron fire). Consequently, at
+the beginning of learning, the hidden neurons are completely silent in the reconstruction phases,
+and are gradually recruited during the data phase of the eCD rule (e.g. see 50 ms in panel (b)).
+to 7 bits, and examined the results over the range of retained connections. The results of testing
+10,000 samples of MNIST on this network are shown in Fig. 9b. The error rate was about 8% with
+12.5% of the total synaptic weights retained and about 5% with 49% of the connections retained.
+Another recently proposed technique for reducing the precision of the weights while minimizing
+impact on performance is the dual-copy rounding technique [Stromatias et al., 2015]. In the context
+of our sampling machine, the key idea is to sample using reduced precision weights, but learn with
+full precision weights. Dual copy rounding was shown to outperform rounding of the weight after
+learning.
+Training the spiking S2M with dual-copy rounding at 4-bit weights (16 different weight values)
+resulted in 5.2% error rate at the MNIST task, and rounding at 2 bits (4 weight values) increased
+this number to 7.8%. Synaptic weight resolution of 4 bits is recognized as a sweet spot for hardware
+[Merolla et al., 2014; Pfeil et al., 2012]. Furthermore, it is a plausible synaptic weight precision for
+biological synapses: recent analysis of synapses in the rat Hippocampus suggested that each synapse
+could store about 4 to 5 bits of information [Bartol et al., 2015].
+We note that the dual-copy approach is only beneficial at the inference stage (post-learning).
+During inference, the high-precision weights can be dropped and only the low-precision weight are
+maintained. However, during learning it is necessary to maintain full precision weights. Learning
+with low precision weights is possible using stochastic rounding techniques [Muller and Indiveri,
+2015]. We could not test stochastic rounding in spiking S2Ms because the symmetry requirements in
+the spiking neural network connectivity prevent a direct, efficient implementation in multithreaded
+simulators (such as the used Auryn neural simulator).
+
+3.4
+
+Synaptic Operations and Energy Efficiency in S2Ms
+
+Power consumption in brain-inspired computers is often dominated by synaptic communication
+and plasticity. Akin to the energy required per multiply accumulate operation (MAC) in digital
+
+16
+
+Figure 9: Pruning connections in the spiking S2M and re-learning. (a) We test the spiking S2M’s
+robustness to synapse pruning by removing all connections whose weights were below a given threshold. We quantified the effects of pruning by testing the pruned spiking S2M over the entire MNIST
+test set (black curve). After pruning, we re-trained the network over 32 epochs (corresponding to
+32k sample presentations), which recovered most of the loss due to pruning (red curve). (b) Reduced
+synaptic weight precision in the spiking S2M. After learning, pruning and re-learning, the synaptic
+weights were downsampled by truncating them to a single decimal point. There remained fewer
+than 128 unique weight values in the final matrix. The horizontal line is at 4.4%.
+
+17
+
+computers, the energy required by each synaptic operation (SynOp) is one representative metric of
+the efficiency of brain-inspired computers [Merolla et al., 2014]. The reason is that every time one
+neuron spikes, a large number of synapses of other, possibly physically distant neurons are updated
+(in practice, hundreds to ten of thousands of synapses).
+A SynOp potentially consumes much less energy than a MAC even on targeted GPGPUs, and
+improvements in energy per SynOP directly translate into energy efficiencies at the level of the
+task. However, these operations are not directly comparable because it is unclear how many SynOps
+provide the equivalent of a MAC operation at a given task. To provide a reference to this comparison,
+we count the number of SynOps and approximate number of MACs necessary to achieve a target
+accuracy at the MNIST task for spiking S2Ms and RBMs, respectively (Fig. 10). Strikingly, the
+spiking S2M achieves SynOp-MAC parity at this task. Given that the energy efficiency of a SynOp
+is potentially orders of magnitude lower than the MAC [Park et al., 2014; Merolla et al., 2014], this
+result makes an extremely strong case for hardware implementations of spiking S2Ms. The possible
+reasons for this parity are twofold: 1) weight updates are undertaken after presentation of every digit,
+which mean that fewer repetitions of the dataset are necessary to achieve the same performance. 2)
+only active connections incur a SynOp. In the RBM, the operations necessary for computing the
+logistic function, random numbers at the neuron, and the weight updates were not taken into account
+and would further favor the spiking S2M. The operation necessary for the stochastic synapse in
+the spiking S2M (a Bernoulli trial) is likely to be minimal because the downstream synapse circuits
+do not need to be activated when the synapse fails to transmit. Furthermore, the robustness of
+spiking S2Ms to the pruning of connections (described in Sec. 3.3) can further strongly reduce the
+number of SynOps after learning.
+
+4
+
+Discussion
+
+The Boltzmann Machine stems from the idea of introducing noise into a Hopfield network [Hinton
+and Sejnowski, 1986]. The noise prevents the state from falling into local minima of the energy,
+enabling it to learn more robust representations while being less prone to overfitting. Following the
+same spirit, the S2M introduces a stochastic component to Hopfield networks, but rather than the
+units themselves being noisy, the connections are noisy.
+The stochastic synapse model we considered is blank-out noise, where the synaptic weight is
+multiplied by binary random variable. This is to be contrasted with additive noise, where the
+stochastic term such as a white noise process is added to the membrane potential. In artificial
+neural networks, multiplicative noise forces weights to become either sparse or invariant to rescaling
+[Nalisnick et al., 2015]. When combined with rectified linear activation functions, multiplicative
+noise tends to increase sparsity [Rudy et al., 2014]. Multiplicative noise makes neural responses
+sparser: In the absence of additive noise, neurons have activation functions very close to being
+rectified linear [Tuckwell, 2005]. In the absence of a depolarizing input, the neuron cannot fire, and
+thus its synapses cannot potentiate. Consequently, if the parameters are initiated properly, many
+neurons will remain silent after learning.
+Event-driven CD was first demonstrated in a spiking neural network that instantiated a Markov
+Chain Monte Carlo (MCMC) neural sampling of a target Boltzmann distribution [Neftci et al.,
+2014]. The classification performance of the original model was limited by two properties. First,
+every neuron was injected with a (additive) noisy current of very large amplitude. Neurally speaking,
+this corresponded to a background Poisson spike train of 1000 Hz, which considerably increased the
+network activity in the system. Second, in spite of the large input noise, neurons fired periodically
+at large firing rates due to an absolute refractory period. This periodic firing evoked strong spike-to-
+
+18
+
+Figure 10: The spiking S2M achieves SynOp-MAC parity at the MNIST task. The number of
+multiply-accumulate (MAC) operations required for sampling in the RBM during learning is compared to the number of synaptic operations (SynOps) in the spiking S2M during the MNIST learning
+task. At this task, the spiking S2M (S3M) requires fewer operations to reach the same accuracy
+during learning. Other necessary operations for the RBM, e.g. additions, random number generations, logistic function calls and weight updates were not taken into account here, and would further
+favor the spiking S2M. One reason for the SynOp-MAC parity is that learning in the spiking S2M
+requires fewer repetitions of data samples to reach the same accuracy compared to the RBM. Another reason is that only active connections in the spiking S2M incur a SynOp. SynOp-MAC parity
+between the spiking S2M and the RBM is very promising for hardware implementations because
+a SynOp in dedicated hardware potentially consumes much less power than a MAC in a general
+purpose digital processor. Note that the non-spiking S2M is not competitive on this measure because it requires N 2 random number generations per Gibbs sampling step in addition to the same
+number of MACs as the RBM. The curves are plotted up to the point where the best performance
+is reached.
+
+19
+
+spike correlations (synchrony) that were detrimental to the learning and the sampling. Consequently,
+the performance of eCD in an MNIST task was significantly lower than when standard CD was used
+(8.1% error rate).
+The performance of the spiking S2M in the MNIST hand-written digits task vastly improved
+accuracy metrics over our previous results while requiring a fraction of the number of synaptic
+operations. The reduction in the number of operations was possible because our previous neuron
+model required an extra background Poisson spike train for introducing noise, whereas the S2M
+generates noise through stochastic synapses. The improvement in accuracy over our earlier results
+in [Neftci et al., 2014] stems from at least two reasons: 1) Spike-to-spike decorrelations caused
+by the synaptic noise better condition the plasticity rule by preventing pair-wise synchronization;
+2) Regularization, which mitigates overfitting and the co-adaptation of the units. In the machine
+learning community, blank-out noise is also known as DropConnect [Wan et al., 2013]. It was
+demonstrated to perform regularization, which helped achieve state-of-the-art results on several
+image recognition benchmarks, including the best result so far on MNIST without elastic distortions
+(0.21%). Note that the S2M model did not include domain-specific knowledge, which suggests that
+its performance may generalize to other problems and datasets.
+
+4.1
+
+Synaptic Unreliability in the Brain
+
+The probabilistic nature of synaptic quantal release is a well known phenomenon [Katz, 1966].
+Unreliability is caused by the probabilistic release of neurotransmitters at the pre-synaptic terminals
+[Allen and Stevens, 1994]. Detailed slice and in vivo studies found that synaptic vesicle release
+in the brain can be extremely unreliable - typically 50% transmission rate and possibly as low
+as 10% in in vivo - at a given synapse [Branco and Staras, 2009; Borst, 2010]. Such synaptic
+unreliability can be a major source of noise in the brain [Calvin and Stevens, 1968; Faisal et al.,
+2008; Yarom and Hounsgaard, 2011; Abbott and Regehr, 2004]. Assuming neurons maximize the
+ratio of information theoretic channel capacity to axonal transmission energy, synaptic failures can
+lower energy consumption without lowering the transmitted computational information of a neuron
+[Levy and Baxter, 2002]. Interestingly, an optimal synaptic failure rate can be computed given
+the energetic cost synaptic and somatic activations. Another consequence of probabilistic synapses
+is that, via recurrent interactions in the networks, synaptic unreliability would be the cause of
+Poisson-like activity in the pre-synaptic input [Moreno-Bote, 2014].
+In the S2M, the multiplicative effect of the blank-out noise is manifested in the pre-synaptic
+input by making its variance dependent on the synaptic weights and the network states. Our
+theoretical analysis suggests that, in the S2M’s regime of operation, increased variability has the
+effect of reducing the sensitivity of the neuron to other synaptic inputs by flattening the neural
+transfer curve. With multiplicative noise, input variability can be high when pre-synaptic neurons
+with strong synaptic weights are active. In the S2M, such an activity pattern emerges when the
+probability of a given state under the learned model and the sensory data is high. That case suggests
+that the network has reached a good estimate and should not be easily modified by other evidence,
+which is the case when the neural transfer curve is flatter. Synaptic unreliability can thus play the
+role of a dynamic normalization mechanism in the neuron with direct implications on probabilistic
+inference and action selection in the brain.
+Aithchison and Latham suggested the “synaptic sampling hypothesis” whereby pre-synaptic
+spikes would draw samples from a distribution of synaptic weights [Aitchison and Latham, 2013].
+This process could be a mechanism used in the brain to represent uncertainty over the parameters
+of a learned model [Aitchison and Latham, 2014]. Stochasticity can be carried to the learning
+dynamics as well. Recent studies point to that fact, when learning the blank-out probability at the
+20
+
+synapses is also learned [Al-Shedivat et al., 2015b,a], the learned neural generative models capture
+richer representations, especially when labeled data is sparse. Kappel and colleagues also showed
+that stochasticity in the learning dynamics improves generalization capability of neural network.
+The blank-out noise model used in this work is a particular case of the studies above, whereby
+the weights of the synapses are either zero or the value of the stored weight with a fixed probability.
+In contrast to previous work, we studied the learning dynamics under this probabilistic synapse
+model within an otherwise deterministic recurrent neural network. Besides the remarkable fact
+that synaptic stochasticity alone is sufficient for sampling, it enables robust learning of sparse
+representations and an efficient implementation in hardware.
+Related Work on Mapping Machine Learned Models onto Neuromorphic Hardware
+Many approaches for configuring spiking neural networks rely on mapping pre-trained artificial
+neural networks onto spiking neural networks using a firing rate code [O’Connor et al., 2013; Diehl
+et al., 2015; Cao et al., 2014; Hunsberger and Eliasmith, 2015]. Many recent work show that the
+approximations incurred in brain-inspired and neuromorphic hardware platforms [Merolla et al.,
+2014; Neftci et al., 2014; Cao et al., 2014; Diehl et al., 2015; O’Connor et al., 2013; Das et al., 2015;
+Marti et al., 2015] including reduced bit precision [Stromatias et al., 2015; Muller and Indiveri, 2015;
+Marti et al., 2015] have a minor impact on performance. Standard artificial neural networks such
+as deep convolutional neural networks and recurrent neural networks trained with Rectified linear
+units (ReLU) can be mapped on spiking neurons by exploiting the threshold-linear of integrate & fire
+neurons [Diehl et al., 2015; Cao et al., 2014]. Such mapping techniques have the advantage that they
+can leverage the capabilities of existing machine learning frameworks such as Caffe [Jia et al., 2014]
+or pylearn2 [Goodfellow et al., 2013] for brain-inspired computers. Although mapping techniques do
+not offer a solution for on-line, real-time learning, they resulted in the best performing spike-based
+implementations on standard machine learning benchmarks such as MNIST and CIFAR.
+Related work on Online Learning with Spiking Neurons Training neural networks is a
+very time- and energy-consuming operation, often requiring multiple days on a computing cluster
+to produce state-of-the-art results. Using neuromorphic architectures for learning neural networks
+can have significant advantages from the perspectives of scalability, power dissipation and real-time
+interfacing with the environment. While embedded synapses require additional chip resources and
+usually prohibits the implementation of more complex rules, a recent survey of software simulators
+argues that dedicated learning hardware is a prerequisite for real-time learning (or faster) in spiking
+networks [Zenke and Gerstner, 2014]. This is because the speed-up margin of parallelism encounters
+a hard boundary due to latencies in the inter-process communications.
+The S2M is an ideal candidate for embedded, online learning, where plasticity is implemented
+locally using a dedicated on-chip device [Azghadi et al., 2014]. These operate on local memory
+(e.g. synaptic weights) using local information (e.g. neural events) which will lead to more scalable,
+faster and more power efficient learning compared to computer clusters, and the ability to adapt in
+real-time to changing environments.
+Previous work reported on on-line learning of MNIST classification with spiking neurons. A
+hierarchical spiking neural network with a STDP-like learning rule achieved 8% error rate on the
+MNIST task [Beyeler et al., 2013]. Using models of non-volatile memory devices as synapses and
+STDP learning, error rates of 6.3% were reported [Querlioz et al., 2015]. Diehl and Cook demonstrated the best results on unsupervised learning with spiking neural networks so far [Diehl and
+Cook, 2015]. Their network model is comparable to competitive learning algorithms where each
+neuron learns a representation of a portion of the input space. Their architecture could achieve
+
+21
+
+up to 5% error rate. The S2M outperformed this best result using a much smaller number of neurons and synapses and relying on dynamics that are more amenable to hardware implementations.
+However, the number of repetitions to reach this performance using the spiking S2M was larger
+than the above studies (512,000 presentations vs 40,000 in [Diehl and Cook, 2015]). Our neural
+sampling based architecture with stochastic neurons and deterministic synapses achieved peak performance after 15,000 samples [Neftci et al., 2014], suggesting that the slowness is partly caused by
+the stochastic connections. Similar results have been observed using the DropConnect algorithm
+[Wan et al., 2013].
+
+4.2
+
+Implementations of Synaptic Unreliability in Neuromorphic Hardware
+
+At least four studies reported the implementation of blank-out synapses for neuromorphic systems
+using the Address Event Representation (AER) [Goldberg et al., 2001; Corradi et al., 2014; Choudhary et al., 2012; Merolla et al., 2014]. In these studies, synaptic unreliability was mainly used as a
+mechanism for increasing the resolution of the synaptic weights in hardware (which is often binary).
+In fact, the mean of a synaptic current produced by a stochastic synapse is the probability times the
+weight of the synapse. By allowing the probability to take values with high precision, the effective
+resolution of the synapse weight can be increased. The downside is that this approach is valid
+only when the neural computations are rate-based, such as in the neural engineering framework
+[Eliasmith and Anderson, 2004] where synaptic unreliability in neuromorphic systems was primarily
+applied [Corradi et al., 2014; Choudhary et al., 2012].
+In rate-based models, the variability introduced by stochastic synapses is dealt with by averaging over large populations of neurons or by taking temporal averages. Implementations based on
+firing rate codes thus disregard spike times. From a hardware perspective, firing rate codes often
+raise the question whether a spike-based hardware platform is justifiable over a direct, dedicated
+implementation of the machine learning operations, or even a dedicated implementation of the rate
+dynamics [Wang et al., 2015]. In contrast, codes based on neural sampling, synaptic sampling or
+phase critically depend on spike statistics or the precise timing of the spikes. For example, in the
+S2M, synaptic unreliability and the variability that it causes are an integral part of the sampling
+process. The variability introduced by the multiplicative property of synaptic noise is exploited
+both as a mechanism that generates sigmoidal activation and that improves learning. Results from
+the network dynamics suggest that the introduced variability generates sparser representations,
+and in some cases are insensitive to parameter rescaling. Thus, our work suggests that synaptic
+unreliability can play much more active roles in information processing.
+The robustness and to synaptic pruning and weight down-sampling is a promising feature to further decrease the hardware footprint of S2M. However, these two features are currently introduced
+post-learning. Learning procedures that could introduce synaptic pruning and synaptic generation
+during (online) learning is the subject of future research.
+
+22
+
+σ
+p
+τr
+τsyn
+τbr
+gL
+urst
+C
+θ
+2T
+W
+
+Noise amplitude
+Blank-out probability at synapse
+Refractory period
+Time constant of recurrent, and bias synapses.
+“Burn-in” time of the neural sampling
+Leak conductance
+Reset Potential
+Membrane capacitance
+Firing threshold
+Epoch duration
+Initial weight matrix
+
+bv , bh
+
+Initial bias for layer v and h
+
+Tsim
+Nv , Nh
+
+Simulation time per epoch
+Number of visible and hidden units
+
+Nc
+Nsamples
+
+Number of class label units
+Total number of MNIST sample presentations
+
+τST DP
+q
+
+b
+
+Learning time window
+Learning rate for W
+
+nbatch
+W
+bh , bv
+
+Batch size
+Distribution of weight parameters
+Distribution of bias parameters
+
+Learning rate for bv , bh
+
+spiking S2M, visible neurons
+all models
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all spiking S2M
+all S2M, RBM
+all spiking S2M
+all S2M, RBM
+all spiking S2M
+all models,
+except in Fig. 2
+all models
+Fig. 4, spiking S2M
+Fig. 4, S2M, RBM
+all models
+all spiking S2M
+all S2M, RBM
+all spiking S2M
+all S2M, RBM
+all S2M, RBM
+Fig. 2
+Fig. 2
+
+Table 2: Parameters used for the neural networks.
+
+23
+
+4.47 nA
+.5
+4 ms
+4 ms
+10 ms
+1 nS
+0V
+1 pF
+100 mV
+100 ms
+N (0, .3)
+N (0, .1)
+−.15
+0
+100 s
+794, 500
+5, 5
+10
+512000
+75 · 106
+10 ms
+3.85 · 10−6
+.025
+1.43 · 10−5
+.025
+50
+N (−.3, 1.5)
+N (0, 1.5)
+
+5
+
+Acknowledgments
+
+We thank Friedemenn Zenke for support on the Auryn simulator and discussion.
+This work funded by the National Science Foundation (NSF CCF-1317373, EN, BP, SJ, GC), the
+Office of Naval Research (ONR MURI 14-13-1-0205, EN, BP), and Intel Corporation (EN, GC).
+
+References
+Abbott L. and Regehr W. Synaptic computation. Nature, 431:796–803, October 2004.
+Aitchison L. and Latham P. The synaptic sampling hypothesis. Cosyne Abstracts, 2013.
+Aitchison L. and Latham P. E. Bayesian synaptic plasticity makes predictions about plasticity
+experiments in vivo. arXiv preprint arXiv:1410.1029, 2014.
+Aitchison L. and Latham P. E. Synaptic sampling: A connection between PSP variability and
+uncertainty explains neurophysiological observations. ArXiv e-prints, May 2015.
+Al-Shedivat M., Naous R., Neftci E., Cauwenberghs G., and Salama K. Inherently stochastic spiking
+neurons for probabilistic neural computation. In IEEE EMBS Conference on Neural Engineering,
+Apr 2015a. (accepted).
+Al-Shedivat M., Neftci E., and Cauwenberghs G. Neural generative models with stochastic synapses
+capture richer representations. In Cosyne Abstracts, May 2015b. URL https://www.dropbox.
+com/s/eafcpxn1optdhiz/Al-Shedivat_etal15.pdf?dl=0. (accepted).
+Allen C. and Stevens C. F. An evaluation of causes for unreliability of synaptic transmission.
+Proceedings of the National Academy of Sciences, 91(22):10380–10383, 1994.
+Amit D. and Brunel N. Dynamics of a recurrent network of spiking neurons before and following
+learning. Network: Computation in Neural Systems, 8(4):373–404, 1997. ISSN 0954-898X.
+Azghadi R., Iannella N., Al-Sarawi S., Indiveri G., and Abbott D. Spike-based synaptic plasticity
+in silicon: design, implementation, application, and challenges. Proceedings of the IEEE, 102(5):
+717–737, 2014.
+Bartol T. M., Bromer C., Kinney J. P., Chirillo M. A., Bourne J. N., Harris K. M., and Sejnowski
+T. J. Hippocampal spine head sizes are highly precise. bioRxiv, page 016329, 2015.
+Benjamin B. V., Gao P., McQuinn E., Choudhary S., Chandrasekaran A. R., Bussat J., AlvarezIcaza R., Arthur J. V., Merolla P., and Boahen K. Neurogrid: A mixed-analog-digital multichip
+system for large-scale neural simulations. Proceedings of the IEEE, 102(5):699–716, 2014.
+Bergstra J., Breuleux O., Bastien F., Lamblin P., Pascanu R., Desjardins G., Turian J., WardeFarley D., and Bengio Y. Theano: a CPU and GPU math expression compiler. In Proceedings of
+the Python for Scientific Computing Conference (SciPy), volume 4, 2010.
+Berkes P., Orbán G., Lengyel M., and Fiser J. Spontaneous cortical activity reveals hallmarks of
+an optimal internal model of the environment. Science, 331(6013):83–87, 2011.
+
+24
+
+Beyeler M., Dutt N. D., and Krichmar J. L. Categorization and decision-making in a neurobiologically plausible spiking network using a stdp-like learning rule. Neural Networks, 48:
+109–124, 2013. ISSN 0893-6080. doi: http://dx.doi.org/10.1016/j.neunet.2013.07.012. URL
+http://www.sciencedirect.com/science/article/pii/S0893608013001986.
+Borst J. G. G. The low synaptic release probability in vivo. Trends in neurosciences, 33(6):259–266,
+2010.
+Branco T. and Staras K. The probability of neurotransmitter release: variability and feedback
+control at single synapses. Nature Reviews Neuroscience, 10(5):373–383, 2009.
+Brunel N. Dynamics of sparsely connected networks of excitatory and inhibitory spiking neurons.
+Journal of computational neuroscience, 8(3):183–208, 2000.
+Brunel N. and Hakim V. Fast global oscillations in networks of integrate-and-fire neurons with low
+firing rates. Neural Computation, 11(7):1621–1671, 1999. ISSN 0899-7667.
+Calvin W. H. and Stevens C. F. Synaptic noise and other sources of randomness in motoneuron
+interspike intervals. J Neurophysiol, 31(4):574–587, 1968.
+Cao Y., Chen Y., and Khosla D. Spiking deep convolutional neural networks for energy-efficient
+object recognition. International Journal of Computer Vision, pages 1–13, 2014.
+Choudhary S., Sloan S., Fok S., Neckar A., Trautmann E., Gao P., Stewart T., Eliasmith C., and
+Boahen K. Silicon neurons that compute. In Villa A., Duch W., Érdi P., Masulli F., and Palm
+G., editors, Artificial Neural Networks and Machine Learning – ICANN 2012, volume 7552 of
+Lecture Notes in Computer Science, pages 121–128. Springer Berlin / Heidelberg, 2012. ISBN
+978-3-642-33268-5. doi: 10.1007/978-3-642-33269-2_16.
+Corradi F., Eliasmith C., and Indiveri G. Mapping arbitrary mathematical functions and dynamical
+systems to neuromorphic vlsi circuits for spike-based neural computation. In Circuits and Systems
+(ISCAS), 2014 IEEE International Symposium on, pages 269–272. IEEE, 2014.
+Das S., Pedroni B. U., Merolla P., Arthur J., Cassidy A. S., Jackson B. L., Modha D., Cauwenberghs
+G., and Kreutz-Delgado K. Gibbs sampling with low-power spiking digital neurons. In Circuits
+and Systems (ISCAS), 2015 IEEE International Symposium on, pages 2704–2707. IEEE, 2015.
+Deco G., Jirsa V., Robinson P., Breakspear M., and Friston K. The dynamic brain: From spiking
+neurons to neural masses and cortical fields. PLoS Comput Biol, 4(8):e1000092, 2008.
+Diehl P. U. and Cook M. Unsupervised learning of digit recognition using spike-timing-dependent
+plasticity. Frontiers in Computational Neuroscience, 9:99, 2015.
+Diehl P. U., Neil D., Binas J., Cook M., Liu S.-C., and Pfeiffer M. Fast-classifying, high-accuracy
+spiking deep networks through weight and threshold balancing. In International Joint Conference
+on Neural Networks (IJCNN),, pages 1–8. IEEE, 2015.
+Eliasmith C. and Anderson C. Neural engineering: Computation, representation, and dynamics in
+neurobiological systems. MIT Press, 2004.
+Faisal A. A., Selen L. P., and Wolpert D. M. Noise in the nervous system. Nature Reviews Neuroscience, 9(4):292–303, 2008.
+
+25
+
+Fiser J., Berkes P., Orbán G., and Lengyel M. Statistically optimal perception and learning: from
+behavior to neural representations. Trends in cognitive sciences, 14(3):119–130, 2010.
+Fusi S. and Mattia M. Collective behavior of networks with linear (VLSI) integrate and fire neurons.
+Neural Computation, 11:633–52, 1999.
+Gardiner C. W. Handbook of stochastic methods. 2012.
+Gerstner W. and Kistler W. Spiking Neuron Models. Single Neurons, Populations, Plasticity. Cambridge University Press, 2002.
+Giulioni M., Corradi F., Dante V., and del Giudice P. Real time unsupervised learning of visual
+stimuli in neuromorphic vlsi systems. Scientific Reports, 5:14730 EP –, Oct 2015. URL http:
+//dx.doi.org/10.1038/srep14730. Article.
+Goldberg D., Cauwenberghs G., and Andreou A. Probabilistic synaptic weighting in a reconfigurable
+network of VLSI integrate-and-fire neurons. Neural Networks, 14(6–7):781–793, Sep 2001.
+Goodfellow I. J., Warde-Farley D., Lamblin P., Dumoulin V., Mirza M., Pascanu R., Bergstra
+J., Bastien F., and Bengio Y. Pylearn2: a machine learning research library. arXiv preprint
+arXiv:1308.4214, 2013. URL http://arxiv.org/abs/1308.4214.
+Haykin S. S. Neural networks: A comprehensive foundation, 1999.
+Hinton G. and Salakhutdinov R. Reducing the dimensionality of data with neural networks. Science,
+313(5786):504–507, 2006.
+Hinton G. and Sejnowski T. Learning and relearning in boltzmann machines. MIT Press, Cambridge,
+Mass, 1:282–317, 1986.
+Hinton G., Osindero S., and Teh Y. A fast learning algorithm for deep belief nets. Neural computation, 18(7):1527–1554, 2006.
+Hinton G. E. Training products of experts by minimizing contrastive divergence. Neural computation, 14(8):1771–1800, 2002.
+Hopfield J. Neural networks and physical systems with emergent collective computational abilities.
+Proceedings of the national academy of sciences, 79(8):2554–2558, 1982.
+Hunsberger E. and Eliasmith C.
+arXiv:1510.08829, 2015.
+
+Spiking deep networks with lif neurons.
+
+arXiv preprint
+
+Indiveri G., Linares-Barranco B., Hamilton T., van Schaik A., Etienne-Cummings R., Delbruck
+T., Liu S.-C., Dudek P., Häfliger P., Renaud S., Schemmel J., Cauwenberghs G., Arthur J.,
+Hynna K., Folowosele F., Saighi S., Serrano-Gotarredona T., Wijekoon J., Wang Y., and Boahen K. Neuromorphic silicon neuron circuits. Frontiers in Neuroscience, 5:1–23, 2011. ISSN
+1662-453X. doi: 10.3389/fnins.2011.00073. URL http://www.frontiersin.org/Neuromorphic_
+Engineering/10.3389/fnins.2011.00073/abstract.
+Jia Y., Shelhamer E., Donahue J., Karayev S., Long J., Girshick R., Guadarrama S., and Darrell
+T. Caffe: Convolutional architecture for fast feature embedding. arXiv preprint arXiv:1408.5093,
+2014.
+
+26
+
+Kappel D., Habenschuss S., Legenstein R., and Maass W. Network plasticity as bayesian inference.
+arXiv preprint arXiv:1504.05143, 2015.
+Katz B. Nerve, muscle, and synapse. McGraw-Hill New York, 1966.
+LeCun Y., Bottou L., Bengio Y., and Haffner P. Gradient-based learning applied to document
+recognition. Proceedings of the IEEE, 86(11):2278–2324, 1998.
+Lee H., Ekanadham C., and Ng A. Y. Sparse deep belief net model for visual area v2. In Advances
+in neural information processing systems, pages 873–880, 2008.
+Levy W. B. and Baxter R. A. Energy-efficient neuronal computation via quantal synaptic failures.
+The Journal of Neuroscience, 22(11):4746–4755, 2002.
+Marti D., Rigotti M., Seok M., and Fusi S. Energy-efficient neuromorphic classifiers. arXiv preprint
+arXiv:1507.00235, 2015.
+Merolla P. A., Arthur J. V., Alvarez-Icaza R., Cassidy A. S., Sawada J., Akopyan F., Jackson B. L.,
+Imam N., Guo C., Nakamura Y., and others . A million spiking-neuron integrated circuit with a
+scalable communication network and interface. Science, 345(6197):668–673, 2014.
+Moradi S. and Indiveri G. An event-based neural network architecture with an asynchronous programmable synaptic memory. IEEE Transactions on Biomedical Circuits and Systems, March
+2013. doi: 10.1109/TBCAS.2013.2255873.
+Moreno-Bote R. Poisson-like spiking in circuits with probabilistic synapses. PLoS computational
+biology, 10(7):e1003522, 2014.
+Müller L. Algorithms for Massively Parallel, Event-Based Hardware. PhD thesis, ETH Zürich, 2015.
+Muller L. K. and Indiveri G. Rounding methods for neural networks with low resolution synaptic
+weights. arXiv preprint arXiv:1504.05767, 2015.
+Nair V. and Hinton G. E. 3d object recognition with deep belief nets. In Bengio Y., Schuurmans
+D., Lafferty J., Williams C., and Culotta A., editors, Advances in Neural Information Processing
+Systems 22, pages 1339–1347. Curran Associates, Inc., 2009. URL http://papers.nips.cc/
+paper/3872-3d-object-recognition-with-deep-belief-nets.pdf.
+Nalisnick E., Anandkumar A., and Smyth P. A scale mixture perspective of multiplicative noise in
+neural networks. arXiv preprint arXiv:1506.03208, 2015.
+Neftci E., Das S., Pedroni B., Kreutz-Delgado K., and Cauwenberghs G. Event-driven contrastive
+divergence for spiking neuromorphic systems. Frontiers in Neuroscience, 7(272), Jan. 2014. ISSN
+1662-453X. doi: 10.3389/fnins.2013.00272. URL http://www.frontiersin.org/neuromorphic_
+engineering/10.3389/fnins.2013.00272/abstract.
+O’Connor P., Neil D., Liu S.-C., Delbruck T., and Pfeiffer M. Real-time classification and sensor fusion with a spiking deep belief network. Frontiers in Neuroscience, 7(178), 2013. ISSN
+1662-453X. doi: 10.3389/fnins.2013.00178. URL http://www.frontiersin.org/neuromorphic_
+engineering/10.3389/fnins.2013.00178/abstract.
+
+27
+
+Park J., Ha S., Yu T., Neftci E., and Cauwenberghs G. A 65k-neuron 73-mevents/s 22-pj/event asynchronous micro-pipelined integrate-and-fire array transceiver. In Biomedical Circuits and Systems
+Conference (BioCAS). IEEE, Oct. 2014. URL https://www.dropbox.com/s/mwex6dnytnjhew7/
+Park_etal14.pdf?dl=0.
+Parzen E. Stochastic processes, volume 24. SIAM, 1999.
+Petrovici M. A., Bill J., Bytschok I., Schemmel J., and Meier K. Stochastic inference with deterministic spiking neurons. arXiv preprint arXiv:1311.3211, Nov 2013.
+Pfeil T., Potjans T. C., Schrader S., Potjans W., Schemmel J., Diesmann M., and Meier K. Is a 4-bit
+synaptic weight resolution enough? - constraints on enabling spike-timing dependent plasticity
+in neuromorphic hardware. Frontiers in Neuroscience, 6, 2012. ISSN 1662-453X. doi: 10.3389/
+fnins.2012.00090. URL http://www.frontiersin.org/Journal/Abstract.aspx?s=755&name=
+neuromorphic_engineering&ART_DOI=10.3389/fnins.2012.00090.
+Probst D., Petrovici M. A., Bytschok I., Bill J., Pecevski D., Schemmel J., and Meier K. Probabilistic inference in discrete spaces can be implemented into networks of lif neurons. Frontiers in
+computational neuroscience, 9, 2015.
+Querlioz D., Bichler O., Vincent A. F., and Gamrat C. Bioinspired programming of memory devices
+for implementing an inference engine. Proceedings of the IEEE, 103(8):1398–1416, 2015.
+Renart A., Brunel N., and Wang X. Computational Neuroscience: A Comprehensive Approach,
+chapter Mean field theory of irregularly spiking neuronal populations and working memory in
+recurrent cortical networks, pages 431–490. Chapman and Hall, Boca Raton, 2003.
+Rudy J., Ding W., Im D. J., and Taylor G. W. Neural network regularization via robust weight
+factorization. arXiv preprint arXiv:1412.6630, 2014.
+Saïghi S., Mayr C. G., Serrano-Gotarredona T., Schmidt H., Lecerf G., Tomas J., Grollier J., Boyn
+S., Vincent A. F., Querlioz D., and others . Plasticity in memristive devices for spiking neural
+networks. Frontiers in neuroscience, 9, 2015.
+Schemmel J., Brüderle D., Grübl A., Hock M., Meier K., and Millner S. A wafer-scale neuromorphic
+hardware system for large-scale neural modeling. In International Symposium on Circuits and
+Systems, ISCAS 2010, pages 1947–1950. IEEE, 2010.
+Stromatias E., Neil D., Pfeiffer M., Galluppi F., Furber S. B., and Liu S.-C. Robustness of spiking
+deep belief networks to noise and reduced bit precision of neuro-inspired hardware platforms.
+Frontiers in neuroscience, 9, 2015.
+Tuckwell H. C. Introduction to theoretical neurobiology: volume 2, nonlinear and stochastic theories,
+volume 8. Cambridge University Press, 2005.
+van Vreeswijk C. and Sompolinsky H. Chaos in neuronal networks with balanced excitatory and
+inhibitory activity. Science, 274(5293):1724–1726, December 1996.
+Wan L., Zeiler M., Zhang S., Cun Y. L., and Fergus R. Regularization of neural networks using
+dropconnect. In Proceedings of the 30th International Conference on Machine Learning (ICML13), pages 1058–1066, 2013.
+
+28
+
+Wang R., Thakur C. S., Hamilton T. J., Tapson J., and van Schaik A. A neuromorphic hardware architecture using the neural engineering framework for pattern recognition. arXiv preprint
+arXiv:1507.05695, 2015.
+Wang X. Synaptic basis of cortical persistent activity: the importance of NMDA receptors to
+working memory. J. Neurosci., 19:9587–9603, November 1999.
+Yarom Y. and Hounsgaard J. Voltage fluctuations in neurons: signal or noise?
+Reviews, 91(3):917–929, 2011.
+
+Physiological
+
+Yu S., Gao B., Fang Z., Yu H., Kang J., and Wong H.-S. P. Stochastic learning in oxide binary
+synaptic device for neuromorphic computing. Frontiers in neuroscience, 7, 2013.
+Zenke F. and Gerstner W. Limits to high-speed simulations of spiking neural networks using generalpurpose computers. Frontiers in neuroinformatics, 8, 2014.
+
+29
+
+

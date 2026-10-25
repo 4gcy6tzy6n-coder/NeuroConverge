@@ -1,0 +1,3024 @@
+Orangutan: A Multiscale Brain Emulation-Based Artificial Intelligence
+Framework for Dynamic Environments
+Yong Xie
+Alibaba Group
+Hangzhou, China
+
+arXiv:2406.15488v1 [q-bio.NC] 18 Jun 2024
+
+laola.xy@taobao.com
+
+Abstract— Achieving General Artificial Intelligence (AGI)
+has long been a grand challenge in the field of AI, and braininspired computing is widely acknowledged as one of the most
+promising approaches to realize this goal. This paper introduces
+a novel brain-inspired AI framework, Orangutan. It simulates
+the structure and computational mechanisms of biological
+brains on multiple scales, encompassing multi-compartment
+neuron architectures, diverse synaptic connection modalities,
+neural microcircuits, cortical columns, and brain regions, as
+well as biochemical processes including facilitation, feedforward
+inhibition, short-term potentiation, and short-term depression,
+all grounded in solid neuroscience. Building upon these highly
+integrated brain-like mechanisms, I have developed a sensorimotor model that simulates human saccadic eye movements
+during object observation. The model’s algorithmic efficacy was
+validated through testing with the observation of handwritten
+digit images.
+
+I. I NTRODUCTION
+As the ultimate goal in the field of artificial intelligence,
+General Artificial Intelligence (AGI) refers to AI that reaches
+human-level intelligence across all aspects. To achieve this
+ambition, the development of AI has drawn immense inspiration and insight from natural intelligence [1]. Among
+these, AI frameworks represented by Deep Neural Networks
+(DNN) have achieved significant success in intelligent tasks
+such as image [2], [3] and speech recognition [4].
+Although DNNs have reached or even surpassed human
+performance in certain domains, they suffer from poor generalization, high dependency on data, lack of interpretability,
+and limited adaptability to environmental changes. These
+shortcomings pose significant challenges in advancing towards AGI. Many scholars attribute these limitations to
+the stark differences between the internal representations of
+DNNs and the neural activity patterns in biological brains,
+arguing that DNNs lack biological plausibility and struggle to
+match the high efficiency and dynamism of biological neural
+systems in information processing.
+In pursuit of AI pathways that more closely mimic brain
+operational mechanisms, numerous intelligence models and
+frameworks inspired by neuroscience have been proposed
+over the past decades. At the microscale, there are models
+like the HodgkinHuxley (H-H) model [5], which simulates neuronal action potentials through nonlinear differential equations, and the simpler Integrate-and-Fire (IF) and
+Leaky Integrate-and-Fire (LIF) spiking neuron models. At
+
+the mesoscale, models like the Hierarchical Temporal Memory (HTM) [6] simulate brain cortical column structures,
+alongside theories such as the Thousand Brains Theory [7].
+At the macroscale, spiking neural networks [8] and the
+STDP learning algorithm [9], based on spiking neurons, have
+been developed. On the cognitive level, architectures such as
+Spaun [10], ACT-R [11], [12], Leabra [13], SAL [14], Nengo
+[15], NEST [16], and BrainCog [17] have been introduced.
+Despite each framework modeling different mechanisms
+at various scales of the brain, a vast range of computational
+mechanisms within the brain remains unexplored and insufficiently simulated. On the other hand, a unified architecture
+that effectively integrates brain-like mechanisms across multiple scales, similar to the brain, has yet to emerge. This
+paper posits that these two points are crucial for continued
+breakthroughs in AI and the progression towards AGI.
+To simulate as many brain mechanisms as possible
+across multiple scales, this paper introduces a new AI
+frameworkOrangutan. At the microscale, it models the
+anatomical morphology of neurons, the transmission process
+of neural excitation, and various neurotransmitter actions; at
+the mesoscale, it simulates multiple types of neural synapses,
+neural microcircuits, and cortical column structures; at the
+macroscale, it models the structure of brain regions in the
+neocortex and the inter-regional projection relationships.
+Furthermore, based on its implemented model algorithms,
+it also simulates brain-like mechanisms such as population
+coding, winner-takes-all attention competition, and top-down
+feedback regulation. A detailed introduction will follow.
+II. F RAMEWORK I NTRODUCTION
+The Orangutan is a large primate species that inhabits the
+tropical rainforests of Asia. Not only are they remarkably
+intelligent, but they also possess a gentle disposition. These
+traits align closely with the long-term goal of this study:
+to achieve an artificial intelligence that is nearly on par
+with human intelligence and is friendly towards humans
+through high-fidelity simulation of the biological brain. The
+framework is thus named after this creature. To achieve
+this goal, Orangutan, utilizing the Python programming
+language, simulates the core mechanisms of the brain across
+the micro, meso, and macro scales. It aims to interpret
+their functions within the brain from an engineering and
+algorithmic perspective, with Figure 1 depicting the main
+
+aspects of this endeavor. Additionally, considering the complexity involved in algorithm implementation, Orangutan
+makes deliberate choices and adjustments in some biological
+details to strike a balance between biological plausibility
+and algorithmic feasibility. The mechanisms at each of these
+scales will be introduced subsequently.
+A. Microscale Brain Simulation
+At the microscale, the focus is on the most fundamental
+neuroscientific building blocks, including individual neurons,
+synapses, and the molecular and cellular processes within
+neurons.
+Neurons serve as the basic computational units of neural
+networks. To more closely resemble the anatomical structure of biological neurons, Orangutan has developed a
+multi-compartment neuron model [18], as opposed to the
+commonly used “point” neuron. A “compartment” refers
+to an abstract representation of a portion of a neuron,
+encompassing dendrites, soma (cell body), axons, synapses,
+etc., with Figure 2(a) illustrating the basic structure of an
+Orangutan neuron. The neurocompartmental structure in
+Orangutan offers considerable flexibility; in some simple
+computation scenarios, it allows developers to omit unnecessary dendrites or axons. When a neuron consists of only
+a single soma compartment, it becomes a typical “point”
+neuron. This simplification reflects Orangutans effort and
+attempt to balance biological plausibility with algorithmic
+feasibility by increasing algorithmic efficiency at the cost
+of a certain degree of simulation accuracy, while ensuring
+the computational outcomes of the neural network remain
+unchanged.
+Orangutan simulates the electrophysiological and chemical properties of each compartment through a distinct set
+of attributes, providing developers the flexibility to adjust
+these values as shown in Table I. Leveraging this attribute
+set, Orangutan models the dynamic process of excitation
+transmission between compartments. Initially, a compartment
+at its Resting Potential (RP) will generate a neural spike
+after receiving sufficient excitation. The frequency of the
+spike is calculated using Equation 1, where E denotes the
+current excitation of the compartment. The neural spike is
+transmitted progressively along the dendrites, soma, axons,
+and synapses. Equation 2 illustrates the computation process
+for the excitation transmission across neuronal compartments, where E ′ represents the excitation conveyed to the
+downstream compartment. After transmitting excitation, the
+compartment returns to the resting state.
+
+
+E − RP
+, 0)
+(1)
+F req = max(
+|RP |
+E ′ = F req
+
+max(F a, ST P )LT P
+T RS
+max(Sh, ST D)LT D
+
+(2)
+
+In Orangutan, the computational cycle during which
+excitation starts from a neuron’s dendrites, moves through
+various compartments, and ultimately transfers to a compartment in another neuron, is defined as a “tick”. Simulating
+
+the dynamic process of excitation transmission throughout
+the entire neural network is achieved by updating the state
+of each neuronal compartment tick by tick. However, compartments within the neural network are not merely passing
+excitation straightforwardly from upstream to downstream;
+instead, each type of compartment performs unique computational roles.
+Neuronal dendrites are made up of multiple dendritic compartments that can form branching and cascading structures
+[19]. In addition to the operation of summation, inspired by
+the logical operations performed by the proximal dendrites
+of pyramidal neurons [20], Orangutan has also established dendritic compartments that can carry out operations
+to determine maximum and minimum values. Figure 2(b)
+demonstrates a secondary dendritic structure. These features
+enable dendrites to perform complex integration of incoming
+excitations and relay the integrated results to the soma.
+The soma serves as the primary site for representing neural
+signal intensity, simultaneously receiving excitations from its
+own dendrites or synapses from other neurons. It conducts
+a simple summation of these excitations before forwarding
+them to the axon. Additionally, in a “point” neuron model,
+the soma can also directly establish synaptic relationships
+with other neurons, both upstream and downstream.
+Axons are accountable for the output of neurons.
+Orangutan emulates the characteristic of axons in biological brains where different neurons possess axons of
+varying lengths (step length) to precisely control the timing
+of excitation reaching the postsynaptic neuron, thus finely
+tuning the computational process of the neural network.
+Specifically, once an axonal compartment receives excitation
+at tick t, it becomes active and sends out spike signals
+at tick t + step length. Neuroscientifically, a biological
+neuron can have only one axon. To optimize the efficiency
+of the neural network operation, Orangutan permits a
+neuron to have multiple axons, each operating independently
+with the capability to define distinct attributes such as
+step length, post sign, etc. An axon can simultaneously
+establish synapses with multiple postsynaptic neurons, facilitating the passage of excitation through these synapses.
+Synapses are the main sites of neuronal communication.
+In the biological brain, synapses influence the postsynaptic neuron by releasing different types of neurotransmitters, which commonly exert excitatory or inhibitory effects.
+Orangutan, following the approach of classical artificial
+neuron models, simplifies these effects into mathematical
+addition and subtraction operations [21], [22]. However,
+the signal transmission process in the biological brain is
+much more intricate, involving a variety of chemical actions. For example, facilitation (F a) and shunting inhibition
+(Sh) can respectively amplify and diminish the strength
+of signal transmission [23], [24]. Orangutan approximates
+these biochemical interactions through multiplicative and divisive mathematical operations, introducing non-linear computational elements to the network’s computation process.
+Furthermore, these effects are transient (typically lasting
+only 1 tick in Orangutan), lending themselves well to
+
+Intelligence
+Abilities
+
+Computational
+Platform
+
+Perception
+
+Attention
+
+Motor
+
+Recognition
+
+Development
+
+Runtime Container
+
+Data Visualization
+
+Brain Regions & Neuron Config
+
+Neural Network Initialization
+
+Network State Retrieval
+
+Connectivity Specificity Rules
+Config
+
+Neural Network State Update
+
+Data Filtering & Searching
+
+Runtime Parameter Config
+
+Network State Logging
+
+Network State Rendering
+
+Microscale
+
+Mesoscale
+
+Macroscale
+
+Neuronal Structure
+
+Synaptic Connections
+
+Brain Regions
+
+Brain-inspired
+Mechanisms
+
+Neuronal Microcircuit
+Neuronal Excitation Propagation
+
+Inter-regional Neural Networks
+Connectivity Specificity
+
+Neurotransmitters
+
+Cortical Column
+
+Signal Encoding Strategies
+
+Fig. 1: Orangutan Architecture
+
+synchronous computational scenarios between synapses. By
+comparison, short-term potentiation (STP) and short-term
+depression (STD) contribute to the neural network’s shortterm plasticity, just like facilitation and shunting inhibition, they enhance or diminish signal transmission but have
+longer durations [23] (persisting for more than 1 tick in
+Orangutan). Such mechanisms can be applied to scenarios
+that require asynchronous computation between neurons,
+such as temporal computations and planning. Moreover, the
+impact of long-term potentiation (LTP) and long-term depression (LTD) mechanisms lasts even longer and reflects the
+network’s long-term plasticity. Synapses can be categorized
+into stable and plastic based on whether the values of LTP or
+LTD alterations are permitted, with the former employed for
+algorithms unaffected by learned experience, such as basic
+perceptual functions, and the latter mainly applied within
+Orangutans learning algorithms.
+It is worth noting that Orangutan does not directly simulate the neurotransmitters and specific molecular mechanisms
+behind these processes but emulates their ultimate impact
+on the particular compartments involved. This abstraction
+of molecular processes keeps the algorithmic complexity of
+simulating the neural network computation within reasonable
+bounds. The type of synapse is defined by the attribute
+release type, and the synapse’s influence is reflected in
+
+changes to the related parameters of the postsynaptic compartment: the excitation of the postsynaptic compartment,
+impacted by excitatory and inhibitory synapses, will be
+incremented or decremented based on the excitation value
+′
+E transmitted from the presynaptic compartment (excluding
+dendritic compartments performing MAX and MIN operations). Similarly, postsynaptic compartments affected by
+facilitating synapses, shunting inhibitory synapses, shortterm potentiation (STP), and short-term depression (STD)
+synapses will also have their corresponding property values
+′
+(F a, Sh, ST P , ST D) incremented by the value of E .
+Based on the aforementioned mechanisms, researchers can
+fulfill diverse computational requirements when developing
+neural networks by designing neurons with varying anatomical structures and utilizing different types of neurotransmitters for transmission.
+B. Mesoscale Brain Simulation
+Mesoscale studies focus on networks and circuits between
+neurons, examining how multiple neurons connect and collaborate to produce specific functions.
+In the biological brain, there is an abundance of synaptic connection forms between neurons, including the common axo-dendritic synapses, as well as axo-somatic, axoaxonic, axo-synaptic, somato-somatic synapses, and au-
+
+TABLE I: Neuronal compartment properties. All properties are represented as int or float for computational efficiency.
+Abbreviations are used for compartment names: A=Axon, S=Synapse, D=Dendrite.
+Property
+
+Symbol
+
+Default
+Value
+
+Exclusive
+
+Synapses
+Inheritable
+
+All
+All
+All
+All
+All
+All
+
+✗
+✓
+✓
+✗
+✓
+✓
+
+Compartment type, enumeration values found in Listing1 under TYPE
+Number of the brain region where the compartment is located
+Number of the cortical column where the compartment is located
+Number of the neuron where the compartment is located
+Row number of the cortical column in the brain region
+Column number of the cortical column in the brain region
+
+All
+All
+All
+All
+All
+
+✓
+✓
+✗
+✗
+✗
+
+Index of the cortical hypercolumn within the brain region.
+Index of the cortical minicolumn within the hypercolumn
+Index of the compartment in the entire neural network
+Index of the upstream compartment in the entire neural network
+Index of the downstream compartment in the entire neural network
+
+All
+All
+All
+A
+
+✓
+✗
+✗
+✗
+
+0
+
+S
+
+✓
+
+Resting potential
+Current excitation
+Spike frequency generated by the current excitation
+Axonal step length, influencing the timing of excitation reaching its
+target
+The synaptic all-or-none response pattern is modulated by both the
+stimulus of synaptic excitation, denoted as E ′ , and the post-synaptic
+chamber excitation, denoted as E. This can be categorized as follows:
+0 represents a non-binary response; 1 signifies a weak conditional
+binary response, transmitting the full excitation only when the synapse
+meets the condition |E ′ | > |E|; 2 indicates a strong conditional binary
+response, whereby full excitation is transmitted when the synapse
+satisfies the condition |E ′ | ≥ |E|.
+
+Fundamental Characteristics
+type
+N/A
+N/A
+N/A
+N/A
+region no
+N/A
+N/A
+col no
+neuron no
+N/A
+N/A
+N/A
+N/A
+region row no
+region hyperN/A
+N/A
+col no
+N/A
+N/A
+hyper col ind
+mini col ind
+N/A
+N/A
+ind
+N/A
+N/A
+N/A
+N/A
+pre ind
+N/A
+N/A
+post ind
+Electrophysiological Characteristics
+RP
+RP
+-65
+excite
+E
+-65
+tick spike- times
+Freq
+0
+step length
+N/A
+1
+all or none
+
+N/A
+
+Description
+
+Chemical Characteristics
+Fa
+Fa
+Sh
+Sh
+STP
+STP
+STD
+STD
+LTP
+LTP
+LTD
+LTD
+transmitterTRS
+release sum
+release type
+N/A
+
+1
+1
+1
+1
+1
+1
+65
+
+All
+All
+All
+All
+S
+S
+All
+
+✗
+✗
+✗
+✗
+✗
+✗
+✓
+
+Facilitation effect experienced
+Shunting inhibition experienced
+Short-term potentiation experienced
+Short-term depression experienced
+Long-term potentiation experienced
+Long-term depression experienced
+Number of neurotransmitters released per spike
+
+N/A
+
+S
+
+✓
+
+post sign
+
+N/A
+
+1
+
+S/D
+
+✓
+
+Type of neurotransmitter released, with enumeration values available
+in Listing1 under RELEASE TYPE. For both excitatory and inhibitory
+neurons, release type is “excite”, differentiated by post sign=1/-1
+Distinguishes between excitatory and inhibitory neurons when release type is “excite”, using 1 and -1.
+
+Neuroplasticity
+marker
+
+N/A
+
+N/A
+
+All
+
+✗
+
+N/A
+
+0
+
+All
+
+✗
+
+N/A
+
+0
+
+All
+
+✗
+
+produce markerper spike
+marker remain
+
+Identifier number of neural cell adhesion molecules used to mark and
+recognize neuron compartments of the same type within a brain region
+Number of neural cell adhesion molecules produced per spike
+Current quantity of neural cell adhesion molecules, influenced by
+mechanisms such as spike generation, synaptic connection consumption, and tick-by-tick decay
+
+tapses. Orangutan meticulously simulates each of these
+types, as illustrated in Figure 3. Beyond the most common axo-dendritic type, the other varieties of synapses in
+Orangutans neural networks serve different computational
+
+functions. Axo-somatic synapses enable the presynaptic neuron to circumvent the input signal integration mechanisms
+of the postsynaptic neuron’s dendrites, directly affecting its
+soma. Axo-axonic synapses enable the presynaptic neuron to
+
+3
+
+2
+
+MAX
+
+1
+
+MIN
+
+ADD
+
+4
+(a)
+
+(b)
+
+Fig. 2: Figure (a) depicts a typical Orangutan multicompartment neuron model. All compartments, from top to
+bottom, are sequentially arranged as dendrites (star), soma
+(round), axons (square), and synapses (the bulb-ended line).
+Figure (b) shows a multi-compartment dendritic structure.
+Two primary dendritic compartments (MAX and MIN) simultaneously receive excitatory inputs from three presynaptic neurons (green), performing maximum and minimum
+calculations respectively, before passing their outputs to a
+secondary dendritic compartment (ADD) for summation. The
+numbers illustrate the excitatory inputs from the presynaptic
+neurons and the final excitation obtained by the soma (blue
+circle) after dendritic integration.
+
+uniformly modulate the postsynaptic neuron’s axon, thereby
+affecting the signal output of all synapses on that axon en
+masse. Axo-synaptic synapses, on the other hand, can finely
+regulate the output process of each synapse on the postsynaptic neuron. In addition to axonal synapses, the presynaptic
+neuron’s soma may also directly establish synapses with any
+compartment of the postsynaptic neuron, such as somatosomatic synapses, functioning similarly to those formed by
+axons. This mechanism allows simple neuronal models that
+omit axonal compartments to still establish synapses with
+other neurons and participate in the neural network’s computation process. Lastly, Orangutan also simulates autaptic
+neurons found in the biological brain, where a neuron’s axon
+or soma establishes synapses with its own compartments,
+which can provide a means for maintaining excitation or
+self-regulation. For a complete delineation of the synaptic
+relationships between compartments, refer to Table II.
+Listing 1: Main Variables and Enums
+# Neuronal compartment t y p e s
+TYPE = {
+soma : 1 ,
+axon : 2 ,
+axon end : 3 ,
+dendrite min : 4 ,
+dendrite max : 5 ,
+dendrite add : 6 ,
+}
+# Types o f e x c i t a t o r y a c t i o n s o f
+
+synaptic release
+RELEASE TYPE = {
+excite : 1 ,
+Fa : 2 ,
+Sh : 3 ,
+STP : 4 ,
+STD : 5 ,
+}
+# The F u l l E x t e n t o f t h e G l o b a l
+R e c e p t i v e F i e l d i n V i s u a l Models
+VISUAL FIELD WH = ( 2 8 , 2 8 )
+# Orientation enumeration values defined
+within a p o l a r c o o r d i n a t e system
+where t h e upward d i r e c t i o n
+c o r r e s p o n d s t o 0 o r 360 d e g r e e s .
+ORIENTS = [ 2 2 . 5 , 4 5 . , 6 7 . 5 , 9 0 . , 1 1 2 . 5 ,
+135. , 157.5 , 180. , 202.5 ,
+225. , 247.5 , 270. , 292.5 , 315. , 337.5 ,
+360.]
+# The number o f o r i e n t a t i o n s .
+ORIENT SUM = 16
+# The minimum s p a c i n g b e t w e e n
+orientations .
+MIN ORIENT = 2 2 . 5
+# Scale enumeration values in p i x e l s .
+RECEPTIVE FIELD LEVELS = [ 1 , 3 , 5 , 7 , 9 ,
+11 , 13 , 15 , 17 , 19 , 21]
+# Angle e n u m e r a t i o n v a l u e s .
+ANGLES = [ 2 2 . 5 , 4 5 . , 6 7 . 5 , 9 0 . , 1 1 2 . 5 ,
+135. , 157.5 , 180.]
+TABLE II: Permitted Synaptic Relationships in Orangutan
+Postsynaptic
+Presynaptic
+Axon
+Soma
+Axon
+Soma
+
+Dendrite Soma Axon Synapse
+
+Heterosynapses
+✓
+✓
+Autapses
+✓
+✓
+
+✓
+✓
+
+✓
+✓
+
+✓
+✓
+
+✓
+✗
+
+✗
+✓
+
+✓
+✓
+
+Building upon the rich variety of synaptic connection
+types, Orangutan further simulates numerous classic neural
+microcircuit structures found in the biological brain, as
+depicted in Figure 4. These microcircuits act as fundamental
+algorithmic units within larger-scale neural networks, serving
+various functions such as lateral inhibitory circuits for enhancing signal contrast 4(a), recurrent inhibitory circuits for
+feedback regulation 4(b), and mutual inhibitory circuits for
+establishing antagonistic actions or competitive relationships
+between neurons 4(c) [25]. Among these, mutual inhibitory
+circuits implement a Winner-Takes-All (WTA) competitive
+mechanism, where at any given moment only one neuron
+in the circuit is active while the others are silenced due to
+inhibitory effects. Orangutan extends the applicability of
+the WTA mechanism to include synaptic inhibition, such that
+in an inhibitory axo-synaptic synapse, if the excitation of the
+
+Fig. 3: Various synaptic connection types. From left to
+right, they are axo-dendritic, axo-somatic, axo-axonic, axosynaptic, somato-somatic synapses, and autapses. To save
+space, other synaptic structures listed in Table II are not
+shown in the figure.
+
+presynaptic neuron exceeds that of the postsynaptic neuron,
+the former can completely inhibit the latter’s synapse, and
+vice versa. Orangutan achieves this all-or-none discharge
+characteristic in inhibitory synaptic compartments through
+the attribute all or none. This mechanism allows the presynaptic neuron to either fully inhibit or not affect a specific
+synapse of the postsynaptic neuron, without influencing the
+soma of the latter, thus ensuring that other synapses of the
+postsynaptic neuron can still output signals normally. This
+holds significant utility in scenarios requiring such refined
+regulation. It is noteworthy that in cases where the excitation
+levels of neurons are equal, the inhibitory circuit may exist
+in a critical state. For the axo-synaptic synapse, this means
+the postsynaptic neuron could either not at all inhibit or fully
+inhibit the postsynaptic compartment, thus representing two
+independent critical states. Orangutan distinguishes these
+by setting all or none to 1 or 2, termed as weak all-or-none
+inhibition and strong all-or-none inhibition, respectively.
+These critical state all-or-none inhibition mechanisms, akin
+to highly sensitive triggers, require only minimal perturbations to disrupt the equilibrium and are heavily utilized in
+the brain-like models subsequently introduced.
+Beyond these typical microcircuits found in the biological
+brain, Orangutan also simulates microcircuits capable of
+performing logical operations, including AND gates 4(e), OR
+gates 4(f), NOT gates 4(d), and XOR gates 4(g). From the
+perspective of a single spike, whether a neuron fires at a
+certain moment corresponds to a binary 1 or 0, making these
+logical microcircuits equivalent to the logic gates found in
+traditional circuits. In reality, neurons within these circuits
+often exhibit different pulsing frequencies, and their released
+excitation is regulated by neurotransmitters. Therefore, from
+a broader time scale, a NOT gate microcircuit performs a
+subtraction operation, an AND gate microcircuit operates as
+a minimum value calculation, and an OR gate microcircuit
+as a maximum value calculation.
+The above neural microcircuits demonstrate the sparsification of connections between Orangutan neurons, meaning
+each neuronal compartment is connected only to a specific set
+of compartments within the neural network. Unlike classical
+
+fully connected artificial neural networks, sparse networks
+not only help to enhance overall operational efficiency but
+also align more closely with our observations of biological
+neural networks [26]. To establish precise synaptic connections between specified neurons, Orangutan adopts a
+connectivity specificity mechanism inspired by the biological
+brain [27] and has developed a rule-based system: based on
+attributes such as region no, neuron no and col no (see
+Table I), developers can obtain each compartment’s index
+value within the neural network and design rule functions
+that precisely describe the presynaptic and postsynaptic
+compartments to guide synapse formation. This rule system
+applies to both the genesis of stable and plastic synapses;
+stable synapses are created at the initialization phase of the
+neural network, whereas plastic synapses are dynamically
+generated during network operation. Attributes marked as
+synapse only in Table I are defined in the upstream compartment but do not act on it; instead, they are inherited
+by the nascent synapse upon its formation. Additionally,
+Orangutan allows developers to assign values to the attributes of these new synapses within the rule functions.
+Networks established through these pre-encoded rules can
+perform specific algorithms and possess good interpretability.
+Based on the architecture of neural microcircuits and
+connectivity specificity mechanisms, Orangutan further
+simulates the columnar structure of the cerebral neocortex.
+Cortical columns are the basic functional units of the neocortex, composed of several neurons with the same col no,
+exhibiting more complex information processing capabilities
+than individual neurons. Additionally, cortical columns in
+the biological brain often possess specialized functions; for
+instance, in the visual cortex, different columns may be sensitive to edges of different orientations or stimuli of varying
+colors [28], [29]. Orangutan adheres to this discovery in
+practical applications of cortical columns. The computational
+function of cortical columns is realized by local neural
+networks formed within the column through the mechanism
+of connection specificity. These neurons can not only share
+input signals but also, after a series of computations, transmit
+the processed results to other cortical columns via intercolumnar synapses, generating more complex computational
+activities at a macroscopic scale.
+C. Macroscale Brain Simulation
+At the macroscopic scale, the focus is on the structure
+and function of the entire brain or the entire nervous system,
+including the connections between different brain regions
+(the brain connectome) and how these connections support
+complex cognitive functions and behaviors. At this scale, numerous cortical columns make up the brain region structures
+at the macroscopic level.
+Brain regions in Orangutan are computational modules
+with a single function, designed to process specific signals
+or perform particular functions. Inspired by relevant research
+[30], cortical columns within an Orangutan brain region
+have similar intra-column network structures and algorithmic logic, whereas cortical column structures vary between
+
+(a)
+
+(e)
+
+(b)
+
+(c)
+
+(f)
+
+(d)
+
+(g)
+
+Fig. 4: Neural Microcircuits, where both the red and purple neurons are inhibitory neurons. In practical scenarios, Orangutan simplifies neural circuits by replacing excited inhibitory interneurons with the inhibitory axons of
+presynaptic neurons, thereby reducing the neural network’s
+complexity and operational overhead. (a) Lateral inhibition
+features a neuron (blue) that excites a target (yellow), whilst
+inhibiting nearby cells (green) via an interneuron (red). (b) In
+recurrent inhibition, the neuron (blue) inhibits itself through
+an interneuron (red). (c) For mutual inhibition, each neuron
+(blue) suppresses the other via an interneuron (red). (d) A
+NOT gate arises when the excitatory neurons (blue) activity
+is prevented by an inhibitory neuron (red). (e) In an AND
+gate circuit, the green excitatory neuron activates both yellow
+and red neurons equally, but red’s inhibition prevents yellow
+from activating. Only with both green and active inhibitory
+purple neurons does the yellow output neuron activate. (f) An
+OR gate triggers the output (yellow) when either the green
+or blue cell is active. When active together, the green neuron
+uses the red neuron to inhibit the blue synapse, protecting
+the yellow neuron from overactivation. (g) An XOR gate
+activates the output (yellow) only when activity is present in
+one of two antagonistic neurons (green, blue).
+
+different brain regions. Furthermore, cortical columns within
+the same brain region can establish cross-column synaptic
+connections, forming neural networks at the regional scale
+to perform complex module-level algorithms. Additionally,
+cortical columns across different brain regions can also
+establish inter-regional synaptic projections, linking multiple
+computational modules in series to form more complex
+information processing pathways and computational systems.
+The multitude of neurons within a brain region collectively
+establish a complex encoding mechanism for signal input,
+exhibiting characteristics similar to the sparse and population coding found in the brain. Sparse coding [31] refers
+to a neural system’s strategy of representing information
+where, due to sparse connections between neurons, only a
+few neurons are activated while most remain silent. This
+
+encoding strategy is considered efficient as it reduces energy
+consumption and enhances the selectivity and robustness of
+representations. Sparse coding ensures that neuronal response
+patterns have a high degree of selective specificity, with a
+neuron responding strongly to only a few stimuli. Population coding [32], on the other hand, represents information
+through the overall activity patterns of neuron groups, rather
+than the activity of individual neurons. In population coding, a single neuron may respond to multiple inputs, and
+different combinations of neurons can encode more complex
+information. This strategy allows the brain to represent rich
+and detailed information through multi-dimensional activity
+patterns of neuronal groups, increasing the economic efficiency of the model’s algorithms. For example, the joint
+activity of two adjacent neurons can theoretically represent
+any value between the two numerical values they encode,
+such as the combined activity of two neurons representing
+red and yellow to indicate the color orange.
+D. Brain Simulation of Learning Mechanisms
+Learning mechanisms are one of the core elements of
+artificial intelligence, and Orangutan’s learning mechanisms are still in an exploratory phase. Currently, there is
+a degree of simulation for various learning and memoryrelated mechanisms in the brain, including Hebbian learning
+and predictive coding. It is hoped that through the highlevel integration of these mechanisms, a learning ability can
+ultimately be achieved that allows for online and local learning, possesses high sample efficiency and interpretability, and
+approaches human-level capabilities.
+Orangutan’s learning mechanism will follow Hebb’s
+rule, which states that synapses are formed between simultaneously active neurons. In the biological brain, neuronal
+adhesion molecules are involved in regulating this synaptic
+plasticity, which is very important for learning and memory. Orangutan simulates the type of neuronal adhesion
+molecules and their production and depletion dynamics using
+three attributes: marker, produce marker per spike, and
+marker remain. The marker serves to label specific types
+of neural cells, produce marker per spike defines the
+number of neuronal adhesion molecules released per spike,
+and marker remain indicates the remaining abundance
+of these molecules, with more details available in Table
+I. Furthermore, through the rule system of Orangutan,
+developers can write a number of directional rules specifying
+the marker of presynaptic and postsynaptic neurons that can
+dynamically establish and strengthen synapses. During the
+operation of the neural network, when neurons that meet the
+criteria are active in the same tick, they will establish new
+synapses or change the strength of existing ones. For the
+learning mechanism, the rule mechanism can constrain the
+scope of neural plasticity. By limiting which neurons can or
+cannot form connections with each other, potentially harmful
+cognitions or skills beyond what is desired can be avoided as
+the agent explores the world, contributing to safer and more
+controllable artificial intelligence.
+In addition to Hebbian learning, Orangutan also draws
+
+Fig. 5: Predictive Coding Neural Circuit. Prediction cell
+(green) and input cell (blue) separately excite the negative
+prediction bias cell (orange) and positive prediction bias cell
+(purple), respectively. They form a NOT gate microcircuit
+with each other through their respective inhibitory axons
+and synapses (red). When the excitation of the prediction
+neuron is greater than that of the input neuron, the negative
+prediction bias neuron is activated, and vice versa for the
+positive prediction bias neuron. If the excitations of both are
+exactly equal, then neither of the prediction bias neurons will
+be activated.
+
+from the theory of predictive coding in neuroscience to
+simulate the dynamic changes in synaptic Long-Term Potentiation (LT P ) and Long-Term Depression (LT D). The
+LT P and LT D of plastic synapses are regulated by neurons
+with negative and positive prediction biases, respectively. The
+former becomes active and induces an increase in LT P when
+outcomes exceed expectations, while the latter becomes
+active and leads to an increase in LT D when outcomes
+are below expectations. These types of neurons are activated
+through specific neural circuits, as shown in Figure 5.
+The specific implementation of the above learning mechanisms is subject to change as Orangutan continues to
+explore the brain, and thus this article does not intend
+to reveal too much detail before the technology matures.
+Additionally, I am also attempting to introduce more brainlike learning mechanisms, such as hippocampal replay and
+dendritic spine resource competition.
+III. M ODEL I NTRODUCTION
+To validate the algorithmic efficacy of Orangutan, I have
+developed a large neural network model that utilizes most of
+the mechanisms provided by Orangutan. It comprises 13
+brain regions, approximately 3.7 million neurons, and about
+56 million compartments. This model simulates the saccadic
+movements observed when the human eye views objects.
+At first glance, saccades seem to be a simple mechanical
+process, but according to Moravec’s paradox (tasks that are
+easy for humans are hard for machines and vice versa),
+the complex neural mechanisms and dynamic processes
+involved present a significant challenge for any artificial
+intelligence system attempting to simulate similar effects. In
+classical visual theories of neuroscience, the biological brain
+processes visual signals primarily through the “what” and
+“where” pathways, with the “what” pathway responsible for
+processing pattern information, and the “where” pathway for
+processing spatial information and motion control [33]. The
+operation of Orangutan is broadly divided into perception,
+
+motion, and abstraction, as shown in Figure 6. The perceptual
+part simulates the classical hierarchical feature extraction
+process of the “what” pathway [28], while the motion part
+mimics the vision-guided motor-related processes of the
+“where” pathway. The perception phase provides potential
+feature targets for the motion phase, which in turn regulates
+the feature extraction process of the perception phase. These
+two phases influence each other and work in coordination,
+jointly realizing a neural network dynamic cycle of perception and motion. Meanwhile, accompanying the perceptionmotion process, the model continuously performs spatial
+perception of feature locations and extraction of abstract
+attributes of features, providing a more comprehensive representation of objects for downstream cognitive activities.
+Finally, it is important to note that since this model does
+not include learning mechanisms, all synapses in the neural
+network are stable synapses. Next, I will introduce the
+working principles of these three stages separately.
+I utilized the MNIST handwriting digits dataset as the
+signal input source for this model. As one of the most
+renowned and extensively used datasets in the field of
+artificial intelligence, MNIST has been employed to validate
+numerous AI technologies in their nascent stages of development, including Convolutional Neural Networks (CNNs)
+[34] and Dropout [35], among others. The following sections
+will elucidate the working principles of the three stages of
+this model on MNIST samples.
+A. Perception
+The perceptual capability of this model aims to extract
+top-level visual features from images. For this model, two
+of the most common top-level features were defined: arcs
+and angles, which have good generalizability for the visual
+patterns of handwritten digits and can describe almost all
+Mnist image cases. Related research has also revealed the
+presence of neurons in the primary visual cortex that have
+high selectivity for these two types of features [36].
+The model has developed multiple brain regions to work
+together on hierarchical feature extraction. It is important
+to note that the definition of these brain regions does not
+follow the typical division found in the biological brain but
+is instead aligned with the actual algorithmic requirements
+and the features to be extractedthat is, each brain region is
+responsible for extracting only one type of feature.
+1) Representing Pixel Points: In the publicly available
+Mnist dataset, each image is a 28x28 grayscale picture,
+with each pixel’s grayscale value ranging from 0 to 255.
+To represent these pixel points, this model has established
+a brain region for processing feature points, consisting of
+28x28 cortical columns. For ease of description, Orangutan
+utilizes a Cartesian coordinate system with the y-axis pointing downwards and the x-axis to the right to mark the
+position of each cortical column, placing the top-leftmost
+cortical column at the coordinate origin. The arrangement
+of cortical columns within the brain region forms a oneto-one topological mapping relationship with the pixels on
+the image. This is analogous to the topological projection
+
+Visual Input
+
+Pixels
+Representation
+
+Edge Points
+Extraction
+
+Modulates the
+Feature
+Extraction
+Process By
+Inhibitory
+Feedback
+
+Edge
+Orientation
+Extraction
+
+Oriented Line
+Segments
+Extraction
+
+Antipodal Points
+Extraction
+
+Angles
+Extraction
+
+Arcs Extraction
+
+(a)
+
+(b)
+
+Fig. 7: Two types of high-level features defined by this
+model: (a) Feature angles. (b) Feature arcs. The red squares
+represent the centroids of the arcs.
+
+Top-Down
+Propagation of
+Inhibitory
+Feedback
+Signals
+
+Winner-TakesAll (WTA)
+Attention
+Competition
+
+28
+28
+
+Generation of
+Winner Feature
+
+Eye Saccades
+to the Location
+of Feature
+Abstract
+Attributes
+Extraction
+
+Spatial Position
+Attributes
+Extraction
+
+Cognitive
+Activity
+
+Fig. 6: Model Workflow. It primarily involves three components: perception (green), motion (blue), and abstraction
+(red).
+
+relationship between retinal ganglion cells and the lateral
+geniculate nucleus of the thalamus [28], [29], as shown in
+Figure 8(a). Each point column contains a neuron representing the corresponding pixel point, termed a pixel cell,
+denoted as CP xl, with more details provided in Table III.
+When running the model, Orangutan reads the image
+data at the start of each tick, amplifies it by 100 times (025500) to serve as the excitation value for the pixel cells. The
+pixel cells consequently generate a certain spike frequency
+and transmit the signal forward to drive the operation of
+the entire neural network. Figure 9(a) displays the activity
+level of the pixel cell layer after inputting an Mnist image
+(2 72.bmp) into the model. The activity level of neurons in
+the figure accurately reflects the grayscale of pixels in the
+
+(a)
+
+(b)
+
+Fig. 8: (a) Each of the 28x28 hypercolumns in the brain
+region involved in feature extraction topologically maps to
+an image pixel, processing localized visual features. Dashed
+arrows highlight this correspondence at the image and cortical column peripheries. (b) Central-surround antagonistic
+neural circuit for edge point extraction. Within a 3x3 cortical
+column array, the CEdg o=135 (blue) located in the central
+receptive field (outlined by the blue box) integrates excitatory
+inputs from CP xl (green) in the peripheral receptive field
+(outlined by the black box) with inhibitory inputs from CP xl
+(red) in the central receptive field. As the peripheral receptive
+field of CEdg o=135 spans only a single grid space, the circuit
+includes only one excitatory neuron. However, for receptive
+fields that cover multiple grid spaces, such as the peripheral
+receptive field of the first CEdg o=22.5 shown in Figure
+10(a), there are multiple excitatory neurons present within
+the circuit, and the excitatory weights transmitted are directly
+proportional to the grayscale levels of the corresponding grid
+spaces.
+
+image.
+2) Extracting Edge Points: The two types of top-level features defined in this paper are located at the contours’ edges,
+as shown in Figure 7. Edge points, serving as the foundation
+forming the contour edges, are the primary objects extracted
+by this model. An edge point is a directed point where the
+brightness of the pixel at its position is lower than that of its
+adjacent pixels. This model defines 16 orientation variables
+to describe the orientations of edge points within a polar
+
+TABLE III: Brain regions in the model. The distribution of cortical columns is described in the format of hypercolumn
+rows × hypercolumn columns × minicolumns within each hypercolumn. The superscripts of neuron symbols correspond
+to different abstract attribute values in the Listing 1 (o/o1/o2 : ORIEN T S, s : RECEP T IV E F IELD LEV ELS, a :
+AN GLES).The number of neurons in each minicolumn is obtained by multiplying the quantities of these attributes.
+Brain Region
+
+Point
+
+Column
+Distribution
+
+Primary
+Neurons
+Pixel Cell
+Edge Point
+Cell
+
+Antipodal Points
+
+Vectors
+
+Angles
+
+CEdg
+
+o
+
+Neurons per
+Minicolumn
+1
+16
+
+28 × 28 × 1
+Edge Point
+Feedback Cell
+
+Orients
+
+Neuron
+Symbols
+CP xl
+
+28 × 28 × 1
+
+28 × 28 × 1
+
+28 × 28 × 1
+
+28 × 28 × 1
+
+Orientation
+Cell
+Orientation
+Feedback Cell
+Antipodal
+Point Cell
+Antipodal
+Feedback Cell
+Vector Cell
+Vector
+Feedback Cell
+Angle Cell
+
+N/A
+
+16
+
+COris,o,a
+
+704
+
+N/A
+
+704
+
+CAntP s,o,a
+
+704
+
+N/A
+
+704
+
+CV ecs,o,a
+
+704
+
+N/A
+
+704
+
+CAng
+
+o1,o2
+
+256
+
+Attention
+Winner Cell
+
+CW in
+
+256
+
+Arc Cell
+
+CArc
+
+1
+
+Arcs
+
+28 × 28 × 1
+
+Attention
+Winner Cell
+
+CW in
+
+1
+
+Current Position
+
+1×2×1
+
+Current
+Position Cell
+
+CCurX c
+CCurY c
+
+28
+
+Previous Position
+
+1×2×1
+
+Previous
+Position Cell
+
+CP revX c
+CP revY c
+
+28
+
+Relative Position
+
+1×2×1
+
+Relative
+Position Cell
+
+CRelX c
+CRelY c
+
+57
+
+N/A
+
+16
+
+N/A
+
+11
+
+Type Cell
+
+N/A
+
+2
+
+Orientation
+Cell
+
+N/A
+
+17
+
+Angle Cell
+
+N/A
+
+9
+
+Scale Cell
+
+N/A
+
+11
+
+Attention
+Competition
+Cell
+
+CComp
+
+1
+
+Relative
+Direction Cell
+Relative
+Distance Cell
+
+Abstract
+Attributes
+
+Global
+Regulation
+
+1×1×1
+
+1×1×1
+
+Neuron Description
+Represents a pixel point.
+Extracts directed edge points.
+Receives feedback from orientation cells to
+regulate edge point stimulation of orientation
+cells.
+Extracts edge points in a specific orientation at
+this location.
+Receives feedback from antipodal or vector
+cells for downstream transmission.
+Extracts and represents antipodal point features.
+Receives feedback excitation from the winner
+arc cells and transmits downstream.
+Extracts and represents vector features.
+Receives feedback excitation from winning angle cells and transmits downstream.
+Extracts and represents angular features.
+Represents winning angular features in attention competition, transmitting feedback to
+lower-order features.
+Extracts and represents arc features .
+Represents winning arc features in attention
+competition, transmitting feedback to lowerorder features.
+Coordinates for the focused features, used to
+direct eye movement. The superscript (c) in
+the symbol represents coordinates with values
+ranging from 0 to 28.
+Records and represents the coordinates of the
+location of the previously noted feature.
+Represents the position of the currently noticed
+feature relative to the previously noticed feature.
+Represents the displacement direction of the
+current feature relative to the previous feature.
+Represents the displacement distance of the
+current feature relative to the previous feature.
+Represents the type of feature. With two enumeration values: angle and arc.
+Represents the feature orientation. Includes
+16 orientations from ORIENTS and one nonoriented.
+Represents the opening angle of the feature.
+Includes 8 angles from ANGLES and one nonangled.
+Represents the scale of the feature.
+In the attention competition network, aggregates the excitation of all participating neurons
+and, in turn, applies an all-or-nothing inhibition
+to them.
+
+(a)
+
+(d)
+
+(b)
+
+(e)
+
+(c)
+
+(f)
+
+Fig. 9: Extraction results of features at various hierarchical
+levels on image 2 72. (a) Neurons (red spot) representing
+pixel points (white). The whiter the pixel, the brighter the
+red spot, indicating higher neuron excitation; conversely, the
+darker the spot, the lower the excitation. (b) Activity of
+CEdg o=135 (c) Activity of COris=9,o=45,a=90 (d) Activity
+of CSeg s=5,o=45,a=90 (e) Activity of CAng o1 =45,o2 =90 . The
+red square represents the most active angle cell. (f) Activity
+of arc cells. The red square represents the most active arc
+cell. The overall excitation distribution shows continuity.
+
+coordinate system where the upward direction represents
+0 or 360 degrees, with angles increasing in a clockwise
+direction, as seen in the ORIEN T S variable in Listing 1.
+Correspondingly, within each edge column, there are 16 edge
+cells CEdg o (see Table III), where the superscript o indicates
+the cell’s selectivity for specific edge orientations (symbols
+for other types of feature cells follow the same format). The
+more prominent the related edge points in an image, the
+more active they are. Other orientations that lie between these
+16 orientations are jointly represented by varying levels of
+activity in two adjacent edge cells.
+In order to extract edge points from images, this model
+simulates the response characteristics of Lateral Geniculate
+Nucleus (LGN) neurons to local contrast with their centersurround antagonistic receptive field structure [37] and the
+V1 cortex’s orientation-specific selectivity for edges [28].
+The receptive field refers to the area in the environment
+whose stimuli can influence the electrical activity of a
+neuron. For neurons in the visual system, the receptive
+field specifically denotes the area on the retina where light
+stimuli can affect the neuron’s response. This model has
+designed central and surrounding receptive fields for edge
+cells oriented in various directions, as illustrated in Figure
+10(a). Based on the receptive fields, the model established
+a feed-forward circuit for edge cells. As shown in Figure
+8(b), a CEdg o=135 receives excitation from pixel cells in
+the surrounding receptive field while also being inhibited by
+pixel cells in the central receptive field. The CEdg o=135
+
+becomes active when the excitation of its own position’s
+CP xl is less than the weighted sum of the excitation of
+CP xl at adjacent positions. The excitation received by the
+edge cell follows Equation 3, where n epresents the number
+of CP xl in the perimeter
+receptive field, and subject to
+Pn
+the condition that i=1 T RSP xlj = 65. In the equation,
+I replaced the letter “C” at the beginning of the symbols
+CEdg o and CP xl with the symbols of attributes in the Table
+III to represent the attribute variables of the corresponding
+neurons. The formulas presented hereafter all adhere to this
+same format. Figure ?? showcases the activity of CEdg o=135
+on image 2 72.
+EEdgio=θ =
+
+n
+X
+
+T RSP xlj EP xlj − EP xli
+
+(3)
+
+j=1
+
+3) Extracting the Orientation: The receptive fields of
+edge point cells are relatively small, whereas corners and
+lines, as top-level features, have larger scale receptive
+fields. To allow small-scale features to represent largescale ones, this model established orientation brain regions
+and orientation cells, as seen in Table III. As shown in
+Figure 10(b), orientation cells have receptive fields that
+extend further than those of edge point cells, denoted
+as COris,o,a , where s denotes the scale (as shown in
+RECEP T IV E F IELD LEV ELS within Listing 1) of
+the distance between the peripheral receptive field and the
+central receptive field in pixel units, o denotes the orientation of the peripheral receptive field relative to the
+central receptive field, and a represents the angle (as shown
+in AN GLES within Listing 1) between the direction o1
+indicated by CEdg o1 within the receptive field and the
+direction o inherent to COris,o,a itself. The receptive field
+of an orientation cell is a sector area defined by its scale and
+orientation, with the area being directly proportional to the
+scale. This ensures that no potential edge points are missed
+during the extraction process. Additionally, it should be noted
+that the receptive field scale defined by this model is the
+diameter of a circle with its center at the position of the
+neuron, obtained through the formula s = 2n + 1, where
+n = 1, 2, . . . , 11.
+Each COris,o,a receives excitations from all specificoriented CEdg o within its receptive field and takes the
+maximum value among them as its own excitation, as
+seen in Equation 4, where n is the total number of edge
+point cells within the receptive field. It establishes synapses
+with edge point cells at different locations, each having
+a different T RS, with those closer to the center of the
+receptive field having a higher T RS, and vice versa. The
+model primarily stimulates orientation cells of four types:
+a = 90/180/270/360, which are used for subsequent feature
+extraction tasks. Figure 9(c) demonstrates the activity of
+COris=9,o=45,a=90 on image 2 72.
+′
+
+′
+
+EOrio,s,a = max T RSEdgio =o+a EEdgio =o+a
+1≤i≤n
+
+(4)
+
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+(f)
+
+Fig. 10: Peripheral receptive fields of various feature cells. Blue squares represent the cell locations, and gray squares
+denote peripheral receptive fields, with the grayscale intensity roughly reflecting the synaptic strength established between
+the feature cells and the cells within the receptive field. For simplicity, this diagram only displays a subset of the receptive
+fields. (a) Receptive fields of some edge point cells, adjacent to the cell location. (b) Receptive fields of some orientation
+cells, which extend further from the center compared to edge point cells. (c) Receptive fields of some vector cells, consisting
+of receptive fields from multiple orientation cells with the same orientation but sequential scales. (d) Receptive fields of
+some antipodal point cells, formed by receptive fields from two scale-matched, centrally symmetric orientation cells. (e)
+Receptive fields of some angle cells, comprising all scaled vector cells in two specific orientations. (f) Receptive fields of
+some arc cells, composed of receptive fields from all orientations and scales of antipodal point cells.
+
+The mechanism by which orientation cells integrate neuronal excitation within a region bears certain similarities to
+complex cells in neuroscience. Simple cells, such as edge
+point cells, are highly sensitive to specific visual stimuli and
+their locations. In contrast, complex cells, while sensitive
+to stimulus characteristics, are less precise about the exact
+location. This means that complex cells will respond as long
+as the stimulus attributes are correct, regardless of where the
+stimulus appears within the receptive field [28], [29]. Subsequent extraction and representation of more complex features
+based on orientation cells demonstrate robust responsiveness
+to the precise location of signals.
+4) Extracting Vectors: Vectors are defined as a specific
+type of linear structure, formed by a continuous arrangement
+of edge points, with a clearly designated start and end point.
+Like complex cells, vector cells (denoted as CV ecs,o,a )
+integrate excitatory inputs from COris,o,a , which have the
+same orientation (o) and angle (a) across a continuous scale
+(s), to construct a perception of contour lines. The receptive
+fields of these cells are illustrated in Figure 10(c). This
+process follows the excitation formula outlined in Equation
+5, where i = 1, 3, 5, . . .. In Figure 11(a), I present a neural
+circuit diagram illustrating the formation of a receptive field
+for CV ecs=9,o=45,a=90 . When a vector feature of scale 9,
+
+fully matching this receptive field, appears, the corresponding
+neuron is maximally activated.
+The method of activating vector cells through the simple
+linear addition of orientation cell excitation may lead to
+a problem: larger scale vector cells might receive more
+excitation signals more easily compared to smaller scale
+vector cells, even if their receptive fields are not fully covered
+by visual signals. This situation could reduce the precision of
+neuronal signal encoding. To address this issue, the model
+establishes an additional antagonistic inhibition circuit, as
+shown in Figure 11(b). This means that if there is any
+presynaptic input missing, the vector cell will suffer from
+additional inhibition, which is proportional to the degree of
+input missing: the more missing the input, the stronger the inhibition. Only when all types of COris,o,a are active can the
+CV ecs,o,a completely avoid such inhibition. Accordingly, I
+have updated the excitation equation to form a new formula
+6, where the constant I represents the theoretical extremum
+of EOris=i,o=m,a=α .
+In another scenario, the improper activation of vector
+cells can be attributed to large-scale vector features. When
+these large-scale features activate the vector cells of the
+corresponding scale, they might also completely cover the
+receptive fields of smaller scale vector cells, erroneously
+
+(a)
+
+(b)
+
+(c)
+
+Fig. 11: Feature extraction circuit for CV ecs=9,o=45,a=90 : (a) Five COris=1/3/5/7/9,o=45,a=90 (green) at the same location
+and across contiguous scales form excitatory synapses with a CV ecs=9,o=45,a=90 (blue) at the same location, together
+constituting its receptive field. (b) Penalty circuit during signal absence. Every orientation cell (green) is paired with a
+corresponding autaptic neuron (purple) that consistently transmits inhibitory excitation to the vector cell through inhibitory
+axons (red). Orientation cell counteracts this inhibitory effect by establishing a lateral inhibition circuit (orange) with it.
+(c) End-inhibition circuit for CV ecs=9,o=45,a=90 . Larger scale COris=13,o=45,a=90 (red) constitute the inhibitory receptive
+field for CV ecs=9,o=45,a=90 , which gets inhibited when feature signals cover this receptive field.
+ESeg s=n,o=m,a=α =
+
+n
+X
+
+EOris=i,o=m,a=α
+
+(5)
+
+(EOris=i,o=m,a=α − max(I − EOris=i,o=m,a=α , 0))
+
+(6)
+
+i=1
+
+ESeg s=n,o=m,a=α =
+
+n
+X
+i=1
+
+ESeg
+
+s=n,o=m,a=α
+
+=
+
+n
+X
+
+(EOris=i,o=m,a=α − max(I − EOris=i,o=m,a=α , 0)) − (⌊n/2⌋ + 1)EOris=n+4,o=m,a=α (7)
+
+i=1
+
+causing these cells to be fully activated. To address this
+issue, this model introduced a method simulating the endinhibition mechanism found in the visual cortex [38]. As
+shown in Figure 11(c), COris=13,o=45,a=90 forms an inhibitory synaptic connection with CV ecs=9,o=45,a=90 . Given
+that COris=13,o=45,a=90 is located on the periphery of
+CV ecs=9,o=45,a=90 ’s receptive field, this means when a
+vector feature extends beyond the boundary of the receptive field, COris=13,o=45,a=90 gets activated and sends an
+inhibitory signal to CV ecs=9,o=45,a=90 , thereby inhibiting
+its activity. It is worth noting that in this model, the receptive fields involved in end-inhibition are 4 scales larger
+than the excitation receptive fields. This design prevents
+the end-inhibition response from being overly sensitive and
+mistakenly activated due to the inhibitory and excitatory
+receptive fields being too close together. The formula for
+calculating excitation has been updated to Equation 7. This
+end-inhibition mechanism ensures that vector cells are fully
+activated only when the vector features properly cover
+
+their receptive fields, thereby enhancing the precision of
+vector cell encoding. Figure 9(d) shows the activity of
+CV ecs=9,o=45,a=90 in image 2 72.
+5) Extracting Angles: In this model, an angle is defined
+as being comprised of two vectors, constrained to be between
+45 degrees and 180 degrees, segmented in steps of 22.5
+degrees, as shown in AN GLES within Listing 1. To reduce
+the complexity of the algorithm, the model further simplifies
+the definition of an angle to be scale-invariant, meaning that
+vectors of any scale in the two directions can be extracted
+as feature angles. Previous research indicates that in the
+primary visual cortex of the brain, there exist specific neurons
+that selectively respond to angles and exhibit the highest
+activity when the apex of an angle is located at the center of
+their receptive fields [36]. Based on this finding, this model
+designed angle cells (denoted as CAng o1,o2 ) to simulate the
+functions of such neurons. The excitation formula for angle
+cells, as described in Equation 8, reflects a higher activation
+level of the angle cell when the excitations of two vectors
+
+at specified orientations are similar, where n = 1, 3, 5, . . ..
+Additionally, the formula introduces a constant λ (set to
+the value of 0.08) to bolster the excitation of CAng o1,o2 at
+smaller angles, aligning the feature extraction results more
+closely with the human intuitive perception of object angles.
+Figure 9(e) demonstrates the active state of the angle cell
+CAng o1 =45,o2 =90 in image 2 72.
+6) Extracting Arcs: In this model, arcs are defined as
+contour edges in the image with a specific curvature. Similar
+to the processing of angle features, according to related research, there are neurons in the primary visual cortex that are
+specifically activated when the apex of a contour is located
+at the center of their receptive fields [36]. In addition to arc
+features, the frequently occurring ring features in images also
+need to be effectively extracted and represented. To construct
+a unified algorithmic framework to handle both types of
+features, this model considers arcs and rings as the same
+category of feature, adopting a different approach from the
+literature to define the receptive field of arc cells by setting
+the center of the receptive field at the centroid of the arc or
+ring. Furthermore, given the presence of numerous irregular,
+approximately arc-shaped curves in images, including those
+with distinct edges, this model also includes these irregular
+curves within the scope of arc features and extracts them
+using a unified algorithm. Arc cells are denoted as CArc
+and are insensitive to scale and opening orientation.
+Similar to feature angles, the extraction of arc features also
+follows a hierarchical process from simple to complex. Initially, the receptive fields of two orientation cells COris,o,a
+with opposite directions and the same scale jointly constitute
+the receptive field for antipodal point cells (denoted as
+CAntP s,o ), as shown in Figure 10(d). This design follows an
+excitation formula 9 to establish a feed-forward neural circuit
+with CAntP s,o , where T RS(s) represents larger excitation
+from COris,o,a with larger scales. Subsequently, CAntP s,o
+of various orientations and scales together form the receptive
+field for CArc, as presented in Figure 10(f), and a feedforward neural circuit is established with CArc according to
+the excitation formula 10. Antipodal points ensure symmetry
+during the extraction of arc features, while the aggregation
+of antipodal points of different scales in the same orientation
+increases the robustness of the extraction algorithm for nonregular arc features. Considering the similarity between the
+extraction processes and principles of arc- and angle-related
+features, this paper does not elaborate on the specific neuronetwork structures and detailed descriptions of arc feature
+extraction. Figure 9(f) illustrates the activation of arc cells
+in image 2 72.
+B. Motion
+The saccade function is a key motor process in this model,
+primarily comprising three stages: attentional competition,
+eye saccades, and attention shift, as depicted in the blue part
+of Figure 6.
+1) Attentional Competition: During the perception phase,
+this model generates a saliency map [39] concerning features
+such as angles and arcs, where the activity levels of angle
+
+cells and arc cells represent the physical saliency of stimuli
+in the visual field. Subsequently, the model needs to filter out
+a single, most active cell from all angle and arc cells, which
+will serve as the target for the next step of the eye saccade. To
+this end, a winner-takes-all (WTA) competitive relationship
+is established among the feature cells, such that the final
+victor maintains full activation while the losers become
+completely inactive. According to Koch et al., a WTA neural
+network is equivalent to a maximum value operator [39],
+which corroborates the working principle of the winnertakes-all mechanism in this model: only the strongest signal
+source will stand out in a competitive environment.
+This model establishes a centralized WTA network to
+implement the mechanisms described, as shown in figure
+12. Initially, an “Attention Competition Cell” (denoted as
+CComp) aggregates the excitation of all CAng and CArc
+through its MAX dendrite. Concurrently, each feature cell
+is paired with a corresponding winner cell located within
+the same column. Feature cells must excite their associated
+winner cells to indicate their victory in attention competition.
+However, CComp counters this by establishing an all-ornothing weak inhibitory synapse (all or none = 1), aiming
+to obstruct the process. Due to the nature of this synaptic
+connection, only the most active feature cell, whose excitation precisely equals the inhibitory excitation, can activate
+its winner cell without being affected by the inhibition.
+This effectively suppresses less active cells from similar
+activation, ensuring that each attention competition activates
+only a single winner cell.
+2) Eye Saccades: Research suggests that attention fundamentally forecasts the destination of the next eye movement,
+implying that our focus on specific segments of the visual
+world typically triggers our eyes to move to that location
+[40]. This model characterizes the specific location of the
+winning feature based on simulations of grid cells, serving as
+the target for eye movement. Grid cells are a class of neurons
+found in the brain that are capable of generating a regular
+hexagonal grid pattern across the entire environment. These
+patterns are believed to be part of the internal spatial mapping
+system of the brain, assisting animals in understanding their
+position within an environment [41]. Inspired by this, this
+model constructs a 28 × 28 grid cell matrix as a positional
+map and establishes a topological mapping relationship with
+the top-level features. When a top-level feature cell wins
+the attentional competition, its corresponding winner cell
+activates the grid cell at the relevant position. Due to the
+one-hot nature of the attentional competition mechanism,
+correspondingly, only one grid cell in the grid matrix will
+be active at any given time, serving as the sole target for the
+eye saccade.
+Biologically, the motor cortex drives the process of eye
+saccades through neuromuscular junctions. The extraocular
+muscles around the eye are influenced by neural signals,
+jointly regulating the rotation angle of the eye [42]. This
+model establishes a set of positional neurons (denoted as
+CCurX and CCurY ) to represent the coordinates of the
+currently focused feature and to approximately simulate the
+
+EAng o1=i,o2=j = 65(1 −
+
+λ|i − j|
+) min( max EV ec(s = n, o = i, a = 90), max EV ec(s = n, o = j, a = 270)) (8)
+1≤n≤21
+1≤n≤21
+22.5
+
+EAntP s=θ,o=ω = T RS min(EOris=θ,o=ω,a=180 , EOris=θ,o=(ω+180)
+
+EArc =
+
+8
+X
+
+T RS max EAntP s=n,o=22.5i
+
+i=1
+
+0≤n≤21
+
+mod 360,a=180
+
+) where T RS = 1.2 + 0.15θ (9)
+
+where T RS = 1/8 and n = 1, 2, . . .
+
+(10)
+
+-2
+MAX
+
+-1
+1
+2
+
+-2
+
+Fig. 12: Attention Competition Circuit. Feature cells (green)
+involved in the competition form excitatory synapses with
+their respective winner cells (blue). The attention competition
+cell dendrites (red) receive excitation from all the feature
+cells, compute the maximum value, and prevents the excitation process of feature cells towards winner cells through
+all-or-nothing weak inhibitory synapses (red).
+
+input of eye movement signals. By connecting them with
+grid cells, a mapping relationship between target position
+and eye state can be established, as shown in Figure 13.
+This mechanism can be applied in the field of robotics, to
+drive changes in the posture of cameras or motors. As this
+research focuses on the algorithmic level, the integration of
+software and hardware is not extensively discussed in this
+paper.
+Theoretically, eye saccades to a new position cause
+changes in input signals, involving complex visual processing
+mechanisms. However, to simplify the computational process, this study does not simulate this visual input change
+effect. Such simplification allows for a more focused exploration and validation of the underlying control mechanisms
+of eye movement, without the complexities of visual processing. Future work could further refine the model, including
+the effects of visual feedback on the eye control system,
+to achieve a more comprehensive brain-inspired artificial
+intelligence system.
+3) Attention Shift: Saccades are a continuous process,
+meaning that attention shifts from one feature to another,
+
+-1
+
+1
+
+2
+
+Fig. 13: Grid cells (blue), representing feature locations,
+establish a Y-axis mapping (green dashed box) with neurons
+(green) controlling vertical eye movements, and an X-axis
+mapping (red dashed box) with neurons (red) controlling
+horizontal eye movements. The absolute value of numbers
+on the motor neurons represents the distance of eye movement control, with positive numbers indicating movement
+downward or to the right, and negative numbers indicating
+movement upward or to the left.
+
+such as from the angle shown by the red square in Figure
+9(e) to the arc represented by the red square in Figure 9(f).
+A typical approach to implementing attention shifts is to
+establish a recurrent inhibitory circuit from the winner cell
+to its own feed-forward excitation circuit [39]. Influenced by
+its self-imposed inhibitory effect, the winner cell will reduce
+its activity level for a period of time, which is reported
+biologically to be 500ms [43], and in this models may
+be appropriately extended, for example, spanning the entire
+observational cycle for the current sample. This mechanism
+allows the competition network to sequentially produce
+different winners, as illustrated in Figure 15(a), where a
+winner cell temporarily inhibits its own activity, permitting
+other feature winner cell to become active in subsequent
+competitions and attract eye saccades.
+However, this mechanism has its limitations in this model:
+due to the population coding characteristic of neural networks, a feature will activate multiple neurons to varying
+degrees, and their activity distribution is continuous, as seen
+in Figure 9(f). Therefore, by solely inhibiting the excitatory
+
+(a)
+
+(b)
+
+(c)
+
+Fig. 14: Attention Competition (a) Among all active feature
+cells (red dots), an angle cell with the highest excitation
+(red square) wins the attention competition. (b) The winning
+angle cell conveys feedback excitation to all feedback edge
+dot cells (red dots) within its receptive field. (c) All angle
+cells with receptive fields similar to that of the winning
+angle cell become inactive due to the loss of feedforward
+excitation, allowing an arc cell (red square) to become the
+new winner.
+
+source of the winner cell, attention will shift to another
+nearby similar feature, making it difficult to notice other
+more novel features, hence reducing the observational efficiency of the model. A relatively direct solution to this is
+to inhibit all feature cells within a circular area centered on
+the winner cell on the saliency map, allowing attention to
+shift to features at a greater distance [44]. However, this
+introduces additional accuracy problems: if the inhibition
+range is too small, the desired effect will not be achieved,
+while too large a range may erroneously inhibit feature cells
+of high observational value. Furthermore, due to the diversity
+and complexity of real-world samples, it’s challenging to find
+an optimal scale that applies to all possible scenarios.
+To address the issues above, this model establishes a
+top-down recurrent inhibitory circuit. This circuit shares
+the same trans-brain-area path as the bottom-up feature
+extraction circuit but operates in the opposite direction, as
+shown in Figure 15(b). This negative feedback pathway has
+excellent directionality, and ultimately, only the CEdg o of all
+orientations located within the receptive field of winner cell
+can obtain the negative feedback excitation. Therefore, the
+shape and range of the recurrent inhibitory area correspond
+to the actual receptive field of winner cells. Figure 14(b)
+displays the activity of CEdg o ’s feedback cells excited by
+a CAng o1=45,o2=90 ’s winner cell in the reverse direction
+on image 2 72. Subject to feedback inhibition, CEdg o
+reduces its own excitatory transmission, affecting not only
+the winner feature cells themselves but also all CAng o1,o2
+and CArc that receive excitation from these CEdg o , to
+varying degrees. This approach balances precision and generalizability when executing negative feedback inhibition
+on feature cells, thereby enhancing the model’s efficiency
+in recognizing novel and distinct features. Eventually, with
+CAng o1=45,o2=90 inhibited, another CArc successfully captures the model’s attention, as depicted in Figure 14(c).
+This top-down negative feedback regulatory process exhibits mechanisms analogous to those in the brain: visual
+
+(a)
+
+(b)
+
+Fig. 15: Two neural circuits for attention shift through
+feedback inhibition. For simplicity, only the circuits related
+to feature angles are shown, with the feedback inhibition
+mechanism for feature arcs following a similar principle. (a).
+When input signals pass through CEdg o (blue), COris,o,a
+(green), and CV ecs,o,a (yellow) to reach CAng o1,o2 and
+eventually activate the winner cell (purple) in the attention competition, winner cell applies recurrent inhibition to
+its own feedforward synapses through STD axon (purple
+square). (b) winner cell (purple) conveys a negative feedback
+signal to the underlying CEdg o through a top-down, largescale circuit established based on feedback cells (right path),
+which then applies STD effects (orange) to its feedforward circuit (left path). To simplify, although the actual
+network structure is much more complex than illustrated,
+every feature level is conceptually represented by a pair of
+neurons: one feedforward and one feedback. Additionally,
+since winner cells inherently possess receptive fields of the
+corresponding top-level feature cells, they can directly serve
+as the initiation points for the right-side feedback loop.
+
+signals from the retina are relayed through the lateral geniculate nucleus (LGN) and are modulated by the influence of the
+thalamic reticular nucleus (TRN) before being transmitted
+to the primary visual cortex (V1). The TRN receives excitatory back-projections from V1 and establishes inhibitory
+projections to the LGN [45]. This fact provides a biologically
+plausible source for the attention algorithm in this model.
+C. Abstraction
+Related studies have shown that during the process of
+continuous scanning, models establish the relative positional
+relationships between features [46]. In order to simulate
+this mechanism, I first established a set of coordinate cells,
+CP revY c and CP revX c , that represent the position of
+the previous feature. Subsequently, before scanning to the
+next feature, the current feature position cells (CCurY c and
+CCurX c ) activate CP revY c and CP revX c . Finally, the
+above two groups of neurons, through the neural circuitry as
+shown in Figure 16, activate neurons CRelY c and CRelX c
+that represent the relative positions between features. Furthermore, through a simple AND gate logic circuit, this
+
+8
+
+28
+...
+
+0
+
+20
+
+IV. R ESULTS
+
+y
+y-8
+
+8
+
+Fig. 16: Feature Inter-Relative Position Perception Circuit.
+In the diagram, CRelY c=8 (blue) represents a displacement
+of 8 pixels on the Y-axis and can be activated by various combinations (dashed boxes) of CCurY (green) and
+CP revY (red), where each combination internally reflects
+a Y-axis coordinate difference of 8. On the far right, their
+joint stimulation of CRelY c=8 through an AND gate neural
+microcircuit is depicted, with green lines indicating excitatory synapses and purple and red lines representing inhibitory
+synapses.
+
+model can establish mapping relationships between CRelY c
+and CRelX c and neurons that represent abstract properties,
+the “Relative Direction Cell” and the “Relative Distance
+Cell”, thereby extracting the relative direction and distance
+between two features. This abstraction capability for relative
+positions of features helps the model to establish a stable
+representation of the internal structure of objects, which is
+of significant importance for the learning capabilities and
+pattern recognition abilities of intelligent agents.
+In addition to locational properties, this model also extracts abstract attributes such as orientation, angle, and scale
+of top-level features. Taking scale as an example, I first
+established attribute cells representing 11 scales CScls .
+Then, using the characteristic that CW in, which has won
+the attentional competition, passes down feedback excitation
+from the top-down, I established a mapping circuit between
+the feedback cells of CV eco=45,s=5,a=90 and CAntP s,o
+and CScls . Lastly, I set up additional neural circuits to
+enhance the algorithm’s precision, such as establishing local
+competitive circuits to ensure that for each orientation, only
+one CV eco=45,s=5,a=90 or CAntP s,o with the maximum
+excitation is used for attribute mapping calculations, as well
+as averaging the scales represented by different orientations
+of CV eco=45,s=5,a=90 or CAntP s,o when they are not the
+same to determine the scale of the winning feature. The
+neural algorithmic implementation for extracting orientation
+and angle attributes also follows similar principles. Due to
+space constraints, the specific excitation formulas and neural
+circuit structures will not be elaborated on in the article.
+The above abstract attributes are significant for this study.
+On one hand, they complement the perceptual abilities of this
+model. On the other hand, they will serve as the foundation
+for a symbolized cognitive system, to be applied in the future
+development of cognitive functions, including learning, in the
+Orangutan cognitive system.
+
+I composed a test set of 100 samples using the first 10
+images of each digit from the MNIST dataset and validated
+the feature observation capability of the model with it. The
+main objective of the testing was to examine whether the
+model could observe salient features in the images and make
+saccadic movements between these features. Salient features
+are defined as those that provide a good generalization
+of the image content, typically featuring larger scale and
+receptive fields covering more edge points. The test focused
+on whether the features discovered by the model met the
+definition of salient features and the efficiency with which the
+model observed novel salient features. Based on the model’s
+operational principle, the model would observe all potential
+features until the negative feedback mask covers all active
+edge point cells, thereby returning all feature neurons on the
+saliency map to a resting state. To improve test efficiency, I
+capped the number of features observed by the model at five.
+Figure 17 shows part of the test results, with the complete
+saccadic trajectory data available in Appendix A.
+It should be noted that since the primary goal of this model
+is to simulate human eye saccade activity, no targeted testing
+was conducted for ancillary functionalities implemented in
+the algorithm, such as abstraction, and therefore related data
+is not presented in the test results. Additionally, the primary
+aim of this model is to demonstrate the effectiveness of the
+Orangutan algorithm by showcasing its working principles,
+hence no further testing was conducted on a larger scale of
+samples.
+V. D ISCUSS
+A. Result Analysis
+The results above indicate that the majority of features
+observed by the model on the test samples are consistent
+with the standards of salient features and possess sufficient
+novelty, generally meeting experimental expectations. However, some instances in the test results do not completely
+align with human expectations or intuition. First, the model
+extensively observed a category of sub-salient features in
+the samples of the digit “1”, such as the second and third
+features of 1 0 and the second feature of 1 1. Although
+they possess larger receptive fields, they fail to cover the
+maximum number of edge points; therefore, their saliency
+is not the strongest, which deviates somewhat from human
+intuition. A similar issue also exists in other digit samples
+featuring large-scale linear edges, such as the fifth feature of
+9 0. The primary cause of this phenomenon is that handwritten digits are typically rough, and the serrated protrusions
+found in large-scale linear edges tend to produce small
+angular features locally. Coupled with the feature extraction
+algorithm’s additional gain for small angles of CAng o1,o2
+(refer to Equation 8), the model is more prone to focus
+on feature angles with smaller angles (which also tend to
+have smaller receptive field ranges). Additionally, largerscale feature angles are more negatively affected by edge
+serration when exciting CAng o1,o2 . This issue could be
+
+Fig. 17: Partial Test Results Showcase for the Model’s Scanning Function. In the picture, circles represent arcs, while squares
+denote angles. For further details on each feature, refer to the appendix A.
+
+resolved in future research with the establishment of new
+line cells and feature extraction neural algorithms specifically
+optimized for linear features.
+Second, in samples of the digit “7”, the model tends to
+notice small-scale feature angles at the ends of large-scale
+angles, such as the fourth and fifth features in 7 0 and
+7 1. This issue also exists in other samples with large-scale
+angles, such as the fourth and fifth features of 1 0 and 1 1.
+Due to the model’s receptive field scale being limited to 21,
+when the most salient CAng o1,o2 is initially observed, its
+feedback receptive field is not broad enough to entirely cover
+the actual edges of feature angles in the image, allowing the
+areas not covered by the receptive field to be observed as
+independent features subsequently. This could be rectified
+by expanding the numerical range of scales.
+Finally, the model observes numerous non-core features
+that do not aid in digit recognition. This phenomenon is
+particularly evident in digit samples with fewer core features, such as “0”. This happens because the current model
+algorithm only has a preference for feature saliency, tending
+to passively search for features that have not been observed
+previously. However, core features typically possess distinct
+characteristics of salient features, and the test results also
+demonstrate that the model tends to prioritize observing core
+features before peripheral ones, thus aligning with the design
+goals of the model.
+
+2) Optimizing Model Algorithm: The current saliencybased attention mechanism within neuroscience is known
+as an involuntary attention process, which lacks conscious
+activity participation and does not possess the capability
+for active feature selection, making the model prone to
+observe some non-core features. Therefore, the next step
+is the proposed implementation of a voluntary attention
+mechanism: based on learning capabilities, the model could
+establish associations between different numbers and their
+corresponding core features. This would allow the model
+to generate preferences for specific features and actively
+search capabilities when observing specific numbers, thereby
+improving observation efficiency and robustness to noise.
+Additionally, in terms of feature representation, the current
+model only covers a limited range of feature types, such as
+angles and arcs, whereas the biological brain can recognize
+many more complex features, including lines and crosses
+[36]. Future research will aim to increase the variety of feature extraction types in the model, to more comprehensively
+simulate the richness of human vision.
+Lastly, the current model has not been fully validated
+in terms of processing large-scale, complex-content, and
+low signal-to-noise ratio grayscale images and does not
+support color image processing. Future studies will expand
+the model’s scope of application to accommodate a greater
+variety of visual environments and verify its performance on
+more complex and large-scale image samples.
+
+B. Limitations and Future Directions
+This model has achieved the goal of demonstrating the biological plausibility and algorithmic efficacy of Orangutan
+through simulating the neural mechanisms of human eye
+saccades. However, there remain significant differences in
+terms of the final effectiveness as well as the size and
+complexity of the neural network compared to the biological
+brain. Here I outline the main limitations, which will be the
+focus of future research.
+1) Incorporating More Brain-like Mechanisms: Learning
+is one of the core abilities of intelligent systems, and the
+current model essentially represents a static neural network
+based on a set of rule systems. Future plans include developing a learning mechanism centered around Hebbian rules.
+Leaning on learning mechanisms and feature position information and abstract attributes acquired during saccades, the
+model would dynamically establish new synapses and change
+network structures while observing. This would continuously
+build and update internal representations of digits, aiming to
+achieve human-level sustained learning capability.
+Furthermore, the existing mechanisms are still insufficient, as many excellent computational mechanisms in
+the brain have not yet been implemented. However, since
+Orangutan’s foundational implementation principles are
+close to those of the biological brain, it has good compatibility with new mechanisms. This allows the future introduction
+of more brain-like mechanisms in my research, moving
+towards the long-term goal of creating a general artificial
+intelligence system that can rival human capabilities.
+
+C. Related Work
+Classical neuron models such as Hodgkin-Huxley (HH),
+Integrate-and-Fire (IF), and Leaky Integrate-and-Fire (LIF)
+model various aspects of neurons transmitting signals in
+the form of spikes to different degrees, leading to the
+development of Spiking Neural Networks (SNNs) and SpikeTiming-Dependent Plasticity (STDP) learning algorithms. In
+comparison, Orangutan has not yet achieved the same
+level of precision in simulating these electrophysiological
+characteristics. For instance, Orangutan represents spike
+frequency with a fixed numeric value and is insensitive to
+specific spike patterns. Furthermore, neural spiking activity is
+not the core foundation for the learning mechanisms planned
+for subsequent implementation. The main reason is that
+Orangutan strives to balance biological plausibility with
+algorithmic validity; its simulation of brain-like mechanisms
+is constrained by neuroscience on the one hand and driven
+by algorithmic needs in practical engineering scenarios on
+the other. To date, there has been no necessity encountered
+in the development process to implement mechanisms of
+similar complexity. Should future research present computational problems requiring such mechanisms, I will consider
+incorporating them into Orangutan. Currently, Orangutan
+is more focused on simulating the chemical properties of
+neurons, including the regulatory roles of various neurotransmitters in the signal transmission process. Additionally,
+forthcoming research on learning mechanisms will also be
+based more on chemical features.
+
+Moreover, Orangutan shares many similarities with other
+theoretical and computational frameworks within the field
+of brain-inspired artificial intelligence. For example, the
+Hierarchical Temporal Memory (HTM) model simulates the
+brain’s cortical column structure at the mesoscopic scale,
+while the HMAX model emulates the process of hierarchical
+feature extraction in the brain’s ventral pathway structure
+at the macroscopic level [47]. Orangutan is dedicated
+to researching and simulating the process of brain fusion,
+incorporating a multitude of computing mechanisms. Therefore, beyond the aforementioned mechanisms, Orangutan
+has implemented additional brain-like mechanisms and has
+attempted to realize complex brain-like functions based on
+them, achieving preliminary results.
+VI. C ONCLUSION
+In this paper, I proposed an artificial intelligence framework highly inspired and constrained by biology, called
+Orangutan, to explore a viable pathway towards general
+artificial intelligence. It models various classical mechanisms
+within the biological brain at multiple scales, exhibiting a
+high degree of biological plausibility. Subsequently, based
+on Orangutan, I constructed a sensory-motor model. It
+simulates the process of human eye saccades when observing objects and models the working mechanisms of
+the classical ventral and dorsal pathways in the biological
+visual system. The test results of the model on the MNIST
+dataset demonstrate Orangutan’s algorithmic efficacy. This
+research points to a potential and feasible path for achieving general artificial intelligence close to the human level
+through multi-scale brain emulation and lays the groundwork
+for further exploration of artificial intelligence with embodied cognition and sustained learning capabilities.
+ACKNOWLEDGEMENTS
+This study utilized OpenAI’s ChatGPT tool during the
+translation process to assist with English translation and text
+proofreading. I am grateful for the support it provided.
+R EFERENCES
+[1] D. Hassabis, D. Kumaran, C. Summerfield, and M. Botvinick,
+“Neuroscience-inspired artificial intelligence,” Neuron, vol. 95,
+p. 245258, July 2017.
+[2] A. Krizhevsky, I. Sutskever, and G. E. Hinton, “Imagenet classification
+with deep convolutional neural networks,” Communications of the
+ACM, vol. 60, pp. 84 – 90, 2012.
+[3] C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna, “Rethinking the inception architecture for computer vision,” 2016 IEEE
+Conference on Computer Vision and Pattern Recognition (CVPR),
+pp. 2818–2826, 2015.
+[4] G. E. Hinton, L. Deng, D. Yu, G. E. Dahl, A. rahman Mohamed,
+N. Jaitly, A. W. Senior, V. Vanhoucke, P. Nguyen, T. N. Sainath, and
+B. Kingsbury, “Deep neural networks for acoustic modeling in speech
+recognition: The shared views of four research groups,” IEEE Signal
+Processing Magazine, vol. 29, pp. 82–97, 2012.
+[5] A. Hodgkin and A. Huxley, “A quantitative description of membrane
+current and its application to conduction and excitation in nerve,”
+Bulletin of Mathematical Biology, vol. 52, no. 1, pp. 25–71, 1990.
+[6] J. Hawkins and S. Blakeslee, “On intelligence,” 2004.
+[7] A. Vyshedskiy, “Hawkins, jeff. 2021. a thousand brains: A new theory
+of intelligence,” Evolutionary Studies in Imaginative Culture, vol. 6,
+pp. 111 – 114, 2022.
+
+[8] W. Maass, “Networks of spiking neurons: The third generation of
+neural network models,” Electron. Colloquium Comput. Complex.,
+vol. TR96, 1996.
+[9] P. U. Diehl and M. Cook, “Unsupervised learning of digit recognition
+using spike-timing-dependent plasticity,” Frontiers in Computational
+Neuroscience, vol. 9, 2015.
+[10] T. C. Stewart, F.-X. Choo, and C. Eliasmith, “Spaun: A perceptioncognition-action model using spiking neurons,” Cognitive Science,
+vol. 34, 2012.
+[11] J. R. Anderson and C. Lebiere, “The atomic components of thought,”
+1998.
+[12] J. R. Anderson, “Rules of the mind,” 1993.
+[13] R. C. OReilly, T. E. Hazy, and S. A. Herd, “The leabra cognitive
+architecture: How to play 20 principles with nature and win!,” 2012.
+[14] D. J. Jilk, C. Lebiere, R. C. OReilly, and J. R. Anderson, “Sal: an
+explicitly pluralistic cognitive architecture,” Journal of Experimental
+& Theoretical Artificial Intelligence, vol. 20, pp. 197 – 218, 2008.
+[15] T. Bekolay, J. Bergstra, E. Hunsberger, T. DeWolf, T. C. Stewart,
+D. Rasmussen, F.-X. Choo, A. R. Voelker, and C. Eliasmith, “Nengo: a
+python tool for building large-scale functional brain models,” Frontiers
+in Neuroinformatics, vol. 7, 2014.
+[16] M.-O. Gewaltig and M. Diesmann, “Nest (neural simulation tool),”
+Scholarpedia, vol. 2, p. 1430, 2007.
+[17] Y. Zeng, D. Zhao, F. Zhao, G. Shen, Y. Dong, E. Lu, Q. Zhang, Y. Sun,
+Q. Liang, Y. Zhao, Z. Zhao, H. Fang, Y. Wang, Y. Li, X. Liu, C.-Y. Du,
+Q. Kong, Z. Ruan, and W. Bi, “Braincog: A spiking neural network
+based, brain-inspired cognitive intelligence engine for brain-inspired
+ai and brain simulation,” Patterns, vol. 4, 2022.
+[18] W. Rall, “Theory of physiological properties of dendrites,” Annals of
+the New York Academy of Sciences, vol. 96, 1962.
+[19] W. Rall, “Branching dendritic trees and motoneuron membrane resistivity.,” Experimental neurology, vol. 1, pp. 491–527, 1959.
+[20] A. Polsky, B. W. Mel, and J. Schiller, “Computational subunits in thin
+dendrites of pyramidal cells,” Nature Neuroscience, vol. 7, pp. 621–
+627, 2004.
+[21] W. S. McCulloch and W. Pitts, “A logical calculus of the ideas
+immanent in nervous activity,” Bulletin of Mathematical Biology,
+vol. 52, pp. 99–115, 1990.
+[22] T. Sanger and P. N. Baljekar, “The perceptron: a probabilistic model
+for information storage and organization in the brain.,” Psychological
+review, vol. 65 6, pp. 386–408, 1958.
+[23] R. S. Zucker and W. G. Regehr, “Short-term synaptic plasticity.,”
+Annual review of physiology, vol. 64, pp. 355–405, 2002.
+[24] L. F. Abbott and F. S. Chance, “Drivers and modulators from push-pull
+and balanced synaptic input.,” Progress in brain research, vol. 149,
+pp. 147–55, 2005.
+[25] L. Luo, “Architectures of neuronal circuits,” Science, vol. 373, 2021.
+[26] S. Song, P. J. Sjöström, M. Reigl, S. B. Nelson, and D. B. Chklovskii,
+“Highly nonrandom features of synaptic connectivity in local cortical
+circuits,” PLoS Biology, vol. 3, 2005.
+[27] R. W. Sperry, “Chemoaffinity in the orderly growth of nerve fiber
+patterns and connections.,” Proceedings of the National Academy of
+Sciences of the United States of America, vol. 50, pp. 703–10, 1963.
+[28] D. H. Hubel and T. N. Wiesel, “Receptive fields, binocular interaction
+and functional architecture in the cat’s visual cortex,” The Journal of
+Physiology, vol. 160, 1962.
+[29] D. H. Hubel and T. N. Wiesel, “Receptive fields and functional
+architecture of monkey striate cortex,” The Journal of Physiology,
+vol. 195, 1968.
+[30] V. B. Mountcastle, “An organizing principle for cerebral function : the
+unit module and the distributed system,” 1978.
+[31] B. A. Olshausen and D. J. Field, “Sparse coding of sensory inputs,”
+Current Opinion in Neurobiology, vol. 14, pp. 481–487, 2004.
+[32] B. B. Averbeck, P. E. Latham, and A. Pouget, “Neural correlations,
+population coding and computation,” Nature Reviews Neuroscience,
+vol. 7, pp. 358–366, 2006.
+[33] M. Mishkin, L. G. Ungerleider, and K. A. Macko, “Object vision and
+spatial vision: two cortical pathways,” Trends in Neurosciences, vol. 6,
+pp. 414–417, 1983.
+[34] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, “Gradient-based
+learning applied to document recognition,” Proc. IEEE, vol. 86,
+pp. 2278–2324, 1998.
+[35] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, “Dropout: A simple way to prevent neural networks from
+
+overfitting,” Journal of Machine Learning Research, vol. 15, no. 56,
+pp. 1929–1958, 2014.
+[36] S. Tang, T. S. Lee, M. Li, Y. Zhang, Y. Xu, F. Liu, B. Teo, and
+H. Jiang, “Complex pattern selectivity in macaque primary visual
+cortex revealed by large-scale two-photon imaging,” Current Biology,
+vol. 28, pp. 38–48.e3, 2018.
+[37] R. L. de Valois, D. G. Albrecht, and L. G. Thorell, “Spatial frequency
+selectivity of cells in macaque visual cortex,” Vision Research, vol. 22,
+pp. 545–559, 1982.
+[38] J. Bolz and C. Gilbert, “Generation of end-inhibition in the visual
+cortex via interlaminar connections,” Nature, vol. 320, pp. 362–365,
+1986.
+[39] C. Koch and S. Ullman, “Shifts in selective visual attention: towards
+the underlying neural circuitry.,” Human neurobiology, vol. 4 4,
+pp. 219–27, 1985.
+[40] M. Zhao, T. M. Gersch, B. S. Schnitzer, B. A. Dosher, and E. Kowler,
+“Eye movements and attention: The role of pre-saccadic shifts of
+attention in perception, memory and the control of saccades,” Vision
+Research, vol. 74, pp. 40–60, 2012. Visual Attention 2012 Volume I.
+[41] T. Hafting, M. Fyhn, S. Molden, M.-B. Moser, and E. I. Moser,
+“Microstructure of a spatial map in the entorhinal cortex,” Nature,
+vol. 436, pp. 801–806, 2005.
+[42] D. A. Robinson, “Oculomotor unit behavior in the monkey.,” Journal
+of Neurophysiology, vol. 33, no. 3, pp. 393–403, 1970. PMID:
+4985725.
+[43] M. I. Posner, Y. Cohen, and R. D. Rafal, “Neural systems control
+of spatial orienting.,” Philosophical transactions of the Royal Society
+of London. Series B, Biological sciences, vol. 298 1089, pp. 187–98,
+1982.
+[44] L. Itti and C. Koch, “A saliency-based search mechanism for overt and
+covert shifts of visual attention,” Vision Research, vol. 40, pp. 1489–
+1506, 2000.
+[45] K. McAlonan, J. R. Cavanaugh, and R. Wurtz, “Attentional modulation
+of thalamic reticular neurons,” The Journal of Neuroscience, vol. 26,
+pp. 4444 – 4450, 2006.
+[46] E. Zimmermann, M. C. Morrone, and D. C. Burr, “Buildup of spatial
+information over time and across eye-movements,” Behavioural Brain
+Research, vol. 275, pp. 281–287, 2014.
+[47] M. Riesenhuber and T. A. Poggio, “Hierarchical models of object
+recognition in cortex,” Nature Neuroscience, vol. 2, pp. 1019–1025,
+1999.
+
+A PPENDIX
+A. Saccadic Data on the Test Set
+Presented here are the complete saccadic trajectory data
+of the feature observation model on 100 MNIST samples,
+displayed in the form of key-value pairs: the key is the
+BMP image filename, and the value is a list of the first
+five features observed by the model, with their symbols
+presented in LaTeX format. Each feature’s subscript denotes
+the coordinate of its position.
+0 0: [
+A r c { y =15 , x =15} ,
+Ang { y =21 , x = 2 0 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =8 , x = 2 0 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =23 , x = 9 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =7 , x = 1 1 } ˆ { o1 =225 , o2 =45}
+],
+0 1: [
+A r c { y =15 , x =15} ,
+Ang { y =17 , x = 7 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =22 , x = 2 1 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =25 , x = 1 3 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =13 , x = 2 4 } ˆ { o1 =360 , o2 =180}
+],
+0 2: [
+
+A r c { y =17 , x =15} ,
+Ang { y =23 , x = 1 0 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =15 , x = 2 3 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =9 , x = 1 0 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =25 , x = 1 7 } ˆ { o1 =90 , o2 =225}
+],
+0 3: [
+A r c { y =14 , x =16} ,
+Ang { y =20 , x = 2 2 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =8 , x = 1 4 } ˆ { o1 =315 , o2 =360} ,
+Ang { y =9 , x = 8 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =23 , x = 8 } ˆ { o1 =135 , o2 =315}
+],
+0 4: [
+A r c { y =16 , x =15} ,
+Ang { y =10 , x = 1 2 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =14 , x = 2 2 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =20 , x = 8 } ˆ { o1 =180 , o2 =360}
+],
+0 5: [
+A r c { y =16 , x =16} ,
+Ang { y =18 , x = 9 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =15 , x = 2 2 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =24 , x = 1 8 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =6 , x = 1 5 } ˆ { o1 =270 , o2 =45}
+],
+0 6: [
+A r c { y =14 , x =16} ,
+Ang { y =10 , x = 8 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =9 , x = 2 4 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =20 , x = 2 3 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =21 , x = 7 } ˆ { o1 =135 , o2 =315}
+],
+0 7: [
+A r c { y =15 , x =15} ,
+Ang { y =8 , x = 9 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =7 , x = 2 2 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =21 , x = 2 3 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =19 , x = 7 } ˆ { o1 =180 , o2 = 3 3 7 . 5 }
+],
+0 8: [
+A r c { y =17 , x =16} ,
+Ang { y =9 , x = 1 1 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =22 , x = 2 1 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =8 , x = 2 2 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =22 , x = 9 } ˆ { o1 =135 , o2 =315}
+],
+0 9: [
+A r c { y =15 , x =14} ,
+Ang { y =9 , x = 2 0 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =24 , x = 1 5 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =9 , x = 7 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =20 , x = 2 4 } ˆ { o1 =45 , o2 =180}
+],
+1 0: [
+Ang { y =15 , x = 1 6 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+
+Ang { y =19 , x = 1 3 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =9 , x = 1 6 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =24 , x = 1 4 } ˆ { o1 =45 , o2 = 2 0 2 . 5 } ,
+Ang { y =4 , x = 1 8 } ˆ { o1 =270 , o2 =90}
+],
+1 1: [
+Ang { y =16 , x = 1 5 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =17 , x = 1 3 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =8 , x = 1 6 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =25 , x = 1 2 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =8 , x = 1 9 } ˆ { o1 =45 , o2 =180}
+],
+1 2: [
+Ang { y =11 , x = 1 3 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =16 , x = 1 6 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =9 , x = 1 7 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =24 , x = 1 5 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =4 , x = 1 5 } ˆ { o1 =270 , o2 = 6 7 . 5 }
+],
+1 3: [
+Ang { y =17 , x = 1 7 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =9 , x = 1 3 } ˆ { o1 = 2 0 2 . 5 , o2 =315} ,
+Ang { y =17 , x = 1 4 } ˆ { o1 = 2 0 2 . 5 , o2 =315} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =24 , x = 1 4 } ˆ { o1 =135 , o2 =315}
+],
+1 4: [
+Ang { y =17 , x = 1 5 } ˆ { o1 =180 , o2 = 3 3 7 . 5 } ,
+Ang { y =13 , x = 1 6 } ˆ { o1 =360 , o2 = 1 5 7 . 5 } ,
+Ang { y =24 , x = 1 8 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =6 , x = 1 2 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =26 , x = 1 7 } ˆ { o1 =90 , o2 =270}
+],
+1 5: [
+Ang { y =17 , x = 1 7 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =17 , x = 1 3 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =26 , x = 1 5 } ˆ { o1 =135 , o2 =270}
+],
+1 6: [
+Ang { y =17 , x = 1 2 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =12 , x = 1 7 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =6 , x = 1 7 } ˆ { o1 =360 , o2 =90} ,
+Ang { y =24 , x = 1 6 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =225 , o2 =45}
+],
+1 7: [
+Ang { y =15 , x = 1 6 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =14 , x = 1 4 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =25 , x = 1 4 } ˆ { o1 =90 , o2 =270}
+],
+1 8: [
+Ang { y =14 , x = 1 4 } ˆ { o1 =180 , o2 =315} ,
+Ang { y =17 , x = 1 8 } ˆ { o1 =360 , o2 =135} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =24 , x = 2 0 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =8 , x = 1 1 } ˆ { o1 =180 , o2 =315}
+
+],
+1 9: [
+Ang { y =19 , x = 1 5 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+Ang { y =12 , x = 1 5 } ˆ { o1 = 2 0 2 . 5 , o2 =360} ,
+Ang { y =7 , x = 1 9 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =25 , x = 1 2 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =5 , x = 1 7 } ˆ { o1 =270 , o2 =90}
+],
+2 0: [
+Ang { y =20 , x = 1 1 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =24 , x = 1 6 } ˆ { o1 =90 , o2 =270} ,
+A r c { y =8 , x =13} ,
+Ang { y =5 , x = 9 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =8 , x = 1 8 } ˆ { o1 =360 , o2 =180}
+],
+2 1: [
+A r c { y =12 , x =15} ,
+Ang { y =21 , x = 1 5 } ˆ { o1 =135 , o2 =225} ,
+Ang { y =7 , x = 9 } ˆ { o1 =225 , o2 =45} ,
+A r c { y =18 , x =21} ,
+Ang { y =4 , x = 1 7 } ˆ { o1 =270 , o2 =90}
+],
+2 2: [
+Ang { y =22 , x = 1 1 } ˆ { o1 =45 , o2 = 6 7 . 5 } ,
+A r c { y =12 , x =12} ,
+Ang { y =22 , x = 1 7 } ˆ { o1 = 6 7 . 5 , o2 =225} ,
+Ang { y =6 , x = 1 2 } ˆ { o1 = 2 4 7 . 5 , o2 =45} ,
+Ang { y =10 , x = 1 7 } ˆ { o1 =45 , o2 =180}
+],
+2 3: [
+Ang { y =16 , x = 1 4 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =19 , x = 1 2 } ˆ { o1 =90 , o2 =225} ,
+Ang { y =9 , x = 1 7 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =18 , x = 9 } ˆ { o1 =270 , o2 =45} ,
+Ang { y =5 , x = 1 8 } ˆ { o1 =315 , o2 =135}
+],
+2 4: [
+Ang { y =20 , x = 1 6 } ˆ { o1 =135 , o2 =225} ,
+A r c { y =9 , x =14} ,
+A r c { y =19 , x =12} ,
+Ang { y =4 , x = 1 7 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =17 , x = 1 6 } ˆ { o1 =45 , o2 = 1 1 2 . 5 }
+],
+2 5: [
+A r c { y =13 , x =15} ,
+Ang { y =23 , x = 1 6 } ˆ { o1 =135 , o2 =225} ,
+Ang { y =21 , x = 1 9 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =4 , x = 1 3 } ˆ { o1 =270 , o2 =90} ,
+A r c { y =21 , x =12}
+],
+2 6: [
+Ang { y =20 , x = 1 5 } ˆ { o1 =45 , o2 =90} ,
+A r c { y =13 , x =13} ,
+Ang { y =8 , x = 1 3 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =21 , x = 1 4 } ˆ { o1 = 1 1 2 . 5 , o2 =225} ,
+Ang { y =11 , x = 6 } ˆ { o1 =225 , o2 =360}
+],
+
+2 7: [
+A r c { y =12 , x =14} ,
+Ang { y =20 , x = 1 7 } ˆ { o1 =135 , o2 =225} ,
+Ang { y =16 , x = 1 9 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =5 , x = 1 3 } ˆ { o1 =270 , o2 =45} ,
+Ang { y =8 , x = 2 1 } ˆ { o1 =360 , o2 =180}
+],
+2 8: [
+A r c { y =12 , x =15} ,
+A r c { y =20 , x =12} ,
+Ang { y =20 , x = 1 8 } ˆ { o1 =135 , o2 =225} ,
+Ang { y =16 , x = 2 2 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+Ang { y =5 , x = 1 6 } ˆ { o1 =270 , o2 =90}
+],
+2 9: [
+A r c { y =13 , x =15} ,
+Ang { y =20 , x = 1 8 } ˆ { o1 =180 , o2 =225} ,
+Ang { y =18 , x = 1 9 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =9 , x = 9 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =21 , x = 1 0 } ˆ { o1 =180 , o2 =360}
+],
+3 0: [
+A r c { y =18 , x =16} ,
+A r c { y =10 , x =10} ,
+Ang { y =12 , x = 2 0 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =22 , x = 1 1 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =10 , x = 5 } ˆ { o1 =180 , o2 =360}
+],
+3 1: [
+Ang { y =22 , x = 1 8 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =12 , x = 1 7 } ˆ { o1 =45 , o2 =135} ,
+A r c { y =19 , x =13} ,
+Ang { y =6 , x = 1 3 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =10 , x = 1 4 } ˆ { o1 = 2 4 7 . 5 , o2 =270}
+],
+3 2: [
+A r c { y =19 , x =15} ,
+Ang { y =12 , x = 1 6 } ˆ { o1 =45 , o2 =135} ,
+A r c { y =10 , x =12} ,
+Ang { y =5 , x = 1 2 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =26 , x = 1 3 } ˆ { o1 =90 , o2 =270}
+],
+3 3: [
+Ang { y =12 , x = 1 6 } ˆ { o1 =360 , o2 =135} ,
+Ang { y =7 , x = 1 2 } ˆ { o1 =180 , o2 =225} ,
+Ang { y =23 , x = 1 6 } ˆ { o1 =45 , o2 =225} ,
+A r c { y =18 , x =14} ,
+Ang { y =5 , x = 1 0 } ˆ { o1 =225 , o2 =45}
+],
+3 4: [
+A r c { y =18 , x =17} ,
+Ang { y =6 , x = 1 2 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =11 , x = 1 0 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =24 , x = 1 6 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =12 , x = 1 9 } ˆ { o1 =45 , o2 = 1 1 2 . 5 }
+],
+3 5: [
+
+A r c { y =19 , x =11} ,
+A r c { y =11 , x =14} ,
+Ang { y =16 , x = 1 8 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =6 , x = 1 8 } ˆ { o1 =315 , o2 =135} ,
+Ang { y =23 , x = 1 2 } ˆ { o1 =90 , o2 = 2 4 7 . 5 }
+],
+3 6: [
+Ang { y =10 , x = 1 6 } ˆ { o1 = 2 4 7 . 5 , o2 =270} ,
+A r c { y =19 , x =14} ,
+Ang { y =14 , x = 1 8 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =23 , x = 1 9 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =270 , o2 =90}
+],
+3 7: [
+A r c { y =19 , x =15} ,
+A r c { y =9 , x =14} ,
+Ang { y =25 , x = 1 3 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =13 , x = 1 6 } ˆ { o1 =45 , o2 = 1 1 2 . 5 } ,
+Ang { y =21 , x = 2 0 } ˆ { o1 =45 , o2 =180}
+],
+3 8: [
+A r c { y =22 , x =16} ,
+Ang { y =7 , x = 1 4 } ˆ { o1 =225 , o2 = 2 4 7 . 5 } ,
+A r c { y =17 , x =15} ,
+Ang { y =22 , x = 2 0 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =12 , x = 1 5 } ˆ { o1 =45 , o2 =90}
+],
+3 9: [
+A r c { y =18 , x =15} ,
+Ang { y =12 , x = 1 9 } ˆ { o1 =45 , o2 =135} ,
+A r c { y =10 , x =15} ,
+Ang { y =23 , x = 1 9 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =6 , x = 1 4 } ˆ { o1 = 2 4 7 . 5 , o2 =45}
+],
+4 0: [
+A r c { y =13 , x =14} ,
+Ang { y =19 , x = 1 6 } ˆ { o1 =180 , o2 =270} ,
+Ang { y =19 , x = 2 0 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+Ang { y =9 , x = 1 0 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =15 , x = 7 } ˆ { o1 =180 , o2 =360}
+],
+4 1: [
+Ang { y =16 , x = 1 6 } ˆ { o1 =225 , o2 =270} ,
+A r c { y =10 , x =15} ,
+Ang { y =10 , x = 2 2 } ˆ { o1 =45 , o2 = 2 0 2 . 5 } ,
+Ang { y =7 , x = 9 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =23 , x = 1 6 } ˆ { o1 = 2 2 . 5 , o2 =45}
+],
+4 2: [
+A r c { y =12 , x =15} ,
+Ang { y =16 , x = 1 6 } ˆ { o1 =180 , o2 = 2 4 7 . 5 } ,
+Ang { y =14 , x = 1 9 } ˆ { o1 = 2 2 . 5 , o2 =135} ,
+Ang { y =20 , x = 1 8 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =13 , x = 9 } ˆ { o1 = 2 0 2 . 5 , o2 =360}
+],
+4 3: [
+A r c { y =13 , x =14} ,
+
+Ang { y =18 , x = 1 7 } ˆ { o1 =180 , o2 =270} ,
+Ang { y =18 , x = 1 8 } ˆ { o1 =90 , o2 = 1 5 7 . 5 } ,
+Ang { y =16 , x = 1 9 } ˆ { o1 =360 , o2 =90} ,
+Ang { y =12 , x = 9 } ˆ { o1 =225 , o2 =360}
+],
+4 4: [
+A r c { y =12 , x =15} ,
+Ang { y =18 , x = 1 6 } ˆ { o1 =180 , o2 =270} ,
+Ang { y =17 , x = 2 0 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+Ang { y =12 , x = 9 } ˆ { o1 =225 , o2 = 2 2 . 5 } ,
+Ang { y =7 , x = 1 4 } ˆ { o1 =360 , o2 =135}
+],
+4 5: [
+Ang { y =17 , x = 9 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =12 , x = 1 0 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =19 , x = 1 7 } ˆ { o1 =135 , o2 = 2 4 7 . 5 } ,
+Ang { y =12 , x = 2 4 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =11 , x = 2 2 } ˆ { o1 =225 , o2 =360}
+],
+4 6: [
+Ang { y =18 , x = 1 8 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+A r c { y =11 , x =14} ,
+Ang { y =16 , x = 1 6 } ˆ { o1 = 2 0 2 . 5 , o2 =225} ,
+Ang { y =17 , x = 9 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =11 , x = 8 } ˆ { o1 =225 , o2 =360}
+],
+4 7: [
+Ang { y =18 , x = 1 7 } ˆ { o1 =225 , o2 =270} ,
+A r c { y =11 , x =15} ,
+Ang { y =19 , x = 2 0 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+Ang { y =8 , x = 9 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =26 , x = 1 7 } ˆ { o1 =90 , o2 =225}
+],
+4 8: [
+Ang { y =19 , x = 1 7 } ˆ { o1 =180 , o2 =270} ,
+A r c { y =12 , x =14} ,
+Ang { y =17 , x = 2 1 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =11 , x = 7 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =13 , x = 2 0 } ˆ { o1 = 2 2 . 5 , o2 =45}
+],
+4 9: [
+A r c { y =11 , x =16} ,
+Ang { y =17 , x = 1 8 } ˆ { o1 =225 , o2 = 2 4 7 . 5 } ,
+Ang { y =14 , x = 2 1 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =12 , x = 8 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =24 , x = 1 6 } ˆ { o1 =180 , o2 =315}
+],
+5 0: [
+A r c { y =20 , x =16} ,
+A r c { y =13 , x =15} ,
+Ang { y =10 , x = 8 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =19 , x = 1 1 } ˆ { o1 = 1 5 7 . 5 , o2 =270} ,
+Ang { y =23 , x = 1 9 } ˆ { o1 =45 , o2 =225}
+],
+5 1: [
+A r c { y =18 , x =16} ,
+Ang { y =10 , x = 1 0 } ˆ { o1 =225 , o2 =315} ,
+
+A r c { y =9 , x =15} ,
+Ang { y =25 , x = 1 4 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =15 , x = 2 3 } ˆ { o1 =315 , o2 =135}
+],
+5 2: [
+A r c { y =11 , x =18} ,
+A r c { y =19 , x =14} ,
+Ang { y =5 , x = 2 1 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =24 , x = 1 3 } ˆ { o1 = 6 7 . 5 , o2 =225} ,
+Ang { y =21 , x = 1 0 } ˆ { o1 =225 , o2 =360}
+],
+5 3: [
+A r c { y =19 , x =14} ,
+Ang { y =12 , x = 1 2 } ˆ { o1 =225 , o2 =360} ,
+A r c { y =10 , x =16} ,
+Ang { y =23 , x = 1 8 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =6 , x = 1 8 } ˆ { o1 = 2 9 2 . 5 , o2 =90}
+],
+5 4: [
+Ang { y =14 , x = 1 1 } ˆ { o1 = 6 7 . 5 , o2 =90} ,
+A r c { y =19 , x =14} ,
+Ang { y =8 , x = 1 8 } ˆ { o1 =270 , o2 = 6 7 . 5 } ,
+Ang { y =25 , x = 1 1 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =15 , x = 8 } ˆ { o1 =225 , o2 =360}
+],
+5 5: [
+A r c { y =18 , x =16} ,
+A r c { y =10 , x =14} ,
+Ang { y =6 , x = 1 3 } ˆ { o1 =270 , o2 =45} ,
+Ang { y =25 , x = 1 4 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =18 , x = 2 3 } ˆ { o1 =360 , o2 =180}
+],
+5 6: [
+Ang { y =10 , x = 1 6 } ˆ { o1 =270 , o2 =45} ,
+Ang { y =20 , x = 1 2 } ˆ { o1 = 2 0 2 . 5 , o2 =315} ,
+A r c { y =14 , x =15} ,
+Ang { y =21 , x = 1 4 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =9 , x = 2 3 } ˆ { o1 =90 , o2 =225}
+],
+5 7: [
+A r c { y =18 , x =12} ,
+Ang { y =10 , x = 1 4 } ˆ { o1 =90 , o2 =135} ,
+Ang { y =23 , x = 1 9 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =6 , x = 2 1 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =9 , x = 7 } ˆ { o1 =225 , o2 =45}
+],
+5 8: [
+A r c { y =19 , x =13} ,
+A r c { y =11 , x =17} ,
+Ang { y =6 , x = 1 3 } ˆ { o1 =270 , o2 =45} ,
+Ang { y =25 , x = 1 6 } ˆ { o1 =90 , o2 =225} ,
+Ang { y =12 , x = 7 } ˆ { o1 =180 , o2 =315}
+],
+5 9: [
+Ang { y =11 , x = 1 2 } ˆ { o1 =90 , o2 =135} ,
+A r c { y =20 , x =13} ,
+Ang { y =8 , x = 1 5 } ˆ { o1 =270 , o2 =45} ,
+
+Ang { y =5 , x = 2 2 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =25 , x = 1 1 } ˆ { o1 =135 , o2 =270}
+],
+6 0: [
+A r c { y =16 , x =19} ,
+Ang { y =17 , x = 1 0 } ˆ { o1 = 2 2 . 5 , o2 =45} ,
+A r c { y =20 , x =13} ,
+Ang { y =11 , x = 9 } ˆ { o1 = 2 0 2 . 5 , o2 =360} ,
+Ang { y =21 , x = 2 1 } ˆ { o1 =45 , o2 =225}
+],
+6 1: [
+A r c { y =18 , x =15} ,
+Ang { y =13 , x = 1 2 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =22 , x = 1 2 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =8 , x = 1 1 } ˆ { o1 =225 , o2 = 2 2 . 5 } ,
+Ang { y =22 , x = 2 0 } ˆ { o1 =45 , o2 =225}
+],
+6 2: [
+A r c { y =16 , x =18} ,
+A r c { y =12 , x =12} ,
+Ang { y =20 , x = 1 0 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =7 , x = 9 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =20 , x = 2 1 } ˆ { o1 =45 , o2 =225}
+],
+6 3: [
+A r c { y =19 , x =15} ,
+Ang { y =10 , x = 1 3 } ˆ { o1 =225 , o2 = 2 2 . 5 } ,
+Ang { y =14 , x = 1 4 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =22 , x = 1 9 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =16 , x = 1 0 } ˆ { o1 =225 , o2 =360}
+],
+6 4: [
+A r c { y =16 , x =20} ,
+A r c { y =13 , x =12} ,
+Ang { y =13 , x = 6 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =23 , x = 1 6 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =11 , x = 2 0 } ˆ { o1 =270 , o2 =90}
+],
+6 5: [
+A r c { y =14 , x =12} ,
+A r c { y =16 , x =18} ,
+Ang { y =9 , x = 9 } ˆ { o1 = 2 0 2 . 5 , o2 = 2 2 . 5 } ,
+Ang { y =23 , x = 1 4 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =15 , x = 2 2 } ˆ { o1 =45 , o2 =180}
+],
+6 6: [
+A r c { y =14 , x =14} ,
+A r c { y =19 , x =18} ,
+Ang { y =7 , x = 1 2 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =22 , x = 1 1 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =22 , x = 2 0 } ˆ { o1 =45 , o2 =225}
+],
+6 7: [
+Ang { y =19 , x = 1 2 } ˆ { o1 =360 , o2 =45} ,
+A r c { y =18 , x =19} ,
+Ang { y =12 , x = 9 } ˆ { o1 =180 , o2 =360} ,
+Ang { y =21 , x = 2 2 } ˆ { o1 =45 , o2 =225} ,
+
+Ang { y =13 , x = 2 3 } ˆ { o1 =315 , o2 =135}
+],
+6 8: [
+A r c { y =18 , x =17} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =225 , o2 =45} ,
+A r c { y =11 , x =16} ,
+Ang { y =20 , x = 1 1 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =18 , x = 2 1 } ˆ { o1 =45 , o2 =180}
+],
+6 9: [
+A r c { y =13 , x =16} ,
+Ang { y =8 , x = 1 2 } ˆ { o1 =225 , o2 =45} ,
+A r c { y =21 , x =15} ,
+Ang { y =22 , x = 1 0 } ˆ { o1 =135 , o2 =315} ,
+Ang { y =4 , x = 2 1 } ˆ { o1 =315 , o2 =135}
+],
+7 0: [
+Ang { y =11 , x = 2 0 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =20 , x = 1 7 } ˆ { o1 =45 , o2 = 2 0 2 . 5 } ,
+Ang { y =8 , x = 1 7 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =23 , x = 1 2 } ˆ { o1 =225 , o2 = 2 2 . 5 } ,
+Ang { y =10 , x = 8 } ˆ { o1 =135 , o2 =270}
+],
+7 1: [
+Ang { y =12 , x = 2 0 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =22 , x = 1 8 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =7 , x = 1 0 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =23 , x = 1 3 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =10 , x = 8 } ˆ { o1 =135 , o2 =225}
+],
+7 2: [
+Ang { y =10 , x = 1 7 } ˆ { o1 =180 , o2 = 2 4 7 . 5 } ,
+Ang { y =16 , x = 2 0 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =24 , x = 1 6 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =8 , x = 1 5 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =11 , x = 5 } ˆ { o1 =225 , o2 =45}
+],
+7 3: [
+Ang { y =10 , x = 1 9 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =23 , x = 1 5 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =8 , x = 1 2 } ˆ { o1 =315 , o2 = 6 7 . 5 } ,
+Ang { y =20 , x = 1 0 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =11 , x = 2 2 } ˆ { o1 =45 , o2 =180}
+],
+7 4: [
+Ang { y =18 , x = 1 8 } ˆ { o1 =45 , o2 =90} ,
+A r c { y =14 , x =13} ,
+Ang { y =21 , x = 1 7 } ˆ { o1 =90 , o2 =180} ,
+Ang { y =7 , x = 1 4 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =24 , x = 1 4 } ˆ { o1 =180 , o2 =315}
+],
+7 5: [
+A r c { y =13 , x =15} ,
+Ang { y =17 , x = 1 7 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =21 , x = 1 6 } ˆ { o1 =90 , o2 = 2 0 2 . 5 } ,
+Ang { y =8 , x = 1 3 } ˆ { o1 =270 , o2 = 6 7 . 5 } ,
+Ang { y =20 , x = 1 5 } ˆ { o1 =225 , o2 =315}
+
+],
+7 6: [
+Ang { y =8 , x = 1 1 } ˆ { o1 =270 , o2 =90} ,
+A r c { y =17 , x =11} ,
+Ang { y =22 , x = 2 0 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =14 , x = 2 1 } ˆ { o1 =360 , o2 =135} ,
+Ang { y =28 , x = 1 6 } ˆ { o1 =90 , o2 =270}
+],
+7 7: [
+A r c { y =12 , x =16} ,
+Ang { y =19 , x = 1 6 } ˆ { o1 =90 , o2 = 2 0 2 . 5 } ,
+Ang { y =15 , x = 2 0 } ˆ { o1 =45 , o2 =90} ,
+Ang { y =7 , x = 1 1 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =17 , x = 1 3 } ˆ { o1 =225 , o2 =270}
+],
+7 8: [
+Ang { y =12 , x = 2 0 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =8 , x = 1 0 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =23 , x = 1 7 } ˆ { o1 =45 , o2 =225} ,
+Ang { y =11 , x = 5 } ˆ { o1 =90 , o2 =270} ,
+Ang { y =24 , x = 1 1 } ˆ { o1 =225 , o2 =45}
+],
+7 9: [
+Ang { y =19 , x = 1 5 } ˆ { o1 = 2 0 2 . 5 , o2 =270} ,
+A r c { y =14 , x =13} ,
+Ang { y =15 , x = 1 7 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =9 , x = 1 6 } ˆ { o1 =270 , o2 =45} ,
+Ang { y =18 , x = 2 0 } ˆ { o1 =90 , o2 =225}
+],
+8 0: [
+A r c { y =12 , x =16} ,
+Ang { y =17 , x = 1 3 } ˆ { o1 =270 , o2 =315} ,
+A r c { y =19 , x =12} ,
+Ang { y =16 , x = 1 8 } ˆ { o1 = 6 7 . 5 , o2 =180} ,
+Ang { y =6 , x = 1 8 } ˆ { o1 =270 , o2 =90}
+],
+8 1: [
+A r c { y =21 , x =16} ,
+Ang { y =15 , x = 1 7 } ˆ { o1 =45 , o2 =135} ,
+A r c { y =11 , x =15} ,
+Ang { y =16 , x = 1 1 } ˆ { o1 =180 , o2 =270} ,
+Ang { y =8 , x = 1 3 } ˆ { o1 =270 , o2 =45}
+],
+8 2: [
+A r c { y =20 , x =13} ,
+A r c { y =9 , x =16} ,
+Ang { y =15 , x = 1 1 } ˆ { o1 =225 , o2 =360} ,
+Ang { y =14 , x = 1 7 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =24 , x = 1 3 } ˆ { o1 =90 , o2 =225}
+],
+8 3: [
+A r c { y =21 , x =15} ,
+Ang { y =17 , x = 1 1 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =6 , x = 1 6 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =15 , x = 1 7 } ˆ { o1 =45 , o2 =135} ,
+A r c { y =11 , x =15}
+],
+
+8 4: [
+Ang { y =15 , x = 1 3 } ˆ { o1 =225 , o2 =315} ,
+A r c { y =21 , x =14} ,
+Ang { y =14 , x = 1 9 } ˆ { o1 =45 , o2 =180} ,
+A r c { y =10 , x =17} ,
+Ang { y =7 , x = 1 4 } ˆ { o1 =270 , o2 =45}
+],
+8 5: [
+A r c { y =12 , x =14} ,
+Ang { y =16 , x = 1 5 } ˆ { o1 = 6 7 . 5 , o2 =135} ,
+A r c { y =21 , x =14} ,
+Ang { y =17 , x = 1 0 } ˆ { o1 =180 , o2 =315} ,
+Ang { y =8 , x = 1 1 } ˆ { o1 =225 , o2 =45}
+],
+8 6: [
+A r c { y =20 , x =16} ,
+A r c { y =10 , x =16} ,
+Ang { y =14 , x = 1 9 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =17 , x = 1 1 } ˆ { o1 =180 , o2 =315} ,
+Ang { y =24 , x = 1 8 } ˆ { o1 =45 , o2 =225}
+],
+8 7: [
+Ang { y =15 , x = 1 3 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =15 , x = 1 7 } ˆ { o1 =45 , o2 =135} ,
+A r c { y =20 , x =15} ,
+A r c { y =10 , x =15} ,
+Ang { y =25 , x = 1 5 } ˆ { o1 =90 , o2 =270}
+],
+8 8: [
+A r c { y =19 , x =16} ,
+A r c { y =10 , x =16} ,
+Ang { y =15 , x = 1 8 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =14 , x = 1 2 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =5 , x = 1 4 } ˆ { o1 =270 , o2 = 6 7 . 5 }
+],
+8 9: [
+A r c { y =19 , x =15} ,
+A r c { y =9 , x =15} ,
+Ang { y =13 , x = 1 9 } ˆ { o1 =45 , o2 =135} ,
+Ang { y =13 , x = 1 4 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =22 , x = 1 8 } ˆ { o1 =45 , o2 =225}
+],
+9 0: [
+Ang { y =16 , x = 1 6 } ˆ { o1 = 1 5 7 . 5 , o2 =225} ,
+A r c { y =13 , x =13} ,
+Ang { y =17 , x = 1 9 } ˆ { o1 =360 , o2 =135} ,
+Ang { y =8 , x = 1 1 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =9 , x = 1 5 } ˆ { o1 =360 , o2 =90}
+],
+9 1: [
+Ang { y =17 , x = 1 5 } ˆ { o1 =225 , o2 =270} ,
+A r c { y =12 , x =16} ,
+Ang { y =22 , x = 1 6 } ˆ { o1 =45 , o2 =225} ,
+A r c { y =12 , x =20} ,
+Ang { y =8 , x = 1 7 } ˆ { o1 =270 , o2 =90}
+],
+9 2: [
+
+A r c { y =13 , x =15} ,
+Ang { y =17 , x = 1 6 } ˆ { o1 = 2 0 2 . 5 , o2 =225} ,
+Ang { y =17 , x = 1 8 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =10 , x = 1 1 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =9 , x = 1 9 } ˆ { o1 =315 , o2 =45}
+],
+9 3: [
+A r c { y =13 , x =14} ,
+Ang { y =19 , x = 1 6 } ˆ { o1 = 2 0 2 . 5 , o2 =270} ,
+Ang { y =19 , x = 1 9 } ˆ { o1 = 2 2 . 5 , o2 =180} ,
+Ang { y =8 , x = 1 0 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =9 , x = 1 9 } ˆ { o1 =360 , o2 =45}
+],
+9 4: [
+Ang { y =14 , x = 1 7 } ˆ { o1 =225 , o2 = 2 4 7 . 5 } ,
+A r c { y =12 , x =14} ,
+Ang { y =17 , x = 1 9 } ˆ { o1 =45 , o2 = 2 0 2 . 5 } ,
+Ang { y =10 , x = 1 1 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =8 , x = 2 0 } ˆ { o1 =315 , o2 =90}
+],
+9 5: [
+Ang { y =16 , x = 1 9 } ˆ { o1 =225 , o2 = 2 4 7 . 5 } ,
+A r c { y =13 , x =14} ,
+Ang { y =20 , x = 1 9 } ˆ { o1 =45 , o2 =180} ,
+Ang { y =11 , x = 8 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =11 , x = 2 1 } ˆ { o1 =360 , o2 =135}
+],
+9 6: [
+A r c { y =14 , x =14} ,
+Ang { y =21 , x = 1 8 } ˆ { o1 =360 , o2 =180} ,
+Ang { y =22 , x = 1 5 } ˆ { o1 =180 , o2 =315} ,
+Ang { y =7 , x = 1 7 } ˆ { o1 = 2 9 2 . 5 , o2 =90} ,
+Ang { y =11 , x = 9 } ˆ { o1 =180 , o2 =360}
+],
+9 7: [
+Ang { y =16 , x = 1 4 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =23 , x = 1 4 } ˆ { o1 =45 , o2 =225} ,
+A r c { y =11 , x =16} ,
+Ang { y =6 , x = 1 7 } ˆ { o1 =270 , o2 =90} ,
+Ang { y =13 , x = 2 1 } ˆ { o1 =45 , o2 =180}
+],
+9 8: [
+A r c { y =11 , x =17} ,
+Ang { y =16 , x = 1 4 } ˆ { o1 =225 , o2 =270} ,
+Ang { y =9 , x = 1 3 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =20 , x = 1 6 } ˆ { o1 =45 , o2 = 2 0 2 . 5 } ,
+Ang { y =9 , x = 2 0 } ˆ { o1 =360 , o2 =135}
+],
+9 9: [
+A r c { y =12 , x =16} ,
+Ang { y =19 , x = 1 2 } ˆ { o1 =225 , o2 =315} ,
+Ang { y =21 , x = 1 4 } ˆ { o1 =45 , o2 = 2 0 2 . 5 } ,
+Ang { y =8 , x = 1 4 } ˆ { o1 =225 , o2 =45} ,
+Ang { y =7 , x = 2 1 } ˆ { o1 =315 , o2 =45}
+]
+
+

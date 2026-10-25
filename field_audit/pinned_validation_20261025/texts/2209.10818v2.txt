@@ -1,0 +1,1784 @@
+Memory-Augmented Graph Neural Networks: A
+Brain-Inspired Review
+
+arXiv:2209.10818v2 [cs.LG] 14 Jul 2023
+
+Guixiang Ma , Vy A. Vo, Theodore Willke, and Nesreen K. Ahmed
+
+Abstract—We provide a comprehensive review of the existing
+literature on memory-augmented GNNs. We review these works
+through the lens of psychology and neuroscience, which has
+several established theories on how multiple memory systems and
+mechanisms operate in biological brains. We propose a taxonomy
+of memory-augmented GNNs and a set of criteria for comparing
+their memory mechanisms. We also provide critical discussions on
+the limitations of these works. Finally, we discuss the challenges
+and future directions for this area.
+Impact Statement—Memory-augmentation of graph neural
+networks is an emerging research field in the deep graph learning
+community. These augmentations can enhance GNNs’ capabilities
+for structured representation learning and relational reasoning
+tasks, such as human-object interaction prediction, question
+answering, algorithmic reasoning, etc. This paper provides the
+first systematic review of memory-augmented GNNs from the
+perspective of neuroscience and psychology. We identify the open
+challenges in this field and shed light on the promising directions
+for future work. Our work will help facilitate novel brain-inspired
+designs to advance graph neural networks for various domains.
+Index Terms—Graph neural networks, Memory-augmented
+neural networks, Relational reasoning, Structured representation
+
+I. I NTRODUCTION
+Graph neural networks (GNNs) are a family of models at
+the intersection of deep learning and structured approaches,
+and have been widely studied in recent years [1, 2]. GNNs
+typically rely on local message passing to learn representations
+from both irregular graphs (e.g. social networks, molecules)
+and regular graphs (e.g. image grids). The combination of deep
+learning and message passing allows them to extract structured information and relational dependencies from graphs to
+accomplish a variety of tasks [3, 4, 1, 2]. However, a variety of
+limitations in GNNs have led to a convergent set of approaches
+that augment a message passing network with some form of
+memory. Here, we review a diverse set of papers on memoryaugmented GNNs
+The first motivation to review memory-augmented GNNs
+from this perspective is historical. Many areas of machine
+learning have repeatedly drawn inspiration from the brain to
+build architectures that maintain information over time. Early
+efforts include recurrent neural network (RNN) architectures
+[5, 6] that use internal states to store information about
+sequential inputs. These have made many advances in several
+areas of machine learning, and are key to several of the
+memory-augmented GNNs we review here. Other memoryaugmented neural networks (MANNs) utilize external memory
+with differentiable read-write operators that allow the neural
+network to store and access past experiences. MANNs have
+
+been shown to enhance performance on many learning tasks,
+such as reinforcement learning [7], meta learning [8], and fewshot learning [9]. The second motivation is that focusing on
+memory in GNNs may specifically improve performance on
+structured representation learning problems such as relational
+reasoning. In particular, studies in both cognitive neuroscience
+and machine learning suggest that memory plays a key role in
+relational reasoning [10]. Several cognitive behavioral studies
+of human recall have led to proposals that the contents of
+memory are stored as structured representations [11, 12, 13].
+These are bolstered by neuroscience findings of a similarity structure in neural representations of memories, i.e. that
+more similar memories lead to more similar representations
+[14, 15]. In the realm of brain-inspired machine learning,
+[16] demonstrated that augmenting an RNN with a relational
+memory module that allows memories to interact with each
+other improves its performance for various relational reasoning
+tasks, including as partially observed reinforcement learning
+tasks, program evaluation, etc. The final motivation for this
+review is that GNN researchers have already turned to memory
+mechanisms to alleviate specific shortcomings of these models.
+These shortcomings include learning long-range dependencies
+across large graph neighborhoods, as well as across longrange relationships across time for dynamic graphs. However, these efforts are largely independent and have not been
+reviewed from a comprehensive or unified perspective. The
+aim of our review is to create a framework for understanding
+memory-augmented GNNs that may generate new proposals
+for network architectures, datasets, tasks, and ML modules
+that can tackle problems in graph learning and improve the
+expressiveness of GNNs.
+capabilities on various graph learning tasks. We emphasize
+that this paper does not attempt to review the extensive
+literature on GNNs or deep graph representation learning that
+do not explicitly use memory. Prior works have focused on
+these topics [see [1, 2, 17]]. Here instead, we focus on the
+body of works that use memory in the model design of graph
+neural networks and provide a taxonomy to categorize the
+models. Many of the recent works that we review in this
+paper have not been discussed in prior surveys of GNNs.
+We also provide a critical discussion of pros and cons of
+different model designs to provide practitioners with insights
+to inform the design of their next memory-augmented GNN.
+Part of this critical review is undertaken from a neuroscience
+perspective to provide proposals for brain-inspired memory
+augmentations. To the best of our knowledge, this is the
+first review paper on this topic. Our main contributions are
+
+summarized below:
+Our contributions are:
+• We propose a taxonomy of existing memory-augmented
+GNNs.
+• We provide a set of criteria for comparing the memory
+mechanisms, inspired by neuroscience.
+• We present critical discussion on limitations.
+• We provide insights on the open challenges and future
+directions in this field.
+
+readout functions ϕ and ψ can be neural network components
+like a multilayer perceptron or an attention mechanism [18].
+The particular definition of these components is often the key
+distinction between different GNN architectures [3]. These
+may also be referred to as message-passing neural networks
+(MPNNs) in the field of geometric deep learning [19].
+
+II. BACKGROUND
+
+GNNs can be considered a generalization of other popular machine learning approaches, mainly convolution and
+recurrence [4, 19]. Convolutional networks operate over a
+grid and are invariant to spatial translation. Recurrent neural
+networks (RNNs) operate over timesteps and are invariant to
+time translation. GNNs operate over graphs which represent
+their nodes and edges as permutation-invariant sets. Both grids
+and temporal sequences can be represented as graphs, and are
+hence special cases of GNNs. This has inspired several GNN
+architectures that use these ML operations as part of their
+message passing mechanisms, such as early recursive GNNs
+[20] and graph convolutional networks (GCNs) [21]. While
+their form is general, GNNs must either be equivariant or
+invariant functions of the data depending on what type of task
+they are performing [1]. This invariance can be an expressive
+limitation of GNNs and has led to a body of theoretical work
+to formally define the abilities of these models [22, 23].
+A recent comprehensive review by Wu et al. [1] taxonomized GNNs into four main categories. In addition to convolutional and recurrent GNNs, they added spatial-temporal
+GNNs and graph autoencoders that learn network embeddings.
+We focus our review on GNNs that have been described as
+having some form of memory. This includes GNNs in all four
+of Wu et al.’s categories [1]. These memory augmentations
+might store information about the graph structure or previous
+timestep information. An illustration of different forms of
+memory used in augmented GNNs is given in Figure 1. One
+
+First we will review some key concepts and background of
+graph neural networks and the historical use of the concept
+of memory in this literature. Then we will review some key
+concepts and background on the cognitive neuroscience of
+memory. Together these two literatures will help establish
+our taxonomy to understand how memory may improve the
+performance and expressivity of GNNs.
+A. Background: graph neural networks
+Let G = (V, E) denote a graph, where V is the set of nodes,
+E ⊆ V ×V is the set of edges. Let N =| V | be the number of
+nodes, and A, D be the adjacency matrix and degree matrix.
+For each node v ∈ V , let Nv = {u | (u, v) ∈ E} be its
+neighborhood node set, and xv be the feature vector of node
+v. While there may also be edge-level and graph-level features
+in GNNs, we give definitions that omit them for simplicity (see
+[1] for a more detailed definition).
+Message passing in GNNs consists of three steps that
+update the features Xv . There
+L is the message function ψ,
+the aggregation operator
+, and the readout function ϕ.
+The learnable message function defines how the neighbors’
+feature vectors are sent
+Lto the the target node, ψ(xu , xv . The
+aggregation operator
+is a permutation-invariant function
+such as a sum, mean, or maximum that combines the messages
+across the neighborhood node set Nv . The learnable readout ϕ
+then updates the hidden node representation. The message and
+
+∀u ∈ Nv , Xv = ϕ(xv ,
+
+M
+
+ψ(xv , xu )
+
+(1)
+
+Fig. 1. Examples of different forms of memory used with GNNs. A, C] Red boxes outline the network mechanism that contains the memory. B, D] Red
+arrows indicate how read and write mechanisms interact with the memory state m.
+
+early and widely used form of memory in GNNs involved
+the adaptation of RNN units, such as Gated Recurrent Unit
+(GRUs), to maintain an internal memory state for graph inputs.
+In the GatedGNN model, [24] employ a gated recurrent unit
+(GRU) [25] to maintain a memory for each node. This memory
+is updated by its previous hidden states and its neighbors’
+hidden states, which can be defined as:
+(t−1)
+h(t)
+,
+v = GRU (hv
+
+X
+
+Wh(t−1)
+)
+u
+
+(2)
+
+u∈N (v)
+
+where W represents the learnable weight parameters. An
+example of the propagation model of gated GNNs for one
+timestep can be found in Figure 2.
+B. Background: memory in psychology and neuroscience
+Figure 3A shows a typical taxonomy of multiple memory
+systems that distinguishes short-term memory from longterm memory [32]. Long-term memory is required to learn
+structured knowledge and durable facts about the environment
+over days to years [31, 33]. One type of long-term memory,
+episodic memory, enables us to store details of specific events,
+or episodes, that may be useful in the future. Both forms
+of long-term memory are supported by the hippocampus and
+related medial temporal lobe structures [30, 33] (gray structure
+in Fig. 3C). By contrast, working memory allows us to
+engage in the short-term manipulation of information, such
+as adding and multiplying large numbers. Working memory
+plays a central role in global workspace theory [34, 35],
+which posits the existence of a globally accessible, limited
+capacity workspace where information can be coordinated and
+communicated. This global workspace introduces a bottleneck
+that forces the connected modules to compete, since only the
+most important or relevant modules at any given time can
+rewrite the contents of memory in the workspace.
+Figure 3B illustrates a classic theory on interaction between
+perception (sensory register) and memory systems, where attention gates between systems (black arrows) selectively filter
+what information enters into the next stage [36]. These gates
+
+2
+1
+1
+3
+
+1
+4
+1
+
+15
+
+(a) Example input graph
+
+h1(t-1)
+
+h1(t)
+
+h2(t-1)
+
+h2(t)
+
+h3(t-1)
+
+h3(t)
+
+h4(t-1)
+
+h4(t)
+
+h5(t-1)
+
+h5(t)
+
+(b) Unrolled one timestep
+
+Fig. 2. Early memory GNN model. GNNs with recurrent units retain a
+history of computation in the hidden state. For an input graph shown in (a),
+we illustrate how information is propagated over one timestep (b).
+
+Fig. 3.
+Cognitive neuroscience theories on memory systems and their
+interactions. A] A typical taxonomy of multiple memory systems. B] A classic
+theory on interaction between perception (sensory register) and memory
+systems, where information is passed via attentional filters. C] Brain systems
+involved in learning structured knowledge. Figure adapted from [26].
+
+allow for attentional selection of the content in memory, so that
+only relevant information from perception enters short-term
+memory. Furthermore, only information that would be useful
+in long-term memory is encoded. Figure 3C depicts the brain
+systems thought to be involved in complementary learning
+systems, which facilitate the transfer of information from
+short-to long-term memory. The fast learning system is largely
+thought to rely on synaptic plasticity in the hippocampus
+(red arrows). The slow system relies on cortical plasticity
+(green arrows) as well as hippocampal-cortical interactions
+(blue arrows). While the theories illustrated in Figure 3 build
+on a molecular and cellular understanding of memory, their
+main focus is to define cognitive modules or neural systems
+that tackle a particular set of problems. A similar approach
+can help shape our understanding and function of memory
+modules in GNN architectures.
+Another key advance was made in understanding the different stages of memory, regardless of its duration. The stages
+include (1) encoding, (2) maintenance or consolidation, and
+(3) retrieval [37, 38]. It is widely understood that some active
+selection mechanism determines what content is processed in
+each stage of memory. This selection is necessary because
+memory capacity is limited – and is especially necessary in a
+globally accessible workspace since it has a very low capacity
+
+limit compared to long-term memory. Therefore, we can also
+analyze memory GNN to determine whether there is an active
+mechanism that selects specific content to write to memory or
+to retrieve from memory. In some cases, the design of these
+memory mechanisms defaults to the simplest method, which
+is to perform no selection at all and allow all content to be
+written and retrieved.
+III. F RAMEWORK AND TAXONOMY
+We analyze each memory-augmented GNN by (1) the scope
+and form of the memory, (2) the machine learning problem it
+was designed to tackle, and (3) the read, write, and forget
+mechanisms of the memory (Tables I-II).
+A. Scope of memory
+We described GNNs above as a generalized model form that
+can maintain invariance over space or time, depending on what
+is represented by the nodes and edges in the graph. Similarly,
+memory-augmented GNNs can store information about space,
+time, or both space and time. In Table I we define space
+as distance in the graph. Memory GNNs which operate over
+space are storing information about graph structure in memory,
+e.g. to enable non-local processing or to learn particular
+structures such as hierarchies. Memory GNNs which operate
+over time, such as recurrent GNNs, are enabling historydependent processing. Memory GNNs that operate over both
+space and time can process graphs that have evolving features
+or connectivity over time (e.g., dynamic graphs).
+As introduced in Section II, Gated GNNs [24] incorporate
+a gated recurrent unit and unroll the recurrent computation
+for some number of timesteps T , backpropagating through
+time to compute the gradients. Unlike other GNNs, they can
+process sequential information. Therefore we classify them as
+operating over time, even though they may store spatial or
+structural information. See Figure 4 for an illustration of the
+scope of specific memory GNN models.
+The scope of memory is a key distinction to understand
+when drawing parallels between GNNs and humans. Human
+memory, by definition, is always operating over the scope
+of time. Information in human long-term memory, however,
+can encode relational structures that can enable structural
+generalization [10].
+B. Problems in machine learning
+Memory augmentation has been used to address several
+different types of machine learning problems, which we divide into categories: long-range dependencies, expressivity of
+message-passing networks, dynamic graphs, and structured
+representation learning. While a certain work may fall into
+more than one of these categories, we focus on categorizing
+the work based on their motivation for memory augmentation.
+1) Memory for long-range dependencies: Learning longrange dependencies across a graph is a known problem for
+message-passing GNNs [39, 1, 40]. This is mainly due to the
+fact that GNNs update node features based on local information propagated across some k-hop neighborhood [3, 39].
+
+However, many problems in graph learning may require interactions with distant nodes [40]. Researchers first hypothesized that increasing the depth of the network by stacking L
+GNN layers would enable learning representation in an L-hop
+neighborhood. However, it has been observed that when the
+number of layers increases, the node representations become
+indistinguishable. This is known as the “over-smoothing” issue
+[1]. Moreover, as the number of layers increases, the number
+of nodes in each node’s receptive field grows exponentially.
+This also causes “over-squashing”, since information from the
+exponentially-growing receptive field will be compressed into
+fixed-length node vectors [39]. As a consequence, the graph is
+not able to propagate messages from distant nodes, and thus
+only captures short-range information.
+Memory augmentation has been proposed to bolster nonlocal learning abilities in GNNs. One way to do this is to
+add a virtual node that is connected to every other node in
+the graph. Gilmer et al. [41] name this virtual graph element
+a ”master node”, and allow each node to both read from and
+write to the master during every step of message passing. They
+describe the master node as a ”global scratch space” for the
+GNN – which we note is a similar idea to global workspace
+theory in cognitive neuroscience. This virtual node approach
+is discussed in more detail in the next section on expressivity.
+In addition to memory augmentation that operates over
+the scope of space, other works have added memory to
+GNNs to enable learning long-range dependencies over time.
+For example, Rossi et al. [42] create a memory state that
+stores a vector for each node the model has encountered so
+far. This memory is not global – that is, it does not store
+information about the entire graph. Another work proposes
+a GNN architecture for video processing, where the memory
+state stores previous information about some portion of the
+video frame [43].
+2) Memory for expressivity: Theoretical work on the expressivity of GNNs often explores their ability to distinguish
+different graph structures. [3] showed that message-passing
+GNNs can be as powerful as the Weisfeiler-Lehman (WL)
+graph isomorphism test, which is an algorithm to distinguish
+whether two graphs are topologically identical. Like GNNs,
+the WL test also aggregates features from neighboring nodes,
+thereby mapping different node neighborhoods to different
+feature vectors. However, this analysis assumes that the node
+features are countable. See [44] for a discussion on extending
+work on GNN expressiveness to continuous feature spaces.
+In memory-augmented GNNs, the only theoretical work
+we found explored the impact of globally connected (GC)
+virtual nodes on expressiveness. These GC nodes, introduced
+by Gilmer et al. [41], are connected to every other node in the
+graph and are updated via message passing. Xiong et al. [45]
+explored how adding one or more of these GC nodes can act
+as a memory to improve performance on node classification
+tasks. Due to the permutation invariance of message passing,
+GNNs can fail to distinguish graph substructures that are
+locally isomorphic – that is, locally isomorphic neighborhoods
+will map to identical feature vectors. They show that defin-
+
+ing GC memory nodes can break the symmetry in locally
+indistinguishable graph substructures. This is accomplished by
+defining new aggregation rules:
+∀u ∈ Nv , ∀i ∈ VM , hv =
+
+M
+
+(xv , xu , mi )
+
+(3)
+
+∀i ∈ VM , mi =
+
+M
+
+(xv , mi )
+
+(4)
+
+where VM is the set of memory nodes, and mi is the
+representation for memory node i. Xiong et al. [45] define
+two possible models with memory nodes, and further show
+that this improved performance on standard benchmarks.
+Recently [46] investigated a variant on this concept by
+augmenting networks with multiple virtual nodes. Rather than
+being globally connected, each virtual node is connected to
+a different group of nodes. They also show that these virtual
+node augmentations enable the GNN to distinguish between
+isomorphic graph structures. Furthermore, their analysis suggests that using multiple virtual nodes instead of a single
+GC node can have a greater effect on learning long-range
+dependencies and alleviating over-smoothing [46].
+Cai et al. [47] establish a link between message-passing
+networks with GC nodes and two other related deep learning
+approaches: self-attention transformer layers and DeepSets
+[48]. We dive deeper into this connection in Section V.
+3) Memory for dynamic graphs: Dynamic or temporal
+graphs allow the nodes, features, and edges to change over
+time. These often depend on sequence models with recurrence
+and internal memory representation [49]. A review of all the
+work on temporal graph learning that employs RNNs is out
+of the scope of this paper. Instead we describe two general
+approaches to temporal graphs, following Gao and Ribiero
+[49]. The typical approach treats a dynamic graph as a series
+of static graph snapshots, and applies a GNN to each snapshot.
+Then an RNN cell might operate over these outputs. The
+memory state of the RNN cell can be understood to encode the
+previous graph snapshot. In contrast, other methods first apply
+sequence models to the node and/or edge features, then apply
+a GNN to the hidden representations of the sequence model
+[49, 50, 42]. Here the memory states of the RNN encode the
+history of the feature representations, and the GNN aggregates
+over this history. This is the case for the Temporal Graph
+Network [42], which uses this memory to learn long-range
+temporal dependencies.
+One can also view the evolving graph as a persistent data
+structure. Following this line of thought, [51] propose an
+approach that allows a GNN to learn which nodes and features
+should persist to complete an algorithmic reasoning task. They
+suggest this is akin to episodic long-term memory.
+4) Memory that captures relational structure: The last
+category of approaches views the graph itself as memory, and
+devises an augmented GNN to learn the relational structure.
+One work proposes memory layers in their GNN that can
+learn hierarchical representations [52]. They use the term
+memory in analogy to memory-augmented neural networks
+that formulate a series of matrix products as query-key-value
+
+Fig. 4. Scope and form of memory GNNs reviewed here. All of the works
+shown in Table I are depicted here, sorted by the scope of the memory (Section
+III-A) and whether it is internal or external (Section III-C).
+
+memory, wherein a query representation Q is used to find
+memory keys K. These are used to retrieve the actual values
+for the information in memory, V.
+Other work represents an image or spatial environment as
+a graph, and stores this graph in memory to perform tasks
+like visual question answering [53] or spatial navigation [54].
+Another approach in this category considers the information
+in a knowledge graph to be stored in memory [55, 56].
+C. Forms of memory: internal, external, and more
+By analogy to taxonomies of human memory, we describe
+a few different forms of memory (Figures 1 and 4).
+1) Internal memory: There is a sizeable body of work
+on GNNs which rely on a recurrent unit to process some
+input for a fixed number of timesteps T . The recurrent unit
+contains a hidden state, which is a short-term memory store
+that propagates information from timestep to timestep based on
+a rule such as the one defined by Equation (2) and illustrated
+in Figure 2. In a typical gated GNN, hidden states from
+t < −T are discarded. Given that these hidden states are
+temporary memories directly mapped to a single node, we
+can view them as memories that are internal to the nodes.
+A recent work which caches these node-specific hidden states
+are also only storing internal memories [59]. By analogy to
+biological systems, an internal memory state can be thought of
+as persistent activity in a single neuron, whereas an external
+memory state would be a record of activity across a population
+of neurons. From this we can see that any information that
+would be beneficial to many nodes should be stored in external
+memory. On the other hand, it would be inefficient to store
+information that is only useful to a single node or a small
+number of nodes in external memory – instead, storing it in
+a state internal to the node is preferable. The term external
+memory is in reference to MANNs such as the Neural Turing
+Machine [60], where a controller learns what to read and write
+to memory using inputs across many neurons. The external
+memory has a defined size, or capacity, that sets how many
+
+TABLE I
+F ORM AND SCOPE OF MEMORY GNN S FOR DIFFERENT PROBLEMS AND APPLICATIONS .
+Model
+
+Scope
+
+Graph Memory Network
+(GMN), MemGNN [52]
+
+space
+
+ML problem addressed by memory
+Capturing relational structure (hierarchy)
+
+Form of Memory
+
+Application
+
+key-value store
+
+Graph classification
+
+MemGAT, MemGCN [45]
+
+space
+
+Expressivity (local isomorphism)
+
+global information store
+
+Node classification
+
+Multimodal
+[53]
+
+space
+
+Capturing relational structure
+
+spatially organized external memory & internal memory
+
+Visual QA
+
+Neural-GMN
+
+Memory GN (MGN) [55]
+
+space
+
+Capturing relational structure (KGs)
+
+knowledge graph store
+
+Question Answering
+
+Memory-augmented
+(MA-GNN) [57]
+
+time
+
+Long-range dependencies
+
+cache (short-term memory, STM)
+and key-value store (long-term
+memory, LTM)
+
+Sequential
+recommendation
+
+Gated GNN [24]
+
+time
+
+Long-range dependencies; Sequential outputs
+
+internal
+
+Program verification
+
+TreeLSTM [58]
+
+time
+
+Capturing relational structure (hierarchy);
+long-range dependencies
+
+internal
+
+Sentence parsing
+
+GNN
+
+CacheGNN [59]
+
+time
+
+Long-range dependencies
+
+internal cache
+
+Node classification
+
+Recurrent Space-Time GN
+(RSTG) [43]
+
+space-time
+
+Dynamic graphs; long-range dependencies
+
+internal
+
+Video understanding
+
+Persistent Message Passing
+(PMP) [51]
+
+space-time
+
+Dynamic graphs
+
+internal
+
+Algorithm reasoning
+
+Temporal GN (TGN) [42]
+
+space-time
+
+Dynamic graphs; long-range dependencies
+
+internal
+
+Dynamic node classification, Link prediction
+
+GraphMem-Dialog [56]
+
+space-time
+
+Capturing relational structure (KGs); longrange dependencies
+
+internal & external
+
+Dialog systems
+
+Zweig et al. [54]
+
+space-time
+
+Capturing relational structure
+
+internal to the graph
+
+Graph navigation
+
+GC master node[41]
+
+space
+
+Long-range dependencies; expressivity
+
+global information store
+
+Quantum chemistry
+
+Virtual supernodes [46]
+
+space
+
+Expressivity
+
+external
+
+Link prediction
+
+discrete memory vectors are stored. In an augmented GNN
+for dialog systems, for example, the controller uses input from
+recent context and from a knowledge base to figure out what
+to read and write to the memory state [56].
+a) Other forms of external memory: As described in
+Section III-B, one augmentation to the graph structure that
+can be considered a form of globally accessible memory is
+the virtual node which is connected to every single other
+node in the graph. Unlike the external memories modeled
+after MANNs, the read and write rules for GC memory
+nodes are defined by the message passing paradigm. Since
+these memories span many units, we classify them as external
+memories in Figure 4. However, their distinct form warrants
+a separate entry in Table I.
+A few memory-augmented GNN works reference the querykey-value memory framework, which has been widely used in
+other deep learning networks [61]. Here, the memory can be
+organized by the structure between the key vectors, each of
+which is tied to a value vector that represents a retrieved memory. Typically the retrieval mechanism relies on a weighted
+combination across value vectors. These representations are
+not tied to specific nodes in the graph. We adopt the same
+convention as above – while these are external memories by
+our definition, we label them as distinct forms in Table I.
+Similar, work that treats a knowledge graph as a memory
+store is necessarily storing some information across nodes, and
+
+cannot be considered internal memory.
+D. Memory Write Mechanism
+All memory modules require a write mechanism, which
+determines what information is stored or encoded in memory.
+In most cases, the neural network architecture has a rule
+which determines what is stored in memory. In regimes where
+memory capacity is limited, a selective write mechanism
+ensures that only relevant and useful information is stored for
+later processing. This is in line with cognitive neuroscience
+accounts of how and why attention interacts with human
+memory encoding [62]. We found four principal ways that
+memory-augmented GNNs select information to be written to
+memory (Table II. This excludes work which considers the
+entire graph to be a memory store, and never modifies it [55]
+– this is considered to have no separate write mechanism.
+The four methods are modeled after different ML frameworks:
+caching, gated recurrence, key-value memories, and message
+passing. We analyze when each method may be useful to guide
+ML practitioners in the design choices of their next memoryaugmented GNN.
+1) Caching: This is a simple rule for selecting information
+to store in memory: only the most recent t timesteps are stored
+[57, 59]. This is an effective choice if it is known that the task
+would not benefit from storing long-term information, or if the
+
+TABLE II
+M ECHANISMS FOR STORING AND MODIFYING INFORMATION IN MEMORY GNN S .
+Model
+
+Write Mechanism
+
+Forgetting Behavior
+
+Retrieval Mechanism
+
+Graph Memory Network
+(GMN), MemGNN [52]
+
+cluster assignment
+
+N/A
+
+similarity between query and memory nodes
+
+MemGAT, MemGCN [45]
+
+depends on aggregation rule
+
+N/A
+
+all nodes read memory from previous layer
+
+Multimodal
+[53]
+
+aggregates multimodal information preprocessed through GRUs
+
+reset or forget gate
+
+all nodes read memory from previous timestep
+
+Memory GN (MGN) [55]
+
+None
+
+None
+
+query-memory similarity, then graph walk
+
+Memory-augmented
+(MA-GNN) [57]
+
+STM: store most recent items; LTM: train
+key-value embedding
+
+STM: remove oldest items; LTM: none
+specified
+
+STM: entire cache used; LTM: attention embeds
+query
+
+Gated GNN [24]
+
+learnable weights on previous time-step information
+
+reset or forget gate
+
+all nodes read memory from previous timestep
+
+TreeLSTM [58]
+
+learnable weights on neighbors’ information
+
+forget gate
+
+all nodes read memory from neighbors
+
+CacheGNN [59]
+
+stores most recent hidden states
+
+remove oldest
+
+use all stored states
+
+Recurrent Space-Time GN
+(RSTG) [43]
+
+learnable weights on previous time-step information
+
+forget gate
+
+all nodes read memory from previous timestep
+
+Persistent Message Passing
+(PMP) [51]
+
+learnable persistency mask on previous hidden states
+
+None
+
+learnable relevance mask
+
+Temporal GN (TGN) [42]
+
+message function; message aggregation
+over time; learnable memory update function (GRU)
+
+reset or forget gate;
+temporal embedding
+module
+
+temporal graph attention/sum
+
+GraphMem-Dialog [56]
+
+learnable weights on previous time-step and
+current neighbors’ information; write controller for external memory
+
+update gate
+
+a learnable read controller on previous time-step
+memory cells; attention on entities in memory
+
+Zweig et al. [54]
+
+learnable weights on previous time-step information
+
+reset or forget gate
+
+all nodes read memory from previous timestep
+
+GC master node [41]
+
+learnable memory update function (GRU)
+
+reset gate
+
+variable length processing on memory embeddings
+with an attention step
+
+Virtual supernodes [46]
+
+cluster assignment, MP definition
+
+depends on MP definitions
+
+all neighbors (determined by cluster assignment)
+
+Neural-GMN
+
+GNN
+
+rule is only used for a short-term memory module that will
+later be combined with a long-term memory module.
+For GNNs with internal memory, most used a write rule
+determined by the gate equations of recurrent units. Here
+the information written to memory depended on learnable
+weights in a gated recurrent unit that combine the input with
+the current hidden state [24, 43, 54, 56], allowing contextdependent memory encoding.
+2) Key-value memory: One common form of external memory in neural networks is a key-value store, where the items
+in memory are stored as a key ki associated with a value vi
+[63, 64, 65]. These items are then retrieved based on some
+input query q. The write mechanism can change the entire
+key-value pair.
+The write mechanism consisted of arranging the keys as
+clusters of the queries, and defining the associated values as
+projections of the keys back into the query space. Clustering
+mechanisms are useful when it is known that the information
+to be stored in memory has some higher-level structure.
+Unlike [52], [57] defined a key-value memory over time
+to learn a long-term embedding representation of input items.
+Inspired by previous work on memory [66, 64], they simply
+train the key-value matrices K and V through backpropagation
+
+to write to the memory. While this write mechanism is quite
+general and does not make assumptions about the structure of
+memory, it does assume one of the following: (1) once trained,
+the embedding is an effective static representation of the input
+data, or (2) the embedding is retrained or fine-tuned whenever
+the input data statistics change. This type of write mechanism
+would not be effective in online learning settings.
+3) Message passing: A few papers incorporate some component of message passing to update the contents of memory.
+For example, work that adds a virtual memory node mi [45]
+relies on message passing and aggregation operators to update
+the hidden state of the virtual node. This method does not
+directly incorporate graph structure since the virtual node
+is fully connected. Its main advantage may be the ease of
+implementation.
+[51] performed a round of message passing to compute candidate latent features for the next timestep, Ĥ (t) . These served
+as inputs to predict a persistency mask, which determined
+which latent states were kept in memory. Again this allows
+the memory to incorporate the graph structure. Interestingly,
+the persistency mask also depended on the retrieval mechanism
+(see Section III-E).
+In [46], the authors add s virtual nodes by using a graph
+
+clustering algorithm to define s clusters of nodes, each of
+which is fully connected to its own virtual node. Then an
+aggregation rule determines how information from each node
+in a cluster is aggregated and combined to update the corresponding virtual node.
+
+neighborhood. Other than the identity function, the suggested
+retrieval mechanisms in [42] all take advantage of some time
+encoding so that the temporal neighborhood of the target node
+is taken into account.
+
+E. Memory Retrieval Mechanism
+
+In memory-augmented neural networks, another key factor
+that may determine the performance or expressiveness of
+models is their memory capacity, i.e. how much information
+they can store. For RNNs, for example, two questions about
+their memory capacity are: (1) How much information about
+the task can they store in their parameters? (2) How much
+information about the input history can they store in their
+units? [70]. The answers to these two questions usually also
+indicate the potential bottlenecks of these models.
+For some memory-augmented GNN models, discrete items
+or states are stored in their memory – therefore the capacity
+is bounded by the number of memory nodes and hidden
+dimension. For instance, the memory capacity of the model
+in [45] is bounded by M × D, where M is the number
+of memory nodes added to the graph, and D is the size of
+the hidden dimension for the graph neural network layers.
+In [53], the memory capacity is bounded by P × Q × D,
+where P × Q is the number of regions of the 2D image, and
+D is the size of the hidden dimension. In [52], the memory
+capacity of the proposed memory-based GNN is M ×D, where
+M is the number of centroid nodes in the memory layer of
+the model, and D is the size of the hidden dimension. The
+memory graph networks applied in [55] store a knowledge
+graph in its external memory, therefore its memory capacity
+is the size of the knowledge graph, i.e., G(V, E), where V is
+the set of nodes that represent entities (e.g. locations, events,
+public entities) and E is the set of edges that represent the
+connections among the entities. Similarly, in [56], the external
+memory is organized as a knowledge graph G(V, E), where
+nodes in V represent entities and edges in E represent relations
+between entities. The memory capacity in this case is also the
+size of the graph G(V, E).
+For the models with recurrent memory, they can store the
+latent representation of nodes for a number of time steps. As
+shown in Table I, some of these memory GNNs operate over
+time, like the models proposed in [57, 24] and some others
+operate over both space and time [43, 51, 42]. The memory
+capacity of these models depends on the number of recurrent
+units, number of time steps, and the number of layers. These
+also determine how well the models can learn over space or
+time. However, empirical work suggests that RNN capacity
+seems to be limited by the trainability of the architecture,
+rather than the number of parameters or hidden units [70].
+
+in human memory systems there is typically a selective
+retrieval mechanism that limits irrelevant information from
+being used in computation [36, 67]. We find that selective
+retrieval mechanisms in memory-augmented GNNs typically
+depend on similarity computations, although we discuss two
+other instantiations here as well. This relative lack of diversity
+in retrieval mechanisms suggests that practitioners may benefit
+from considering more flexible methods of memory retrieval,
+a point we discuss further in Section VI.
+1) Similarity-based retrieval: One common retrieval rule
+depends on the similarity between an input query and the
+information in memory [52, 55, 57, 56]. This assumes that
+highly similar information is likely to be relevant to the task.
+In the MANN literature, this is often referred to as ”contentbased addressing” [68]. As a result of its relation to MANNs,
+this retrieval mechanism is often used in systems with memory
+controllers such as [56]. Similarity-based retrieval is also the
+typical mechanism used for key-value memory modules. While
+effective, content similarity is only one way of determining
+what information in memory is relevant. As noted in other
+memory work outside of the GNN literature, biological evidence suggests that memories encoded around the same time
+may be useful to retrieve together, even when they are not
+similar in content [68]. This may be particularly useful to
+consider in dynamic graph settings, where distant parts of the
+graph that appear at the same time should be retrieved together.
+2) Other retrieval mechanisms: In [51], a linear network is
+used to determine which node-specific features are relevant for
+retrieval. Unlike other work we reviewed, the authors used a
+setting where there are ground-truth relevance labels, allowing
+them to simply train the linear retrieval network with a crossentropy loss. This is a more generalized approach than a similarity operation, which has its own inductive bias for content
+similarity. Interestingly, the retrieval mechanism interacts with
+write mechanism: only relevant nodes are written to memory.
+Some memory GNNs have multiple steps as part of the
+retrieval mechanism. These multi-step mechanisms can exploit
+the various advantages of different retrieval mechanisms when
+they are needed. In [57], for example, the query to the longterm memory module was computed by a position-dependent
+attention mechanism, based on the equations used in Transformer networks [69]. Then the similarity between the query
+and key-value memory was computed. Finally, this long-term
+memory is aggregated with all the information in the shortterm memory cache using a learnable, context-dependent gate.
+[42] actually propose several different retrieval mechanisms
+which range from a simple identity function (read from all
+the memories, without transforming them) to a a multi-layer
+graph attention network which aggregates over a temporal
+
+F. Memory Capacity
+
+G. Memory Forgetting
+Memory systems with a limited capacity need to have some
+mechanism or policy in place to discard information that is no
+longer useful or relevant. The forgetting might be passive, e.g.
+memory traces that decay slowly over time, or active, wherein
+specific information is marked as no longer relevant [71]. In
+
+contrast to persistence, forgetting is information transience.
+Neurobiological studies of memory also indicate that transient
+memory is important for memory-guided decision-making in
+dynamic, noisy environments, because transience enhances
+flexibility by reducing the influence of outdated information
+and preventing overfitting to specific past events, thus promoting generalization [71]. Our review finds that dedicated
+forgetting mechanisms, other than the gates in recurrent units,
+are not common in memory-augmented GNNs. They may be
+especially important to consider in dynamic graph settings.
+Memory GNNs that rely on gated recurrent units have
+a built-in reset or forget gate to control what information
+is discarded [53, 24, 42, 54, 43]. [56] relies on a memory
+controller rather than a recurrent unit, but there is no forgetting
+mechanism separate from the rules used to write or update the
+memory. It is worth noting that while the persistent message
+passing model proposed in [51] also has internal memory, it
+does not have any forgetting behavior. Rather, it maintains
+a persistent set of internal states to represent the history of
+operations for entities through their lifetime. This kind of
+behavior can lead to intractable storage costs and complexity
+issues. Moreover, without a forgetting mechanism, the model
+can fail when the information stored in memory becomes
+outdated and not relevant to the current state. In [57], the
+oldest items stored in the short-term memory are removed and
+replaced by recent items, while the long-term memory does
+not have any specified forgetting behavior.
+The influence of outdated information is known as the
+staleness issue in dynamic graphs [72]. When a node no longer
+has events which influence or update its internal state, that
+state may no longer be useful. Rossi et al. [42] propose a
+temporal embedding module to mitigate this issue, and suggest
+different instantiations of this module. All of the methods
+involving some time encoding that can keep track of the
+elapsed time since the last event. The GNN-based methods use
+this time encoding to aggregate information from the memory
+of neighboring nodes when too much time has elapsed. This
+allows the network to update (i.e. forget) old information.
+We found that forgetting is not useful for memory GNNs
+that use memory for storing spatial information about a graph,
+such as the key-value store of graph hierarchical structure
+in [52] and the global information store in [45]. Here the
+spatial features they store involve the entire graph, and all
+that information is required by the models during the feature
+propagation over the graph. They are also not applicable to
+memory GNNs that do not have write mechanisms. In [55], the
+memory was a static knowledge graph that stores entities and
+their relationships from the episodes in a dataset collection.
+However, as discussed above, the memory was never modified by the GNN, and it does not have any mechanism for
+forgetting either.
+H. Productive research directions suggested by taxonomy
+Our review and categorization of memory-augmented GNNs
+using the taxonomic criteria in Tables I and II suggest several
+areas of research that would benefit from further investigation.
+
+1) Theoretical Analysis: Most memory-augmented GNNs
+demonstrate success through experimental evaluations for specific applications. Few provide theoretical proof or analysis on
+the impact of memory-augmentation for graph learning tasks.
+For example, augmenting the GNN with virtual nodes has been
+empirically investigated in many works [41, 73]. While there
+has been some theoretical analysis on this topic [45, 46], many
+open questions remain. For example, it would be useful to
+see theoretical analysis on how virtual memory nodes affect
+the receptive field [74] of nodes to prove the impact of this
+memory augmentation for long-range problems.
+In other areas of machine learning, there has been analysis
+on the relationship between self-attention and various forms
+of memory [75, 76]. Some work examines recurrent models
+with internal [77] or external memory [78]. We argue that
+extending the theoretical analysis of attention and memory
+to message-passing GNNs will be fruitful. Some work on
+this has already begun, with a recent paper investigating
+the relationship between MPNNs with GC virtual nodes and
+self-attention transformer layers [47], particularly through a
+connection with the DeepSets [48] model. They find that a
+MPNN with a GC virtual node can approximate a graph
+transformer layer.
+Beyond attention and memory, however, there are plenty of
+other questions to answer about the theoretical and practical
+abilities of GNNs. For example, the impact of gated internal
+memory on the expressivity of message passing networks is
+not well-understood. Empirically, [39] show that a GatedGNN
+performs relatively well on a synthetic task that requires learning long-range dependencies, partially addressing the problem
+of oversquashing. Yet is unknown how this happens – does
+adding internal memory change the Ricci curvature of the
+graph, which is known to affect oversquashing [79]? Or is
+there another mechanism by which this occurs?
+2) Graph-structured memories: The major forms of memory we identified were internal or external to the graph nodes.
+These memory representations could be modified with writing
+and forgetting mechanisms. Occasionally the memory was
+organized in a particular way based on a predefined inductive
+bias, e.g. a grid representation of an image [53], or clustering
+similar nodes together [52, 46]. Alternatively, a knowledge
+graph was considered itself to be the memory and served as
+the input to a GNN – but the knowledge graph itself could
+not be modified [55, 56]. These two major setups are at odds
+with the neuroscience literature, which suggests that memories
+are stored with relational structure that can be modified over
+time [11, 12, 13, 14, 15, 10]. Future work should consider
+building a memory module that is a dynamic, modifiable graph
+that encodes relational structure. Writing to this memory could
+involve modifying nodes, edges, and features. In contrast to the
+standard dynamic graph setting, where the input data evolve
+over time, the graph-structured memory would represent an
+internal world model for the GNN that evolves over time
+and can be updated as new inputs arrive. We note that other
+MANNs have devised ways to encode relationships between
+memories – but these rely on self-attention, rather than an
+
+explicit graph structure, to achieve relational structure in
+memory [16, 80].
+3) Memory mechanisms for temporal graphs: Temporal
+graphs pose their own unique set of issues that can be
+addressed by more human-like memory mechanisms. For
+example, having a high-capacity long-term memory is likely
+useful when processing a dynamic graph, since past information could suddenly become relevant. Rather than rely on a
+selective write mechanism to filter out irrelevant information,
+then, one should consider more selective retrieval mechanisms. In addition to retrieving information based on content
+similarity, one could retrieve based on other factors like
+contextual similarity or temporal encoding similarity. These
+factors have shown to be key in neuroscience research on longterm memory [81].
+Furthermore, we proposed above that the memory itself
+could be a dynamic graph. This would be useful for a setting
+where inputs evolve over time, and an internal model of
+the world needs to be continuously updated. The retrieval
+mechanism could itself be a GNN.
+4) Multiple memory systems: Despite the advances of the
+memory graph neural network models, there is still a gap
+between what current models can achieve and human intelligence. The challenges are especially apparent in tasks that
+require complex language and scene understanding, reasoning
+about structured data, and transferring learning beyond the
+training conditions [4, 82]. For instance, we humans have
+remarkable abilities to remember information over long time,
+and we can make use of memories at varying time-scales, but
+current memory neural network models, such as the memory
+GNN models based on RNNs that only have internal memory
+[24, 43, 51, 42], are still limited in their capabilities to capture
+long time-scale information.
+One promising direction to further advance memory GNNs
+in these aspects is to design models with multiple memory
+systems. As discussed in previous sections, different forms
+of memory (e.g. internal memory, external memory) have
+their own properties and advantages, and they can improve
+different aspects of graph learning tasks. Having a memory
+GNN with multiple forms of memory could combine their
+benefits for improving GNN’s expressive power, and would
+mimic the multiple memory systems that exist in biological
+systems. A similar point on multiple memory systems has
+been made for models of language processing [83]. Some
+of the existing memory GNNs we reviewed have multiple
+forms of memory, such as a spatially organized external
+memory and internal GRU memory in the Multimodal NeuralGMN [53], or the external knowledge base combined with a
+GRU response decoder in the GraphMemDialog model [56].
+However, these networks are designed specifically for those
+applications, and there is still a lack of general multiple
+memory models for GNNs to improve their expressive power
+to address fundamental problems in graph learning.
+According to dominant theories of human learning and
+memory, there are interactions between different memory
+systems, as illustrated in Figure 3B-3C. For instance, rapidly
+
+learned information can be consolidated as structured, longterm memories through bidirectional interactions between
+the hippocampus and cortex [84]. When designing multiplememory-augmented GNN models, it will be key to consider
+what forms of memories to use and how to formulate interactions between these memories to improve graph learning
+problems.
+IV. A PPLICATIONS
+Different forms of memory or mechanisms may be best
+suited to a particular type of application. The existing memory
+GNN works study a variety of tasks and applications (Table
+I), which we describe in greater detail here. We also highlight
+two other graph learning areas that could benefit from memory
+augmentation: meta-learning and reinforcement learning.
+These applications use memory over a spatial scope and
+may not need forgetting mechanisms (depending on whether
+the graph is static or dynamic). However, it may still be
+the case that selective writing and retrieval mechanisms that
+overweight certain features may improve task performance.
+a) Node Classification.: Node classification is the task of
+predicting class labels for different graph nodes. An example
+of node classification problem in web networks is to predict the
+categories for web pages, where the web pages are represented
+as nodes and hyperlinks as edges in a graph [45]. In program
+analysis for compiler optimization, some data flow analysis
+tasks have also been formulated as a node classification
+problem, such as reachability analysis, which predicts if a
+statement is reachable from a root statement, where statements
+are represented as nodes in the program graph [89]. In these
+tasks, how to learn node representations that can best capture
+the relations or dependencies between nodes is a key problem.
+A memory mechanism in GNNs that could enhance a GNNs’
+capability to capture such information may greatly benefit
+these node classification tasks. [45] has shown by their experiments that incorporating global graph information via the
+memory in MemGAT and MemGCN significantly improves
+the GNN’s performance in node classification tasks. Similar
+to the graph classification tasks, these memory models operate
+over the scope of space and will likely only benefit from
+forgetting mechanisms if the graph is dynamic.
+information about entities and their relations [90, 55]. There
+are also some works that focus on visual QA systems, where
+contexts from images are also used for answering the questions
+[91, 53]. Memory GNN models can greatly benefit these applications, since they have the capability to store the semantic
+and structural information in memory and utilize them with
+knowledge graphs for the QA tasks.
+b) Recommender Systems.: two different forms to memory to capture both short-term item contextual information and
+long-term item dependencies. They also incorporate item cooccurrences to model the relationships between closely related
+items.
+c) Meta-learning on graphs: has an LSTM memory
+controller that interacts with an external memory module using
+a number of read and write heads. It has demonstrated superior
+
+performance in meta-learning tasks such as few-shot prediction
+for image classification [8]. In the meta-learning area, there are
+also problems that involves relational reasoning, for example,
+the few-shot human-object interaction recognition task that
+aims at inferring new interactions between human actions and
+objects with only a few available instances [92]. Having a
+memory-augmented GNN that can learn a general strategy for
+the structured representations it should place into memory and
+how it should use these representations for predictions could
+potentially benefit these tasks.
+d) Reinforcement learning over graphs: Memory is an
+important aspect of intelligence and plays an important role
+in many deep reinforcement learning (RL) models [93]. For
+example, episodic memory has been shown to enable reinforcement learning agents to adapt more quickly and thus improve data efficiency [7, 94]. In graph environments, existing
+reinforcement learning efforts mainly focus on combinatorial
+optimization problems on graphs, such as the Maximum
+Cut [95], community detection [96], and Traveling Salesman
+problems [97]. Some of the works in this area started to
+consider memory-augmented GNNs for RL. For instance, the
+memory-augmented graph RL work [54] we discussed in
+Section III introduces an external memory adapted to the
+graph environment to enable a recurrent model with greater
+representation power for the graph navigation task. However,
+little progress had been made in augmenting GNNs with
+memory for these graph reinforcement learning tasks. This
+would be a promising future direction.
+V. OTHER R ELATED W ORK
+While this review is focused on message-passing GNNs
+augmented with some form of memory, here we discuss other
+machine learning approaches that address the same problems
+in machine learning (e.g. modeling long-range dependencies).
+A. Other message-passing neural networks
+Message-passing neural networks (MPNNs) have been the
+most popular architecture for learning graph-structured data.
+However due to localized information propagation mechanisms, most MPNNs are limited in their capability to learn
+long-range relationships in graphs (Section III). Several works
+have proposed a variety of strategies for capturing longrange dependencies in graphs that do not involve memory.
+For instance, a recurrent GNN framework called Implicit
+Graph Neural Networks (IGNN) was introduced in [98].
+IGNN defines a fixed-point equation as an implicit layer for
+aggregation, and uses an iterative solver to find the equilibrium
+While this technically allows for an ‘infinite’ number of layers,
+the effective range of IGNN (i.e. the maximum number of
+hops to capture dependencies for each node) is bounded by
+a certain value [99]. This limitation still hinders their ability
+to capture long-range dependencies in the graph. [100] propose an unsupervised node representation learning approached
+called Deep Graph Infomax (DGI). DGI maximizes mutual
+information between patch representations and corresponding
+
+high-level summaries of graphs to capture the global information content of the entire graph. In [101], Position-aware
+Graph Neural Networks (P-GNNs) are proposed to capture
+the position/location of nodes within a broader context of
+the graph structure. Specifially, P-GNN first samples sets of
+anchor nodes, computes the distance of a given target node
+to each anchor-set, and then learns a non-linear distanceweighted aggregation scheme over the anchor-sets, to capture
+positions of nodes with respect to the anchor nodes. Although
+these works have improved GNNs’ performance for specific
+tasks, the major limitations of MPNNs such as over-smoothing
+and over-squashing may still exist due to the message passing
+mechanism. It would be beneficial to investigate on how to
+leverage memory with these MPNNs to further improve their
+performance and expressive power for different applications.
+B. Graph Transformer architectures
+The connection between GNNs and GTs hinges on the
+definition of permutation invariant operations. That is, both
+models are closely related to the DeepSets model which
+defines objective functions over permutation-invariant inputs,
+enabling deep learning over sets [48].
+[103] investigated how well GTs can recover graph properties. They showed that GTs outperform MPNNs in some longrange problems, demonstrating their potential to prevent oversquashing. Although the GT models have achieved promising
+results in various graph learning tasks, one major downside of
+GTs is their scalability to larger graphs. The dense attention
+mechanism in GTs means that the time complexity scales
+quadratically with the number of nodes, O(N 2 ). Future work
+should focus on theoretical comparison of GTs and MPNNs on
+various graph learning tasks, rather than purely experimental
+comparisons.
+VI. O PEN C HALLENGES AND F UTURE D IRECTIONS
+A. Empirical Evaluations of Memory
+The current evaluations of the memory GNN models in the
+existing works are mostly done on standard graph learning applications, such as graph/node classification and recommender
+systems. They use common metrics such as classification accuracy to measure the performance of the models and compare
+with baseline GNNs. Although they are able to demonstrate
+the overall performance of the models for the applications
+with these metrics, they lack a framework with fine-grained
+measures for evaluating the contribution of memory for these
+tasks. For instance, it would be useful to have more metrics
+to measure the long range relationships that existing networks
+can capture. Although some works have attempted to do this,
+such as the work in [39] that introduces a NeighborsMatch
+task to evaluate GNNs for long-range problems, there is still
+a lack of general evaluation frameworks, including benchmark
+datasets, tasks, and metrics, for the empirical evaluation of the
+memory GNNs. This would be a valuable future direction.
+
+B. Scalability
+The enhanced capabilities of memory-augmented neural
+networks often come at a high computational cost [104].
+Memory GNNs could be even more prone to this issue, since
+the data they deal with are complex structured data. For
+instance, the memory mechanism proposed for the MemGCN
+[45] introduces an extra O(N M ) message passings per layer
+for the GNNs, which allows each of the N nodes in the
+original graph to interact with the M memory nodes stored
+in external memory. This extra cost could be very large
+when scaling to big graphs or when the graph is sparse. In
+other memory GNN models there is no forgetting mechanism,
+leading them to maintain memories through their lifetime
+without discarding any outdated information [51]. Depending
+on the application this can cause issues with complexity and
+storage costs and severely limits scalability. that suffer from
+complexity issues introduced by the memory augmentation,
+one promising solution is to have a selective write mechanism
+that controls what is written to memory. For example, instead
+of storing information from all nodes in the MemGCN [45]
+, they could consider some form of selection criteria or
+an attention mechanism to ensure only relevant and useful
+information is written into the memory. This could improve the
+efficiency and thus the scalability of the models. Furthermore,
+adding selective forgetting mechanisms to models can not only
+reduce the storage cost of the memory, but it can also help
+alleviate the influence of outdated information and prevents
+the model from overfitting to past events.
+VII. C ONCLUSION
+We have presented a review of the mechanisms, applications, and limitations of current memory GNN models from
+the lens of neuroscience and psychology. It is clear that
+multiple forms of memory exist in these models (Tables III) to support a variety of structured representation learning
+problems. In particular, internal memory supports the local
+persistence of information across time or across a portion of
+the graph, whereas external memory can provide more global
+information or contextual knowledge. Future work on memory
+GNN models may improve both performance and scalability,
+but these advances depend on the continued development of
+both theoretical and empirical tools to evaluate the contribution
+of memory.
+R EFERENCES
+[1] Z. Wu, S. Pan, F. Chen, G. Long, C. Zhang, and
+S. Y. Philip, “A comprehensive survey on graph neural
+networks,” IEEE transactions on neural networks and
+learning systems, vol. 32, no. 1, pp. 4–24, 2021.
+[2] J. Zhou, G. Cui, S. Hu, Z. Zhang, C. Yang, Z. Liu,
+L. Wang, C. Li, and M. Sun, “Graph neural networks:
+A review of methods and applications,” AI Open, vol. 1,
+pp. 57–81, 2020.
+[3] K. Xu, W. Hu, J. Leskovec, and S. Jegelka, “How
+powerful are graph neural networks?” arXiv preprint
+arXiv:1810.00826, 2018.
+
+[4] P. W. Battaglia, J. B. Hamrick, V. Bapst, A. SanchezGonzalez, V. Zambaldi, M. Malinowski, A. Tacchetti,
+D. Raposo, A. Santoro, R. Faulkner et al., “Relational
+inductive biases, deep learning, and graph networks,”
+arXiv preprint arXiv:1806.01261, 2018.
+[5] M. Schuster and K. K. Paliwal, “Bidirectional recurrent
+neural networks,” IEEE transactions on Signal Processing, vol. 45, no. 11, pp. 2673–2681, 1997.
+[6] S. Hochreiter and J. Schmidhuber, “Long short-term
+memory,” Neural computation, vol. 9, no. 8, pp. 1735–
+1780, 1997.
+[7] A. Pritzel, B. Uria, S. Srinivasan, A. P. Badia,
+O. Vinyals, D. Hassabis, D. Wierstra, and C. Blundell,
+“Neural episodic control,” in International Conference
+on Machine Learning. PMLR, 2017, pp. 2827–2836.
+[8] A. Santoro, S. Bartunov, M. Botvinick, D. Wierstra, and
+T. Lillicrap, “Meta-learning with memory-augmented
+neural networks,” in International conference on machine learning. PMLR, 2016, pp. 1842–1850.
+[9] O. Vinyals, C. Blundell, T. Lillicrap, D. Wierstra et al.,
+“Matching networks for one shot learning,” Advances
+in neural information processing systems, vol. 29, pp.
+3630–3638, 2016.
+[10] J. C. R. Whittington, T. H. Muller, S. Mark, G. Chen,
+C. Barry, N. Burgess, and T. E. J. Behrens, “The tolmaneichenbaum machine: Unifying space and relational
+memory through generalization in the hippocampal formation,” Cell, vol. 183, no. 5, pp. 1249–1263.e23, Nov
+2020.
+[11] T. F. Brady, T. Konkle, and G. A. Alvarez, “A review of
+visual memory capacity: Beyond individual items and
+toward structured representations,” Journal of Vision,
+vol. 11, no. 5, p. 44, May 2011.
+[12] T. F. Brady and G. A. Alvarez, “Contextual effects in
+visual working memory reveal hierarchically structured
+memory representations,” Journal of Vision, vol. 15,
+no. 15, p. 6, Nov 2015.
+[13] M. Naim, M. Katkov, S. Recanatesi, and M. Tsodyks,
+“Emergence of hierarchical organization in memory for
+random material,” Scientific Reports, vol. 9, no. 11, p.
+10448, Jul 2019.
+[14] Y. Ezzyat and L. Davachi, “Similarity breeds proximity:
+Pattern similarity within and across contexts is related
+to later mnemonic judgments of temporal proximity,”
+Neuron, vol. 81, no. 5, p. 11791189, Mar 2014.
+[15] M. L. Schlichting and P. W. Frankland, “Memory allocation and integration in rodents and humans,” Current
+Opinion in Behavioral Sciences, vol. 17, p. 9098, Oct
+2017.
+[16] A. Santoro, R. Faulkner, D. Raposo, J. Rae,
+M. Chrzanowski, T. Weber, D. Wierstra, O. Vinyals,
+R. Pascanu, and T. Lillicrap, “Relational recurrent neural networks,” Advances in neural information processing systems, vol. 31, 2018.
+[17] Z. Zhang, P. Cui, and W. Zhu, “Deep learning on
+graphs: A survey,” IEEE Transactions on Knowledge
+
+and Data Engineering, 2020.
+[18] P. Veličković, G. Cucurull, A. Casanova, A. Romero,
+P. Lio, and Y. Bengio, “Graph attention networks,” in
+International Conference on Learning Representations,
+2017.
+[19] M. M. Bronstein, J. Bruna, T. Cohen, and P. Velikovi,
+“Geometric deep learning: Grids, groups, graphs,
+geodesics, and gauges,” no. arXiv:2104.13478, May
+2021. [Online]. Available: http://arxiv.org/abs/2104.
+13478
+[20] F. Scarselli, M. Gori, A. C. Tsoi, M. Hagenbuchner,
+and G. Monfardini, “The graph neural network model,”
+IEEE Transactions on Neural Networks, vol. 20, no. 1,
+p. 6180, Jan 2009.
+[21] T. N. Kipf and M. Welling, “Semi-supervised classification with graph convolutional networks,” in J.
+International Conference on Learning Representations,
+2017.
+[22] R. Murphy, B. Srinivasan, V. Rao, and B. Ribeiro,
+“Relational pooling for graph representations,” in
+Proceedings of the 36th International Conference on
+Machine Learning. PMLR, May 2019, p. 46634673.
+[Online]. Available: https://proceedings.mlr.press/v97/
+murphy19a.html
+[23] H. Maron, H. Ben-Hamu, N. Shamir, and Y. Lipman, “Invariant and equivariant graph networks,” arXiv
+preprint arXiv:1812.09902, 2018.
+[24] Y. Li, D. Tarlow, M. Brockschmidt, and R. Zemel,
+“Gated graph sequence neural networks,” in International Conference on Learning Representations, 2016.
+[25] K. Cho, B. van Merrienboer, Ç. Gülçehre, D. Bahdanau,
+F. Bougares, H. Schwenk, and Y. Bengio, “Learning
+phrase representations using rnn encoder-decoder for
+statistical machine translation,” in EMNLP, 2014.
+[26] D. Kumaran, D. Hassabis, and J. L. McClelland, “What
+learning systems do intelligent agents need? complementary learning systems theory updated,” Trends in
+Cognitive Sciences, vol. 20, no. 7, p. 512534, Jul 2016.
+[27] H. Eichenbaum, Learning & Memory. W. W. Norton
+& Company, 2008.
+[28] A.-K. Brem, K. Ran, and A. Pascual-Leone, “Learning
+and memory,” Handbook of clinical neurology, vol. 116,
+pp. 693–737, 2013.
+[29] E. Tulving, “How many memory systems are there?”
+American psychologist, vol. 40, no. 4, pp. 385–398,
+1985.
+[30] L. R. Squire, “Memory systems of the brain: A brief history and current perspective,” Neurobiology of Learning
+and Memory, vol. 82, no. 3, p. 171177, Nov 2004.
+[31] D. Purves, Ed., Neuroscience, 3rd ed. Sinauer Associates, 2004.
+[32] H. L. Roediger, F. M. Zaromb, and W. Lin, A
+Typology of Memory Terms. Elsevier, 2017, p.
+719. [Online]. Available: https://linkinghub.elsevier.
+com/retrieve/pii/B9780128093245210031
+[33] L. R. Squire and J. T. Wixted, “The cognitive neuro-
+
+science of human memory since h.m.” Annual Review
+of Neuroscience, vol. 34, no. 1, p. 259288, 2011.
+[34] S. Dehaene, M. Kerszberg, and J.-P. Changeux, “A
+neuronal model of a global workspace in effortful
+cognitive tasks,” Proceedings of the National Academy
+of Sciences, vol. 95, no. 24, p. 1452914534, Nov 1998.
+[35] B. J. Baars and S. Franklin, “How conscious experience
+and working memory interact,” Trends in Cognitive
+Sciences, vol. 7, no. 4, p. 166172, Apr 2003.
+[36] R. C. Atkinson and R. M. Shiffrin, Human memory: A
+proposed system and its control processes. Academic
+Press, 1968, pp. xi, 249xi, 249.
+[37] A. R. Preston and A. D. Wagner, Chapter 9 - The medial
+temporal lobe and memory. Academic Press, Jan 2007,
+p. 305337.
+[38] J. D. Sweatt, Chapter 2 - Studies of Human Learning
+and Memory. Academic Press, Jan 2010, p. 2447.
+[39] U. Alon and E. Yahav, “On the bottleneck of graph
+neural networks and its practical implications,” in International Conference on Learning Representations,
+2021.
+[40] V. P. Dwivedi, L. Rampek, M. Galkin, A. Parviz,
+G. Wolf, A. T. Luu, and D. Beaini, “Long range
+graph benchmark,” no. arXiv:2206.08164, Jun 2022.
+[Online]. Available: http://arxiv.org/abs/2206.08164
+[41] J. Gilmer, S. S. Schoenholz, P. F. Riley, O. Vinyals,
+and G. E. Dahl, “Neural message passing for quantum chemistry,” in International conference on machine
+learning. PMLR, 2017, pp. 1263–1272.
+[42] E. Rossi, B. Chamberlain, F. Frasca, D. Eynard,
+F. Monti, and M. Bronstein, “Temporal graph networks
+for deep learning on dynamic graphs,” arXiv preprint
+arXiv:2006.10637, 2020.
+[43] A. Nicolicioiu, I. Duta, and M. Leordeanu, “Recurrent space-time graph neural networks,” arXiv preprint
+arXiv:1904.05582, 2019.
+[44] G. Corso, L. Cavalleri, D. Beaini, P. Li, and P. Velikovi,
+“Principal neighbourhood aggregation for graph nets,”
+no. arXiv:2004.05718, Dec 2020. [Online]. Available:
+http://arxiv.org/abs/2004.05718
+[45] T. Xiong, L. Zhu, R. Wu, and Y. Qi, “Memory augmented design of graph neural networks,”
+https://openreview.net/pdf?id=K6YbHUIWHOy, 2020.
+[46] E. Hwang, V. Thost, S. S. Dasgupta, and T. Ma,
+“An analysis of virtual nodes in graph neural
+networks for link prediction,” in Proceedings of
+Learning on Graphs, 2022. [Online]. Available:
+https://openreview.net/forum?id=dI6KBKNRp7
+[47] C. Cai, T. S. Hy, R. Yu, and Y. Wang, “On the
+connection between mpnn and graph transformer,”
+no. arXiv:2301.11956, Feb 2023. [Online]. Available:
+http://arxiv.org/abs/2301.11956
+[48] M. Zaheer, S. Kottur, S. Ravanbakhsh, B. Poczos,
+R. R. Salakhutdinov, and A. J. Smola, “Deep sets,” in
+Advances in Neural Information Processing Systems,
+vol. 30. Curran Associates, Inc., 2017. [Online]. Avail-
+
+able: https://proceedings.neurips.cc/paper/2017/hash/
+f22e4747da1aa27e363d86d40ff442fe-Abstract.html
+[49] J. Gao and B. Ribeiro, “On the equivalence between
+temporal and static equivariant graph representations,”
+in Proceedings of the 39th International Conference on
+Machine Learning. PMLR, Jun 2022, p. 70527076.
+[Online]. Available: https://proceedings.mlr.press/v162/
+gao22e.html
+[50] D. Xu, C. Ruan, E. Korpeoglu, S. Kumar, and K. Achan,
+“Inductive representation learning on temporal graphs,”
+arXiv preprint arXiv:2002.07962, 2020.
+[51] H. Strathmann, M. Barekatain, C. Blundell, and
+P. Veličković, “Persistent message passing,” in ICLR
+2021 Workshop on Geometrical and Topological Representation Learning, 2021.
+[52] A. H. Khasahmadi, K. Hassani, P. Moradi, L. Lee,
+and Q. Morris, “Memory-based graph networks,” in
+International Conference on Learning Representations,
+2020.
+[53] M. Khademi, “Multimodal neural graph memory networks for visual question answering,” in Proceedings
+of the 58th Annual Meeting of the Association for
+Computational Linguistics, 2020, pp. 7177–7188.
+[54] A. Zweig, N. Ahmed, T. L. Willke, and G. Ma, “Neural
+algorithms for graph navigation,” in Learning Meets
+Combinatorial Algorithms at NeurIPS2020, 2020.
+[55] S. Moon, P. Shah, A. Kumar, and R. Subba, “Memory graph networks for explainable memory-grounded
+question answering,” in Proceedings of the 23rd Conference on Computational Natural Language Learning
+(CoNLL), 2019, pp. 728–736.
+[56] J. Wu, I. G. Harris, and H. Zhao, “Graphmemdialog:
+Optimizing end-to-end task-oriented dialog systems using graph memory networks,” in AAAI, 2022.
+[57] C. Ma, L. Ma, Y. Zhang, J. Sun, X. Liu, and M. Coates,
+“Memory augmented graph neural networks for sequential recommendation,” in Proceedings of the AAAI
+Conference on Artificial Intelligence, vol. 34, no. 04,
+2020, pp. 5045–5052.
+[58] K. S. Tai, R. Socher, and C. D. Manning,
+“Improved semantic representations from treestructured long short-term memory networks,” in
+Proceedings of the 53rd Annual Meeting of the
+Association for Computational Linguistics and the 7th
+International Joint Conference on Natural Language
+Processing (Volume 1: Long Papers). Association
+for Computational Linguistics, May 2015. [Online].
+Available: http://arxiv.org/abs/1503.00075
+[59] G. Ma, V. Vo, T. Willke, and N. K. Ahmed,
+“Cache-memory gated graph neural networks,” 2022.
+[Online]. Available: https://memari-workshop.github.io/
+papers/paper 32.pdf
+[60] A. Graves, G. Wayne, and I. Danihelka, “Neural turing
+machines,” arXiv preprint arXiv:1410.5401, 2014.
+[61] A. Miller, A. Fisch, J. Dodge, A.-H. Karimi,
+A. Bordes, and J. Weston, “Key-value memory networks
+
+for directly reading documents,” in Proceedings
+of the 2016 Conference on Empirical Methods
+in Natural Language Processing. Austin, Texas:
+Association for Computational Linguistics, 2016,
+p. 14001409. [Online]. Available: http://aclweb.org/
+anthology/D16-1147
+[62] M. M. Chun and N. B. Turk-Browne, “Interactions
+between attention and memory,” Current Opinion in
+Neurobiology, vol. 17, no. 2, p. 177184, Apr 2007.
+[63] A. Miller, A. Fisch, J. Dodge, A.-H. Karimi, A. Bordes, and J. Weston, “Key-value memory networks for
+directly reading documents,” in Proceedings of the 2016
+Conference on Empirical Methods in Natural Language
+Processing. Association for Computational Linguistics,
+2016, p. 14001409.
+[64] J. Zhang, X. Shi, I. King, and D.-Y. Yeung, “Dynamic
+key-value memory networks for knowledge tracing,”
+in Proceedings of the 26th International Conference
+on World Wide Web. International World Wide Web
+Conferences Steering Committee, Apr 2017, p. 765774.
+[65] J. Huang, W. X. Zhao, H. Dou, J.-R. Wen, and E. Y.
+Chang, “Improving sequential recommendation with
+knowledge-enhanced memory networks,” in The 41st
+International ACM SIGIR Conference on Research &
+Development in Information Retrieval. Association for
+Computing Machinery, Jun 2018, p. 505514.
+[66] S. Sukhbaatar, A. Szlam, J. Weston, and R. Fergus,
+“End-to-end memory networks,” in Advances in Neural
+Information Processing Systems 28. Curran Associates,
+Inc., 2015, p. 24402448.
+[67] E. Ciaramelli, C. L. Grady, and M. Moscovitch, “Topdown and bottom-up attention to memory: A hypothesis
+(atom) on the role of the posterior parietal cortex in
+memory retrieval,” Neuropsychologia, vol. 46, no. 7, p.
+18281851, Jun 2008.
+[68] A. Graves, G. Wayne, M. Reynolds, T. Harley,
+I. Danihelka, A. Grabska-Barwiska, S. G. Colmenarejo,
+E. Grefenstette, T. Ramalho, J. Agapiou, A. P. Badia,
+K. M. Hermann, Y. Zwols, G. Ostrovski, A. Cain,
+H. King, C. Summerfield, P. Blunsom, K. Kavukcuoglu,
+and D. Hassabis, “Hybrid computing using a neural
+network with dynamic external memory,” Nature, vol.
+538, no. 7626, p. 471476, Oct 2016.
+[69] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit,
+L. Jones, A. N. Gomez, Kaiser, and I. Polosukhin,
+Attention is All you Need. Curran Associates, Inc.,
+2017, p. 59986008.
+[70] J. Collins, J. Sohl-Dickstein, and D. Sussillo, “Capacity
+and trainability in recurrent neural networks,” International Conference on Learning Representations, 2017.
+[71] B. A. Richards and P. W. Frankland, “The persistence
+and transience of memory,” Neuron, vol. 94, no. 6, pp.
+1071–1084, 2017.
+[72] S. M. Kazemi, R. Goel, K. Jain, I. Kobyzev, A. Sethi,
+P. Forsyth, and P. Poupart, “Representation learning
+for dynamic graphs: A survey.” J. Mach. Learn. Res.,
+
+vol. 21, no. 70, pp. 1–73, 2020.
+[73] W. Hu, M. Fey, H. Ren, M. Nakata, Y. Dong,
+and J. Leskovec, “Ogb-lsc: A large-scale challenge for
+machine learning on graphs,” in Proceedings of the 35th
+Conference on Neural Information Processing Systems
+Track on Datasets and Benchmarks. arXiv, Oct 2021.
+[Online]. Available: http://arxiv.org/abs/2103.09430
+[74] A. Micheli, “Neural network for graphs: A contextual
+constructive approach,” IEEE Transactions on Neural
+Networks, vol. 20, no. 3, pp. 498–511, 2009.
+[75] T. Bricken and C. Pehlevan, “Attention approximates
+sparse distributed memory,” arXiv:2111.05498 [cs],
+Nov 2021. [Online]. Available: http://arxiv.org/abs/
+2111.05498
+[76] H. Ramsauer, B. Schfl, J. Lehner, P. Seidl, M. Widrich,
+T. Adler, L. Gruber, M. Holzleitner, M. Pavlovi, G. K.
+Sandve, V. Greiff, D. Kreil, M. Kopp, G. Klambauer,
+J. Brandstetter, and S. Hochreiter, “Hopfield networks
+is all you need,” no. arXiv:2008.02217, Apr 2021.
+[Online]. Available: http://arxiv.org/abs/2008.02217
+[77] O. Levy, K. Lee, N. FitzGerald, and L. Zettlemoyer,
+“Long short-term memory as a dynamically computed
+element-wise weighted sum,” in Proceedings of the 56th
+Annual Meeting of the Association for Computational
+Linguistics (Volume 2: Short Papers). Association
+for Computational Linguistics, Jul 2018, p. 732739.
+[Online]. Available: https://www.aclweb.org/anthology/
+P18-2116
+[78] W. Merrill, G. Weiss, Y. Goldberg, R. Schwartz,
+N. A. Smith, and E. Yahav, “A formal hierarchy
+of rnn architectures,” in arXiv:2004.08500 [cs], vol.
+Proceedings of the 58th Annual Meeting of the
+Association for Computational Linguistics, Sep 2020.
+[Online]. Available: https://arxiv.org/abs/2004.08500
+[79] J. Topping, F. D. Giovanni, B. P. Chamberlain, X. Dong,
+and M. M. Bronstein, “Understanding over-squashing
+and bottlenecks on graphs via curvature,” in International Conference on Learning Representations, 2022.
+[80] H. Le, T. Tran, and S. Venkatesh, “Self-attentive
+associative memory,” in Proceedings of the 37th
+International Conference on Machine Learning.
+PMLR, Nov 2020, p. 56825691. [Online]. Available:
+https://proceedings.mlr.press/v119/le20b.html
+[81] M. W. Howard and H. Eichenbaum, “The hippocampus,
+time, and memory across scales,” Journal of Experimental Psychology: General, vol. 142, no. 4, p. 12111230,
+Nov 2013.
+[82] V. Garg, S. Jegelka, and T. Jaakkola, “Generalization
+and representational limits of graph neural networks,”
+in International Conference on Machine Learning.
+PMLR, 2020, pp. 3419–3430.
+[83] A. Nematzadeh, S. Ruder, and D. Yogatama, “On
+memory in human and artificial language processing
+systems,” in Bridging AI and Cognitive Science at
+International Conference on Learning Representations,
+2020.
+
+[84] D. Kumaran, D. Hassabis, and J. L. McClelland, “What
+learning systems do intelligent agents need? complementary learning systems theory updated,” Trends in
+cognitive sciences, vol. 20, no. 7, pp. 512–534, 2016.
+[85] G. Ma, N. K. Ahmed, T. L. Willke, and P. S. Yu, “Deep
+graph similarity learning: A survey,” Data Mining and
+Knowledge Discovery, vol. 35, no. 3, pp. 688–725,
+2021.
+[86] K. M. Borgwardt, C. S. Ong, S. Schönauer, S. Vishwanathan, A. J. Smola, and H.-P. Kriegel, “Protein
+function prediction via graph kernels,” Bioinformatics,
+vol. 21, no. suppl 1, pp. i47–i56, 2005.
+[87] G. Ma, N. K. Ahmed, T. L. Willke, D. Sengupta,
+M. W. Cole, N. B. Turk-Browne, and P. S. Yu, “Deep
+graph similarity learning for brain data analysis,” in
+Proceedings of the 28th ACM International Conference
+on Information and Knowledge Management, 2019, pp.
+2743–2751.
+[88] Y. Yan, J. Zhu, M. Duda, E. Solarz, C. Sripada, and
+D. Koutra, “Groupinn: Grouping-based interpretable
+neural network for classification of limited, noisy brain
+data,” in Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data
+Mining, 2019, pp. 772–782.
+[89] C. Cummins, Z. V. Fisches, T. Ben-Nun, T. Hoefler,
+M. F. OBoyle, and H. Leather, “Programl: A graphbased program representation for data flow analysis and
+compiler optimizations,” in International Conference on
+Machine Learning. PMLR, 2021, pp. 2244–2253.
+[90] A. Bordes, N. Usunier, S. Chopra, and J. Weston,
+“Large-scale simple question answering with memory
+networks,” arXiv preprint arXiv:1506.02075, 2015.
+[91] W. Norcliffe-Brown, S. Vafeias, and S. Parisot, “Learning conditioned graph structures for interpretable visual
+question answering,” Advances in neural information
+processing systems, vol. 31, 2018.
+[92] Z. Ji, P. An, X. Liu, Y. Pang, L. Shao, and Z. Zhang,
+“Task-oriented high-order context graph networks for
+few-shot human-object interaction recognition,” IEEE
+Transactions on Systems, Man, and Cybernetics: Systems, 2021.
+[93] M. Fortunato, M. Tan, R. Faulkner, S. Hansen, A. Puigdomènech Badia, G. Buttimore, C. Deck, J. Z. Leibo,
+and C. Blundell, “Generalization of reinforcement
+learners with working and episodic memory,” Advances
+in Neural Information Processing Systems, vol. 32,
+2019.
+[94] S. Hansen, A. Pritzel, P. Sprechmann, A. Barreto, and
+C. Blundell, “Fast deep reinforcement learning using
+online adjustments from the past,” Advances in Neural
+Information Processing Systems, vol. 31, 2018.
+[95] T. Barrett, W. Clements, J. Foerster, and A. Lvovsky,
+“Exploratory combinatorial optimization with reinforcement learning,” in Proceedings of the AAAI Conference
+on Artificial Intelligence, vol. 34, no. 04, 2020, pp.
+3243–3250.
+
+[96] B. Wilder, E. Ewing, B. Dilkina, and M. Tambe, “End to
+end learning and optimization on graphs,” Advances in
+Neural Information Processing Systems, vol. 32, 2019.
+[97] E. Khalil, H. Dai, Y. Zhang, B. Dilkina, and L. Song,
+“Learning combinatorial optimization algorithms over
+graphs,” Advances in neural information processing
+systems, vol. 30, 2017.
+[98] F. Gu, H. Chang, W. Zhu, S. Sojoudi, and L. El Ghaoui,
+“Implicit graph neural networks,” Advances in Neural
+Information Processing Systems, vol. 33, pp. 11 984–
+11 995, 2020.
+[99] J. Liu, B. Hooi, K. Kawaguchi, and X. Xiao, “Mgnni:
+Multiscale graph neural networks with implicit layers,”
+arXiv preprint arXiv:2210.08353, 2022.
+[100] P. Velickovic, W. Fedus, W. L. Hamilton, P. Liò, Y. Bengio, and R. D. Hjelm, “Deep graph infomax.” ICLR
+(Poster), vol. 2, no. 3, p. 4, 2019.
+[101] J. You, R. Ying, and J. Leskovec, “Position-aware
+graph neural networks,” in International conference on
+machine learning. PMLR, 2019, pp. 7134–7143.
+[102] J. Kim, D. Nguyen, S. Min, S. Cho, M. Lee, H. Lee,
+and S. Hong, “Pure transformers are powerful graph
+learners,” Advances in Neural Information Processing
+Systems, vol. 35, pp. 14 582–14 595, 2022.
+[103] L. Müller, M. Galkin, C. Morris, and L. Rampášek,
+“Attending to graph transformers,” arXiv preprint
+arXiv:2302.04181, 2023.
+[104] J. R. Stevens, A. Ranjan, D. Das, B. Kaul, and
+A. Raghunathan, “Manna: An accelerator for memoryaugmented neural networks,” in Proceedings of the
+52nd Annual IEEE/ACM International Symposium on
+Microarchitecture, 2019, pp. 794–806.
+
+

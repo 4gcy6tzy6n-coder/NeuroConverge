@@ -1,0 +1,1091 @@
+arXiv:2503.12635v1 [cs.LG] 16 Mar 2025
+
+Hybrid Learners Do Not Forget: A Brain-Inspired
+Neuro-Symbolic Approach to Continual Learning
+
+Amin Banayeeanzade
+Department of Computer Science
+University of Southern California
+banayeea@usc.edu
+
+Mohammad Rostami
+Department of Computer Science
+University of Southern California
+rostamim@usu.edu
+
+Abstract
+Continual learning is crucial for creating AI agents that can learn and improve
+themselves autonomously. A primary challenge in continual learning is to learn
+new tasks without losing previously learned knowledge. Current continual learning methods primarily focus on enabling a neural network with mechanisms that
+mitigate forgetting effects. Inspired by the two distinct systems in the human brain,
+System 1 and System 2, we propose a Neuro-Symbolic Brain-Inspired Continual
+Learning (NeSyBiCL) framework that incorporates two subsystems to solve continual learning: A neural network model responsible for quickly adapting to the most
+recent task, together with a symbolic reasoner responsible for retaining previously
+acquired knowledge from previous tasks. Moreover, we design an integration
+mechanism between these components to facilitate knowledge transfer from the
+symbolic reasoner to the neural network. We also introduce two compositional
+continual learning benchmarks and demonstrate that NeSyBiCL is effective and
+leads to superior performance compared to continual learning methods that merely
+rely on neural architectures to address forgetting.
+
+1
+
+Introduction
+
+The classic approach for machine learning (ML) is to learn a single task in isolation. This assumption
+entails that the training and the test data are drawn from the same distribution. As a result, most ML
+models fail to generalize well when they encounter data outside the training data distribution. The
+naive solution to make a model continually generalizable is to continuously update the model to fit
+the input distribution. This process, however, will lead to performance degradation on past tasks,
+known as catastrophic forgetting in the literature [13], because the learnable parameters are dragged
+away from optimal values for the past tasks. The goal of continual learning (CL) in deep learning
+is to mitigate forgetting effects when a model encounters sequentially arriving tasks [10]. In recent
+years, the community has devoted significant attention to mitigating the forgetting phenomena in
+neural networks [34]. Despite their noteworthy accomplishments, we raise this fundamental research
+question: Are the systems purely made from neural reasoners the best candidates to address CL?
+Humans, as natural intelligent agents, demonstrate exceptional cognitive abilities and have continuously inspired AI research. As hypothesized by Kahneman [19], the human brain operates
+using two distinct systems, namely System 1 and System 2. While System 1 is fast, automatic, and
+intuitive, System 2 is slower, deliberate, and analytical, employing logical reasoning to evaluate
+information and make conscious decisions. The two systems operate in parallel and are considered to
+be complementary problem solvers. During the initial stages of learning a task, System 2 plays a
+more prominent role. Learning a new skill requires deliberate practice, focus, and attention to the
+details, all of which are attributes of System 2. System 2 is responsible for consciously processing
+new information, breaking it into smaller meaningful parts, and forming new mental models and
+
+patterns. As the learning progresses, with practice and repetition, System 1 becomes more adept at
+performing the task automatically and without the help of System 2 [12, 5].
+In the inference phase, System 1 thinks fast and is more likely to be engaged in tasks that are routine,
+habitual, and reflexive. System 1 works based on the formation of associations between stimuli and
+responses, which can become weaker over time if they are not reinforced through repeated exposure
+or use. In contrast, System 2 decision-making is based on the explicit, conscious processing of
+information, which can be beneficial when solving problems that require conscious effort, analytical
+thinking, and logical reasoning. Therefore, when facing out-of-distribution tasks, either novel or
+outdated, System 2 is more likely to be responsible for handling them [19].
+When comparing available paradigms in AI with the two systems in humans, artificial neural networks are believed to behave very similarly to System 1, while symbolic reasoners share similar
+characteristics with System 2. With this connection in mind, existing methods in the CL literature
+primarily focus on equipping System 1, i.e., neural networks, with the capability of addressing
+forgetting. In humans, however, this is not the case. While System 1 is vulnerable to forgetting,
+System 2 experiences minimum forgetting by leveraging a symbolic reasoning mechanism. As an
+example, consider the procedural learning of a motory skill, e.g., swimming. While during the early
+stages of learning, most of the muscle behaviors are derived deliberately by System 2, gradually, the
+skill consolidates into the unconscious structure of System 1, leading to generating the appropriate
+motory responses without explicit reasoning. However, if System 1 eventually forgets to solve the
+task due to discontinued exposure to performing the task over extended time periods, System 2 is still
+capable of bringing back the procedural sequence by which the learning has started before.
+To create adaptive AI systems, the emerging neuro-symbolic approaches [7] integrate System 1,
+represented by a neural network, with System 2, implemented as a symbolic reasoner, to enable the AI
+system to reason about complex problems while learning from continuous experiences. Inspired by
+the recent success of neuro-symbolic ML [53, 35, 28], we develop a Neuro-Symbolic Brain-Inspired
+Continual Learning (NeSyBiCL) framework to address CL by mimicking similar human-inspired
+mechanisms. Our framework is composed of three main subcomponents. First, a low-level feature
+extractor, implemented by a convolutional neural network (CNN), extracts basic patterns in the input.
+Second, a neural network architecture is used on top of the features to imitate the System 1 behavior
+by making quick and accurate inferences. Finally, a symbolic inference engine, namely a probabilistic
+symbolic reasoner, is used on top of the features to imitate System 2, which provides the agent with
+interpretable reasoning capability to mitigate catastrophic forgetting.
+The symbolic machinery is responsible for breaking the tasks into meaningful subconcepts and
+solving the tasks by conducting logical deductions. Since rule-based symbolic learners face serious
+limitations, a neural network learner is used to solve the most contemporary task at hand. While the
+neural network component excels at solving the most recent task, it is prone to forget the older ones.
+Although the symbolic reasoner is not as accurate as the neural network, we demonstrate that it is
+immune to catastrophic forgetting. In addition to this property, we propose an interaction mechanism
+between the two systems, enabling an effective knowledge transfer between both learners.
+Notwithstanding the desired properties, our model is only applicable to tasks with a compositional
+nature, i.e., the tasks that can be solved by decomposing the input into smaller subconcepts and
+drawing conclusions based on them and their relationships. To provide further insights, we introduce
+two novel benchmarks to demonstrate the effectiveness of NeSyBiCL compared to existing neuralbased CL methods.
+
+2
+
+Related Work
+
+Our work is at the intersection of continual learning and neuro-symbolic AI. We review relevant
+works in these areas as well as compositional tasks in AI, which are great use cases for our algorithm.
+Continual Learning Continual learning, also known as continual learning, addresses the challenge
+of acquiring new knowledge by a model while retaining previously learned knowledge. To tackle the
+issue of forgetting, three main approaches have been proposed [34]. The first approach, known as
+replay-based methods, involves reusing samples from previous training tasks. This can be achieved by
+either storing them in an explicit episodic memory [26, 37, 8, 2] or generating pseudo-samples using a
+deep generative model [43, 48, 46]. Restored samples can then be mixed with new data and replayed
+2
+
+during model update episodes, simulating joint training [48, 43], or used as a constraint to regularize
+the update of model parameters [26]. The second approach uses parameter isolation which focuses
+on dynamically expanding the model as new task data arrives. This expansion involves introducing
+task-specific weights [40, 51, 41] or masks [47, 52] to accommodate the new tasks effectively. The
+third approach is based on using regularization on the model which involves penalizing significant
+deviations of parameters from the optimal solutions for the previous tasks [32, 54, 21].
+In this context, the proposed method presented in the paper differs substantially from the aforementioned approaches. While the existing methods concentrate on equipping neural networks with
+mechanisms to prevent catastrophic forgetting, we argue that neural networks are not the best candidates for continual learning. Instead, we introduce a symbolic mechanism as the solution to continual
+learning challenges. By adopting this symbolic approach, we offer an alternative perspective on
+addressing continual learning.
+Neuro-Symbolic AI The goal of neuro-symbolic AI is to combine neural networks and symbolic
+reasoning techniques to learn complex tasks. This interdisciplinary approach has shown promising
+results in various domains, including question answering [50], natural language understanding [24],
+and logical reasoning [27]. In the context of continual learning, there have been preliminary efforts
+to leverage symbolic representations. One example is the use of symbolic machinery to remember
+previous tasks in reinforcement learning domains [44]. This approach demonstrates the effectiveness
+of symbolic representations in retaining knowledge across different reinforcement learning tasks.
+Another approach is to combine symbolic reasoning with the representational capabilities of neural
+networks to develop continual reasoning agents [29]. By integrating symbolic reasoning and neural
+networks, the system achieves a more comprehensive and flexible approach to continual learning.
+These methods do not rely on their symbolic reasoner for the purpose of combatting catastrophic
+forgetting, but rather, they rely on the existing CL strategies, such as rehearsal, as the main strategy
+against forgetting. In other words, the reason behind using symbolic reasoners in these studies is only
+because they fit logical reasoning tasks better.
+In contrast, our work specifically draws inspiration from the concept of “slow and fast thinking”
+theory of the brain [6, 9]. This theory suggests that the brain employs two distinct processes for data
+processing: a fast, intuitive process and a slower, deliberate process [19]. In the context of continual
+learning, we aim to leverage symbolic reasoning to mitigate catastrophic forgetting. By capitalizing
+on the benefits of both symbolic reasoning and neural networks, we develop a framework that takes
+advantage of the dual process theory in the brain.
+Visual Compositionality Visual compositionality refers to the ability to understand and interpret
+visual scenes by decomposing them into meaningful components or objects and analyzing their
+relationships and interactions. Compositionality is believed to be the key to the next level of
+intelligence and has attracted many research endeavors. For example, previous works have used
+EBMs for compositional image generation [11], zero-shot image classification [49, 15] and visual
+question answering [3]. Compositionality has also been studied in continual learning by introducing
+compositional modular structures [31], or by relying on EBMs to enable continual learning [11]. Our
+work also follows the same goal of using compositionality in continual learning but with a focus on
+symbolic methods rather than pure neural networks.
+
+3
+
+Preliminaries
+
+Consider a sequence of t = 1, · · · , T learning tasks with the training datasets Dt = {(xi , yi )}i=1
+N ,
+where xi ∈ X is the input sample, and yi ∈ Y is its corresponding label, drawn from an unknown
+task-dependent distribution as (x, y) ∼ p(t) (X, Y ) 1 . At each timestep, the agent learns the current
+task and then proceeds to learn the next task.
+In this work, we consider tasks that have a compositional nature, i.e., the tasks could be solved more
+effectively by breaking them down into smaller parts and then combining the partial solutions through
+their relations to obtain the final solution. For example, see Figure 1 (a)-(b), where each class is
+defined by the existence of a number of parts (abstract subconcepts) in the input. The smaller parts in
+1
+
+With little misuse of notation, we may use y ∈ D≤t to show that the label of class y exists in the tasks from
+the beginning up to the timestep t.
+
+3
+
+Figure 1: An overview of the proposed framework. (a)-(b) examples from the Clevr and Sketch
+compositional datasets. In both datasets, the combination of objects (subconcepts) with different
+shapes, colors, and relational locations form a new class, while other factors, such as rotation, color
+fullness, or material, are irrelevant. As an example, in the Sketch domain, a red triangle to the right of
+an orange one forms one class, while the combination of a blue circle, a yellow pentagon on the right,
+and a blue rectangle on the left creates another class. (c) A schematic of NeSyBiCL which consists of
+two complementary parallel pathways for data processing. Inspired by the dual thinking system, the
+symbolic reasoner decomposes the input into its subcomponents/relations and is the best candidate to
+solve the older tasks with no forgetting. The neural reasoner is responsible for effectively solving the
+contemporary task. The two components are also coupled through a knowledge integration loss.
+the task have bilateral relations that make reasoning about solving the tasks plausible. In other words,
+each class in the dataset can be characterized by a graph that encodes the compositional knowledge.
+As a result, one can reason on the set of graphs to distinguish the classes from each other. Leveraging
+compositionality and abstract subconcepts for relational reasoning has been shown to significantly
+enhance generalization in AI [17, 49]. However, this mechanism has not been widely adopted in CL
+settings [11].
+The goal in CL is to sequentially observe the tasks and train a predictive model ŷ = hθ (x; t) with
+learnable weights θ, such that it generalizes well on all tasks observed so far continually during the
+testing time. Since the agent may encounter the past learned task at any timestep, it should preserve
+its generalizability on those tasks. Simply updating the model at each timestep using empirical risk
+minimization on Dt will lead to catastrophic forgetting. Because the model will be trained to perform
+well only on the current task, leading to the deviation of θ from the optimal values for past tasks.
+Existing CL methods mostly use neural-level approaches, i.e., equipping System 1 with effective
+mechanisms, such as model regularization or experience replay to mitigate forgetting [21, 39, 1, 34].
+However, our goal is to implement System 2 and take advantage of it to address catastrophic forgetting.
+At the same time, we also use System 1 to handle the uncertainty that the symbolic system is not
+able to capture due to the randomness of the tasks. This randomness may include limited spatial
+translations, occlusions, rotations, or choice of materials. System 1 has a more generalizable behavior
+to handle these uncertainties and can complement System 2. To further clarify the motivation behind
+this setup, consider the cognitive task of distinguishing an elephant from an eagle as an example.
+Humans can solve the task at a glance by intuitively using the System 1 prediction. However, one may
+discriminate between the two categories by probing the lack or existence of subconcepts, e.g., trunk,
+long ears, beak, etc, and their bilateral relationships. Therefore, the ability to think compositionally
+relies on the operation of System 2 [15].
+
+4
+
+Proposed Method
+
+Figure 1 (c) visualizes a block diagram representation of the proposed solution for CL, where a
+symbolic reasoner is used along with a neural reasoner. The first component in the computational
+pipeline is a feature extractor f : X → Rd , implemented by a CNN, to embed the input in
+a d-dimensional feature space. Moreover, neuroscience studies have reported that the primary
+4
+
+visual cortex of humans appears to remain unaltered beyond a certain age [42, 16], indicating that
+fundamental image feature extractors in the brain undergo infrequent rewiring. We have reflected this
+property by pretraining a feature extractor and fixing it as a basic processing block. On top of that,
+we employ two subsystems, i.e., the neural reasoner and the symbolic reasoner, as further explained
+in the next sections.
+4.1
+
+Symbolic Reasoner
+
+The key aspect of the symbolic reasoner is to establish a connection between a raw input x and
+its label y, by inferring an intermediate symbolic abstract representation. We consider that this
+representation is encoded via a graph G = (C, R). Formally, the nodes C in the graph represent the
+subconcepts in x, and the edges R depict the relations between the nodes, e.g., the spatial relative
+structure among the subconcepts. In other words, each class in the problem is defined by a specific
+graph. Hence, the symbolic reasoner uses the extracted graph to predict the class label via graph
+matching, i.e., symbolic reasoning. With this formalism in mind, we assume the following joint
+distribution over variables:
+p(x, G, y; KB(t) ) = p(y|G; KB(t) )p(G|x)p(x)
+
+(1)
+
+where KB(t) is the abstract knowledge-base, accumulated up to timestep t during the continual
+learning procedure of the symbolic reasoner. One implementation for such knowledge-base KB(t)
+could be the set of the learned class-specific graphs and their corresponding ground truth labels, i.e.
+KB(t) = {(y, Gy )|y ∈ D≤t }. The learning procedure for the symbolic reasoner is further explained
+in Section 4.3, but in a nutshell, the symbolic reasoner learns how to abstract a class-specific graph
+that entails the similarities between all class members in the training data when learning the current
+task. With the factorization in Equation (1), the classification rule for symbolic reasoning would be:
+p(y|x; KB(t) ) =
+
+X
+
+p(y|G; KB(t) )p(G|x),
+
+(2)
+
+G∈G
+
+where G is the set of all possible graph formations. Next, we estimate p(y|G; KB(t) ) as
+softmax(sim(G, Gy )), where sim is a similarity score function defined over G × G. Moreover,
+one might assume the MAP approximation for simplification of solving Equation (2):
+p(y|x; KB(t) ) ≈ p(y|G ∗ (x); KB(t) ), where G ∗ (x) = arg max p(G|x)
+
+(3)
+
+G
+
+Q
+Q
+To model the graph construction from the input, we use the p(G|x) = c∈C p(c|x) r∈R p(r|x)
+factorization, and implement a decomposition module D : Rd → G, e.g., a Faster R-CNN object
+detector, to decompose the input image into its subcomponents. The subconcepts that are abstracted
+from the inputs and the type of bilateral relations may be shared across various tasks. They are crucial
+for exchanging knowledge across different classes, distinguishing them from each other, and enabling
+high-level reasoning [14]. They are analogous to the symbols that humans use as a lingua-franca for
+the reuse of knowledge [20, 29]. We adopt the inherent assumption that the meanings of concepts
+(symbols) for different tasks remain unchanged over time, making the symbolic reasoner temporally
+robust. In other words, we assume that the probability distribution p(G|x), have no time-varying
+element. With these assumptions, we come to the central claim of our work.
+Statement 1. Under the assumption of a persistent decomposition module, the continual learner
+given in Equations (2) or (3) has zero forgetting.
+The above statement, with the proof included in Appendix A, justifies the intuition behind selecting
+the symbolic reasoner as the candidate to accumulate knowledge over a long continual episode.
+Notice that the persistency assumption is not very restricting since it has been reported that while the
+final semantic layers of neural networks drift considerably during a continual learning episode, the
+initial layers remain unchanged [22, 36]. This phenomenon even enables the possibility of replacing
+the initial layers with a pretrained fixed feature extractor [4, 33]. Put differently, in this work, we
+substituted the MLP layers on top of feature extractors with a symbolic reasoner to mitigate the
+problem of catastrophic forgetting.
+5
+
+4.2
+
+Neural Reasoner
+
+The neural reasoner is a connectionist model [30], implemented with MLP layers on top of the feature
+extractor layers. It is responsible for directly mapping the features into the target space and making
+intuitive predictions using low-level features. More concisely, considering an embedding space of
+size p, we denote the neural network parameterized by θn as hθn : Rd → Rp followed by a logistic
+regression layer with the weights W ∈ R|Y|×p and the bias term b ∈ R|Y| to generate an output label
+distribution as softmax(W hθn (x) + b). Existing AI systems primarily only have this component
+which is vulnerable with respect to catastrophic forgetting in CL settings. For this reason, existing
+CL methods focus on mitigating forgetting in this component by changing the end-to-end learning
+process of deep learning.
+4.3
+
+Learning Process
+
+Symbolic Reasoner: At the timestep t of the training phase, all of the training samples in Dt are
+parsed into their corresponding relational graphs. This process requires a priori information about the
+type of components and relations which describe the tasks well. Note, however, the natural learning
+process relies on a similar premise. Next, the extracted graphs are analyzed and the graph with the
+minimum distance to other instances is assumed as the prototype graph that characterizes that class.
+The new graph then is appended to the knowledge-base (refer to Algorithm 1 for more details).
+Neural Reasoner: We would like to augment the classic end-to-end learning process for deep
+learning by an interaction process between System 1 and System 2. Therefore, we propose an
+integration loss LI to facilitate knowledge integration from the symbolic reasoner into the neural
+network. To that end, we utilize an MLP head parameterized by θi and apply it to the embedding
+space of the neural reasoner to predict some summarized attributes of the graph G. As a result,
+the embedding space would encode the abstract information available in the input. Intuitively, this
+loss function encourages the neural learner to benefit from the human-understandable supervision
+provided by the symbolic reasoner. We also use the typical cross-entropy loss, LC . The total loss
+function is a weighted combination of the two loss functions
+L(θn , θi , W, b) = LC (θn , W, b) + λLI (θn , θi ),
+(4)
+where λ is a trade-off hyperparameter between the two loss terms (see Appendix B for extra details).
+The neural reasoner is merely trained on the samples of the most recent tasks and is not responsible
+for remembering the older tasks. Therefore, we empirically found it beneficial to reset the θn and
+W parameters at the beginning of each task to increase the learning capacity of the neural network.
+Notice that this technique only applies to classification heads and not the feature extractor to maintain
+the representational knowledge transfer between the tasks. Algorithm 1 summarizes the learning
+process for NeSyBiCL.
+Algorithm 1 Learning Phase of NeSyBiCL
+Require: A pretrain dataset D0 and a set of T continual tasks D1 , ..., DT
+1: KB(0) = {}
+2: Pretrain a feature extractor f and a decomposition module D with D0
+3: for t = 1 to T do:
+4:
+for y ∈ Dt do:
+5:
+G = {G ∗ (x)|(x, y)P
+∈ Dt }
+6:
+Gy = arg minG∈G G ′ ∈G sim(G, G ′ )
+7:
+KB(t) ← KB(t−1) ∪ {(y, Gy )|y ∈ Dt }
+8:
+Reset W, b, θn and θi
+9:
+Optimize the neural reasoner using the loss function in Equation (4)
+10: return f , D, KB(T ) , θn , W and b
+4.4
+
+Inference
+
+Contemporary and old tasks are distributed differently among System 1 and System 2. System 1 is
+responsible for processing habitual tasks, which are familiar and require little conscious effort. In
+6
+
+contrast, System 2 is used to process old tasks, which are less familiar and require deliberate thinking
+and effort. Based on this inspiration, we employ a switching mechanism to assign different tasks to
+different systems at the test time, as proposed in Algorithm 2. Namely, the neural reasoner is the most
+effective module to handle the most recent tasks, while the symbolic reasoner is the best candidate to
+solve the older tasks without exhibiting catastrophic forgetting.
+Algorithm 2 Inference Phase of NeSyBiCL
+Require: An input x and the task id t
+Require: The knowledge-base KB(T ) , the feature extractor f , decomposition module D and the
+trained weights of the neural reasoner W, b, and θn .
+1: if t = T then:
+▷ Solving the most recent task
+2:
+y = arg max softmax(W hθn (f (x)) + b)
+3: else
+▷ Solving older tasks
+4:
+G ∗ (x) = D(f (x))
+5:
+y = arg maxy,(y,Gy )∈KB(T ) softmax(sim(G ∗ (x), Gy ))
+return y
+
+5
+
+Experimental Validation
+
+We demonstrate that NeSyBiC leads to SOTA performance on two compositional CL benchmarks
+that we introduce.
+5.1
+
+Experimental Setup
+
+Datasets: We designed two datasets, both with a compositional nature, using the Clevr and Sketch
+domains. The Clevr [18] dataset is a common dataset with a compositional nature usually used for
+visual question-answering tasks. Here, we synthetically arranged objects in each image to construct
+a continual dataset. We have also created a second dataset, called Sketch, to create similar images
+in a 2D scene. The shared property of these datasets is that each input image consists of several
+objects that possess certain bilateral relationships. Each class is defined by a class-level graph that is
+shared among the samples of that class. However, there exists a limited amount of variations in each
+image, e.g. translational randomness in the location of objects, which deforms the graph and makes it
+more challenging to reason about the class label. Figure 1 provides illustrations for samples of input
+images. We performed experiments using 10 continual tasks, with each task containing 10 classes.
+Each class was supported by 200 training samples and 50 test samples (see Appendix C for more
+details).
+Neural network architectures: We use a fixed CNN as the feature extractor network, followed by a
+two-layers MLP for the neural reasoner which receives its input from the CNN.
+Evaluation metrics: let Ri,j denotes the model accuracy (classification rate) on task i after learning
+task j in a CL setting. Following the literature, we use two metrics for evaluating the algorithms. First,
+we use the average accuracy over all learned tasks evaluated at the end of the continual episode when
+PT
+all tasks are learned, i.e. Aall = T1 i=1 Ri,T . This metric is used to measure forgetting because it
+entails performance on all past tasks. Second, we also calculate the average of all accuracies on the
+PT
+most recent tasks immediately after the task is processed, i.e. Alast = T1 i=1 Ri,i . This metric is a
+reflection of the model’s adaptability and can be used to reveal the weakness of the symbolic learner.
+We repeat each experiment 4 times and report both the average and the standard deviation for these
+metrics. To study the temporal dynamics of learning, we also visualize learning curves.
+Baselines for comparison: to demonstrate the effectiveness of our algorithm, we include a naive
+sequential learner, i.e., simple fine-tuning, as a lower-bound as well as a multi-task learner, i.e.,
+joint-task training, as an upper-bound for CL algorithms. Despite being simple, these baselines help
+to evaluate the effectiveness of our algorithm. Moreover, we include the results of our hybrid model,
+NeSyBiCL, in addition to a pure symbolic baseline, which is equivalent to removing the neural
+reasoner from the hybrid model and solely relying on the symbolic mechanism to make decisions for
+all tasks. This baseline can demonstrate the positive effect of using a neural reasoner.
+7
+
+Sketch
+
+Clevr
+
+Methods
+
+Aall (%)
+
+Alast (%)
+
+Aall (%)
+
+Alast (%)
+
+Fine-Tuning
+Multi-Task
+
+18.2 ± 0.5
+92.2 ± 0.2
+
+89.1 ± 5.1
+−
+
+19.2 ± 1.0
+94.5 ± 0.3
+
+92.2 ± 2.6
+−
+
+EWC [21]
+ER [39]
+SI [16]
+LWF [23]
+GEM [25]
+
+28.0 ± 0.7
+35.0 ± 1.3
+23.6 ± 1.0
+29.1 ± 0.3
+22.4 ± 1.1
+
+90.8 ± 1.6
+83.4 ± 7.5
+88.3 ± 5.1
+88.3 ± 5.1
+89.5 ± 5.5
+
+27.1 ± 0.3
+31.4 ± 3.2
+25.9 ± 0.7
+29.0 ± 0.2
+25.1 ± 4.6
+
+90.8 ± 2.0
+83.2 ± 8.8
+88.0 ± 1.7
+87.1 ± 5.8
+92.3 ± 2.8
+
+Symbolic
+NeSyBiC
+
+67.2 ± 0.5
+71.5 ± 0.6
+
+67.2 ± 5.9
+90.6 ± 5.0
+
+64.6 ± 1.6
+68.4 ± 0.9
+
+64.6 ± 5.5
+90.8 ± 4.0
+
+Table 1: Performance comparison of NeSyBiC along with baselines on the two compositional datasets:
+symbolic reasoner faces no forgetting effects and outperforms the neural-based CL baseline in the
+average accuracy criteria Aall . NeSyBiC hybrid-based learner utilize a neural reasoner parallel to the
+symbolic reasoner which enhances the adaptability to a new task, measured by the Alast criteria.
+For comparison against existing CL methods, we compare our method against: (i) Experience Replay
+(ER) [39], (ii) Gradient Episodic Memory (GEM) [25], (iii) Elastic Weight Consolidation (EWC) [21],
+(iv) Synaptic Intelligence (SI) [54], and (v) Learning without Forgetting (LWF) [23]. These methods
+are served as representatives of the major existing neural-based CL approaches. ER randomly stores
+a small subset of training samples in a memory buffer, replayed when the model is updated for
+rehearsal. GEM uses memory samples for gradient correction when updating the model weights for
+the new task. EWC regularizes the loss function by penalizing the drift of network parameters from
+the weights optimal for previous tasks. SI adopts a similar regularization mechanism, except that it
+estimates parameter importance online based on the training trajectory. LWF, uses the inputs from
+the current task as anchor points and minimze the distance between the predicted logit vectors of the
+new model and the model from the previous timestep.
+These techniques have their own limitations. For example, ER will not work well if a memory buffer
+with a fixed size is used or EWC compromises the learning capacity of the neural reasoner as more
+weights are consolidated to remember past learned tasks. In contrast, NeSyBiC stores an abstract
+knowledge graph in its symbolic memory as a lightweight prototype for each class, rather than input
+images in the pixel space. For a fair comparison, we conduct all experiments on s single-head neural
+networks 2 in the task-incremental CL scenario [45].
+5.2
+
+Results
+
+Table 1 presents a comparison between NeSyBiC and the baselines on both datasets. We observe that
+the symbolic reasoner excels other baselines in the average accuracy measure Aall by a significant
+performance gap. The underlying reason behind this behavior is that the symbolic learner can
+effectively break the input into meaningful high-level subconcepts and solve the tasks by exploiting
+the compositional nature of the problem. However, due to the uncertainty in the tasks, the predicted
+graph is different from the true graph for a subset of input samples. As a result, the symbolic reasoner
+is incapable of solving the contemporary task with a performance similar to the neural-based CL
+methods as reflected by the Alast measure. This trend is the primary reason that most symbolic
+learning is replaced with deep learning. In other words, in a single-task learning scenario, deep
+learning is a better solution. These observations demonstrate that AI exclusively based on System
+1 or System 2 leads to specific weaknesses in CL settings. Importantly, we observe that NeSyBiC,
+which benefits from both System 1 and System 2, leads to superior performance in both measures.
+We conclude that while neural-based CL techniques are helpful, neuro-symbolic CL is an alternative
+with great potential.
+2
+
+except for the multi-task learning baseline where the backbone is shared and each task has a separate
+classifier head
+
+8
+
+Figure 2: Learning curves for a long continual learning episode consisting of 50 tasks in the Sketch
+domain: (Left) the average accuracy on all previous tasks at each time step. We observe that NeSyBiC
+and the symbolic reasoner lead to minimal forgetting effects. (Right) the accuracy on the test samples
+of the last task at each timestep. We observe that NeSyBiC achieves better performance when solving
+the contemporary task compared to the symbolic learner.
+A major evaluation criterion in CL is the amount of forgetting. To study forgetting, we use a long
+continual episode based on the Sketch dataset. It consists of 50 tasks with 10 classes per task. To
+study the dynamics of learning, we have visualized the learning curves for this experiment in Figure 2.
+In this figure, neural-based CL methods are trained for 200 epochs on each task before the next task
+arrives. Figure 2, left, presents Aall metric versus training epochs. In this figure, the near-flat behavior
+in the learning curve of the symbolic reasoner stems from its zero-forgetting property according to
+Statement 1. More importantly, we observe that although neural-based CL methods can slow down
+the forgetting effect when compared to the fine-tuning baseline, they are not as effective when used in
+a long CL episode. Particularly, we observe that at the end of the learning episode, the performance
+of ER is similar to fine-tuning. As expected, NeSyBiC outperforms both the symbolic and the neural
+reasoner techniques by combining their nice behaviors.
+We provide the learning curves for the Alast metric in Figure 2, right, to study the plasticity-stability
+tradeoff in the CL methods. We observe that despite using a growing memory buffer for ER, the
+performance on the last task decreases. This is an important observation because it demonstrates that
+ER compromises the learning capacity of a neural network. Specifically, fine-tuning outperforms ER
+in the last task measure, despite suffering from catastrophic forgetting on past tasks. Additionally, it is
+noteworthy that the gap between the sequential fine-tuning with the neural reasoner of the NeSyBiCL.
+The two key factors that make the difference are the integration loss and the resetting mechanism, as
+mentioned in Section 4.3. Our conclusion is that there is a trade-off between addressing catastrophic
+forgetting and the generalizability of a neural network on a new task. Hence, addressing CL using
+a neural reasoner may not be the best approach. Our proposed method addresses this problem by
+leveraging the symbolic knowledge base. Because the burden of CL is handled by the growing
+knowledge base, the neural reasoner is used to solve the contemporary task. As a result, its learning
+capacity is not reduced when a large number of tasks are learned. This conclusion is also crucial
+because it suggests that CL using an end-to-end neural network is not feasible when the tasks become
+complex compared to the size of the neural reasoner we use.
+5.3
+
+Analytic and Ablative Experiments
+
+We present additional experiments to justify why it is necessary to benefit a neuro-symbolic approach
+for continual learning and to provide a better understanding of the components of our method.
+Necessity of neuro-symbolic learning for CL One natural question is whether a purely symbolic
+model is sufficient for CL. We observed in Table 1 and Figure 2 that NeSyBiC performs slightly
+better than the symbolic model in the average accuracy measure and outperforms it considerably in
+9
+
+Figure 3: Ablative experiments: (Left) performance of the neural reasoner and the symbolic reasoner
+for learning a single task versus uncertainty in the Sketch domain. We see that the neural reasoner
+is more robust against the injection of uncertainty compared to the symbolic reasoner. (Right) the
+average accuracy on the last tasks during the continual episode (Al ast), versus the number of training
+samples in the Sketch dataset. We see the effect of the integration loss and also that the performance
+of the neural reasoner is highly affected by the number of training samples.
+the last task accuracy measure. To shed light on this behavior, we note that there exists uncertainty
+and variation in the generated samples of each class. More specifically, there exists a translational
+noise in the location of each object in the input image. The power of noise controls the variation level
+in training data. As a result, the abstract graph representation of each image can be more variant,
+leading to performance degradation in the symbolic reasoner. To study the effect of uncertainty in the
+input samples, Figure 3, left, presents the ability to solve a single task for both models. We observe
+that the symbolic reasoner is vulnerable with respect to uncertainty, i.e., its generalizability power is
+less than the neural reasoner. In contrast, both methods can solve the tasks decently when there exists
+no uncertainty in the input. We conclude that a neural reasoner is not going to be the best solution for
+CL because it cannot perform well to the extent of a neural reasoner in single-task learning. Since
+neural reasoners are vulnerable with respect to forgetting effects, we conclude that the research focus
+in CL should be on developing hybrid neuro-symbolic algorithms.
+Ablative experiments on the integration Loss Our motivation for adding the integration loss is
+to provide a mechanism such that the symbolic reasoner can inject extra supervision into the neural
+model. This process accords with the interaction of System 1 and System 2 in the nervous system.
+Figure 3, right, presents an experiment to demonstrate the effectiveness of the integration loss. In this
+figure, we have reported the average accuracy for the last tasks versus the number of training samples
+per class. We first note that the performance of the symbolic reasoner does not considerably depend
+on the number of training samples. The reason is that it relies on learning the abstract knowledge
+graph that can be done with a few training points. In contrast, the neural reasoner is highly vulnerable
+in few-shot learning regimes. The interesting observation is that through using the integration loss, the
+performance of the neural reasoner increases significantly. This observation suggests that symbolic
+learning can enable knowledge transfer across tasks because the shared concepts and relations serve
+as means for transfer learning.
+
+6
+
+Conclusion
+
+We developed a brain-inspired continual learning model. Our model is a neuro-symbolic model that
+consists of a symbolic reasoner, motivated by System 2 in the brain, and a neural reasoner, to imitate
+System 1 behavior in the decision-making process of humans. We provide theoretical and empirical
+studies to demonstrate that the symbolic reasoner mitigates forgetting effects more effectively and the
+neural reasoner possesses a better generalizability power. The two components complement each
+other for SOTA performance on two compositional datasets.
+10
+
+An interesting direction for future exploration is extending our framework for solving real-world
+continual learning problems. Our hypothesis is that our approach will be extendable conditions on
+using the right symbolic reasoner and benefiting from a carefully annotated dataset for this purpose.
+
+References
+[1] Rahaf Aljundi, Francesca Babiloni, Mohamed Elhoseiny, Marcus Rohrbach, and Tinne Tuytelaars. Memory
+aware synapses: Learning what (not) to forget. In Proceedings of the European conference on computer
+vision (ECCV), pages 139–154, 2018.
+[2] Rahaf Aljundi, Min Lin, Baptiste Goujaud, and Yoshua Bengio. Gradient based sample selection for online
+continual learning. In Advances in Neural Information Processing Systems, volume 32. Curran Associates,
+Inc., 2019.
+[3] Jacob Andreas, Marcus Rohrbach, Trevor Darrell, and Dan Klein. Neural module networks. In 2016 IEEE
+Conference on Computer Vision and Pattern Recognition (CVPR), pages 39–48, 2016.
+[4] Mohammadamin Banayeeanzade, Rasoul Mirzaiezadeh, Hosein Hasani, and Mahdieh Soleymani. Generative vs. discriminative: Rethinking the meta-continual learning. In Advances in Neural Information
+Processing Systems, volume 34, pages 21592–21604. Curran Associates, Inc., 2021.
+[5] Pierre Barrouillet. Dual-process theories and cognitive development: Advances and challenges. Developmental Review, 31(2):79–85, 2011.
+[6] Yoshua Bengio. The consciousness prior, 2019.
+[7] Tarek R Besold, Artur d’Avila Garcez, Sebastian Bader, Howard Bowman, Pedro Domingos, Pascal Hitzler,
+Kai-Uwe Kühnberger, Luis C Lamb, Daniel Lowd, Priscila Machado Vieira Lima, et al. Neural-symbolic
+learning and reasoning: A survey and interpretation. arXiv preprint arXiv:1711.03902, 2017.
+[8] Zalán Borsos, Mojmir Mutny, and Andreas Krause. Coresets via bilevel optimization for continual learning
+and streaming. In Advances in Neural Information Processing Systems, volume 33, pages 14879–14890.
+Curran Associates, Inc., 2020.
+[9] Di Chen, Yiwei Bai, Wenting Zhao, Sebastian Ament, John M. Gregoire, and Carla P. Gomes. Deep
+reasoning networks: Thinking fast and slow, 2019.
+[10] Zhiyuan Chen and Bing Liu. Lifelong machine learning. Synthesis Lectures on Artificial Intelligence and
+Machine Learning, 12(3):1–207, 2018.
+[11] Yilun Du, Shuang Li, and Igor Mordatch. Compositional visual generation with energy based models. In
+Advances in Neural Information Processing Systems, volume 33, pages 6637–6647. Curran Associates,
+Inc., 2020.
+[12] Jonathan St.B.T. Evans. In two minds: dual-process accounts of reasoning. Trends in Cognitive Sciences, 7
+(10):454–459, 2003.
+[13] Robert M French. Catastrophic forgetting in connectionist networks. Trends in cognitive sciences, 3(4):
+128–135, 1999.
+[14] Thomas R Gruber. Toward principles for the design of ontologies used for knowledge sharing? International
+journal of human-computer studies, 43(5-6):907–928, 1995.
+[15] Zhongyi Han, Le-Wen Cai, Wang-Zhou Dai, Yu-Xuan Huang, Benzheng Wei, Wei Wang, and Yilong Yin.
+Abductive subconcept learning. Science China Information Sciences, 66(2):122103, Jan 2023.
+[16] Peter R Huttenlocher et al. Synaptic density in human frontal cortex-developmental changes and effects of
+aging. Brain Res, 163(2):195–205, 1979.
+[17] Takuya Ito, Tim Klinger, Doug Schultz, John Murray, Michael Cole, and Mattia Rigotti. Compositional
+generalization through abstract representations in human and artificial neural networks. Advances in Neural
+Information Processing Systems, 35:32225–32239, 2022.
+[18] Justin Johnson, Bharath Hariharan, Laurens van der Maaten, Li Fei-Fei, C Lawrence Zitnick, and Ross
+Girshick. Clevr: A diagnostic dataset for compositional language and elementary visual reasoning. In
+CVPR, 2017.
+[19] Daniel Kahneman. Thinking, fast and slow. macmillan, 2011.
+
+11
+
+[20] Subbarao Kambhampati, Sarath Sreedharan, Mudit Verma, Yantian Zha, and Lin Guan. Symbols as a
+lingua franca for bridging human-ai chasm for explainable and advisable ai systems. In Proceedings of the
+AAAI Conference on Artificial Intelligence, volume 36, pages 12262–12267, 2022.
+[21] James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel Veness, Guillaume Desjardins, Andrei A Rusu,
+Kieran Milan, John Quan, Tiago Ramalho, Agnieszka Grabska-Barwinska, et al. Overcoming catastrophic
+forgetting in neural networks. Proceedings of the national academy of sciences, 114(13):3521–3526, 2017.
+[22] Timothée Lesort, Thomas George, and Irina Rish. Continual learning in deep networks: an analysis of the
+last layer. arXiv preprint arXiv:2106.01834, 2021.
+[23] Zhizhong Li and Derek Hoiem. Learning without forgetting. CoRR, abs/1606.09282, 2016.
+[24] Zhixuan Liu, Zihao Wang, Yuan Lin, and Hang Li. A neural-symbolic approach to natural language
+understanding. In Findings of the Association for Computational Linguistics: EMNLP 2022, pages 2159–
+2172, Abu Dhabi, United Arab Emirates, December 2022. Association for Computational Linguistics.
+[25] David Lopez-Paz and Marc’Aurelio Ranzato. Gradient episodic memory for continual learning. Advances
+in neural information processing systems, 30, 2017.
+[26] David Lopez-Paz and Marc' Aurelio Ranzato. Gradient episodic memory for continual learning. In
+Advances in Neural Information Processing Systems, volume 30, pages 6467–6476. Curran Associates,
+Inc., 2017.
+[27] Robin Manhaeve, Sebastijan Dumancic, Angelika Kimmig, Thomas Demeester, and Luc De Raedt.
+Deepproblog: Neural probabilistic logic programming. advances in neural information processing systems,
+31, 2018.
+[28] Jiayuan Mao, Chuang Gan, Pushmeet Kohli, Joshua B Tenenbaum, and Jiajun Wu. The neuro-symbolic
+concept learner: Interpreting scenes, words, and sentences from natural supervision. In International
+Conference on Learning Representations. International Conference on Learning Representations, ICLR,
+2019.
+[29] Emanuele Marconato, Gianpaolo Bontempo, Elisa Ficarra, Simone Calderara, Andrea Passerini, and
+Stefano Teso. Neuro symbolic continual learning: Knowledge, reasoning shortcuts and concept rehearsal,
+2023.
+[30] James L McClelland, Bruce L McNaughton, and Randall C O’Reilly. Why there are complementary learning systems in the hippocampus and neocortex: insights from the successes and failures of connectionist
+models of learning and memory. Psychological review, 102(3):419, 1995.
+[31] Jorge A Mendez and ERIC EATON. Lifelong learning of compositional structures. In International
+Conference on Learning Representations, 2021.
+[32] Cuong V. Nguyen, Yingzhen Li, Thang D. Bui, and Richard E. Turner. Variational continual learning. In
+International Conference on Learning Representations, 2018.
+[33] Oleksiy Ostapenko, Timothee Lesort, Pau Rodríguez, Md Rifat Arefin, Arthur Douillard, Irina Rish, and
+Laurent Charlin. Continual learning with foundation models: An empirical study of latent replay, 2022.
+[34] German I. Parisi, Ronald Kemker, Jose L. Part, Christopher Kanan, and Stefan Wermter. Continual lifelong
+learning with neural networks: A review. Neural Networks, 113:54–71, 2019. ISSN 0893-6080.
+[35] Emilio Parisotto, Abdel-rahman Mohamed, Rishabh Singh, Lihong Li, Dengyong Zhou, and Pushmeet
+Kohli. Neuro-symbolic program synthesis. arXiv preprint arXiv:1611.01855, 2016.
+[36] Vinay Venkatesh Ramasesh, Ethan Dyer, and Maithra Raghu. Anatomy of catastrophic forgetting: Hidden
+representations and task semantics. In International Conference on Learning Representations, 2021.
+[37] S. Rebuffi, A. Kolesnikov, G. Sperl, and C. H. Lampert. icarl: Incremental classifier and representation
+learning. In 2017 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), pages 5533–5542,
+2017.
+[38] Shaoqing Ren, Kaiming He, Ross Girshick, and Jian Sun. Faster r-cnn: Towards real-time object detection
+with region proposal networks. In Advances in Neural Information Processing Systems, volume 28. Curran
+Associates, Inc., 2015.
+[39] David Rolnick, Arun Ahuja, Jonathan Schwarz, Timothy Lillicrap, and Gregory Wayne. Experience replay
+for continual learning. Advances in Neural Information Processing Systems, 32, 2019.
+
+12
+
+[40] Andrei A. Rusu, Neil C. Rabinowitz, Guillaume Desjardins, Hubert Soyer, James Kirkpatrick, Koray
+Kavukcuoglu, Razvan Pascanu, and Raia Hadsell. Progressive neural networks, 2016.
+[41] Jonathan Schwarz, Wojciech Czarnecki, Jelena Luketina, Agnieszka Grabska-Barwinska, Yee Whye Teh,
+Razvan Pascanu, and Raia Hadsell. Progress & compress: A scalable framework for continual learning. In
+Proceedings of the 35th International Conference on Machine Learning, volume 80, pages 4528–4537.
+PMLR, 2018.
+[42] Philip Shaw, Noor J Kabani, Jason P Lerch, Kristen Eckstrand, Rhoshel Lenroot, Nitin Gogtay, Deanna
+Greenstein, Liv Clasen, Alan Evans, Judith L Rapoport, et al. Neurodevelopmental trajectories of the
+human cerebral cortex. Journal of neuroscience, 28(14):3586–3594, 2008.
+[43] Hanul Shin, Jung Kwon Lee, Jaehong Kim, and Jiwon Kim. Continual learning with deep generative
+replay. In Advances in Neural Information Processing Systems, volume 30. Curran Associates, Inc., 2017.
+[44] Daniel L Silver. On common ground: Neural-symbolic integration and lifelong machine learning. In
+Proceedings of the 9th International Workshop on Neural-Symbolic Learning and Reasoning NeSy13,
+pages 41–46, 2013.
+[45] Gido M Van de Ven and Andreas S Tolias. Three scenarios for continual learning. arXiv preprint
+arXiv:1904.07734, 2019.
+[46] Gido M. van de Ven, Hava T. Siegelmann, and Andreas S. Tolias. Brain-inspired replay for continual
+learning with artificial neural networks. Nature Communications, 11(1), August 2020.
+[47] Mitchell Wortsman, Vivek Ramanujan, Rosanne Liu, Aniruddha Kembhavi, Mohammad Rastegari, Jason
+Yosinski, and Ali Farhadi. Supermasks in superposition. In Advances in Neural Information Processing
+Systems, volume 33, pages 15173–15184. Curran Associates, Inc., 2020.
+[48] Chenshen Wu, Luis Herranz, Xialei Liu, yaxing wang, Joost van de Weijer, and Bogdan Raducanu. Memory
+replay gans: Learning to generate new categories without forgetting. In Advances in Neural Information
+Processing Systems, volume 31, pages 5962–5972. Curran Associates, Inc., 2018.
+[49] Tailin Wu, Megan Tjandrasuwita, Zhengxuan Wu, Xuelin Yang, Kevin Liu, Rok Sosič, and Jure Leskovec.
+Zeroc: A neuro-symbolic model for zero-shot concept recognition and acquisition at inference time. In
+Neural Information Processing Systems, 2022.
+[50] Kexin Yi, Jiajun Wu, Chuang Gan, Antonio Torralba, Pushmeet Kohli, and Joshua B. Tenenbaum. Neuralsymbolic vqa: Disentangling reasoning from vision and language understanding. In Advances in Neural
+Information Processing Systems, pages 1039–1050, 2018.
+[51] Jaehong Yoon, Eunho Yang, Jeongtae Lee, and Sung Ju Hwang. Lifelong learning with dynamically
+expandable networks. In International Conference on Learning Representations, 2018.
+[52] Jaehong Yoon, Saehoon Kim, Eunho Yang, and Sung Ju Hwang. Scalable and order-robust continual
+learning with additive parameter decomposition. In International Conference on Learning Representations,
+2020.
+[53] Dongran Yu, Bo Yang, Dayou Liu, and Hui Wang. A survey on neural-symbolic systems. arXiv,
+2111.08164, 2021.
+[54] Friedemann Zenke, Ben Poole, and Surya Ganguli. Improved multitask learning through synaptic intelligence. arXiv preprint, 1703.04200, 2017.
+
+13
+
+A
+
+Proof of the Statement 1
+
+In this section, we present the justification for Statement 1.
+Proof. For simplification, we provide the proof in the class-incremental continual learning scenario;
+However, the proof is easily extendable to the task-incremental or other conditions. More formally,
+we assume that all the labels for task t comes from the set Ct and these sets are disjoint among
+different tasks:
+t ̸= t′ ⇒ Ct ∩ Ct′ = ∅
+S
+Next, we denote the set of all concatenated training samples as D = t=1,··· ,T Dt . To prove that
+our continual learner has zero forgetting, we have to show that the model that is obtained by the
+continual training procedure is equivalent to the model obtained in a non-continual setting trained
+over D. Consider the predictive distributions p1 (y|x, KB1 ) and p2 (y|x, KB2 ) for the two models,
+respectively. According to Equation (2), we can decompose each of the predictive distributions in the
+following way:
+Ct = {y|(x, y) ∈ Dt },
+
+p(y|x; KB) =
+
+X
+
+p(y|G; KB)p(G|x),
+
+G∈G
+
+According to the persistency assumption, p(G|x) is the same for both models. Therefore, we focus
+on the second term:
+
+p(y|G; KB) = softmax(sim(G, Gy )) = P
+
+esim(G,Gy )
+sim(G,Gy′ )
+(y ′ ,Gy′ )∈KB e
+
+∀(y, Gy ) ∈ KB
+
+1
+′
+where sim(G, G ′ ) = 1+d(G,G
+′ ) and d(G, G ) is a distance metric between the two graphs. Thus, it
+suffices to show that KB1 = KB2 to complete the proof:
+
+KB2 = {(y, Gy )|y ∈ D} = {(y, Gy )|y ∈
+
+[
+
+Ct }
+
+t=1,··· ,T
+
+=
+
+[
+
+{(y, Gy )|y ∈ Ct } = KB1
+
+t=1,··· ,T
+
+In other words, the process of the KB formation is not affected by the streaming nature of the training
+data. Therefore, the model experiences no forgetting.
+
+B
+
+Integration Loss
+
+To implement the integration loss, first, the color and the shape of each node in the graph are
+converted to a separate one-hot vector. In other words, each node is described by two one-hot vectors
+representing its shape and color accordingly. Next, the corresponding vectors of different nodes are
+added together to construct two vectors. One vector is the summary of the shape of the objects that
+exist in the image and the other one is representative of the colors. Using the integration loss, the
+neural reasoner is encouraged to predict the two vectors for each image. It is noteworthy that we set
+the trade-off hyperparameter between the two loss terms as λ = 1.5.
+
+C
+
+Details of the Experimental Setup
+
+In this section, we provide further details on the dataset construction, the symbolic learner, and the
+neural architectures and hyperparameter values that we used.
+14
+
+Figure 4: Sample images from the Clevr (Left) and Sketch (Right) datasets. This figure contains
+three tasks per dataset and two classes per task.
+
+C.1
+
+Dataset
+
+As previously mentioned, each class in this dataset is indicated by the type of the objects, their colors
+and their bilateral relative locations (Refer to Figure 4 for a visualization).
+In the Sketch domain, the shape of objects is uniformly sampled from {’Square’, ’Triangle’, ’Circle’,
+’Pentagon’} and the set of legible colors consists of {’Blue’, ’Red’, ’Purple’, ’Green’, ’Yellow’,
+’Orange’, ’White’}. The objects can be filled with color or not, have different borderline thicknesses,
+have different area scales, and have different rotation angles. But none of the mentioned factors
+affect the class label. For the Clevr domain, the objects are selected from the set of {’Cone’, ’Sphere’,
+’Cube’, ’Cylinder’} and the color is selected from { ’Gray’, ’Red’, ’Blue’, ’Green’, ’Brown’, ’Purple’,
+’Cyan’, ’Yellow’}. The class-irrelevant factors in this dataset are volume scale, the material of the
+object (rubber or metal), and rotation angle.
+To create a new class, first, a single object with a certain color is sampled and placed in the center of
+the scene. Next, one or more objects are selected and distributed on the perimeter of a circle around
+the first object. Next, to generate inter-class images, the class-irrelevant factors are applied to the
+image to introduce variations to the samples of the class. Additionally, to inject further uncertainty
+into the problem, the horizontal and vertical location of each object is modified by a translational
+noise where the strength of the noise is controlled with a scaling hyperparameter. (See Figure 5 for
+some examples and Section 5.3 for an analysis).
+15
+
+Figure 5: Sample images with different amounts of translational variation indicated by the scale
+coefficient u.
+
+Figure 6: The procedure of the decomposition module. First, the objects in the image are detected
+using an object detection algorithm and next, an abstract graph is constructed based on the detections.
+
+C.2
+
+Symbolic Reasoner
+
+We provide details about the symbolic learner and its sub-elements, i.e., the decomposition module
+and the graph construction process. See Figure 6 for an overview of the decomposition module. This
+module first decomposes the input image using an object detection algorithm, e.g. a Faster-RCNN
+[38]. In addition to the bounding box, the object detector can effectively identify the color and shape
+of each object using a classification head on top of the object detector. Using the extracted information,
+the corresponding graph is constructed where each node represents the objects (subconcepts) in
+the image and edges represent the location of each concept in the scene when relatively compared
+to other nodes. As mentioned in the main text, after decomposing images in the dataset, further
+processing steps are taken to compute the distance between different graphs of the input images
+during the learning and inference phases. It is noteworthy that we used graph edit distance as a metric
+to compute the distance between two graphs in the symbolic reasoner.
+The Faster-RCNN used in this work has two layers of CNN with the kernel size of 5 as the backbone,
+followed by RPN, ROI pooling, and classification layers. Table 2 contains the results of training this
+module over the pretraining set. Moreover, the inference time of the algorithm is reported in the
+same table. The high processing time of this module is a considerable practical barrier to using the
+symbolic reasoner. Therefore, one might preprocess the whole training and testing corpus priorly to
+minimize the object detection time overhead. However, due to the high performance of the module
+on both datasets and because of the fact that the target of this research is fundamentally different
+from developing accurate object detectors, one might assume that the symbolic reasoner has oracle
+access to the output of an approximately perfect object detector.
+C.3
+
+Architecture and Hyperparameters
+
+In the experiments, we used two datasets in the Sketch and Clevr domains. The images from the
+two datasets have a resolution of 64 × 64 and 160 × 120 respectively. The neural learners used in
+this work are constructed from 2 layers of convolutional neural networks with a kernel size of 5 as
+the preliminary feature extractors. On top of that, two MLP layers are placed where the first one is
+responsible for encoding the input in the embedding space and the second one is considered as the
+classifier weights. We optimized neural architectures using the Adam optimizer and a learning rate
+16
+
+Dataset
+
+Average Precision (%)
+@ IOU = 0.5
+
+Average Recall (%)
+@ IOU = 0.5
+
+Inference Time
+per 1000 Samples (s)
+
+Clevr
+Sketch
+
+93.7
+97.8
+
+97.9
+99.1
+
+22.0
+21.6
+
+Table 2: The results of training Faster-RCNN on the pertaining set. The inference time is reported on
+an NVIDIA V100 GPU.
+
+Model
+
+Training Time (s)
+
+Inference Time (s)
+
+Neural Reasoner
+Symbolic Reasoner
+
+13.2
+135.7
+
+0.04
+41.5
+
+Table 3: Running time of implemented models measured on an NVIDIA V100 GPU. Both models
+were trained on a single-task Sketch dataset containing 10 classes and 100 train samples per class.
+The running time of the neural reasoner is measured for 200 epochs. The testing set for both models
+also includes 100 samples per class. The time measured for the symbolic reasoner includes the
+Faster-RCNN inference in addition to the symbolic reasoning performed on the extracted graphs.
+
+of 10−3 for 200 epochs per task. It is noteworthy that each experiment is repeated 4 times and its
+average and variance is reported.
+In most of the experiments, we used a training dataset with 10 tasks and 10 classes per task. We used
+200 train and 50 test samples per class. Additionally, we have also used a pretraining set of 50 classes
+to train the Faster-RCNN module or to pretrain the feature extractor backbones.
+
+D
+
+Additional Analytic Experiments
+
+In this section, we offer additional experiments that provide a deeper insight about our algorithm.
+D.1
+
+Running Times Comparison
+
+We compare the training and testing time of the neural and symbolic reasoner to demonstrate a crucial
+advantage of the neural reasoner compared to the symbolic reasoner which is its inference time.
+Table 3 provides a comparison on the Sketch dataset. Based on this table, the symbolic reasoner has
+much slower training and inference procedures. One possible explanation for such a difference could
+be the distinct nature of the two algorithms. Neural networks benefit from highly-parallelized data
+processing pathways implemented on GPU infrastructures. However, the symbolic algorithm has a
+sequential nature, especially in calculating the graph distances using the edit distance metric. This
+observation also aligns with similar behavior in humans, where it is reported that System 1 is much
+faster in decision-making compared to System 2 [19].
+D.2
+
+Long Continual Episode on Clevr Dataset
+
+Figure 2 contains learning curves for a long continual episode containing 50 tasks of the Sketch dataset.
+Here, we repeat a similar experiment on the Clevr domain to further emphasize the effectiveness of
+our model in mitigating catastrophic forgetting. It can be similarly observed in Figure 7 that both the
+hybrid and symbolic learners are not affected by catastrophic forgetting. In contrast, the neural-based
+models greatly suffer from the forgetting effect. In addition to that, The NeSyBiCL model performs
+considerably better than the symbolic learner in the last task accuracy measure.
+D.3
+
+Effect of Pretraining
+
+We investigate the effect of using a pretrained backbone with other CL baselines. To that end, a
+convolutional neural network is trained on the pretraining corpus using the typical cross-entropy loss.
+17
+
+Figure 7: Learning curves for a long continual learning episode consisting of 50 tasks in the Clevr
+domain: (Left) the average accuracy on all previous tasks at each time step. We observe that NeSyBiC
+and the symbolic reasoner lead to minimal forgetting effects. (Right) the accuracy on the test samples
+of the last task at each timestep. We observe that NeSyBiC achieves better performance when
+solving the contemporary task compared to the symbolic learner. The only difference is that in this
+experiment, each task contains 5 classes as compared to the 10 classes in Figure 2.
+Sketch
+
+Clevr
+
+Methods
+
+Aall (%)
+
+Alast (%)
+
+Aall (%)
+
+Alast (%)
+
+Fine-Tuning
+Multi-Task
+
+17.7 ± 1.5
+90.7 ± 0.2
+
+85.8 ± 8.6
+−
+
+21.0 ± 0.1
+91.5 ± 0.1
+
+89.6 ± 5.0
+−
+
+EWC [21]
+ER [39]
+SI [16]
+LWF [23]
+GEM [25]
+
+20.5 ± 0.8
+29.8 ± 2.1
+19.7 ± 0.1
+19.1 ± 1.7
+18.6 ± 1.0
+
+88.9 ± 5.2
+80.8 ± 8.3
+87.5 ± 4.3
+87.1 ± 6.4
+87.9 ± 5.6
+
+22.9 ± 0.2
+30.3 ± 0.4
+19.8 ± 0.2
+21.1 ± 0.1
+21.8 ± 0.1
+
+88.7 ± 5.5
+82.4 ± 7.3
+87.1 ± 4.4
+87.9 ± 6.6
+89.5 ± 5.1
+
+Table 4: Performance comparison of different baselines on the two compositional datasets when a
+pretrained backbone is used.
+Next, the convolutional layers are frozen and used as the initial point of the backbone of the neural
+learner in a CL episode. Table 4 demonstrates the results of this procedure. The table completely
+follows the setup of Table 1, except for the fact that the backbone is pretrained. It is noticeable that
+using such a technique could not greatly affect most of the baselines.
+
+E
+
+Infrastructures and Data Availability
+
+The Sketch dataset is generated using Open-CV and the Clevr dataset is generated using the Blender
+toolkit. Moreover, we used an NVIDIA P100 GPU and a Google Colab service with an NVIDIA V100
+GPU. As a rough estimation, all of the experiments of Table 1 can be replicated in approximately 6
+hours on a V100 GPU.
+
+18
+
+
