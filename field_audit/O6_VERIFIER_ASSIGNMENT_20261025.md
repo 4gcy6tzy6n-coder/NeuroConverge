@@ -102,6 +102,8 @@ cp -r NMI/NeuroConverge/field_audit/pinned_validation_20261025 ~/o6_verify/Neuro
 cp -r NMI/NeuroConverge/field_audit/fulltexts ~/o6_verify/NeuroConverge/field_audit/
 ```
 
-(The pinned text/PDF directories and the pilot-era `fulltexts/` folder are intentionally untracked
-in git - hash manifests are the anchors - so the clone must be completed with these copies. The
+(The pinned text/PDF directories are intentionally untracked in git - hash manifests are the
+anchors - so the clone must be completed with those copies. The pilot-era `fulltexts/` folder is
+**tracked** at HEAD (22 files) and a fresh clone already carries it; the `cp -r` line for it is
+redundant. Corrected 2026-10-25 after the O-6 verification found the original wording wrong. The
 coder_H sheets ARE committed; a fresh clone already carries them.)
