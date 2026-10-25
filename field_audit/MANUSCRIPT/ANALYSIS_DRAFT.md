@@ -10,20 +10,19 @@ draft scaffolding and is removed in the submission build (Article: Introduction 
 Figures are specified with their numbers below; production follows the figure contracts. Author
 list, affiliations and correspondence: owner-side.
 
-## Abstract (146 words)
+## Abstract (149 words)
 
 Evidence audits of biological-to-artificial intelligence transfer have concentrated on utility;
-the mechanistic pedigree of a design choice is usually accepted as stated. We decompose frozen,
-hash-pinned corpora of arXiv-declared mechanism claims - 16 primary and 42 validation - into a
-five-transition inference chain and grade, transition by transition, what controlled evidence each
-paper itself supplies. No claim evidences its structure-to-computation transition in-paper (16/16
-and 42/42 E0): the biological foundation is delegated by citation. The computation-to-correspondence
-transition - the content that makes a system "brain-inspired" - carries mostly suggestive-only
-support, while utility comparisons concentrate the controlled evidence. A preregistered kill rule
-(80 percent controlled headline evidence) was not triggered: 62.5 percent (primary) and 61.9
-percent (validation) of claims carry controlled headline evidence. We deliver an item-level,
-dual-coded reporting standard for the uncontrolled middle of the chain. The corpora are
-first-query candidate samples; no prevalence claim is made.
+the mechanistic pedigree of a design choice is usually accepted. We decompose frozen, hash-pinned
+corpora of arXiv-declared mechanism claims - 16 primary and 42 validation - into a five-transition
+inference chain and grade each transition by the controlled evidence the paper itself supplies. The
+finding is a stable asymmetry: controlled evidence concentrates where review already looks, utility
+comparisons (10/16 and 25/42), while the correspondence transition - whether artificial components
+implement the invoked computation - rests mostly on suggestive-only support (12/16 and 27/42).
+Foundations are delegated by citation in every claim (16/16 and 42/42), usually to sources that do
+support them; the mapping goes unverified. A preregistered kill rule (80 percent) was not triggered
+(62.5 and 61.9 percent). We deliver an executable reporting standard for the uncontrolled
+correspondence link. The corpora are first-query candidate samples; no prevalence claim is made.
 
 ## Introduction (drafted; number-free by construction)
 
@@ -71,16 +70,18 @@ with the same expectation of controlled disclosure the field already applies to 
 ## Results
 
 **The chain, transition by transition (Fig 1).** Under the weaker-grade merge of two independent
-coders, the structure-to-computation transition T1 carries no in-paper controlled evidence in any
-claim (E0 16/16): every paper in the corpus delegates its biological foundation to citation. The
-computation-to-correspondence transition T2 is nearly as thin (E1 12/16, E0 2/16, E2 2/16) - the
-claimed instantiation of the invoked computation is, in twelve of sixteen claims, supported only
-suggestively, in a single setting with no control named for this transition. Utility comparisons
-(T3) are where controlled evidence concentrates (E2 10/16, E1 4/16, E0 2/16). Generality (T4: E1
-9/16, E0 6/16, E2 1/16) and scope fidelity (T5: E1 11/16, E2 4/16, E0 1/16) fall between. The
-delegation is not absence of biological support: an in-paper E0 records that the paper itself
-supplies no evidence for the transition, a different fact from the transition being unevidenced
-anywhere (Methods, external layer).
+coders, the five transitions split into two regimes, and the split is the finding. Utility
+comparisons (T3) are where controlled evidence concentrates (E2 10/16, E1 4/16, E0 2/16) -
+precisely where peer review already looks. The correspondence transition (T2), the claimed
+instantiation of the invoked computation and the content that makes a system "brain-inspired", is
+thin: E1 12/16 (suggestive-only, a single setting, no control named for this transition), E0 2/16,
+E2 2/16. The structure-to-computation transition T1 carries no in-paper controlled evidence in any
+claim (E0 16/16): every paper in the corpus delegates its biological foundation to citation.
+Generality (T4: E1 9/16, E0 6/16, E2 1/16) and scope fidelity (T5: E1 11/16, E2 4/16, E0 1/16)
+fall between. The delegation is not absence of biological support - AI research legitimately
+builds on published neuroscience, and nobody proposes re-proving every biological premise; an
+in-paper E0 records only that the paper itself supplies no evidence for the transition, a
+different fact from the transition being unevidenced anywhere (Methods, external layer).
 
 **The correspondence gap (Fig 2).** The two thinnest transitions are the correspondence link
 (T2: controlled in 2/16) and the generality link (T4: controlled in 1/16); utility comparisons
@@ -143,12 +144,20 @@ counts are 15/16, 3/16 and 9/16 (with the control inventory itself at 0/16).
 What this finding does not claim: it is not a prevalence statement about the field (the corpus is a
 first-query candidate sample of arXiv-declared mechanism claims, and every proportion above carries its
 interval); it passes no judgment on the truth of any mechanism (an in-paper E0 transition may be true -
-the finding is about what the papers themselves supply); and it does not evaluate the cited external
+the finding is about what the papers themselves supply); it disputes nothing about AI research's
+legitimate reliance on published neuroscience - re-proving biological premises is not the standard
+proposed here, and the pilot's specificity verification (11 of 14 delegated foundations supported
+specifically) is reported in the Supplementary; and it does not evaluate the cited external
 literature's support (the external layer could not be merged under the two-coder protocol and is
-disclosed as a convention divergence; the pilot-corpus specificity verification, in which 11 of 14
-delegated foundations were supported specifically, is reported in the Supplementary as pilot evidence).
-The framework's own validity is checked against five workspace projects as calibration case studies
-(Supplementary). Limitations are as follows: the quota sample's width (16 claims; Wilson 39-82 percent
+disclosed as a convention divergence).
+The general statement the audit supports is: current AI evaluation practice can verify a model's
+utility, because review demands it, but has no step that verifies a model's correspondence with the
+biological mechanism it cites; the framework supplied here is an operational supplement that makes the
+second check cheap. The framework's own validity is checked against five workspace projects as
+calibration case studies (Supplementary), and the grade scale's positive-control sensitivity is
+demonstrated on three deliberately selected strong-correspondence papers, each of which the instrument
+grades E2 at the correspondence transition (Supplementary). Limitations are as follows: the quota
+sample's width (16 claims; Wilson 39-82 percent
 on the headline statistic - the 42-claim validation corpus narrows this to 47-75 at a replicated
 61.9 percent, and both corpora remain first-query candidate samples); the same-model coder pair with
 disclosed correlated-error risk (in-paper disagreement 22.5 percent on the final corpus, 30.5 percent
@@ -186,7 +195,13 @@ category caps as frozen, claim-type adjudicated with logged replacements (35 dra
 stratum-matched; six corpus members are surveys or reviews without an own artifact, a
 composition carried from the draw). Two new isolated-context coders graded all five transitions
 under the identical frozen instructions (evidence layer only, per the frozen validation scope);
-the weaker-grade merge and weaker-evidence headline resolution apply unchanged.
+the weaker-grade merge and weaker-evidence headline resolution apply unchanged. Two preregistered
+robustness checks accompany the validation pass (Supplementary): excluding the survey/review members
+of both corpora (mechanical title/abstract self-identification rule; primary 16 -> 15, validation
+42 -> 36) leaves every finding direction-identical and strengthens the utility-correspondence
+asymmetry; and a positive-control probe on three deliberately selected strong-correspondence papers
+confirms the grade scale awards its top in-paper grade (E2 at T2) when a paper supplies controlled
+correspondence evidence.
 
 **Coding.** Each claim's five transitions were graded independently by two coders working from the pinned
 texts under frozen instructions, with quoted justifications and location pointers. The coders are

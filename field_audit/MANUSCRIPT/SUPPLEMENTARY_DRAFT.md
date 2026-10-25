@@ -109,3 +109,31 @@ specifically support the invoked computation (11/14) - the pilot's three-layer T
 in-paper E0; 14/18 externally established; 11/14 specifically). Promoting this to a final-corpus
 statistic requires a single external-verification convention frozen before coding, a named
 successor version, and a fresh pass; none is claimed here. No prevalence claim is made.
+
+## SI Note 5: robustness and positive-control calibration (2026-10-25, advisor-directed)
+
+**Survey exclusion.** Frozen mechanical rule (title or abstract self-identifies as survey/review):
+primary corpus 2 of 16 excluded (2312.07213v4, 2305.11252v1), validation corpus 6 of 42 excluded
+(1506.03264v1, 1901.03690v3, 2204.07050v7, 2209.10818v2, 2312.09257v2, 2603.26722v1; the two
+additional coder-flagged validation claims are primary-research papers and are not excluded). Every
+finding is direction-identical without surveys, and the utility-correspondence asymmetry
+strengthens: T3 controlled 10/15 (66.7 pct) vs T2 2/15 (13.3 pct) on primary; T3 25/36 (69.4 pct)
+vs T2 9/36 (25.0 pct) on validation; T1 remains E0 in all kept claims of both corpora; headline
+E2+ rises to 66.7 pct (primary, CI 41.7-84.8) and 72.2 pct (validation, CI 56.0-84.2), every point
+estimate still below the 80 pct kill bar (honest caveat: the smaller subsets' interval upper bounds
+cross 80; the kill rule is defined on the frozen corpora as drawn). Record:
+`ROBUSTNESS_SURVEY_EXCLUSION_20261025.md` + JSON.
+
+**Positive-control probe.** Question: does the instrument award its top in-paper grade when a paper
+actually supplies controlled correspondence evidence (excluding the "inherently grades low"
+critique)? Three papers outside both corpora were nominated under a frozen criterion (abstract
+explicitly claims the bio-inspired mechanism ablated/inverted or a matched non-bio control
+attributed to the mechanism): differentiable plasticity (1804.02464v3), multi-compartment spiking
+RL (2301.07275v2), and Global-Workspace RL transfer (2403.04588v2). Registered prediction: at
+least 2 of 3 at T2 = E2. Outcome: 3/3 at T2 = E2 (indeed E2 across T2-T5, headline T3), quotes and
+cited specifics verified against pinned texts; hashes re-checked. The probe's second reading is on
+message: even these strong-correspondence papers carry T1 = E0 - delegation of biological
+foundations is universal in this literature, and what separates strong from weak mechanistic papers
+is whether the correspondence and its attribution are controlled. The grade definitions were not
+touched after coding. Record: `POSITIVE_CONTROL_PROBE_20261025.md` + probe directory with pinned
+texts, manifests and coding sheet.

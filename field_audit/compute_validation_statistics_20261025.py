@@ -89,56 +89,61 @@ def selftest():
 if __name__ == "__main__" and "--selftest" in sys.argv:
     selftest(); sys.exit(0)
 
-A = load(ROOT / "CODING_sheets_validation/coder_A.csv", "A")
-B = load(ROOT / "CODING_sheets_validation/coder_B.csv", "B")
-corpus = [r["arxiv_id_version"] for r in csv.DictReader(open(ROOT / "corpus_validation_v2_adjudicated.csv"))]
-hl_a = {r["claim_id"]: r["headline_transition"] for r in csv.DictReader(open(ROOT / "CODING_sheets_validation/headline_A.csv"))}
-hl_b = {r["claim_id"]: r["headline_transition"] for r in csv.DictReader(open(ROOT / "CODING_sheets_validation/headline_B.csv"))}
-assert set(A) == set(B) and len(A) == 210, "sheet mismatch"
-merged = merge_sheets(A, B)
-hm, hnotes = headline_merged(hl_a, hl_b, merged)
+def main():
+    A = load(ROOT / "CODING_sheets_validation/coder_A.csv", "A")
+    B = load(ROOT / "CODING_sheets_validation/coder_B.csv", "B")
+    corpus = [r["arxiv_id_version"] for r in csv.DictReader(open(ROOT / "corpus_validation_v2_adjudicated.csv"))]
+    hl_a = {r["claim_id"]: r["headline_transition"] for r in csv.DictReader(open(ROOT / "CODING_sheets_validation/headline_A.csv"))}
+    hl_b = {r["claim_id"]: r["headline_transition"] for r in csv.DictReader(open(ROOT / "CODING_sheets_validation/headline_B.csv"))}
+    assert set(A) == set(B) and len(A) == 210, "sheet mismatch"
+    merged = merge_sheets(A, B)
+    hm, hnotes = headline_merged(hl_a, hl_b, merged)
 
-# distributions
-per_t = {t: Counter() for t in TRANS}
-for (cid, t), (ing, extg) in merged.items():
-    per_t[t][ing] += 1
-disagree_cells = [(k, A[k]["in_paper_grade"], B[k]["in_paper_grade"]) for k in A if A[k]["in_paper_grade"] != B[k]["in_paper_grade"]]
-ext_disagree = [k for k in A if A[k]["external_evidence_grade"] != B[k]["external_evidence_grade"]]
-hl_disagree = [c for c in corpus if hl_a[c] != hl_b[c]]
-# headline E2+ share and kill rule
-headline_grades = {c: merged[(c, hm[c])][0] for c in corpus}
-n_e2plus = sum(1 for g in headline_grades.values() if g == "E2")
-n_e0e1 = sum(1 for g in headline_grades.values() if g in ("E0", "E1"))
-kill = (n_e2plus / len(corpus)) >= 0.80
-# Wilson interval (same routine as final corpus)
-def wilson(p, n, z=1.959963985):
-    import math
-    if n == 0: return (0.0, 1.0)
-    d = 1 + z*z/n
-    c = (p + z*z/(2*n)) / d
-    h = z * math.sqrt(p*(1-p)/n + z*z/(4*n*n)) / d
-    return (max(0.0, c - h), min(1.0, c + h))
-share = n_e2plus / len(corpus)
-lo, hi = wilson(share, len(corpus))
-scope_a = Counter(A[(c, "T5")]["scope_match"] for c in corpus)
-scope_b = Counter(B[(c, "T5")]["scope_match"] for c in corpus)
+    # distributions
+    per_t = {t: Counter() for t in TRANS}
+    for (cid, t), (ing, extg) in merged.items():
+        per_t[t][ing] += 1
+    disagree_cells = [(k, A[k]["in_paper_grade"], B[k]["in_paper_grade"]) for k in A if A[k]["in_paper_grade"] != B[k]["in_paper_grade"]]
+    ext_disagree = [k for k in A if A[k]["external_evidence_grade"] != B[k]["external_evidence_grade"]]
+    hl_disagree = [c for c in corpus if hl_a[c] != hl_b[c]]
+    # headline E2+ share and kill rule
+    headline_grades = {c: merged[(c, hm[c])][0] for c in corpus}
+    n_e2plus = sum(1 for g in headline_grades.values() if g == "E2")
+    n_e0e1 = sum(1 for g in headline_grades.values() if g in ("E0", "E1"))
+    kill = (n_e2plus / len(corpus)) >= 0.80
+    # Wilson interval (same routine as final corpus)
+    def wilson(p, n, z=1.959963985):
+        import math
+        if n == 0: return (0.0, 1.0)
+        d = 1 + z*z/n
+        c = (p + z*z/(2*n)) / d
+        h = z * math.sqrt(p*(1-p)/n + z*z/(4*n*n)) / d
+        return (max(0.0, c - h), min(1.0, c + h))
+    share = n_e2plus / len(corpus)
+    lo, hi = wilson(share, len(corpus))
+    scope_a = Counter(A[(c, "T5")]["scope_match"] for c in corpus)
+    scope_b = Counter(B[(c, "T5")]["scope_match"] for c in corpus)
 
-result = {
-    "round": "validation_v2_20261025", "n_claims": len(corpus),
-    "per_transition_merged": {t: dict(per_t[t]) for t in TRANS},
-    "in_paper_disagreement": {"cells": len(disagree_cells), "of": 210,
-                              "rate_pct": round(100 * len(disagree_cells) / 210, 1),
-                              "by_transition": dict(Counter(k[1] for k, _, _ in disagree_cells))},
-    "external_disagreement_cells": len(ext_disagree),
-    "headline_disagreements": {"n": len(hl_disagree), "resolutions": hnotes},
-    "headline_merged_map": dict(Counter(hm[c] for c in corpus)),
-    "headline_e2plus": n_e2plus, "headline_e0_e1": n_e0e1,
-    "headline_e2plus_share_pct": round(100 * share, 1),
-    "headline_e2plus_wilson95_pct": [round(100 * lo, 1), round(100 * hi, 1)],
-    "kill_rule_80pct_e2plus": {"triggered": kill, "bar_pct": 80},
-    "scope_match_per_coder": {"A": dict(scope_a), "B": dict(scope_b)},
-}
-out = ROOT / "CODING_sheets_validation/statistics_validation_20261025.json"
-out.write_text(json.dumps(result, indent=2) + "\n")
-print(json.dumps(result, indent=2))
-print("->", out.name)
+    result = {
+        "round": "validation_v2_20261025", "n_claims": len(corpus),
+        "per_transition_merged": {t: dict(per_t[t]) for t in TRANS},
+        "in_paper_disagreement": {"cells": len(disagree_cells), "of": 210,
+                                  "rate_pct": round(100 * len(disagree_cells) / 210, 1),
+                                  "by_transition": dict(Counter(k[1] for k, _, _ in disagree_cells))},
+        "external_disagreement_cells": len(ext_disagree),
+        "headline_disagreements": {"n": len(hl_disagree), "resolutions": hnotes},
+        "headline_merged_map": dict(Counter(hm[c] for c in corpus)),
+        "headline_e2plus": n_e2plus, "headline_e0_e1": n_e0e1,
+        "headline_e2plus_share_pct": round(100 * share, 1),
+        "headline_e2plus_wilson95_pct": [round(100 * lo, 1), round(100 * hi, 1)],
+        "kill_rule_80pct_e2plus": {"triggered": kill, "bar_pct": 80},
+        "scope_match_per_coder": {"A": dict(scope_a), "B": dict(scope_b)},
+    }
+    out = ROOT / "CODING_sheets_validation/statistics_validation_20261025.json"
+    out.write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps(result, indent=2))
+    print("->", out.name)
+
+
+if __name__ == "__main__":
+    main()

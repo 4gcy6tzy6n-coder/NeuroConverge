@@ -1,0 +1,89 @@
+{
+  "rule": "title or abstract self-identifies as survey/review (case-insensitive 'survey'|'review')",
+  "primary": {
+    "excluded": [
+      "2312.07213v4",
+      "2305.11252v1"
+    ],
+    "n_full": 16,
+    "n_kept": 15,
+    "dist": {
+      "T1": {
+        "E0": 15
+      },
+      "T2": {
+        "E1": 11,
+        "E0": 2,
+        "E2": 2
+      },
+      "T3": {
+        "E2": 10,
+        "E0": 1,
+        "E1": 4
+      },
+      "T4": {
+        "E1": 9,
+        "E0": 5,
+        "E2": 1
+      },
+      "T5": {
+        "E1": 10,
+        "E0": 1,
+        "E2": 4
+      }
+    },
+    "headline_map": {
+      "T3": 14,
+      "T2": 1
+    },
+    "headline_e2plus": 10,
+    "headline_e2plus_share_pct": 66.7,
+    "headline_e2plus_wilson95_pct": [
+      41.7,
+      84.8
+    ]
+  },
+  "validation": {
+    "excluded": [
+      "1901.03690v3",
+      "1506.03264v1",
+      "2204.07050v7",
+      "2312.09257v2",
+      "2209.10818v2",
+      "2603.26722v1"
+    ],
+    "n_full": 42,
+    "n_kept": 36,
+    "dist": {
+      "T1": {
+        "E0": 36
+      },
+      "T2": {
+        "E1": 27,
+        "E2": 9
+      },
+      "T3": {
+        "E2": 25,
+        "E1": 11
+      },
+      "T4": {
+        "E1": 26,
+        "E0": 10
+      },
+      "T5": {
+        "E1": 36
+      }
+    },
+    "headline_map": {
+      "T3": 32,
+      "T2": 3,
+      "T4": 1
+    },
+    "headline_e2plus": 26,
+    "headline_e2plus_share_pct": 72.2,
+    "headline_e2plus_wilson95_pct": [
+      56.0,
+      84.2
+    ]
+  }
+}
