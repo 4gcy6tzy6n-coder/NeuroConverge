@@ -25,10 +25,28 @@ def excluded_ids(corpus_csv, title_abstract_pairs):
     return out
 
 # --- primary corpus (n=16) ---
-prim_corpus = list(csv.DictReader(open(ROOT / "corpus_draw_arxiv_v1.csv")))
-# abstracts for primary claims come from the adjudication-input extraction used by the pilot;
-# titles are in the corpus csv; abstracts from the pinned snapshot via the adjudication input is
-# pilot-scoped, so rebuild from the snapshot for primary ids only.
+# Membership comes from the FINAL corpus (the 16 C-ids actually coded), NOT the pilot 18-draw
+# file: the advisor's 2026-10-25 review caught exactly this bookkeeping defect (a pilot-draw
+# review paper that left the corpus at the eligibility narrowing was being listed as excluded,
+# yielding the contradictory 16 - 2 = 15). The C-id -> arxiv id map is recovered from the coder
+# sheet's provenance_file column (fulltexts/<arxiv_id_version>.pdf); titles come from the pilot
+# draw CSV, abstracts from the pinned snapshot - both looked up only for final-16 members.
+cmap = {}
+for r in csv.DictReader(open(ROOT / "CODING_sheets_v2/coder_A_E.csv")):
+    m_ = re.search(r"fulltexts/(\S+)\.pdf$", r["provenance_file"] or "")
+    if m_:
+        cmap[r["claim_id"]] = m_.group(1)
+assert len(cmap) == 16, f"expected 16 C-id mappings, got {len(cmap)}"
+final_ids = set(cmap.values())
+draw_rows = {r["arxiv_id_version"]: r for r in csv.DictReader(open(ROOT / "corpus_draw_arxiv_v1.csv"))
+             if r["arxiv_id_version"] in final_ids}
+# pilot-round adjudication replacements are members of the final 16 but absent from the draw csv;
+# their titles come from the adjudication record
+for r in csv.DictReader(open(ROOT / "CLAIM_TYPE_ADJUDICATION_20261020.csv")):
+    aid = r.get("arxiv_id_version", "")
+    if aid in final_ids and aid not in draw_rows:
+        draw_rows[aid] = {"arxiv_id_version": aid, "title": r.get("title", "")}
+assert len(draw_rows) == 16, f"final-16 membership mismatch: {sorted(final_ids - set(draw_rows))}"
 import xml.etree.ElementTree as ET
 NS = {"a": "http://www.w3.org/2005/Atom"}
 snap_text = (ROOT / "corpus_draw_arxiv_v1.snapshot.jsonl").read_text(errors="replace")
@@ -43,18 +61,9 @@ for line in snap_text.splitlines():
     for e in root.findall("a:entry", NS):
         aid = re.search(r"abs/(\S+)$", e.find("a:id", NS).text.strip()).group(1)
         abs_idx[aid] = re.sub(r"\s+", " ", e.find("a:summary", NS).text or "").strip()
-prim_ids = [r["arxiv_id_version"] for r in prim_corpus]
-prim_pairs = [(r["arxiv_id_version"], r["title"] + " " + abs_idx.get(r["arxiv_id_version"], ""))
-              for r in prim_corpus]
-prim_excl = excluded_ids("primary", prim_pairs)
-# the primary coding sheets key claims by C-id; recover the C-id -> arxiv id map from the
-# coder sheet's provenance_file column (fulltexts/<arxiv_id_version>.pdf)
-cmap = {}
-for r in csv.DictReader(open(ROOT / "CODING_sheets_v2/coder_A_E.csv")):
-    m_ = re.search(r"fulltexts/(\S+)\.pdf$", r["provenance_file"] or "")
-    if m_:
-        cmap[r["claim_id"]] = m_.group(1)
-assert len(cmap) == 16, f"expected 16 C-id mappings, got {len(cmap)}"
+prim_pairs = [(aid, draw_rows[aid]["title"] + " " + abs_idx.get(aid, "")) for aid in final_ids]
+prim_excl = [aid for aid, text in prim_pairs if KW.search(text or "")]
+assert all(a in final_ids for a in prim_excl), "exclusion outside final-16 membership"
 merged_E = list(csv.DictReader(open(ROOT / "CODING_sheets_v2/merged_E.csv")))
 head_m = {r["claim_id"]: r["headline_transition"] for r in csv.DictReader(open(ROOT / "CODING_sheets_v2/headline_merged.csv"))}
 excl_cids = {c for c, a in cmap.items() if a in prim_excl}

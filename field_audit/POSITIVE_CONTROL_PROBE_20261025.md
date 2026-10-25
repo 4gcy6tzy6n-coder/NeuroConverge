@@ -45,7 +45,11 @@ definitions instead.
 
 **Prediction outcome: MET 3/3.** All three positive controls received `in_paper_grade = E2` at T2
 (prediction required >= 2/3). The instrument awards the top in-paper grade when a paper supplies
-controlled correspondence evidence; the "inherently grades low" critique is excluded.
+controlled correspondence evidence. Scope of this result, stated precisely: the positive controls
+demonstrate that the audit instrument can recognize controlled evidence of biological-to-artificial
+computational correspondence; they are purposively selected and do not by themselves establish
+classification accuracy on boundary cases or cross-coder stability (the latter rests on the
+disagreement statistics and the human-coder supersession pass).
 
 | paper | nomination (control claim in abstract) | T1 | T2 | T3 | T4 | T5 | headline |
 | --- | --- | --- | --- | --- | --- | --- | --- |

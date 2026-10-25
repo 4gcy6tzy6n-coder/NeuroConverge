@@ -125,15 +125,19 @@ cross 80; the kill rule is defined on the frozen corpora as drawn). Record:
 `ROBUSTNESS_SURVEY_EXCLUSION_20261025.md` + JSON.
 
 **Positive-control probe.** Question: does the instrument award its top in-paper grade when a paper
-actually supplies controlled correspondence evidence (excluding the "inherently grades low"
-critique)? Three papers outside both corpora were nominated under a frozen criterion (abstract
-explicitly claims the bio-inspired mechanism ablated/inverted or a matched non-bio control
-attributed to the mechanism): differentiable plasticity (1804.02464v3), multi-compartment spiking
-RL (2301.07275v2), and Global-Workspace RL transfer (2403.04588v2). Registered prediction: at
-least 2 of 3 at T2 = E2. Outcome: 3/3 at T2 = E2 (indeed E2 across T2-T5, headline T3), quotes and
-cited specifics verified against pinned texts; hashes re-checked. The probe's second reading is on
-message: even these strong-correspondence papers carry T1 = E0 - delegation of biological
-foundations is universal in this literature, and what separates strong from weak mechanistic papers
-is whether the correspondence and its attribution are controlled. The grade definitions were not
-touched after coding. Record: `POSITIVE_CONTROL_PROBE_20261025.md` + probe directory with pinned
-texts, manifests and coding sheet.
+actually supplies controlled correspondence evidence? Three papers outside both corpora were
+nominated under a frozen criterion (abstract explicitly claims the bio-inspired mechanism
+ablated/inverted or a matched non-bio control attributed to the mechanism): differentiable
+plasticity (1804.02464v3), multi-compartment spiking RL (2301.07275v2), and Global-Workspace RL
+transfer (2403.04588v2). Registered prediction: at least 2 of 3 at T2 = E2. Outcome: 3/3 at
+T2 = E2 (indeed E2 across T2-T5, headline T3), quotes and cited specifics verified against pinned
+texts; hashes re-checked. The positive controls demonstrate that the audit instrument can recognize
+controlled evidence of biological-to-artificial computational correspondence; they do not by
+themselves establish the instrument's classification accuracy on boundary cases or cross-coder
+stability beyond the disagreement statistics reported in the main text - the human-coder
+supersession pass addresses the latter. The probe's second reading is on message: even these
+strong-correspondence papers carry T1 = E0 - delegation of biological foundations is universal in
+this literature, and what separates strong from weak mechanistic papers is whether the
+correspondence and its attribution are controlled. The grade definitions were not touched after
+coding. Record: `POSITIVE_CONTROL_PROBE_20261025.md` + probe directory with pinned texts,
+manifests and coding sheet.

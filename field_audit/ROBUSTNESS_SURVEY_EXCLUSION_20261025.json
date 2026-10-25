@@ -2,7 +2,6 @@
   "rule": "title or abstract self-identifies as survey/review (case-insensitive 'survey'|'review')",
   "primary": {
     "excluded": [
-      "2312.07213v4",
       "2305.11252v1"
     ],
     "n_full": 16,

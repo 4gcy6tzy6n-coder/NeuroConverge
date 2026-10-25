@@ -1,5 +1,25 @@
 # Robustness analysis R2a (advisor review 2026-10-25): survey exclusion
 
+## ERRATUM (2026-10-25, advisor catch - arithmetic inconsistency 16-2=15)
+
+The advisor's review flagged that the originally reported primary numbers (16 claims, 2 excluded,
+15 kept) are arithmetically inconsistent. Verified root cause: the exclusion scan ran over the
+PILOT 18-draw file (`corpus_draw_arxiv_v1.csv`) instead of the final-16 membership. Of the two
+survey-titled papers in that file, 2312.07213v4 ("...Human-computer Interaction: A Review") had
+ALREADY LEFT the corpus at the eligibility narrowing and is not a member of the final 16 (not in
+the coder sheets, the registry, or the manuscript's reference list); the only survey in the final
+16 is 2305.11252v1 (C045). The correct statement is **16 - 1 = 15**, and the correction is
+bookkeeping only: the recomputation's filter had effectively excluded exactly one claim (the
+script's C-id map contains no member matching 2312.07213v4), so every distribution, headline
+number and interval in the tables below is unchanged (10/15 = 66.7 percent, 2/15 = 13.3 percent,
+T1 15/15). The script now derives membership from the final-16 coder sheets, asserts exclusions
+are corpus members, and recovers the two adjudication-replacement titles from the adjudication
+record; it was re-run after the fix and the JSON regenerated with the corrected exclusion list.
+
+---
+
+
+
 Directive: advisor risk R2 - both corpora include survey/review members whose structural E0s
 could dilute the primary-research reading; recompute the core results without them. This is a
 NAMED ROBUSTNESS ANALYSIS reported beside, never instead of, the frozen primary numbers.
