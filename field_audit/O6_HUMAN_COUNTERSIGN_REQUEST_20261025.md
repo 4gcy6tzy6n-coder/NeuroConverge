@@ -117,6 +117,8 @@ checker PASS.
 ```bash
 git clone https://github.com/4gcy6tzy6n-coder/NeuroConverge.git
 cd NeuroConverge/field_audit
+# check 0 - restore the non-redistributed pinned files (rights review 2026-10-26):
+python3 fetch_pinned_from_arxiv.py            # network, ~4 min; verifies every sha256
 # check 2 - your own recount code over the raw sheets (CODING_sheets_v2/, CODING_sheets_validation/, CODING_sheets_human/)
 # check 3 - the H3 chain:
 python3 compute_H3_full_20261025.py && python3 compute_H3_reading2b_20261025.py
@@ -130,6 +132,9 @@ python3 robustness_survey_exclusion_20261025.py  # expect exit 0
 python3 verify_tie_rule_canonicality_20261026.py # expect PASS, 4 assertions
 ```
 
-Keep your command logs and outputs; attach them to the signed sheet. The primary-corpus PDFs
-(`pinned_fulltext_20261020/pdfs/`) remain untracked by size and are covered by their committed
-manifest - none of the seven checks requires them.
+Keep your command logs and outputs; attach them to the signed sheet. NOTE (rights review
+2026-10-26): the repository intentionally does NOT redistribute most full texts - check 0's
+fetch script restores them locally from arXiv with sha256 verification against the committed
+manifests (the fetch itself is personal verification use, not redistribution). The 15
+permissively licensed (CC-BY/CC-BY-SA) validation text layers that ARE committed carry their
+attribution in `pinned_validation_20261025/ATTRIBUTION.md`.
