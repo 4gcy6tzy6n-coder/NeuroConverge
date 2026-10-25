@@ -1,0 +1,41 @@
+{
+  "canonical_maps": {
+    "primary": "16/16",
+    "validation": "36/42",
+    "total": "52/58",
+    "primary_misses": [],
+    "validation_misses": [
+      "1505.07814v2",
+      "1801.02797v1",
+      "2210.15790v1",
+      "2010.11931v1",
+      "2204.07050v7",
+      "2511.06470v1"
+    ]
+  },
+  "h3_script_variant": {
+    "primary": "15/16",
+    "validation": "36/42",
+    "total": "51/58",
+    "primary_misses": [
+      "1811.09699v1"
+    ],
+    "validation_misses": [
+      "1505.07814v2",
+      "1801.02797v1",
+      "2210.15790v1",
+      "2010.11931v1",
+      "2204.07050v7",
+      "2511.06470v1"
+    ]
+  },
+  "primary_map_divergence": [
+    {
+      "claim": "C077",
+      "committed": "T2",
+      "h3_derived": "T3"
+    }
+  ],
+  "canonical_primary_source": "CODING_sheets_v2/headline_merged.csv",
+  "note": "Canonical = committed primary map + committed-validation-rule validation map. The H3-script variant re-derives the primary map with the validation tie rule; C077 / 1811.09699v1 is the only divergence. No number outside this agreement count changes."
+}

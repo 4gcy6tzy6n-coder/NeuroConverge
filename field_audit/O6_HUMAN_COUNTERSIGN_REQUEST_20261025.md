@@ -1,0 +1,81 @@
+# O-6 human counter-signature request (2026-10-25)
+
+**To:** a human non-author verifier (someone who did not author this project's instruments,
+scripts, coding sheets, or manuscript text, and did not perform the AI verification).
+
+**Purpose.** O-6 requires an independent non-author recomputation. An AI non-author verification
+was completed on 2026-10-25 (`O6_VERIFICATION_REPORT_CLAUDE_20261025.md`) and its findings were
+resolved on the lead's instruction (`O6_FINDINGS_RESOLUTION_20261025.md`). The lead has accepted
+the AI report as the machine-checkable half of O-6. Your signature is the human half: confirm that
+the report's numbers and the resolution record are what they say they are. This is a
+**counter-signature of a machine verification**, not a demand that you redo the full audit.
+
+**Materials and commit.**
+
+- AI report: `O6_VERIFICATION_REPORT_CLAUDE_20261025.md`
+- Resolution record: `O6_FINDINGS_RESOLUTION_20261025.md`
+- Base commit verified by O-6: `0dbf8ac`
+- Resolution branch: `o6-findings-resolution-20261025` (code commit `253507e`; the branch also
+  carries the resolution records)
+
+**Suggested checks (2-4 hours).**
+
+1. **Read** the AI report and the resolution record. Note the overall verdict
+   (VERIFIED WITH FINDINGS) and the five findings.
+2. **Recount three load-bearing numbers yourself** from the raw sheets, using your own code or by
+   hand, and record expected/observed:
+   - primary headline E2+ under the AI weaker merge: **10/16 = 62.5 %**
+     (`CODING_sheets_v2/coder_A_E.csv`, `coder_B_E.csv`, `headline_merged.csv`);
+   - validation headline E2+ under the AI weaker merge: **26/42 = 61.9 %**
+     (`CODING_sheets_validation/coder_A.csv`, `coder_B.csv`, `headline_A.csv`, `headline_B.csv`);
+   - in-paper disagreement: **18/80 = 22.5 %** primary.
+3. **Run the H3 chain** and confirm it reproduces the committed H3 JSON:
+
+   ```bash
+   cd field_audit
+   python3 compute_H3_full_20261025.py
+   python3 compute_H3_reading2b_20261025.py
+   shasum -a 256 CODING_sheets_human/H3_READING_20261025.json
+   # expected: 53175756da043aaf9e92d30509d45c8f2edd33ca31571b84b8936b5b0c39787f
+   ```
+
+4. **Confirm the clean-clone packaging fix** (the two analyses that previously failed):
+
+   ```bash
+   git clone -b o6-findings-resolution-20261025 /Users/yyl/Desktop/workshop/NMI/NeuroConverge ~/o6_countersign/NeuroConverge
+   cp -r /Users/yyl/Desktop/workshop/NMI/NeuroConverge/field_audit/pinned_fulltext_20261020 ~/o6_countersign/NeuroConverge/field_audit/
+   cp -r /Users/yyl/Desktop/workshop/NMI/NeuroConverge/field_audit/pinned_validation_20261025 ~/o6_countersign/NeuroConverge/field_audit/
+   cd ~/o6_countersign/NeuroConverge/field_audit
+   python3 run_final_scoring_20261024.py      # expect exit 0
+   python3 robustness_survey_exclusion_20261025.py  # expect exit 0
+   ```
+
+   (`fulltexts/` is tracked at HEAD; no copy is needed. The pinned directories are the only
+   untracked inputs.)
+5. **Spot-check three human quotes** from `CODING_sheets_human/coder_H.csv` against the pinned
+   text layers in `pinned_validation_20261025/texts/` (suggested claims: `1505.07814v2`,
+   `1511.04484v2`, `1702.05596v1` — if a quote is absent, use the next claim and record it).
+6. **Read the findings and resolutions.** Confirm that no load-bearing number changed and that
+   F1-F5 have the recorded dispositions. If you find a discrepancy, record it; do not repair it.
+
+**Rules.**
+
+- Read-only: run scripts, write your own notes, but do not modify, move, or commit project files.
+- If a number does not reproduce, record file, command, expected, observed, and stop; a
+  discrepancy is a finding, not something to fix.
+- You may ask the lead what a number means; ask the scripts' docstrings how to run them.
+
+**Counter-signature.**
+
+I performed the checks above on the commit and materials named in this request. I confirm that the
+load-bearing numbers reproduce and that the resolution record accurately describes the changes.
+
+- Name:
+- Affiliation / role:
+- Date:
+- Checks performed (numbers and commands):
+- Discrepancies found (if any):
+- Signature:
+
+Return this sheet, with your notes, to the lead. The lead will attach it to the O-6 record and send
+the package to the advisor.
