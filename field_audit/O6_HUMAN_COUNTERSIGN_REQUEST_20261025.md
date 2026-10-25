@@ -99,3 +99,37 @@ as-found run (commit `253507e`); the resolution record is part of what you are s
 tie-rule designation (`F4_TIE_RULE_DESIGNATION_20261026.md`) and its verification script
 postdate the report; run `python3 field_audit/verify_tie_rule_canonicality_20261026.py` as a
 seventh check (expected: PASS on all three assertions).
+
+---
+
+## Addendum 2 (2026-10-26): self-contained remote procedure (replaces the local-path setup)
+
+The advisor's remote review flagged that the original check 4 depended on this machine's local
+paths and untracked directories. **Resolved:** the 42 validation text layers are now committed
+(commit `04b6ec5`), so every counter-sign check runs from a plain GitHub clone alone. The
+self-containment was verified by an actual fresh-clone run: `run_final_scoring_20261024.py`
+exit 0; `robustness_survey_exclusion_20261025.py` exit 0; the F4 verification script PASS
+(4 assertions); the H3 chain reproduces `H3_READING_20261025.json` byte-for-byte; the format
+checker PASS.
+
+**Procedure for the counter-signer (no access to the original machine is needed):**
+
+```bash
+git clone https://github.com/4gcy6tzy6n-coder/NeuroConverge.git
+cd NeuroConverge/field_audit
+# check 2 - your own recount code over the raw sheets (CODING_sheets_v2/, CODING_sheets_validation/, CODING_sheets_human/)
+# check 3 - the H3 chain:
+python3 compute_H3_full_20261025.py && python3 compute_H3_reading2b_20261025.py
+shasum -a 256 CODING_sheets_human/H3_READING_20261025.json
+#   expected sha256: 53175756da043aaf9e92d30509d45c8f2edd33ca31571b84b8936b5b0c39787f
+# check 4 - packaging, now from the clone alone:
+python3 run_final_scoring_20261024.py            # expect exit 0
+python3 robustness_survey_exclusion_20261025.py  # expect exit 0
+# check 5 - quotes: locate them in pinned_validation_20261025/texts/ (committed)
+# check 7 - the F4 gate:
+python3 verify_tie_rule_canonicality_20261026.py # expect PASS, 4 assertions
+```
+
+Keep your command logs and outputs; attach them to the signed sheet. The primary-corpus PDFs
+(`pinned_fulltext_20261020/pdfs/`) remain untracked by size and are covered by their committed
+manifest - none of the seven checks requires them.

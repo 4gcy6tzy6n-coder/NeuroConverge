@@ -43,7 +43,7 @@ historical form.
 
 The companion script asserts, from the raw sheets: (1) the validation map re-derived under the
 canonical rule reproduces the committed validation counts exactly; (2) the primary map re-derived
-under the canonical rule yields the disclosed 14 x T3 + 2 x T2 with C077 -> T3; (3) headline E2+
+under the canonical rule yields the disclosed 16 x T3 with C077 -> T3; (3) headline E2+
 counts are identical under both rules in both corpora (10/16, 26/42). Run it before submission;
 it must print PASS on all three assertions.
 

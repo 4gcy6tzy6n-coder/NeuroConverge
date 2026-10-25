@@ -71,6 +71,20 @@ if Counter(pmap_h.values()) != Counter({"T3": 15, "T2": 1}):
     fail.append(f"historical primary map {dict(Counter(pmap_h.values()))} != committed 15xT3+1xT2")
 if not (e2p_c == e2p_h == 10 and np_ == 16): fail.append(f"primary headline E2 not invariant: canonical {e2p_c}, historical {e2p_h}")
 if not (e2v_c == e2v_h == 26 and nv_ == 42): fail.append(f"validation headline E2 not invariant: canonical {e2v_c}, historical {e2v_h}")
+# assertion 4 (advisor's remote review 2026-10-26): the H-vs-AI headline agreement under BOTH
+# rules, with the F4-designated labels - canonical rule 51/58, historical committed map 52/58
+hlH = {r["claim_id"]: r["headline_transition"] for r in csv.DictReader(open(ROOT / "CODING_sheets_human/headline_H.csv"))}
+def h_agreement(pmap_, vmap_):
+    ok = 0
+    for c, t in hlH.items():
+        committed_t = pmap_.get(c) or vmap_.get(c)
+        ok += (t == committed_t)
+    return ok
+h_canonical = h_agreement(pmap, vmap)      # canonical rule on both corpora
+h_hist = h_agreement(pmap_h, vmap)         # historical primary map (tie->A) + committed validation map (tie->T3)
+if h_canonical != 51: fail.append(f"H-vs-AI agreement under the canonical rule {h_canonical}/58 != 51/58 (C077: H chose T2, canonical resolves T3)")
+if h_hist != 52: fail.append(f"H-vs-AI agreement against the historical committed maps {h_hist}/58 != 52/58")
+if h_canonical >= h_hist: fail.append("label check: the canonical-rule agreement must be the LOWER number (H's T2 choice diverges from the canonical T3 tie rule)")
 if fail:
     print("F4 CLOSURE VERIFICATION: FAIL"); [print("  -", f) for f in fail]; sys.exit(1)
-print("F4 CLOSURE VERIFICATION: PASS (validation map reproduces committed counts under the canonical rule; primary canonical map = 16xT3 with C077->T3 as disclosed, historical = 15xT3+1xT2; headline E2+ 10/16 and 26/42 invariant under both rules)")
+print(f"F4 CLOSURE VERIFICATION: PASS (validation map reproduces committed counts; primary canonical 16xT3 / historical 15xT3+1xT2; E2 10/16 and 26/42 invariant; H-vs-AI headline agreement: canonical rule {h_canonical}/58, historical committed maps {h_hist}/58 - labels per F4 designation)")
