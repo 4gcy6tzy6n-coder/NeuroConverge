@@ -84,3 +84,27 @@ main conclusions (per the advisor: human coding may change them).
 
 H1/H2/H3 protocol frozen; packet staged; H3 instrument prepared and selftested. Gate O-5 remains
 BLOCKED on one thing only: a named human coder.
+
+## Amendment (2026-10-25, same day): coder staffing resolved by delegation
+
+The lead has recruited an external researcher as coder H; the lead will NOT code (an earlier
+consideration of the lead coding personally is superseded - the lead is result-aware at the
+aggregate level, which would have forced a disclosed-limitation reading; delegation preserves
+the blindness rule intact). The transmission vehicle is `O5_CODER_ASSIGNMENT_20261025.md`,
+which is blindness-safe by construction (no results, no distributions, no expectations, no
+disagreement statistics; the T2/T3 asymmetry is nowhere stated in coder-facing material).
+Packet completeness verified before handover: all 16 primary PDFs present in
+`pinned_fulltext_20261020/pdfs/` (including adjudication replacements C036/1903.12517v1 and
+C077/1811.09699v1), all 42 validation text layers present in `pinned_validation_20261025/texts/`.
+Handover rule for the lead: copy the packet file list below into a clean folder for the coder;
+do not hand over the repository; do not discuss findings with the coder until H1+H2 sheets are
+complete and the integrity check has run.
+
+Packet file list (the ONLY items the coder receives):
+
+1. `CODING_PACKET_HUMAN_20261025.md` (README)
+2. `CODING_INSTRUCTIONS_FROZEN.md`
+3. `pinned_fulltext_20261020/pdfs/` + `pinned_fulltext_20261020/FULLTEXT_DOWNLOAD_MANIFEST_20261020.csv`
+4. `pinned_validation_20261025/texts/` + `pinned_validation_20261025/FULLTEXT_DOWNLOAD_MANIFEST_20261025.csv`
+5. Empty sheets `CODING_sheets_human/coder_H.csv`, `CODING_sheets_human/headline_H.csv`
+6. `O5_CODER_ASSIGNMENT_20261025.md` (this amendment's companion task document)
