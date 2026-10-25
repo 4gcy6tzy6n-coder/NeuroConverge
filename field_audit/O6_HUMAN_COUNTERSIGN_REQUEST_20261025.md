@@ -79,3 +79,23 @@ load-bearing numbers reproduce and that the resolution record accurately describ
 
 Return this sheet, with your notes, to the lead. The lead will attach it to the O-6 record and send
 the package to the advisor.
+
+---
+
+## Advisor requirements addendum (2026-10-26, stage ruling)
+
+1. The signer must be **uninvolved in the project and in the coding sheets' production** - a
+   third researcher who is neither the lead, nor coder Yang (Yang authored the coding sheets and
+   is therefore disqualified from countering the verification of those sheets), nor anyone who
+   performed the AI verification.
+2. The signer **personally executes the six checks**, keeps the **raw outputs and any findings**
+   (command logs, diffs), and does not sign on the basis of reading the AI report alone.
+3. The lead signs only what the lead has personally reviewed.
+4. Return the signed sheet WITH the raw outputs attached; the package goes to the advisor for the
+   final gate confirmation.
+
+Post-report context for the signer: the findings F1-F5 in the report were resolved after the
+as-found run (commit `253507e`); the resolution record is part of what you are signing. The F4
+tie-rule designation (`F4_TIE_RULE_DESIGNATION_20261026.md`) and its verification script
+postdate the report; run `python3 field_audit/verify_tie_rule_canonicality_20261026.py` as a
+seventh check (expected: PASS on all three assertions).
