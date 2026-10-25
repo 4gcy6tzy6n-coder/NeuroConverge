@@ -98,7 +98,7 @@ Post-report context for the signer: the findings F1-F5 in the report were resolv
 as-found run (commit `253507e`); the resolution record is part of what you are signing. The F4
 tie-rule designation (`F4_TIE_RULE_DESIGNATION_20261026.md`) and its verification script
 postdate the report; run `python3 field_audit/verify_tie_rule_canonicality_20261026.py` as a
-seventh check (expected: PASS on all three assertions).
+seventh check (expected: PASS on all four assertions).
 
 ---
 
