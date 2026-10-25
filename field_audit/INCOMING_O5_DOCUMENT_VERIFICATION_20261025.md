@@ -34,3 +34,24 @@ independent reading".
    an invented pass - the signature of an AI-generated consolidation that confabulated its
    central input. This is the failure mode the workspace's "no completion claim before fresh
    output" rule exists to catch; it was caught here by artifact verification.
+
+## CORRECTION (2026-10-25, later same evening): the O-5 numbers now verify
+
+After this record was committed, the sender delivered the actual sheets
+(`coder_H.csv` 206 rows + `headline_H.csv` 58 rows, via WeChat). Mechanical verification:
+claim sets exactly the final-16 + 42; per-claim completeness exact (16x5, 42xT2/T3/T5); grade
+vocabularies clean; validation provenance 126/126 rows byte-identical to the pinned text layers;
+primary provenance re-established by content (206/206 justification quotes located in our pinned
+PDFs' text). The H3 computation (`compute_H3_full_20261025.py` -> `H3_READING_20261025.json`)
+reproduces EVERY O-5 number the earlier document reported: primary headline E2+ 5/16 = 31.2%,
+T2-E2 5/16 vs T3-E2 4/16, validation T2-E2 6/42 vs T3-E2 19/42, headline 20/41 = 48.8%,
+agreement 61.2/58.7, matched-neither 7/18 and 14/40.
+
+The central inference of this record's original disposition - "work that was never performed in
+any verifiable location" - was therefore TOO STRONG: the work existed outside the record when the
+document circulated, and the document was a faithful if procedurally premature summary of it.
+The standing defect is procedural (conclusions circulated before artifacts entered the record),
+not fabrication. The document's remaining open question is unchanged and is now THE open
+question: the coder's identity/provenance - the document itself disclosed "a delegated AI agent,
+not a human researcher"; the sheets' style is consistent with that; O-5's gate as designed
+(independent HUMAN judgment) does not close on an AI reading regardless of quality.
