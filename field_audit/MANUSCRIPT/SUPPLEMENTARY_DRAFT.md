@@ -50,8 +50,30 @@ demonstration, not as evidence about the field.
 
 ## SI Note 3: instrument chain (provenance)
 
-[Slot: the full commit/artifact chain - frozen protocol, dated amendments, binding records with hashes,
-review records, the recompute STEPS - one table for the reproducibility statement.]
+Every stage below names its governing document and its frozen anchor; all anchors are committed in
+the article's repository, and every Results number is recomputed by the listed script from these
+artifacts alone.
+
+| stage | governing document | frozen anchor |
+| --- | --- | --- |
+| Preregistration (taxonomy T1-T5, grades E0-E4, kill rule 80 pct) | `AUDIT_PREREGISTRATION_v1_FROZEN.md` | frozen 2026-10-19, unedited |
+| Data-source amendment (arXiv; ranking consequences stated) | `AMENDMENT_20261019_ARXIV_DATA_SOURCE.md` | dated amendment |
+| Pinned query snapshot | `corpus_draw_arxiv_v1.snapshot.jsonl` | sha256 `e73f72f5...3aee`, 3,246 records |
+| Primary corpus freeze (18-draw -> 16 after eligibility) | `corpus_draw_arxiv_v1.csv`; `ELIGIBILITY_SECOND_REVIEW_20261024.md` | commit `874797f`; second review 2026-10-24 |
+| Reportability amendment (evidence vs reporting separated) | `OWNER_AMENDMENT_REPORTABILITY_2026-10-20.md` | owner-approved 2026-10-20 |
+| Coder conventions (COND-1 no aggregation, COND-2 cross-tab caveat, COND-3 chain citations = PARTIAL) | `METHODS_CONDITIONS_RECORDED_20261024.md` | recorded pre-coding 2026-10-24 |
+| Scorer binding (v3; refuses incomplete grids, unregistered sources, hash mismatches) | `BINDING_RECORD_V3_20261024.md` (scorer sha256 `b7fa04ab...6455e`; checks `c094856b...9829c`; registry digest `77dcda1a...db6e`) | owner-approved "B1-B4" 2026-10-24 |
+| Independent scorer review | `REPORTABILITY_V3_INDEPENDENT_REVIEW_20261023.md` | BINDING-READY with 4 conditions, all closed |
+| Primary-corpus coding artifacts | `CODING_sheets_v2/` (coder sheets, correction ledger C-1/C-2/C-3, adjudication 39 rows, merge) | commit `f4c16e2` |
+| Primary-corpus statistics | `CODING_sheets_v2/statistics_final_20261024.json` (+ dated erratum on the per-sheet headline inversion) | `CODING_FINAL_RESULTS_20261024.md` |
+| Validation rule (drawn 2026-10-23, scope-corrected 2026-10-25) | `VALIDATION_CORPUS_RULE_20261023.md`; `VALIDATION_RESUMPTION_20261025.md` (v1 draw superseded before coding) | commits `144c41e`, `21eb404` |
+| Validation corpus (N = 42) + pinning | `corpus_validation_v2_adjudicated.csv`; `pinned_validation_20261025/` manifests (42 PDF + text sha256 pairs, re-hash verified) | acceptance amendment 2026-10-25 (owner option a) |
+| Validation coding + statistics | `CODING_sheets_validation/` (two 210-row coder sheets, headline maps, `statistics_validation_20261025.json`) | commit `136ec7f` |
+| Recompute path (reproducibility statement) | `fill_results_numbers.py` (manuscript numbers), `compute_validation_statistics_20261025.py --selftest`, `make_figures.py`, `nmi_format_check.py --selftest` | one command each, all committed |
+
+Chain-citation discipline: this table names documents, not facts - every number in the main text is
+produced by the recompute path from the pinned artifacts, and any discrepancy between the two would
+fail the format checker's frozen-number cross-checks before submission.
 
 ## SI Note 4: pilot-corpus specificity verification of delegated foundations (11/14 specific)
 

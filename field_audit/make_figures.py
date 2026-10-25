@@ -70,18 +70,23 @@ kA = sum(1 for c, t in _HA.items() if _EA[(c, t)]["in_paper_grade"] in ("E0", "E
 kB = sum(1 for c, t in _HB.items() if _EB[(c, t)]["in_paper_grade"] in ("E0", "E1"))
 _EM = {(r["claim_id"], r["transition"]): r for r in merged}
 kM = sum(1 for c, t in head.items() if _EM[(c, t)]["in_paper_grade"] in ("E0", "E1"))
-ks = [kA, kB, kM]
-vals = [100 * k / 16 for k in ks]
-labels = ["coder A map", "coder B map", "merged map"]
-lohi = [_wilson(k, 16) for k in ks]
+_val = json.load(open(ROOT / "CODING_sheets_validation/statistics_validation_20261025.json"))
+kV, nV = _val["headline_e0_e1"], _val["n_claims"]
+ks = [kA, kB, kM, kV]
+ns = [16, 16, 16, nV]
+vals = [100 * k / n for k, n in zip(ks, ns)]
+labels = ["coder A map", "coder B map", "merged map", "validation merged"]
+lohi = [_wilson(k, n) for k, n in zip(ks, ns)]
 err = [[v - lo for v, (lo, hi) in zip(vals, lohi)], [hi - v for v, (lo, hi) in zip(vals, lohi)]]
-ax.bar(labels, vals, color="#7fa8c9", edgecolor="white", yerr=err, capsize=6, error_kw={"ecolor": "#444"})
+ax.bar(labels, vals, color=["#7fa8c9", "#7fa8c9", "#7fa8c9", "#4a7ba6"], edgecolor="white", yerr=err, capsize=6, error_kw={"ecolor": "#444"})
+def _pct(v):
+    return f"{v:.2f}".rstrip("0").rstrip(".")
 for i, v in enumerate(vals):
-    ax.text(i, 2, f"{ks[i]}/16\n{v:g}%", ha="center", fontsize=9, color="white")
+    ax.text(i, 2, f"{ks[i]}/{ns[i]}\n{_pct(v)}%", ha="center", fontsize=9, color="white")
 ax.axhline(80, color="#b7791f", ls="--", lw=1.2)
-ax.text(2.42, 81, "kill bar 80%", fontsize=8, color="#b7791f", ha="right")
+ax.text(3.42, 81, "kill bar 80% (E2+ scale)", fontsize=8, color="#b7791f", ha="right")
 ax.set_ylabel("headline claims resting on E0/E1 (%)"); ax.set_ylim(0, 100)
-ax.set_title("Reliance of abstract improvement claims on uncontrolled transitions\n(bars: point estimate; whiskers: Wilson 95% CI; dashed: preregistered kill bar not reached)", fontsize=10)
+ax.set_title("Reliance of abstract improvement claims on uncontrolled transitions\n(whiskers: Wilson 95% CI; primary n=16, validation n=42;\ndashed: preregistered kill bar, not reached)", fontsize=10)
 fig.tight_layout(); fig.savefig(OUT / "fig3_headline.png", dpi=200); plt.close(fig)
 
 # Fig 4 - reportability by item

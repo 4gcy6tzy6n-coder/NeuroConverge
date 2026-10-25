@@ -10,20 +10,20 @@ draft scaffolding and is removed in the submission build (Article: Introduction 
 Figures are specified with their numbers below; production follows the figure contracts. Author
 list, affiliations and correspondence: owner-side.
 
-## Abstract (145 words)
+## Abstract (146 words)
 
 Evidence audits of biological-to-artificial intelligence transfer have concentrated on utility;
-the mechanistic pedigree of a design choice is usually accepted as stated. We decompose a frozen,
-hash-pinned corpus of 16 arXiv-declared mechanism claims into a five-transition inference chain
-and grade, transition by transition, what controlled evidence each paper itself supplies. No
-claim evidences its structure-to-computation transition in-paper (16/16 E0): the biological
-foundation is delegated by citation. The computation-to-correspondence transition - the content
-that makes a system "brain-inspired" - carries suggestive-only support in 12 of 16 claims and
-controlled support in just 2, while utility comparisons are where controlled evidence concentrates (10/16). A
-preregistered kill rule (80 percent controlled headline evidence) was not triggered (62.5
-percent, 95 percent CI 39-82). We deliver an item-level, dual-coded reporting standard for the
-uncontrolled middle of the chain. The corpus is a first-query candidate sample; no prevalence
-claim is made.
+the mechanistic pedigree of a design choice is usually accepted as stated. We decompose frozen,
+hash-pinned corpora of arXiv-declared mechanism claims - 16 primary and 42 validation - into a
+five-transition inference chain and grade, transition by transition, what controlled evidence each
+paper itself supplies. No claim evidences its structure-to-computation transition in-paper (16/16
+and 42/42 E0): the biological foundation is delegated by citation. The computation-to-correspondence
+transition - the content that makes a system "brain-inspired" - carries mostly suggestive-only
+support, while utility comparisons concentrate the controlled evidence. A preregistered kill rule
+(80 percent controlled headline evidence) was not triggered: 62.5 percent (primary) and 61.9
+percent (validation) of claims carry controlled headline evidence. We deliver an item-level,
+dual-coded reporting standard for the uncontrolled middle of the chain. The corpora are
+first-query candidate samples; no prevalence claim is made.
 
 ## Introduction (drafted; number-free by construction)
 
@@ -261,10 +261,12 @@ transition; unit: the claim) whose in-paper evidence grade is E2. T1 (grey) is z
 delegation finding, not by sampling; no interval or test applies.
 
 **Fig 3 | Headline reliance, with uncertainty.** Point estimates of the share of claims whose
-abstract improvement claim rests on an E0/E1 transition (unit: the claim; n = 16 per map: coder
-A's own map, coder B's own map, and the merged map), with two-sided Wilson score 95 percent
-intervals as whiskers. The dashed line is the preregistered kill-rule threshold (80 percent), a
-decision rule, not a significance threshold. No p value is computed anywhere in the figure.
+abstract improvement claim rests on an E0/E1 transition (unit: the claim; n = 16 per map for the
+first three bars - coder A's own map, coder B's own map, and the merged map - and n = 42 for the
+fourth bar, the validation corpus's merged map under the same frozen resolution rule), with
+two-sided Wilson score 95 percent intervals as whiskers. The dashed line is the preregistered
+kill-rule threshold (80 percent, on the complementary E2+ scale), a decision rule, not a
+significance threshold. No p value is computed anywhere in the figure.
 
 **Fig 4 | Reportability by item.** Counts of claims (n = 16 per item; unit: the claim) with
 complete reporting for each of the 11 items, after preregistered adjudication. By protocol no
