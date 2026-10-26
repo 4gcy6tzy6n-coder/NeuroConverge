@@ -52,3 +52,18 @@ chain changes.
    recommendation is (c), with (a) executed immediately.
 3. **Re-inclusion:** if the owner later confirms permission for any non-permissive paper (or the
    NC-ND four), its text/PDF may re-enter HEAD with an attribution line.
+
+## Owner disposition (2026-10-26): repository visibility unchanged
+
+The owner ruled: "不设置GitHub了，继续推进" - the repository stays PUBLIC; no visibility change,
+no history rewrite. Recorded as the governing decision. Consequences, stated for the record:
+
+- The tracked tree at HEAD (`233b4f7` onward) redistributes no third-party full text beyond the
+  15 permissively licensed, attributed text layers. This is the compliant steady state.
+- The git history (`04b6ec5`..`db2eff0`, and the pilot-era `fulltexts/` PDFs since the first
+  push) remains publicly retrievable. This is an ACCEPTED RESIDUAL RISK by owner decision, not an
+  oversight; it is disclosed here so no later reader mistakes it for one.
+- The eventual public evidence deposit for the manuscript's data-availability statement will be
+  a FRESH, curated repository (code + manifests + metadata + grades + permissive texts only),
+  built at submission time from HEAD - never a mirror of this working history. That item moves
+  to the submission checklist (O-4 package).
