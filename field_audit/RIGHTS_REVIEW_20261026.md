@@ -67,3 +67,14 @@ no history rewrite. Recorded as the governing decision. Consequences, stated for
   a FRESH, curated repository (code + manifests + metadata + grades + permissive texts only),
   built at submission time from HEAD - never a mirror of this working history. That item moves
   to the submission checklist (O-4 package).
+
+## Second pass (2026-10-26, package build): exhaustive reconciliation found 13 missed files
+
+Building the evidence package from HEAD surfaced two gaps in the first remediation, which had
+worked by directory rather than by file: (1) `fulltexts_txt/` - 16 primary-corpus text layers
+tracked since the pilot-era commit `22bcb2e`, 12 of them non-permissive; (2) one validation text
+(`2603.26787v1`, non-exclusive license) that the first removal pass missed. Fix: an exhaustive
+reconciliation of EVERY tracked file matching `<arxiv_id_version>.(txt|pdf)` against the license
+audit (31 files: 13 non-permissive removed from the index, 18 permissive kept, 0 unaudited);
+`ATTRIBUTION.md` now covers both directories. Disk copies retained. The reconciliation is the
+method of record from here on - directory-based cleanup is not.
